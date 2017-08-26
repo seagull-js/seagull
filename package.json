@@ -8,13 +8,13 @@
   },
   "engineStrict": true,
   "scripts": {
-    "prettier": "prettier --single-quote --no-semi --trailing-comma es5 --write 'src/**/*.ts'",
     "lint": "tslint -c tslint.json 'src/**/*.ts' --fix",
+    "prettier": "prettier --single-quote --no-semi --trailing-comma es5 --write 'src/**/*.ts'",
     "prebuild": "npm run lint && npm run prettier",
     "build": "rm -rf dist && tsc",
     "pretest": "npm run build",
     "test": "NODE_ENV=test mocha --opts mocha.opts",
-    "watch": "mocha-typescript-watch --opts .mocha"
+    "watch": "mocha-typescript-watch --opts mocha.opts"
   },
   "repository": {
     "type": "git",
@@ -53,6 +53,7 @@
     "typescript": "^2.3.2"
   },
   "dependencies": {
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "yamljs": "^0.3.0"
   }
 }
