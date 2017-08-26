@@ -1,0 +1,5 @@
+--ui mocha-typescript
+--require source-map-support/register
+--timeout 5000
+--recursive
+dist/test/**/*.js
