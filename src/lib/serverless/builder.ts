@@ -1,5 +1,10 @@
 import * as YAML from 'yamljs'
-import { IIAMRoleStatement, IProvider, IServerless } from './interfaces'
+import {
+  IFunction,
+  IIAMRoleStatement,
+  IProvider,
+  IServerless,
+} from './interfaces'
 
 export default class Builder {
   private data: IServerless
@@ -9,17 +14,22 @@ export default class Builder {
     this.data.service = name
   }
 
-  public addIAMRoleStatement(item: IIAMRoleStatement): Builder {
+  addIAMRoleStatement(item: IIAMRoleStatement): Builder {
     this.data.provider.iamRoleStatements.push(item)
     return this
   }
 
-  public addPlugin(item: string): Builder {
+  addPlugin(item: string): Builder {
     this.data.plugins.push(item)
     return this
   }
 
-  public toYAML(): string {
+  addFunction(name, fn: IFunction): Builder {
+    this.data.functions[name] = fn
+    return this
+  }
+
+  toYAML(): string {
     return YAML.stringify(this.data, 4)
   }
 

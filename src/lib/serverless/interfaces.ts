@@ -1,7 +1,11 @@
+export interface IFunctionEvent {
+  [source: string]: string
+}
+
 export interface IFunction {
   handler: string
   timeout: number
-  events: { [source: string]: string }
+  events: IFunctionEvent[]
 }
 
 export interface IIAMRoleStatement {
