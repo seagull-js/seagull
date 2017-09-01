@@ -16,7 +16,6 @@ class ExampleRoute extends API {
 // tslint:disable-next-line:max-classes-per-file
 @suite('Default API handlers work')
 class ApiHandlers {
-
   @test('simple text response works')
   async canReplyWithTextData() {
     const api = new ExampleRoute()
@@ -34,5 +33,4 @@ class ApiHandlers {
     expect(response.statusCode).to.be.equal(200)
     expect(response.body).to.be.equal('hello Max')
   }
-
 }

@@ -8,7 +8,7 @@ export interface IDict {
 }
 
 export default class Request {
-  static fromApiGateway (event: APIGatewayEvent): Request {
+  static fromApiGateway(event: APIGatewayEvent): Request {
     const method = event.httpMethod as HttpMethod
     const { pathParameters, queryStringParameters } = event
     const params = merge({}, pathParameters, queryStringParameters)

@@ -27,7 +27,7 @@ export default abstract class API {
   // }
 
   // this function contains your business logic code.
-  async abstract handle(request: Request): Promise<Response>
+  abstract async handle(request: Request): Promise<Response>
 
   // return data as JSON response
   protected json(data: any): Response {
