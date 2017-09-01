@@ -6,10 +6,6 @@ import Response from './response'
  * Basic class for a "Backend" API Route.
  */
 
-export interface IStaticThis<T> {
-  new (): T
-}
-
 export default class API {
   // This will be invoked by AWS Lambda. Do not touch.
   static async dispatch(event: Event, context: Context, fn: CB) {
