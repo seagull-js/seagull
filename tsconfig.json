@@ -9,7 +9,7 @@
     "outDir": "./dist",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "allowJs": true
+    "declaration": true
   },
   "include": [
       "src/**/*",
