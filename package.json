@@ -1,6 +1,6 @@
 {
   "name": "@seagull-js/seagull",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "TODO: impressive one-liner",
   "main": "dist/lib/index.js",
   "types": "dist/lib/index.d.ts",
@@ -56,5 +56,6 @@
     "typescript": "^2.3.2"
   },
   "dependencies": {
+    "lodash": "^4.17.4"
   }
 }
