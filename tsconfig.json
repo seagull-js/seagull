@@ -15,6 +15,6 @@
       "src/**/*",
       "test/**/*"
   ],
-  "lib": [ "es5", "es6", "es7", "dom", "dom.iterable" ],
+  "lib": [ "es7", "dom", "dom.iterable" ],
   "types": ["node"]
 }
