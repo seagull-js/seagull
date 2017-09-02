@@ -1,5 +1,5 @@
 {
-  "name": "seagull",
+  "name": "@seagull-js/seagull",
   "version": "0.1.0",
   "description": "TODO: impressive one-liner",
   "main": "dist/lib/index.js",
@@ -14,7 +14,8 @@
     "build": "rm -rf dist && tsc",
     "pretest": "npm run build",
     "test": "NODE_ENV=test mocha --opts mocha.opts",
-    "watch": "mocha-typescript-watch --opts mocha.opts"
+    "watch": "mocha-typescript-watch --opts mocha.opts",
+    "publish": "npm publish --access public"
   },
   "repository": {
     "type": "git",
