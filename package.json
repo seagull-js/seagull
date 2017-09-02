@@ -1,6 +1,6 @@
 {
   "name": "@seagull-js/seagull",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "TODO: impressive one-liner",
   "main": "dist/lib/index.js",
   "engines": {
@@ -41,7 +41,6 @@
   "devDependencies": {
     "@types/aws-lambda": "0.0.16",
     "@types/chai": "^4.0.4",
-    "@types/lodash": "^4.14.74",
     "@types/mocha": "^2.2.42",
     "@types/node": "^8.0.25",
     "aws-sdk": "^2.104.0",
@@ -56,11 +55,5 @@
     "typescript": "^2.3.2"
   },
   "dependencies": {
-    "inflection": "^1.12.0",
-    "lodash": "^4.17.4",
-    "path-parser": "^2.0.2",
-    "query-string": "^5.0.0",
-    "url-parse": "^1.1.9",
-    "yamljs": "^0.3.0"
   }
 }
