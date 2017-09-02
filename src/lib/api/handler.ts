@@ -11,13 +11,13 @@ export default class Handler {
    * Configuration for HTTP settings
    */
   // url path
-  path?: string
-
-  // add CORS headers and OPTIONS Request for this route
-  cors: boolean = false
+  static path?: string
 
   // specify the desired HTTP Method
-  method: string = 'GET'
+  static method: string = 'GET'
+
+  // add CORS headers and OPTIONS Request for this route
+  static cors: boolean = false
 
   // more stuff here, like
   // timeout, ...
