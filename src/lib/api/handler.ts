@@ -11,7 +11,7 @@ export default class Handler {
    * Configuration for HTTP settings
    */
   // url path
-  static path?: string
+  static path: string
 
   // specify the desired HTTP Method
   static method: string = 'GET'
@@ -21,6 +21,24 @@ export default class Handler {
 
   // more stuff here, like
   // timeout, ...
+
+  /**
+   * instance getters for the static properties above
+   */
+  path(): string {
+    // tslint:disable-next-line:no-string-literal
+    return this.constructor['path']
+  }
+
+  method(): string {
+    // tslint:disable-next-line:no-string-literal
+    return this.constructor['method']
+  }
+
+  cors(): string {
+    // tslint:disable-next-line:no-string-literal
+    return this.constructor['cors']
+  }
 
   /**
    * available response handlers, depending on the HTTP settings above
