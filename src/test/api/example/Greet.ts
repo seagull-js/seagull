@@ -8,3 +8,7 @@ export default class Greet extends API {
     return this.text(`hello ${name}`)
   }
 }
+
+export const handler = () => {
+  return Greet.dispatch.bind(Greet)
+}
