@@ -24,7 +24,7 @@ class DispatchTests {
     expect(response.body).to.be.equal('hello max')
   }
 
-  @test.only
+  @test
   async 'dispatching real lambda calls works'() {
     const event = {
       httpMethod: 'GET',
