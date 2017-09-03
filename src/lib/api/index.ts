@@ -14,7 +14,7 @@ export default class API extends Handler {
   static async dispatch(event: Event, context: Context, fn: Callback) {
     try {
       const request = Request.fromApiGateway(event)
-      const handler = new this()
+      const handler = this.create()
       const response = await handler.handle(request)
       return fn(null, response)
     } catch (error) {
@@ -31,6 +31,11 @@ export default class API extends Handler {
         return error ? reject(error) : resolve(result)
       })
     })
+  }
+
+  // indirection helper for 'this' magic. Do not refactor into dispatch() above!
+  static create<T extends API>(): T {
+    return new this() as T
   }
 
   // this function contains your business logic code, will be overriden

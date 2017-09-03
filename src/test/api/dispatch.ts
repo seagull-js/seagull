@@ -23,4 +23,21 @@ class DispatchTests {
     const response = await handler.dispatchPromise(exampleRequest, {})
     expect(response.body).to.be.equal('hello max')
   }
+
+  @test
+  async 'dispatching real lambda calls works'() {
+    const event = {
+      httpMethod: 'GET',
+      path: '/hello',
+      pathParameters: {},
+      queryStringParameters: {},
+    }
+    const api = require(join(__dirname, 'example', 'Greet.js'))
+    const response: any = await new Promise((resolve, reject) => {
+      api.default.dispatch(event, null, (error, result) => {
+        error ? reject(error) : resolve(result)
+      })
+    })
+    expect(response.body).to.be.equal('hello world')
+  }
 }
