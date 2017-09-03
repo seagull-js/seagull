@@ -2,6 +2,11 @@
 
 # Seagull.js
 
+[![TypeScript](https://badges.frapsoft.com/typescript/code/typescript.svg?v=101)](https://github.com/ellerbrock/typescript-badges/)
+[![Build Status](https://travis-ci.org/seagull-js/seagull.svg?branch=master)](https://travis-ci.org/Anonyfox/flay-js)
+[![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
+[![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](http://www.gnu.org/licenses/lgpl-3.0)
+
 A lightweight, isomorphic, universal, fullstack, opinionated and experimental
 web framework. The goal is to create an CoC abstraction layer with maximum
 convenience over the combination of a serverless backend architecture and a
