@@ -1,4 +1,10 @@
+/**
+ * See http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-set-up-simple-proxy.html#api-gateway-simple-proxy-for-lambda-output-format
+ * for more details about how this object must look like.
+ */
+
 export default class Response {
+  isBase64Encodes: boolean = false // TODO: deliver static assets
   statusCode: number
   body: string
   headers: { [key: string]: string }

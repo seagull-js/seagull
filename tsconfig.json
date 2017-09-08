@@ -9,12 +9,14 @@
     "outDir": "./dist",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "declaration": true
+    "declaration": true,
+    "jsx": "react",
+    "jsxFactory": "createElement"
   },
   "include": [
       "src/**/*",
       "test/**/*"
   ],
   "lib": [ "es5", "es6", "es7", "dom", "dom.iterable" ],
-  "types": ["node"]
+  "types": ["node", "inferno"]
 }
