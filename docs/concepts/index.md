@@ -11,6 +11,12 @@ Seagull aims to solve the major pain points developer currently face when
 building web apps. Therefore the subtitle of the framework is not a joke,
 these Buzzwords mean the following:
 
+- **[Featherweight](featherweight)**:
+  Ambitiious frameworks tend to become heavy, bloated and too big to grasp in a
+  hurry. Seagull aims to be a great choice for the fast paced environment of
+  Hackathons or Startups, while also flying in circles around complex enterprise
+  solutions when it comes to performance and scalability.
+
 - **[Zero-Config](zero_config)**:
   From start to deployment: there is no need to set up dozens of dependencies,
   build tools or cherry-picking libraries. In the spirit of "Convention over

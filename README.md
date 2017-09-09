@@ -2,7 +2,7 @@
 
 # Seagull.js
 
-> A Zero-Config Typesafe Isomorphic Cloud Framework.
+> Featherweight Zero-Config Typesafe Isomorphic Cloud Framework.
 >
 > [See the website](https://seagull-js.github.io/seagull/)
 
