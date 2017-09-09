@@ -1,6 +1,6 @@
 # Setup
-title:        Seagull Core
-tagline:      A responsive theme for your project on GitHub Pages
+title:        'Seagull :: Core'
+tagline:      Zero-Config Typesafe Isomorphic Cloud Framework
 baseurl:      "/seagull"
 paginate:     1
 
