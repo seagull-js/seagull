@@ -1,7 +1,7 @@
 # Setup
 title:        Seagull Core
 tagline:      A responsive theme for your project on GitHub Pages
-baseurl:      "/seagull/"
+baseurl:      "/seagull"
 paginate:     1
 
 # About/contact
