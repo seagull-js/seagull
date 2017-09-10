@@ -70,7 +70,7 @@ empty scaffolded project looks like, with explanations:
 
   (ToDo: copy assets folder during build step, load it directly for serve step)
 
-- **[package.json](https://github.com/seagull-js/seagull-cli/blob/master/templates/app/package.json)**
+- **[package.json](package-json)**
 
   The central point for any project-wide configurations. Node.js projects
   already use this file for dependency management and node.js settings, but
