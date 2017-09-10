@@ -1,9 +1,7 @@
 ---
-layout: default
+layout: doc
 title:  "Inspirations: Best of many Worlds"
 ---
-
-{% include concept-head.md %}
 
 # {{ page.title }}
 

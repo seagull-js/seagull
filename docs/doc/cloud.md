@@ -1,9 +1,9 @@
 ---
-layout: default
+layout: doc
 title:  "Cloud"
 ---
 
-{% include concept-head.md %}
+# {{ page.title }}
 
 The framework is optimized to compile apps to AWS Lambda functions and spin up
 a serverless infrastructure via AWS Cloudformation. There are no servers to

@@ -1,9 +1,9 @@
 ---
-layout: default
+layout: doc
 title:  "Framework"
 ---
 
-{% include concept-head.md %}
+# {{ page.title }}
 
 A modern *fullstack* web application consists of an interactive
 single-page-application (SPA), with server-side-rendering (SSR) for

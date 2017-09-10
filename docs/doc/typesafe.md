@@ -1,9 +1,9 @@
 ---
-layout: page
+layout: doc
 title:  "Typesafe"
 ---
 
-{% include concept-head.md %}
+# {{ page.title }}
 
 Seagull leverages the most popular web programming language out there
 (Javascript), but goes huge steps forward by embracing modern Typescript.

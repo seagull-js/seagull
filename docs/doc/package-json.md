@@ -1,6 +1,6 @@
 ---
-layout: default
-title:  "Documentation: package.json"
+layout: doc
+title:  "package.json"
 ---
 
 # {{ page.title }}

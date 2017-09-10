@@ -1,8 +1,7 @@
 # Setup
-title:        'Seagull :: Core'
+title:        'Seagull::Core'
 tagline:      Featherweight Zero-Config Typesafe Isomorphic Cloud Framework
 baseurl:      "/seagull"
-paginate:     1
 
 # About/contact
 author:

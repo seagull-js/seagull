@@ -1,9 +1,9 @@
 ---
-layout: default
+layout: doc
 title:  "Featherweight"
 ---
 
-{% include concept-head.md %}
+# {{ page.title }}
 
 Ambitiious frameworks tend to become heavy, bloated and too big to grasp in a
 hurry. Seagull aims to be a great choice for the fast paced environment of
