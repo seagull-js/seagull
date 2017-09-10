@@ -23,6 +23,7 @@ these Buzzwords mean the following:
   hurry. Seagull aims to be a great choice for the fast paced environment of
   Hackathons or Startups, while also flying in circles around complex enterprise
   solutions when it comes to performance and scalability.
+  [&rarr; more...](featherweight)
 
 - **[Zero-Config](zero_config)**:
   From start to deployment: there is no need to set up dozens of dependencies,
