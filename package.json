@@ -1,6 +1,6 @@
 {
   "name": "@seagull-js/seagull",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "TODO: impressive one-liner",
   "main": "dist/lib/index.js",
   "types": "dist/lib/index.d.ts",
@@ -61,8 +61,11 @@
     "inferno": "^3.9.0",
     "inferno-component": "^3.9.0",
     "inferno-create-element": "^3.9.0",
+    "inferno-mobx": "^3.9.0",
     "inferno-router": "^3.9.0",
     "inferno-server": "^3.9.0",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "mobx": "^3.2.2",
+    "typestyle": "^1.4.0"
   }
 }

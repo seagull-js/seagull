@@ -3,7 +3,7 @@ import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import Request from '../../lib/api/request'
 import Frontend from './example/Frontend'
 
-@suite.only('Content API handlers work')
+@suite('Content API handlers work')
 class ContentApiHandlers {
   @test
   async 'simple html ssr response works'() {
