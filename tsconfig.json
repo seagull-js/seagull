@@ -10,13 +10,12 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "declaration": true,
-    "jsx": "react",
-    "jsxFactory": "createElement"
+    "jsx": "react"
   },
   "include": [
       "src/**/*",
       "test/**/*"
   ],
   "lib": [ "es5", "es6", "es7", "dom", "dom.iterable" ],
-  "types": ["node", "inferno"]
+  "types": ["node", "react", "react-dom"]
 }

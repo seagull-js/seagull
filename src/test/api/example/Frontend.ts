@@ -1,27 +1,16 @@
-import createElement from 'inferno-create-element'
-import { doAllAsyncBefore, match, RouterContext } from 'inferno-router'
-import { renderToString } from 'inferno-server'
+// library imports
+import { renderToString as render } from 'react-dom/server'
+import { API, Request, Response } from '../../../lib/'
 
-import { API, Request, Response } from '../../../lib'
-import routes from './frontend/'
+// configuration imports
 import layout from './frontend/layout'
+import routes from './frontend/routes'
 
+// Server Side Rendering for the frontend
 export default class Frontend extends API {
   static method = 'GET'
-  static path = '/'
+  static path = '/*'
   async handle(request: Request): Promise<Response> {
-    const renderProps = match(routes, request.path)
-    // TODO
-    // if (renderProps.redirect) {
-    //   return this.redirect(renderProps.redirect)
-    // }
-    const children = createElement(RouterContext, renderProps)
-    const body = renderToString(layout({ children }))
-    return this.html('<!DOCTYPE html>\n' + body)
+    return this.html(render(layout({ children: routes(true, request) })))
   }
-}
-
-// CLI-building does this step implicitly
-export const handler = () => {
-  return Frontend.dispatch.bind(Frontend)
 }

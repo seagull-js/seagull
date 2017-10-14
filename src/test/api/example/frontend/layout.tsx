@@ -1,4 +1,4 @@
-import createElement from 'inferno-create-element'
+import * as React from 'react'
 
 export default function Html({ children }) {
   return (

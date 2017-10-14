@@ -4,4 +4,7 @@ export { default as Response } from './api/response'
 export { default as API } from './api/index'
 
 // Frontend building blocks
-export { history } from './spa/index'
+// export { history } from './spa/index'
+
+// Utility & Helpers
+export { isClient, isServer, history } from './util'
