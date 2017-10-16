@@ -1,6 +1,7 @@
 import * as dashify from 'dashify'
 import 'reflect-metadata'
 import { generate as newID } from 'shortid'
+import * as DB from './ddb'
 import field from './field'
 
 /**
@@ -46,7 +47,18 @@ DynamoDbNewsTable:
         WriteCapacityUnits: 3
   */
 export default class Model {
-  @field private id: string = null
+  static async create<T extends Model>(this: { new (): T }, data): Promise<T> {
+    const instance: T = Object.assign(new this(), data)
+    return instance.save()
+  }
+
+  static async find<T extends Model>(this: { new (): T }, id: string): Promise<T> {
+    const data = await DB.getItem(new this()._name, 'id', id)
+    const instance: T = Object.assign(new this(), data)
+    return instance
+  }
+
+  @field private id: string = ''
 
   get _name(): string {
     return dashify(this.constructor.name)
@@ -56,22 +68,37 @@ export default class Model {
     return this.id
   }
 
-  get _interface(): any {
+  get _interface(): {[field: string]: string} {
     const result = {}
     for (const key of Object.keys(this)) {
       const type = Reflect.getMetadata('design:type', this, key)
       if (type && type.name) {
-        result[key] = type.name
+        result[key] = type.name.toLowerCase()
       }
     }
     return result
   }
 
+  get _errors(): string[] {
+    const itf = this._interface
+    return Object.keys(itf).map(key => {
+      return key !== 'id' && typeof this[key] !== itf[key] ? key : false
+    }).filter(key => key) as string[]
+  }
+
+  get _isValid(): boolean {
+    return this._errors.length <= 0
+  }
+
   async save(): Promise<this> {
+    if (!this._isValid) {
+      const fields = this._errors.join(', ')
+      throw new Error(`invalid fields for ${this._name}: ${fields}`)
+    }
     if (!this.id) {
       this.id = newID()
     }
-    // do DB stuff
+    await DB.putItem(this._name, this)
     return this
   }
 }

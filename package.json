@@ -15,7 +15,7 @@
     "build": "rm -rf dist && tsc",
     "pretest": "npm run build",
     "test": "NODE_ENV=test mocha --opts mocha.opts",
-    "watch": "mocha-typescript-watch --opts mocha.opts"
+    "watch": "NODE_ENV=test mocha-typescript-watch --opts mocha.opts"
   },
   "repository": {
     "type": "git",
@@ -50,7 +50,6 @@
     "@types/react-router": "^4.0.15",
     "@types/react-router-config": "^1.0.4",
     "@types/react-router-dom": "^4.0.8",
-    "aws-sdk": "^2.104.0",
     "chai": "^4.1.1",
     "mocha": "^3.5.0",
     "mocha-typescript": "^1.1.7",
@@ -62,6 +61,7 @@
     "typescript": "^2.5.2"
   },
   "dependencies": {
+    "aws-sdk": "^2.104.0",
     "dashify": "^0.2.2",
     "history": "^4.7.2",
     "lodash": "^4.17.4",
