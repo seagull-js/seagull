@@ -23,16 +23,30 @@ class ModelsTest {
   @test
   async 'models generate IDs on save'() {
     const todo = new Todo()
-    expect(todo._id).to.be.equal('')
+    expect(todo._id).to.be.equal(null)
     await todo.save()
     expect(todo._id).to.be.a('string')
     expect(todo._id.length).to.be.above(0)
   }
 
   @test
+  async 'models create and update timestamps on save'() {
+    const todo = new Todo()
+    expect(todo._createdAt).to.be.equal(null)
+    expect(todo._updatedAt).to.be.equal(null)
+    await todo.save()
+    expect(todo._createdAt).to.be.not.equal(null)
+    expect(todo._updatedAt).to.be.not.equal(null)
+    expect(todo._createdAt.getTime()).to.be.equal(todo._updatedAt.getTime())
+    await sleep(1)
+    await todo.save()
+    expect(todo._createdAt.getTime()).to.be.not.equal(todo._updatedAt.getTime())
+  }
+
+  @test
   async 'models do not override IDs on updating'() {
     const todo = new Todo()
-    expect(todo._id).to.be.equal('')
+    expect(todo._id).to.be.equal(null)
     const { _id } = await todo.save()
     expect(todo._id).to.be.a('string')
     expect(todo._id.length).to.be.above(0)
@@ -56,4 +70,8 @@ class ModelsTest {
     expect(todo).to.be.an('object')
     expect(todo._id).to.be.equal(original._id)
   }
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
