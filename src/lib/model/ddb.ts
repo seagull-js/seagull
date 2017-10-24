@@ -1,12 +1,48 @@
 /**
  * Import the SDK and prepare a fresh DynamoDB client instance
  */
-import * as DynamoDB from 'aws-sdk/clients/dynamodb';
+import * as DynamoDB from 'aws-sdk/clients/dynamodb'
 import OfflineClient from './ddb_offline'
 const client =
   process.env.NODE_ENV === 'test'
     ? new OfflineClient()
-    : new DynamoDB.DocumentClient({ region: 'eu-central-1', convertEmptyValues: true })
+    : new DynamoDB.DocumentClient({
+        convertEmptyValues: true,
+        region: 'eu-central-1',
+      })
+
+/**
+ * Delete a single item by hash key.
+ */
+export type DeleteItemInput = DynamoDB.DocumentClient.DeleteItemInput
+export type DeleteItemOutput = DynamoDB.DocumentClient.DeleteItemOutput
+
+// core function promisified: Get a single item by hash key
+export async function remove(
+  params: DeleteItemInput
+): Promise<DeleteItemOutput> {
+  return client.delete(params).promise()
+}
+
+// convenience function: Get a single item by hash key
+export async function removeItem(
+  table: string,
+  key: string,
+  value: string
+): Promise<boolean> {
+  const params = {
+    Key: {
+      [key]: value,
+    },
+    TableName: table,
+  }
+  try {
+    await remove(params)
+    return true
+  } catch (error) {
+    return false
+  }
+}
 
 /**
  * Get a single item by hash key.

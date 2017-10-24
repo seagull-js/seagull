@@ -21,7 +21,6 @@ import field from './field'
  * to save objects into the database.
  */
 export default class Model {
-
   /**
    * static attributes for table metadata and settings
    */
@@ -43,10 +42,23 @@ export default class Model {
   }
 
   // Fetch an object from the database by id
-  static async find<T extends Model>(this: { new (): T }, id: string): Promise<T> {
+  static async find<T extends Model>(
+    this: { new (): T },
+    id: string
+  ): Promise<T> {
     const data = await DB.getItem(new this()._name, 'id', id)
-    const instance: T = Object.assign(new this(), data)
-    return instance
+    if (data && data.id) {
+      const instance: T = Object.assign(new this(), data)
+      return instance
+    } else {
+      return undefined
+    }
+  }
+
+  // Remove an object from the database by id
+  static async remove<T extends Model>(id: string): Promise<boolean> {
+    const instance = await this.find(id)
+    return instance ? instance.remove() : false
   }
 
   /**
@@ -91,7 +103,7 @@ export default class Model {
   }
 
   // advanced magic stuff to get the data fields of the object and its types (!)
-  get _interface(): {[field: string]: string} {
+  get _interface(): { [field: string]: string } {
     const result = {}
     for (const key of Object.keys(this)) {
       const type = Reflect.getMetadata('design:type', this, key)
@@ -102,15 +114,18 @@ export default class Model {
     return result
   }
 
+  // field names of derived models
+  get _ownFields(): string[] {
+    const whitelist = new Model()
+    return Object.keys(this._interface).filter(key => !(key in whitelist))
+  }
+
   // check if fields have wrong data types and return a list of wrong ones
   get _errors(): string[] {
     const itf = this._interface
-    return Object.keys(itf).map(key => {
-      if (key === 'id' || key === 'updatedAt' || key === 'createdAt') {
-        return false
-      }
-      return typeof this[key] !== itf[key] ? key : false
-    }).filter(key => key) as string[]
+    return this._ownFields
+      .map(key => (typeof this[key] !== itf[key] ? key : false))
+      .filter(key => key) as string[]
   }
 
   // shorthand helper for existing type errors on runtime
@@ -121,6 +136,14 @@ export default class Model {
   /**
    * public instance methods for model objects
    */
+
+  // remove the object from the database
+  async remove(): Promise<boolean> {
+    if (!this._id) {
+      return false
+    }
+    return DB.removeItem(this._name, 'id', this._id)
+  }
 
   // persist an object to the database, creating a new record or update existing
   async save(): Promise<this> {

@@ -5,6 +5,11 @@ import { filter, find, map, values } from 'lodash'
 /**
  * convenience type imports / aliases
  */
+export type DeleteItemInput = DynamoDB.DocumentClient.DeleteItemInput
+export type DeleteItemOutput = DynamoDB.DocumentClient.DeleteItemOutput
+export type DeleteItemCallback = (err: AWSError, data: DeleteItemOutput) => void
+export type DeleteItemResponse = Request<DeleteItemOutput, AWSError>
+
 export type GetItemInput = DynamoDB.DocumentClient.GetItemInput
 export type GetItemOutput = DynamoDB.DocumentClient.GetItemOutput
 export type GetItemCallback = (err: AWSError, data: GetItemOutput) => void
@@ -27,6 +32,16 @@ export default class DynamoDBClient {
   constructor() {
     // this.mockServerlessYaml()
     // this.seed()
+  }
+
+  delete(params: DeleteItemInput, cb?: DeleteItemCallback): DeleteItemResponse {
+    const table = this.getTable(params.TableName)
+    const key = Object.keys(params.Key)[0]
+    const value = params.Key[key]
+    const result = find(table, item => item[key] === value)
+    const newTable = filter(table, (item: any) => item._id !== value)
+    this.setTable(params.TableName, newTable)
+    return this.wrapResponse({ Item: result })
   }
 
   get(params: GetItemInput, cb?: GetItemCallback): GetItemResponse {
@@ -63,6 +78,10 @@ export default class DynamoDBClient {
       this.tables[name] = []
     }
     return this.tables[name]
+  }
+
+  private setTable(name: string, list: any): void {
+    this.tables[name] = list
   }
 
   private wrapResponse(input: any): any {

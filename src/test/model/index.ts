@@ -54,7 +54,8 @@ class ModelsTest {
     expect(todo._id).to.be.equal(_id)
   }
 
-  @test async 'models can check validity'() {
+  @test
+  async 'models can check validity'() {
     const todo = new Todo()
     expect(todo._isValid).to.be.equal(true)
     expect(todo._errors).to.have.length(0)
@@ -63,15 +64,36 @@ class ModelsTest {
     expect(todo._errors).to.contain('text')
   }
 
-  @test async 'find model by id works'() {
+  @test
+  async 'find model by id works'() {
     const original = await Todo.create({ done: false, text: 'stuff' })
     expect(original).to.be.an('object')
     const todo = await Todo.find(original._id)
     expect(todo).to.be.an('object')
     expect(todo._id).to.be.equal(original._id)
   }
+
+  @test
+  async 'can delete models interactively'() {
+    const instance = await Todo.create({ done: false, text: 'stuff' })
+    const id = instance._id
+    const status = await instance.remove()
+    expect(status).to.be.equal(true)
+    const search = await Todo.find(id)
+    expect(search).to.be.equal(undefined)
+  }
+
+  @test
+  async 'can delete models statically'() {
+    const instance = await Todo.create({ done: false, text: 'stuff' })
+    const id = instance._id
+    const status = await Todo.remove(id)
+    expect(status).to.be.equal(true)
+    const search = await Todo.find(id)
+    expect(search).to.be.equal(undefined)
+  }
 }
 
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise(resolve => setTimeout(resolve, ms))
 }
