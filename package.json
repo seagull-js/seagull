@@ -1,6 +1,6 @@
 {
   "name": "@seagull-js/seagull",
-  "version": "0.4.2",
+  "version": "0.4.4",
   "description": "TODO: impressive one-liner",
   "main": "dist/lib/index.js",
   "types": "dist/lib/index.d.ts",
@@ -50,6 +50,7 @@
     "@types/react-router": "^4.0.15",
     "@types/react-router-config": "^1.0.4",
     "@types/react-router-dom": "^4.0.8",
+    "aws-sdk": "^2.104.0",
     "chai": "^4.1.1",
     "mocha": "^3.5.0",
     "mocha-typescript": "^1.1.7",
@@ -61,7 +62,6 @@
     "typescript": "^2.5.2"
   },
   "dependencies": {
-    "aws-sdk": "^2.104.0",
     "dashify": "^0.2.2",
     "history": "^4.7.2",
     "lodash": "^4.17.4",
@@ -76,5 +76,8 @@
     "reflect-metadata": "^0.1.10",
     "shortid": "^2.2.8",
     "typestyle": "^1.4.0"
+  },
+  "peerDependencies": {
+    "aws-sdk": "^2.104.0"
   }
 }
