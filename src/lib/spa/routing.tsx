@@ -8,6 +8,7 @@ import { Route, Router, RouterProps, StaticRouter, StaticRouterProps, Switch } f
 import Request from '../api/request'
 import { history } from '../util'
 
+// static routing or dynamic
 declare type IRoutingConf =  { 
   appRouter: typeof Router,
   routerProps: RouterProps
@@ -16,7 +17,10 @@ declare type IRoutingConf =  {
   routerProps: StaticRouterProps
 }
 
+// loaded stores, minimial: routing
 declare type IStores = { routing: RouterStore } & {}
+// should be: an array of classes which implements Page
+// cant be expressed in typescript
 declare type IPages = Array<{default:any}>
 
 export default class Routing {
@@ -27,6 +31,7 @@ export default class Routing {
   constructor( isSSR = false, request?: Request ) {
     this.pages = this.loadPages()
     this.stores = this.loadStores()
+    // while ssr we use different routing classes
     this.routingConf = (isSSR && request) ? this.buildStaticRoutingConf(request) : this.buildBrowserRoutingConf() 
   }
 
@@ -38,8 +43,10 @@ export default class Routing {
             {map(this.pages, (page)=>{
               let path: string
               try {
+                // Page classes with injected stores
                 path = (new page.default.wrappedComponent()).path
               } catch (e) {
+                // raw page classes
                 path = (new page.default()).path
               }
               return (
@@ -72,10 +79,12 @@ export default class Routing {
 
   private loadPages(): IPages {
     try {
+      // paths for bundling after compile
       return bulk(__dirname, [
        '../../../../../../dist/frontend/pages/*.js',
        ])['..']['..']['..']['..']['..']['..'].dist.frontend.pages
     } catch (e) {
+      // paths for bundling and compiling together (tsify)
       return bulk(__dirname, [
        '../../../../../../frontend/pages/*.tsx',
        ])['..']['..']['..']['..']['..']['..'].frontend.pages
@@ -84,10 +93,12 @@ export default class Routing {
   private loadStores(): IStores {
     let rawStores = []
     try {
+      // paths for bundling after compile
       rawStores = bulk(__dirname, [
         '../../../../../../dist/frontend/stores/*.js',
       ])['..']['..']['..']['..']['..']['..'].dist.frontend.stores
     } catch (e) {
+      // paths for bundling and compiling together (tsify)
       rawStores = bulk(__dirname, [
        '../../../../../../frontend/stores/*.ts',
        ])['..']['..']['..']['..']['..']['..'].frontend.stores
