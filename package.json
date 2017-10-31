@@ -1,6 +1,6 @@
 {
   "name": "@seagull-js/seagull",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "description": "Featherweight Zero-Config Typesafe Isomorphic Cloud Framework",
   "main": "dist/lib/index.js",
   "types": "dist/lib/index.d.ts",
@@ -75,6 +75,12 @@
     "react-router-dom": "^4.2.2",
     "reflect-metadata": "^0.1.10",
     "shortid": "^2.2.8",
-    "typestyle": "^1.4.0"
+    "typestyle": "^1.4.0",
+    "brfs": "^1.4.3",
+    "bulk-require": "^1.0.1",
+    "bulkify": "^1.4.2"
+  },
+  "browserify": {
+    "transform": [ "bulkify", "brfs" ]
   }
 }
