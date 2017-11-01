@@ -1,7 +1,7 @@
 // library imports
 import * as bulk from 'bulk-require'
-import { keys, map, reduce } from 'lodash'
-import { Provider } from 'mobx-react'
+import { keys, map, reduce, without } from 'lodash'
+import { inject, observer, Provider } from 'mobx-react'
 import { RouterStore, syncHistoryWithStore } from 'mobx-react-router'
 import * as React from 'react'
 import { Route, Router, RouterProps, StaticRouter, StaticRouterProps, Switch } from 'react-router';
@@ -29,28 +29,23 @@ export default class Routing {
   private stores: IStores
 
   constructor( isSSR = false, request?: Request ) {
-    this.pages = this.loadPages()
     this.stores = this.loadStores()
+    this.pages = this.loadPages()
     // while ssr we use different routing classes
     this.routingConf = (isSSR && request) ? this.buildStaticRoutingConf(request) : this.buildBrowserRoutingConf() 
   }
 
   load() {
+    const storeKeys: string[] = without(keys(this.stores), 'routing')
     return (
       <Provider  { ...this.stores }>
         <this.routingConf.appRouter {...this.routingConf.routerProps}>
           <Switch>
             {map(this.pages, (page)=>{
-              let path: string
-              try {
-                // Page classes with injected stores
-                path = (new page.default.wrappedComponent()).path
-              } catch (e) {
-                // raw page classes
-                path = (new page.default()).path
-              }
+              const path: string = (new page.default()).path
+              const component = inject(...storeKeys)(observer(page.default))
               return (
-                <Route exact path={path} component={ page.default } key={path}/>
+                <Route exact path={path} component={ component } key={path}/>
               )
             })}
           </Switch>
