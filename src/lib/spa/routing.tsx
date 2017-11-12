@@ -95,8 +95,11 @@ export default class Routing {
     } catch (e) {
       // paths for bundling and compiling together (tsify)
       rawStores = bulk(__dirname, [
-       '../../../../../../frontend/stores/*.ts',
-       ])['..']['..']['..']['..']['..']['..'].frontend.stores
+        '../../../../../../frontend/stores/*.ts',
+      ])
+      if (rawStores){
+        rawStores = rawStores['..']['..']['..']['..']['..']['..'].frontend.stores
+      }
     }
     return reduce(keys(rawStores), (value, storeKey)=>{
       value[storeKey] = new rawStores[storeKey].default()
