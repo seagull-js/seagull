@@ -97,7 +97,7 @@ export default class Routing {
       rawStores = bulk(__dirname, [
         '../../../../../../frontend/stores/*.ts',
       ])
-      if (rawStores){
+      if (rawStores && keys(rawStores).length){
         rawStores = rawStores['..']['..']['..']['..']['..']['..'].frontend.stores
       }
     }
