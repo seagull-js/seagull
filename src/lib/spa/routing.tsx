@@ -73,33 +73,17 @@ export default class Routing {
   }
 
   private loadPages(): IPages {
-    try {
-      // paths for bundling after compile
-      return bulk(__dirname, [
-       '../../../../../../dist/frontend/pages/*.js',
-       ])['..']['..']['..']['..']['..']['..'].dist.frontend.pages
-    } catch (e) {
-      // paths for bundling and compiling together (tsify)
-      return bulk(__dirname, [
-       '../../../../../../frontend/pages/*.tsx',
-       ])['..']['..']['..']['..']['..']['..'].frontend.pages
-    }
+    // paths for bundling after compile
+    return bulk(__dirname, [
+      '../../../../../../dist/frontend/pages/*.js',
+      ])['..']['..']['..']['..']['..']['..'].dist.frontend.pages
   }
   private loadStores(): IStores {
     let rawStores = []
-    try {
-      // paths for bundling after compile
-      rawStores = bulk(__dirname, [
-        '../../../../../../dist/frontend/stores/*.js',
-      ])['..']['..']['..']['..']['..']['..'].dist.frontend.stores
-    } catch (e) {
-      // paths for bundling and compiling together (tsify)
-      rawStores = bulk(__dirname, [
-        '../../../../../../frontend/stores/*.ts',
-      ])
-      if (rawStores && keys(rawStores).length){
-        rawStores = rawStores['..']['..']['..']['..']['..']['..'].frontend.stores
-      }
+    // paths for bundling after compile
+    rawStores = bulk(__dirname, ['../../../../../../dist/frontend/stores/*.js'])
+    if (rawStores && keys(rawStores).length){
+      rawStores = rawStores['..']['..']['..']['..']['..']['..'].dist.frontend.stores
     }
     return reduce(keys(rawStores), (value, storeKey)=>{
       value[storeKey] = new rawStores[storeKey].default()
