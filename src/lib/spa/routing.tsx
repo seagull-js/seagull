@@ -73,17 +73,34 @@ export default class Routing {
   }
 
   private loadPages(): IPages {
-    // paths for bundling after compile
-    return bulk(__dirname, [
-      '../../../../../../dist/frontend/pages/*.js',
-      ])['..']['..']['..']['..']['..']['..'].dist.frontend.pages
+    try {
+      // paths for bundling after compile
+      return bulk(__dirname, [
+        '../../../../../../.seagull/dist/frontend/pages/*.js'
+       ])['..']['..']['..']['..']['..']['..']['.seagull'].dist.frontend.pages
+    } catch (e) {
+      // paths for bundling and compiling together (tsify)
+      return bulk(__dirname, [
+        '../../../../../../__tmp__/.seagull/dist/frontend/pages/*.js'
+       ])['..']['..']['..']['..']['..']['..'].__tmp__['.seagull'].dist.frontend.pages
+    }
   }
+
   private loadStores(): IStores {
     let rawStores = []
-    // paths for bundling after compile
-    rawStores = bulk(__dirname, ['../../../../../../dist/frontend/stores/*.js'])
-    if (rawStores && keys(rawStores).length){
-      rawStores = rawStores['..']['..']['..']['..']['..']['..'].dist.frontend.stores
+    try {
+      // paths for bundling after compile
+      rawStores = bulk(__dirname, [
+        '../../../../../../.seagull/dist/frontend/stores/*.js'
+      ])['..']['..']['..']['..']['..']['..']['.seagull'].dist.frontend.stores
+    } catch (e) {
+      // paths for bundling and compiling together (tsify)
+      rawStores = bulk(__dirname, [
+        '../../../../../../__tmp__/.seagull/dist/frontend/stores/*.js'
+      ])
+      if (rawStores && keys(rawStores).length){
+        rawStores = rawStores['..']['..']['..']['..']['..']['..'].__tmp__['.seagull'].dist.frontend.pages
+      }
     }
     return reduce(keys(rawStores), (value, storeKey)=>{
       value[storeKey] = new rawStores[storeKey].default()
