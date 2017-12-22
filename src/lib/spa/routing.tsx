@@ -1,7 +1,7 @@
 // library imports
 import * as bulk from 'bulk-require'
-import { keys, map, reduce } from 'lodash'
-import { Provider } from 'mobx-react'
+import { keys, map, reduce, without } from 'lodash'
+import { inject, observer, Provider } from 'mobx-react'
 import { RouterStore, syncHistoryWithStore } from 'mobx-react-router'
 import * as React from 'react'
 import { Route, Router, RouterProps, StaticRouter, StaticRouterProps, Switch } from 'react-router';
@@ -29,28 +29,23 @@ export default class Routing {
   private stores: IStores
 
   constructor( isSSR = false, request?: Request ) {
-    this.pages = this.loadPages()
     this.stores = this.loadStores()
+    this.pages = this.loadPages()
     // while ssr we use different routing classes
     this.routingConf = (isSSR && request) ? this.buildStaticRoutingConf(request) : this.buildBrowserRoutingConf() 
   }
 
   load() {
+    const storeKeys: string[] = without(keys(this.stores), 'routing')
     return (
       <Provider  { ...this.stores }>
         <this.routingConf.appRouter {...this.routingConf.routerProps}>
           <Switch>
             {map(this.pages, (page)=>{
-              let path: string
-              try {
-                // Page classes with injected stores
-                path = (new page.default.wrappedComponent()).path
-              } catch (e) {
-                // raw page classes
-                path = (new page.default()).path
-              }
+              const path: string = (new page.default()).path
+              const component = inject(...storeKeys)(observer(page.default))
               return (
-                <Route exact path={path} component={ page.default } key={path}/>
+                <Route exact path={path} component={ component } key={path}/>
               )
             })}
           </Switch>
@@ -81,27 +76,31 @@ export default class Routing {
     try {
       // paths for bundling after compile
       return bulk(__dirname, [
-       '../../../../../../dist/frontend/pages/*.js',
-       ])['..']['..']['..']['..']['..']['..'].dist.frontend.pages
+        '../../../../../../.seagull/dist/frontend/pages/*.js'
+       ])['..']['..']['..']['..']['..']['..']['.seagull'].dist.frontend.pages
     } catch (e) {
       // paths for bundling and compiling together (tsify)
       return bulk(__dirname, [
-       '../../../../../../frontend/pages/*.tsx',
-       ])['..']['..']['..']['..']['..']['..'].frontend.pages
+        '../../../../../../__tmp__/.seagull/dist/frontend/pages/*.js'
+       ])['..']['..']['..']['..']['..']['..'].__tmp__['.seagull'].dist.frontend.pages
     }
   }
+
   private loadStores(): IStores {
     let rawStores = []
     try {
       // paths for bundling after compile
       rawStores = bulk(__dirname, [
-        '../../../../../../dist/frontend/stores/*.js',
-      ])['..']['..']['..']['..']['..']['..'].dist.frontend.stores
+        '../../../../../../.seagull/dist/frontend/stores/*.js'
+      ])['..']['..']['..']['..']['..']['..']['.seagull'].dist.frontend.stores
     } catch (e) {
       // paths for bundling and compiling together (tsify)
       rawStores = bulk(__dirname, [
-       '../../../../../../frontend/stores/*.ts',
-       ])['..']['..']['..']['..']['..']['..'].frontend.stores
+        '../../../../../../__tmp__/.seagull/dist/frontend/stores/*.js'
+      ])
+      if (rawStores && keys(rawStores).length){
+        rawStores = rawStores['..']['..']['..']['..']['..']['..'].__tmp__['.seagull'].dist.frontend.pages
+      }
     }
     return reduce(keys(rawStores), (value, storeKey)=>{
       value[storeKey] = new rawStores[storeKey].default()

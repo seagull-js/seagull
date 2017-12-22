@@ -1,6 +1,6 @@
 {
     "name": "@seagull-js/seagull",
-    "version": "0.4.8",
+    "version": "0.5.1",
     "description": "Featherweight Zero-Config Typesafe Isomorphic Cloud Framework",
     "main": "dist/lib/index.js",
     "types": "dist/lib/index.d.ts",
@@ -39,17 +39,9 @@
     },
     "homepage": "https://github.com/seagull-js/seagull#readme",
     "devDependencies": {
-        "@types/aws-lambda": "0.0.16",
         "@types/chai": "^4.0.4",
-        "@types/history": "^4.6.0",
-        "@types/lodash": "^4.14.74",
         "@types/mocha": "^2.2.42",
         "@types/node": "^8.0.25",
-        "@types/react": "^16.0.18",
-        "@types/react-dom": "^16.0.2",
-        "@types/react-router": "^4.0.15",
-        "@types/react-router-config": "^1.0.4",
-        "@types/react-router-dom": "^4.0.8",
         "chai": "^4.1.1",
         "mocha": "^3.5.0",
         "mocha-typescript": "^1.1.7",
@@ -61,11 +53,15 @@
         "typescript": "^2.5.2"
     },
     "dependencies": {
-        "aws-lambda": "^0.1.2",
+        "@types/aws-lambda": "0.0.16",
+        "@types/history": "^4.6.0",
+        "@types/lodash": "^4.14.74",
+        "@types/react": "^16.0.18",
+        "@types/react-dom": "^16.0.2",
+        "@types/react-router": "^4.0.15",
+        "@types/react-router-config": "^1.0.4",
+        "@types/react-router-dom": "^4.0.8",
         "aws-sdk": "^2.104.0",
-        "brfs": "^1.4.3",
-        "bulk-require": "^1.0.1",
-        "bulkify": "^1.4.2",
         "dashify": "^0.2.2",
         "history": "^4.7.2",
         "lodash": "^4.17.4",
@@ -79,12 +75,12 @@
         "react-router-dom": "^4.2.2",
         "reflect-metadata": "^0.1.10",
         "shortid": "^2.2.8",
-        "typestyle": "^1.4.0"
+        "typestyle": "^1.4.0",
+        "brfs": "^1.4.3",
+        "bulk-require": "^1.0.1",
+        "bulkify": "^1.4.2"
     },
     "browserify": {
-        "transform": [
-            "bulkify",
-            "brfs"
-        ]
+        "transform": ["bulkify", "brfs"]
     }
 }
