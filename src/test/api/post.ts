@@ -8,7 +8,7 @@ class PostJsonApiHandlers {
   @test
   async 'simple text response works'() {
     const api = new ExampleAPI()
-    const payload = JSON.stringify({ name: 'Dude' })
+    const payload = { name: 'Dude' }
     const request = new Request('POST', '/save', {}, payload)
     const response = await api.handle(request)
     expect(response.statusCode).to.be.equal(200)
