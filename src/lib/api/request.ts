@@ -9,11 +9,10 @@ export interface IDict {
 
 export default class Request {
   static fromApiGateway(event: APIGatewayEvent): Request {
-    const method = event.httpMethod as HttpMethod
+    const method = (event.httpMethod as HttpMethod) || 'GET'
     const { pathParameters, queryStringParameters } = event
     const params = merge({}, pathParameters, queryStringParameters)
     const path = event.path
-
     if (method === 'POST') {
       const ct = event.headers['content-type']
       if (ct === 'application/x-www-form-urlencoded') {
