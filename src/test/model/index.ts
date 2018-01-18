@@ -3,7 +3,7 @@ import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import Model from '../../lib/model/'
 import Todo from './example/todo'
 
-@suite.only('Models work')
+@suite('Models work')
 class ModelsTest {
   @test
   async 'models have inferrable names and are dasherized'() {
