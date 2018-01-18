@@ -8,8 +8,8 @@ const client =
     ? new OfflineClient()
     : new DynamoDB.DocumentClient({
         convertEmptyValues: true,
-        region: 'eu-central-1'
-      });
+        region: 'eu-central-1',
+      })
 
 /**
  * Delete a single item by hash key.
