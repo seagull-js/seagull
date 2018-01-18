@@ -4,12 +4,12 @@
 import * as DynamoDB from 'aws-sdk/clients/dynamodb'
 import OfflineClient from './ddb_offline'
 const client =
-  process.env.NODE_ENV === 'test'
+  process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'dev'
     ? new OfflineClient()
     : new DynamoDB.DocumentClient({
         convertEmptyValues: true,
-        region: 'eu-central-1',
-      })
+        region: 'eu-central-1'
+      });
 
 /**
  * Delete a single item by hash key.
