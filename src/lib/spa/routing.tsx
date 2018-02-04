@@ -1,5 +1,4 @@
 // library imports
-import * as bulk from 'bulk-require'
 import { keys, map, reduce, without } from 'lodash'
 import { inject, observer, Provider } from 'mobx-react'
 import { RouterStore, syncHistoryWithStore } from 'mobx-react-router'
@@ -75,14 +74,10 @@ export default class Routing {
   private loadPages(): IPages {
     try {
       // paths for bundling after compile
-      return bulk(__dirname, [
-        '../../../../../../.seagull/dist/frontend/pages/*.js'
-       ])['..']['..']['..']['..']['..']['..']['.seagull'].dist.frontend.pages
+      return require('../../../../../../.seagull/dist/frontend/index.js').pages
     } catch (e) {
-      // paths for bundling and compiling together (tsify)
-      return bulk(__dirname, [
-        '../../../../../../__tmp__/.seagull/dist/frontend/pages/*.js'
-       ])['..']['..']['..']['..']['..']['..'].__tmp__['.seagull'].dist.frontend.pages
+      // paths for faster testing (symlinked node_modules)
+      return require('../../../../../../__tmp__/.seagull/dist/frontend/index.js').pages
     }
   }
 
@@ -90,17 +85,10 @@ export default class Routing {
     let rawStores = []
     try {
       // paths for bundling after compile
-      rawStores = bulk(__dirname, [
-        '../../../../../../.seagull/dist/frontend/stores/*.js'
-      ])['..']['..']['..']['..']['..']['..']['.seagull'].dist.frontend.stores
+      rawStores = require('../../../../../../.seagull/dist/frontend/index.js').stores
     } catch (e) {
-      // paths for bundling and compiling together (tsify)
-      rawStores = bulk(__dirname, [
-        '../../../../../../__tmp__/.seagull/dist/frontend/stores/*.js'
-      ])
-      if (rawStores && keys(rawStores).length){
-        rawStores = rawStores['..']['..']['..']['..']['..']['..'].__tmp__['.seagull'].dist.frontend.pages
-      }
+      // paths for faster testing (symlinked node_modules)
+      rawStores = require('../../../../../../__tmp__/.seagull/dist/frontend/index.js').stores
     }
     return reduce(keys(rawStores), (value, storeKey)=>{
       value[storeKey] = new rawStores[storeKey].default()
