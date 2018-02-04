@@ -25,6 +25,11 @@ export type QueryOutput = DynamoDB.DocumentClient.QueryOutput
 export type QueryCallback = (err: AWSError, data: QueryOutput) => void
 export type QueryResponse = Request<QueryOutput, AWSError>
 
+export type ScanInput = DynamoDB.DocumentClient.ScanInput
+export type ScanOutput = DynamoDB.DocumentClient.ScanOutput
+export type ScanCallback = (err: AWSError, data: ScanOutput) => void
+export type ScanResponse = Request<ScanOutput, AWSError>
+
 // local wrapper for testing
 export default class DynamoDBClient {
   private tables: { [tableName: string]: any[] } = {}
@@ -67,6 +72,11 @@ export default class DynamoDBClient {
     const value = params.ExpressionAttributeValues[valueName]
     const result = filter(table, item => item[key] === value)
     return this.wrapResponse({ Items: result })
+  }
+
+  scan(params: ScanInput, cb?: ScanCallback): ScanResponse {
+    const table = this.getTable(params.TableName)
+    return this.wrapResponse({ Items: table })
   }
 
   /**

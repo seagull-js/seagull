@@ -92,6 +92,27 @@ class ModelsTest {
     const search = await Todo.find(id)
     expect(search).to.be.equal(undefined)
   }
+
+  @test
+  async 'can return all items'() {
+    await Todo.create({ done: false, text: 'stuff1' })
+    await Todo.create({ done: false, text: 'stuff2' })
+    await Todo.create({ done: false, text: 'stuff3' })
+    const list = await Todo.all()
+    expect(list).to.be.an('array')
+    expect(list[0]).to.be.an('object')
+    expect(list[0]).to.be.instanceOf(Todo)
+    expect(list.length).to.be.above(2)
+  }
+
+  @test
+  async 'can remove all items'() {
+    const originalList = await Todo.all()
+    expect(originalList.length).to.be.above(0) // from previous tests
+    await Todo.clear()
+    const newList = await Todo.all()
+    expect(newList.length).to.be.equal(0)
+  }
 }
 
 function sleep(ms) {

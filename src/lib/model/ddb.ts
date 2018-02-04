@@ -122,3 +122,21 @@ export async function queryItems(
   const result = await query(params)
   return result.Items
 }
+
+/**
+ * Scan a table
+ */
+export type ScanInput = DynamoDB.DocumentClient.ScanInput
+export type ScanOutput = DynamoDB.DocumentClient.ScanOutput
+
+// core function promisified: scan a complete table and return all items
+export async function scan(params: ScanInput): Promise<ScanOutput> {
+  return client.scan(params).promise()
+}
+
+// convenience function: get all items in table
+export async function scanItems(table: string): Promise<any> {
+  const params: ScanInput = { TableName: table }
+  const result = await scan(params)
+  return result.Items
+}

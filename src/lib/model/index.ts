@@ -35,6 +35,21 @@ export default class Model {
    * static methods for managing model objects ("CRUD")
    */
 
+  // return a list of all objects in the database table
+  static async all<T extends Model>(this: { new (): T }): Promise<T[]> {
+    const data = await DB.scanItems(new this()._name)
+    return data.map(item => Object.assign(new this(), item))
+  }
+
+  // remove ALL objects in the database table, returns number of removed items
+  static async clear<T extends Model>(): Promise<number> {
+    const all = await this.all()
+    for (const item of all) {
+      await item.remove()
+    }
+    return all.length
+  }
+
   // directly create a new object from parameters, save it and then return it
   static async create<T extends Model>(this: { new (): T }, data): Promise<T> {
     const instance: T = Object.assign(new this(), data)
