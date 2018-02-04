@@ -100,7 +100,10 @@ export default class API {
     // show 500 error message
   }
 
-  missing(message: string): void {
-    // show 404 error page
+  // show 404 error page
+  missing(message: string, permanent: boolean = false): Response {
+    const headers = { 'Content-Type': 'text/html; charset=utf-8' }
+    const code = permanent ? 410 : 404
+    return new Response(code, message, headers)
   }
 }
