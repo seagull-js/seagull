@@ -89,11 +89,8 @@ export default class API {
         <p>This page has moved to <a href="${url}">${url}/</a>.</p>
       </body>
     </html>`
-    if (permanent) {
-      return new Response(301, data, headers)
-    } else {
-      return new Response(302, data, headers)
-    }
+    const code = permanent ? 301 : 302
+    return new Response(code, data, headers)
   }
 
   error(message: string): void {
