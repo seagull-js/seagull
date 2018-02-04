@@ -64,8 +64,8 @@ export default class API {
     return new Response(200, body, headers)
   }
 
+  // send response as HTML
   html(data: string): Response {
-    // send reponse as HTML
     const headers = { 'Content-Type': 'text/html; charset=utf-8' }
     return new Response(200, data, headers)
   }
