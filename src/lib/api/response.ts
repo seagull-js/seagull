@@ -4,7 +4,6 @@
  */
 
 export default class Response {
-  isBase64Encodes: boolean = false // TODO: deliver static assets
   statusCode: number
   body: string
   headers: { [key: string]: string }
