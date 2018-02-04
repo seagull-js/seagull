@@ -75,8 +75,25 @@ export default class API {
     return new Response(200, data, headers)
   }
 
-  redirect(url: string): void {
-    // redirect to target url
+  redirect(url: string, permanent: boolean = true): Response {
+    const headers = {
+      'Content-Type': 'text/html; charset=utf-8',
+      Location: url,
+    }
+    const data = `<html>
+      <head>
+        <title>Moved</title>
+      </head>
+      <body>
+        <h1>Moved</h1>
+        <p>This page has moved to <a href="${url}">${url}/</a>.</p>
+      </body>
+    </html>`
+    if (permanent) {
+      return new Response(301, data, headers)
+    } else {
+      return new Response(302, data, headers)
+    }
   }
 
   error(message: string): void {
