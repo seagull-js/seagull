@@ -93,8 +93,9 @@ export default class API {
     return new Response(code, data, headers)
   }
 
-  error(message: string): void {
-    // show 500 error message
+  error(message: string = 'internal server error'): Response {
+    const headers = { 'Content-Type': 'text/html; charset=utf-8' }
+    return new Response(500, message, headers)
   }
 
   // show 404 error page
