@@ -73,23 +73,34 @@ export default class Routing {
 
   private loadPages(): IPages {
     try {
-      // paths for bundling after compile
-      return require('../../../../../../.seagull/dist/frontend/index.js').pages
-    } catch (e) {
-      // paths for faster testing (symlinked node_modules)
-      return require('../../../../../../__tmp__/.seagull/dist/frontend/index.js').pages
+        // paths for aws lambda
+        return require('/var/task/dist/frontend/index.js').pages
+    } catch(e) {
+      try {
+        // paths for bundling after compile
+        return require('../../../../../../.seagull/dist/frontend/index.js').pages
+      } catch (e) {
+        // paths for faster testing (symlinked node_modules)
+        return require('../../../../../../__tmp__/.seagull/dist/frontend/index.js').pages
+      }
     }
   }
 
   private loadStores(): IStores {
     let rawStores = []
     try {
-      // paths for bundling after compile
-      rawStores = require('../../../../../../.seagull/dist/frontend/index.js').stores
-    } catch (e) {
-      // paths for faster testing (symlinked node_modules)
-      rawStores = require('../../../../../../__tmp__/.seagull/dist/frontend/index.js').stores
+      // paths for aws lambda
+      rawStores = require('/var/task/dist/frontend/index.js').stores
+    } catch(e) {
+      try {
+        // paths for bundling after compile
+        rawStores = require('../../../../../../.seagull/dist/frontend/index.js').stores
+      } catch (e) {
+        // paths for faster testing (symlinked node_modules)
+        rawStores = require('../../../../../../__tmp__/.seagull/dist/frontend/index.js').stores
+      }
     }
+
     return reduce(keys(rawStores), (value, storeKey)=>{
       value[storeKey] = new rawStores[storeKey].default()
       return value
