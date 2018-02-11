@@ -3,9 +3,12 @@ import { keys, map, reduce, without } from 'lodash'
 import { inject, observer, Provider } from 'mobx-react'
 import { RouterStore, syncHistoryWithStore } from 'mobx-react-router'
 import * as React from 'react'
-import { Route, Router, RouterProps, StaticRouter, StaticRouterProps, Switch } from 'react-router';
+import { matchPath, Route, Router, RouterProps, StaticRouter, StaticRouterProps, Switch } from 'react-router';
+import { matchRoutes } from 'react-router-config'
+import { RouteProps } from 'react-router-dom'
 import Request from '../api/request'
 import { history } from '../util'
+import Page from './page'
 
 // static routing or dynamic
 declare type IRoutingConf =  { 
@@ -20,12 +23,13 @@ declare type IRoutingConf =  {
 declare type IStores = { routing: RouterStore } & {}
 // should be: an array of classes which implements Page
 // cant be expressed in typescript
-declare type IPages = Array<{default:any}>
+declare type IPages<S, P> = Array<{default:{new():Page<S, P>}}>
 
 export default class Routing {
   private routingConf : IRoutingConf
-  private pages: IPages
+  private pages: IPages<any,any>
   private stores: IStores
+  private request
 
   constructor( isSSR = false, request?: Request ) {
     this.stores = this.loadStores()
@@ -34,23 +38,43 @@ export default class Routing {
     this.routingConf = (isSSR && request) ? this.buildStaticRoutingConf(request) : this.buildBrowserRoutingConf() 
   }
 
+  initialMatchedPage() {
+    const requestPath = (this.routingConf.routerProps as StaticRouterProps).location as string
+    const matched = matchRoutes(this.decoratedPages(), requestPath)
+    if (matched.length) {
+      const page: {new():Page<any, any>} = (matched[0] as any).route.component.wrappedComponent
+      return new page()
+    }
+    return null
+  }
+
   load() {
-    const storeKeys: string[] = without(keys(this.stores), 'routing')
+    const pages = this.decoratedPages()
     return (
       <Provider  { ...this.stores }>
         <this.routingConf.appRouter {...this.routingConf.routerProps}>
           <Switch>
-            {map(this.pages, (page)=>{
-              const path: string = (new page.default()).path
-              const component = inject(...storeKeys)(observer(page.default))
-              return (
-                <Route exact path={path} component={ component } key={path}/>
-              )
-            })}
+            { pages.map( page => React.createElement(Route, page))}
           </Switch>
         </this.routingConf.appRouter>
       </Provider>
     )
+  }
+
+  private decoratedPages() {
+    const storeKeys: string[] = without(keys(this.stores), 'routing')
+
+    return map(this.pages, (page):RouteProps=>{
+      const path: string = (new page.default()).path
+      const component = inject(...storeKeys)(observer(page.default))
+      const routeProp = {
+        component,
+        exact: true,
+        key: path,
+        path,
+      }
+      return routeProp
+    })
   }
 
   private buildStaticRoutingConf(request: Request): IRoutingConf {
@@ -71,7 +95,7 @@ export default class Routing {
     }
   }
 
-  private loadPages(): IPages {
+  private loadPages(): IPages<any, any> {
     try {
         // paths for aws lambda
         return require('/var/task/dist/frontend/index.js').pages
