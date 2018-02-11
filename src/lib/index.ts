@@ -15,6 +15,7 @@ export { default as Model } from './model/index'
 export { default as field } from './model/field'
 export { default as Routing } from './spa/routing'
 export { default as Page } from './spa/page'
+export { default as Favicons } from './spa/components/favicon'
 // Frontend building blocks
 
 // Utility & Helpers
