@@ -1,6 +1,6 @@
 {
     "name": "@seagull-js/seagull",
-    "version": "0.5.8",
+    "version": "0.5.9",
     "description": "Featherweight Zero-Config Typesafe Isomorphic Cloud Framework",
     "main": "dist/lib/index.js",
     "types": "dist/lib/index.d.ts",
