@@ -20,15 +20,16 @@ declare type IRoutingConf =  {
 }
 
 // loaded stores, minimial: routing
-declare type IStores = { routing: RouterStore } & {}
+export type IStores = { routing: RouterStore } & {}
 // should be: an array of classes which implements Page
 // cant be expressed in typescript
-declare type IPages<S, P> = Array<{default:{new():Page<S, P>}}>
+type IPages<S, P> = Array<{default:{new():Page<S, P>}}>
 
 export default class Routing {
+  stores: IStores
+  
   private routingConf : IRoutingConf
   private pages: IPages<any,any>
-  private stores: IStores
   private request
 
   constructor( isSSR = false, request?: Request ) {
@@ -40,10 +41,11 @@ export default class Routing {
 
   initialMatchedPage() {
     const requestPath = (this.routingConf.routerProps as StaticRouterProps).location as string
+    
     const matched = matchRoutes(this.decoratedPages(), requestPath)
     if (matched.length) {
-      const page: {new():Page<any, any>} = (matched[0] as any).route.component.wrappedComponent
-      return new page()
+      const page: {new(props:any):Page<any, any>} = (matched[0] as any).route.component.wrappedComponent
+      return new page(this.stores)
     }
     return null
   }
