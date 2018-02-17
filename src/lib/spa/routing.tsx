@@ -40,8 +40,10 @@ export default class Routing {
   }
 
   initialMatchedPage() {
-    const requestPath = (this.routingConf.routerProps as StaticRouterProps).location as string
-    
+    let requestPath = (this.routingConf.routerProps as StaticRouterProps).location as string
+    if (typeof window !== 'undefined') {
+      requestPath = window.location.pathname
+    }
     const matched = matchRoutes(this.decoratedPages(), requestPath)
     if (matched.length) {
       const page: {new(props:any):Page<any, any>} = (matched[0] as any).route.component.wrappedComponent
