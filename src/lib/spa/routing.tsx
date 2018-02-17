@@ -100,40 +100,25 @@ export default class Routing {
   }
 
   private loadPages(): IPages<any, any> {
-    try {
-        // paths for aws lambda
-        return require('/var/task/dist/frontend/index.js').pages
-    } catch(e) {
-      try {
-        // paths for bundling after compile
-        return require('../../../../../../.seagull/dist/frontend/index.js').pages
-      } catch (e) {
-        // paths for faster testing (symlinked node_modules)
-        return require('../../../../../../__tmp__/.seagull/dist/frontend/index.js').pages
-      }
-    }
+    return this.requireIndexByEnv().pages
   }
 
   private loadStores(): IStores {
-    let rawStores = []
-    try {
-      // paths for aws lambda
-      rawStores = require('/var/task/dist/frontend/index.js').stores
-    } catch(e) {
-      try {
-        // paths for bundling after compile
-        rawStores = require('../../../../../../.seagull/dist/frontend/index.js').stores
-      } catch (e) {
-        // paths for faster testing (symlinked node_modules)
-        rawStores = require('../../../../../../__tmp__/.seagull/dist/frontend/index.js').stores
-      }
-    }
-
+    const rawStores: any[] = this.requireIndexByEnv().stores
     return reduce(keys(rawStores), (value, storeKey)=>{
       value[storeKey] = new rawStores[storeKey].default()
       return value
     }, {
       routing: new RouterStore()
     })
+  }
+  private requireIndexByEnv() {
+    if (process && process.env && process.env.LAMBDA_TASK_ROOT && process.env.AWS_EXECUTION_ENV) {
+      return require('/var/task/dist/frontend/index.js')
+    }
+    if (process && process.env && process.env.NODE_ENV === 'test') {
+      return require('../../../../../../__tmp__/.seagull/dist/frontend/index.js')
+    }
+    return require('../../../../../../.seagull/dist/frontend/index.js')
   }
 }
