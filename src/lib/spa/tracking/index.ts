@@ -128,6 +128,7 @@ export default class Tracking {
     trackGA(name, data)
     const fullData: any = data || {}
     fullData.uuid = this.id
+    fullData.name = name
     this.post('/track', fullData) // DO NOT WAIT
   }
 
