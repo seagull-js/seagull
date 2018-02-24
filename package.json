@@ -15,7 +15,7 @@
         "build": "rm -rf dist && tsc",
         "pretest": "npm run build",
         "test": "NODE_ENV=test mocha --opts mocha.opts",
-        "watch": "NODE_ENV=test mocha-typescript-watch --opts mocha.opts"
+        "test:watch": "NODE_ENV=test mocha-typescript-watch --opts mocha.opts"
     },
     "repository": {
         "type": "git",
