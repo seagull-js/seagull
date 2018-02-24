@@ -1,9 +1,5 @@
 import { history } from '../../util'
-import trackGA, {
-  IEcommerceTracking as Data,
-  pageViewGA,
-  IEcommerceTracking,
-} from './ga'
+import trackGA, { IEcommerceTracking, pageViewGA } from './ga'
 import UUID from './uuid'
 
 /**
@@ -143,12 +139,12 @@ export default class Tracking {
    */
   private async post(path: string, data: any) {
     return fetch('path', {
-      method: 'POST',
+      body: JSON.stringify(data),
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      method: 'POST',
     })
   }
 }

@@ -20,11 +20,12 @@ function ga() {
 function sendEvent(name: string): void {
   try {
     ga()('send', {
-      hitType: 'event',
-      eventCategory: 'SeagullPirateMetrics',
       eventAction: name,
+      eventCategory: 'SeagullPirateMetrics',
+      hitType: 'event',
     })
   } catch (error) {
+    // tslint:disable-next-line
     console.warn('google analytics is blocked or disabled', error)
   }
 }
@@ -32,13 +33,14 @@ function sendEvent(name: string): void {
 function sendRevenueEventGA(name: string, data: IEcommerceTracking) {
   try {
     ga()('ecommerce:addTransaction', {
-      id: data.id, // Transaction ID. Required.
       affiliation: data.affiliation || '', // Affiliation or store name.
+      id: data.id, // Transaction ID. Required.
       revenue: (data.revenue || 0).toString(), // Grand Total.
       shipping: (data.shipping || 0).toString(), // Shipping.
       tax: (data.tax || 0).toString(), // Tax.
     })
   } catch (error) {
+    // tslint:disable-next-line
     console.warn('ga:ecommerce is blocked or disabled', error)
   }
 }
@@ -48,6 +50,7 @@ export function pageViewGA(urlPath) {
     ga()('set', 'page', urlPath)
     ga()('send', 'pageview')
   } catch (error) {
+    // tslint:disable-next-line
     console.warn('google analytics is blocked or disabled', error)
   }
 }
