@@ -138,7 +138,7 @@ export default class Tracking {
    * @param data payload, gets stringified automatically
    */
   private async post(path: string, data: any) {
-    return fetch('path', {
+    return fetch(path, {
       body: JSON.stringify(data),
       headers: {
         Accept: 'application/json',
