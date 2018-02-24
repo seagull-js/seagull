@@ -13,10 +13,12 @@ export { default as Response } from './api/response'
 export { default as API } from './api/index'
 export { default as Model } from './model/index'
 export { default as field } from './model/field'
+
+// Frontend building blocks
 export { default as Routing } from './spa/routing'
 export { default as Page } from './spa/page'
 export { default as Favicons } from './spa/components/favicon'
-// Frontend building blocks
+export { default as Tracking } from './spa/tracking'
 
 // Utility & Helpers
 export { isClient, isServer, history } from './util'
