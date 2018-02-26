@@ -1,4 +1,6 @@
 import { render } from 'react-dom'
+import {setStylesTarget} from 'typestyle'
+
 import Routing from './routing'
 import Tracking from './tracking'
 
@@ -10,6 +12,8 @@ async function fetchAndMount() {
     await page.componentDidMount()
   }
   render(appRouter.load(), document.getElementById('root'))
+  setStylesTarget(document.getElementById('styles-target'))
+  // tslint:disable-next-line:no-unused-expression
   new Tracking()
 }
 
