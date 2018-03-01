@@ -20,8 +20,9 @@ export { default as Page } from './spa/page'
 export { default as Favicons } from './spa/components/favicon'
 export { default as Head } from './spa/components/head'
 export { default as Body } from './spa/components/body'
+export { default as Document } from './spa/components/document'
 export { default as SEO } from './spa/components/seo'
 export { default as Tracking } from './spa/tracking'
 
 // Utility & Helpers
-export { isClient, isServer, history } from './util'
+export { isClient, isServer, history, loadConfig } from './util'
