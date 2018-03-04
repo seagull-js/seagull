@@ -6,3 +6,16 @@ export const isServer = !hasWindow
 // history (context-dependant)
 import { createBrowserHistory, createMemoryHistory, History } from 'history'
 export const history = isClient ? createBrowserHistory() : createMemoryHistory()
+export const deepFreeze = function deepFreezeFunction(obj) {
+  const propNames = Object.getOwnPropertyNames(obj)
+
+  propNames.forEach(name => {
+    const prop = obj[name]
+
+    if (typeof prop === 'object' && prop !== null) {
+      deepFreezeFunction(prop)
+    }
+  })
+
+  return Object.freeze(obj)
+}

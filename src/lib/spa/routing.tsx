@@ -1,5 +1,5 @@
 // library imports
-import { keys, map, reduce, without } from 'lodash'
+import { cloneDeep, keys, map, reduce, without } from 'lodash'
 import { inject, observer, Provider } from 'mobx-react'
 import { RouterStore, syncHistoryWithStore } from 'mobx-react-router'
 import * as React from 'react'
@@ -7,7 +7,7 @@ import { matchPath, Route, Router, RouterProps, StaticRouter, StaticRouterProps,
 import { matchRoutes } from 'react-router-config'
 import { RouteProps } from 'react-router-dom'
 import Request from '../api/request'
-import { history } from '../util'
+import { deepFreeze, history } from '../util'
 import Page from './page'
 
 // static routing or dynamic
@@ -47,7 +47,12 @@ export default class Routing {
     const matched = matchRoutes(this.decoratedPages(), requestPath)
     if (matched.length) {
       const page: {new(props:any):Page<any, any>} = (matched[0] as any).route.component.wrappedComponent
-      return new page(this.stores)
+      return new page({
+        history,
+        location: deepFreeze(cloneDeep(history.location)),
+        match: matched[0].match,
+        ...this.stores
+      })
     }
     return null
   }
