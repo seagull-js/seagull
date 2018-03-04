@@ -3,7 +3,8 @@ import { skip, slow, suite, test, timeout } from 'mocha-typescript';
 import * as React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import helmet from 'react-helmet';
-import { Body, Head } from '../../lib/index';
+import Body from '../../lib/spa/components/body';
+import Head from '../../lib/spa/components/head';
 import ExampleMetagPage from './example/example_meta_page';
 import ExamplePage from './example/example_page';
 
@@ -25,7 +26,7 @@ class FrontendPages {
     const content = renderToStaticMarkup(<ExampleMetagPage />);
     const html = renderToStaticMarkup(
       <html>
-        <Head/>
+        <Head />
         <Body renderedContent={content}>
           <script src='/assets/bundle.js'></script>
         </Body>

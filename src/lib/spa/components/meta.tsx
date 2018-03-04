@@ -2,7 +2,7 @@ import { cond, defaultTo, noop } from 'lodash'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
 
-export interface ISEO {
+export interface IMeta {
   description?: string,
   language?: string,
   title: string,
@@ -10,10 +10,11 @@ export interface ISEO {
   url?:string,
   imageUrl?: string,
   // TODO
-  schemaObject?: object
+  schemaObject?: object,
+  children?: any
 }
 
-export default (props:ISEO) => {
+export default (props:IMeta) => {
   const linkTags = []
   const metaTags: any[] = [
     { charSet: 'utf-8' }
@@ -52,7 +53,7 @@ export default (props:ISEO) => {
       title= { props.title }
       link={linkTags}
       meta={metaTags}
-    >
+    > {props.children}
     </Helmet>
   )
 }
