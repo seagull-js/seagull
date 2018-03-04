@@ -1,3 +1,4 @@
+import { merge } from 'lodash'
 import { history } from '../../util'
 import trackGA, { IEcommerceTracking, pageViewGA } from './ga'
 import UUID from './uuid'
@@ -126,9 +127,7 @@ export default class Tracking {
    */
   private sendEvent(name: pirateEvent, data?: any): void {
     trackGA(name, data)
-    const fullData: any = data || {}
-    fullData.uuid = this.id
-    fullData.name = name
+    const fullData = merge({}, data, { name, uuid: this.id })
     this.post('/track', fullData) // DO NOT WAIT
   }
 
