@@ -12,7 +12,7 @@ class DocumentTest {
     process.env.config_mock = JSON.stringify({})
     const content = renderToStaticMarkup(<Document content={'here yo are'} />)
     expect(content).to.be.equal(
-      '<html><head><title data-react-helmet="true"></title><style id="styles-target"></style></head><body><div id="root">here yo are</div><script src="/assets/bundle.js"></script></body></html>'
+      '<html><head><title data-react-helmet="true"></title><style id="styles-target"></style><link rel="icon" href="/favicon.ico"/></head><body><div id="root">here yo are</div><script src="/assets/bundle.js"></script></body></html>'
     )
   }
   @test

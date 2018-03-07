@@ -2,7 +2,7 @@ import * as React from 'react'
 import helmet from 'react-helmet'
 import { getStyles } from 'typestyle'
 
-export default ({ children }:{children?}) => {
+export default ({ children }: { children? }) => {
   const helmetData = helmet.rewind()
   return (
     <head>
@@ -13,7 +13,8 @@ export default ({ children }:{children?}) => {
       {helmetData.script.toComponent()}
       {helmetData.style.toComponent()}
       {children}
-      <style id='styles-target'>{getStyles()}</style>
+      <style id="styles-target">{getStyles()}</style>
+      <link rel="icon" href="/favicon.ico" />
     </head>
   )
 }
