@@ -13,6 +13,7 @@ export { default as Response } from './api/response'
 export { default as API } from './api/index'
 export { default as Model } from './model/index'
 export { default as field } from './model/field'
+export * from './shrimp'
 
 // Frontend building blocks
 export { default as Routing } from './spa/routing'
