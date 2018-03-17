@@ -1,6 +1,6 @@
 {
     "name": "@seagull/core",
-    "version": "0.8.6",
+    "version": "0.9.0",
     "description": "Featherweight Zero-Config Typesafe Isomorphic Cloud Framework",
     "main": "dist/lib/index.js",
     "types": "dist/lib/index.d.ts",
@@ -16,7 +16,8 @@
         "pretest": "npm run build",
         "test": "NODE_ENV=test mocha --opts mocha.opts",
         "test:watch": "NODE_ENV=test mocha-typescript-watch --opts mocha.opts",
-        "docs": "typedoc --mode file --excludeExternals --excludePrivate --out docs src/lib"
+        "docs": "typedoc --mode file --excludeExternals --excludePrivate --out docs src/lib",
+        "release": "npm run test && npm run docs && npm publish"
     },
     "repository": {
         "type": "git",
