@@ -40,7 +40,7 @@ class Test {
   async 'has inferrable name and is dasherized'() {
     // tslint:disable-next-line:max-classes-per-file
     const cs = new class CustomShrimp extends Shrimp {}()
-    cs._name.should.be.equal('custom-shrimp')
+    cs._domain.should.be.equal('seagullcoreCustomShrimp')
   }
 
   @test

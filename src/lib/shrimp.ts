@@ -1,7 +1,6 @@
 // external libraries
 import { PackageJson } from '@seagull/package-config'
 import { SimpleDB } from 'aws-sdk'
-import * as dashify from 'dashify'
 import { fromPairs, isArray, pick } from 'lodash'
 import 'reflect-metadata'
 import { generate as newID } from 'shortid'
@@ -92,7 +91,7 @@ export class Shrimp {
    */
   static async All<T extends Shrimp>(this: ISelf<T>): Promise<T[]> {
     const DB = new SimpleDB({ region })
-    const DomainName = `${pkg.name}-${new this()._name}`
+    const DomainName = new this()._domain
     const SelectExpression = `select * from '${DomainName}'`
     const data = await DB.select({ SelectExpression }).promise()
     return data.Items.map(item => Shrimp._deserialize(this, item.Attributes))
@@ -311,14 +310,19 @@ export class Shrimp {
   /**
    * Accessor for the machine-usable and human-readable name of the shrimp at
    * runtime, which is used for internal things like database table names.
-   *
-   * The string gets converted from the actual class name at runtime,
-   * transforming the camelCase identifier into a
-   * [dashified](https://www.npmjs.com/package/dashify) one.
    */
   @Memoize()
   get _name(): string {
-    return dashify(this.constructor.name)
+    return this.constructor.name
+  }
+
+  /**
+   * Accessor for the machine-usable and human-readable domain name for
+   * SimpleDB. This will be used for AWS CloudFormation.
+   */
+  @Memoize()
+  get _domain(): string {
+    return `${pkg.name.replace(/\W/g, '')}${this.constructor.name}`
   }
 
   /**
