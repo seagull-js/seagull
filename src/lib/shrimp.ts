@@ -1,11 +1,12 @@
 // external libraries
 import { PackageJson } from '@seagull/package-config'
 import { SimpleDB } from 'aws-sdk'
-import { fromPairs, isArray, pick } from 'lodash'
+import { find, fromPairs, isArray, pick } from 'lodash'
 import 'reflect-metadata'
 import { generate as newID } from 'shortid'
 import { Memoize } from 'typescript-memoize'
 import field from './model/field'
+import { Domain } from 'domain'
 
 // usage guide:
 // https://code.tutsplus.com/tutorials/building-a-rest-api-with-aws-simpledb-and-nodejs--cms-26086
@@ -91,8 +92,8 @@ export class Shrimp {
    */
   static async All<T extends Shrimp>(this: ISelf<T>): Promise<T[]> {
     const DB = new SimpleDB({ region })
-    const DomainName = new this()._domain
-    const SelectExpression = `select * from '${DomainName}'`
+    const DomainName = await new this()._domain()
+    const SelectExpression = `select * from \`${DomainName}\``
     const data = await DB.select({ SelectExpression }).promise()
     return data.Items.map(item => Shrimp._deserialize(this, item.Attributes))
   }
@@ -170,7 +171,7 @@ export class Shrimp {
    */
   static async Find<T extends Shrimp>(this: ISelf<T>, id: string): Promise<T> {
     const DB = new SimpleDB({ region })
-    const DomainName = `${pkg.name}-${new this()._name}`
+    const DomainName = await new this()._domain()
     const data = await DB.getAttributes({ DomainName, ItemName: id }).promise()
     if (data && data.Attributes) {
       return Shrimp._deserialize(this, data.Attributes)
@@ -317,12 +318,19 @@ export class Shrimp {
   }
 
   /**
-   * Accessor for the machine-usable and human-readable domain name for
-   * SimpleDB. This will be used for AWS CloudFormation.
+   * Method for the machine-usable and human-readable domain name for
+   * SimpleDB. This will be used for AWS CloudFormation. It is necessary to
+   * request the list of domains at runtime and pick the correct one, since
+   * CloudFormation will append a random hash to the domain name on deployment.
    */
   @Memoize()
-  get _domain(): string {
-    return `${pkg.name.replace(/\W/g, '')}${this.constructor.name}`
+  async _domain(): Promise<string> {
+    const DB = new SimpleDB({ region })
+    const { DomainNames } = await DB.listDomains().promise()
+    return find(DomainNames, domainName => {
+      const [appName, stageName, shrimpName, hash] = domainName.split('-')
+      return appName === pkg.name && shrimpName === this._name
+    })
   }
 
   /**
@@ -389,7 +397,7 @@ export class Shrimp {
       return false
     }
     const DB = new SimpleDB({ region })
-    const DomainName = `${pkg.name}-${this._name}`
+    const DomainName = await this._domain()
     await DB.deleteAttributes({ DomainName, ItemName: this._id }).promise()
     return true
   }
@@ -431,7 +439,7 @@ export class Shrimp {
       this.createdAt = new Date().getTime()
     }
     this.updatedAt = new Date().getTime()
-    const DomainName = `${pkg.name}-${this._name}`
+    const DomainName = await this._domain()
     const ItemName = this._id
     const Attributes = Shrimp._serialize(this)
     const DB = new SimpleDB({ region })

@@ -1,14 +1,17 @@
+import { PackageJson } from '@seagull/package-config'
 import * as AWSMock from 'aws-sdk-mock'
 import 'chai/register-should'
 import { find } from 'lodash'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import { field, Shrimp } from '../lib'
 
+const pkg = new PackageJson()
+
 class Todo extends Shrimp {
   @field text: string = ''
   @field done: boolean = false
 }
-
+// tslint:disable-next-line:max-classes-per-file
 @suite.only('Shrimp')
 class Test {
   db: any
@@ -30,17 +33,14 @@ class Test {
       delete this.db[ItemName]
       cb(null)
     })
+    AWSMock.mock('SimpleDB', 'listDomains', cb => {
+      const list = [`${pkg.name}-dev-Shrimp-123`, `${pkg.name}-dev-Todo-123`]
+      cb(null, { DomainNames: list })
+    })
   }
 
   after() {
     AWSMock.restore('SimpleDB')
-  }
-
-  @test
-  async 'has inferrable name and is dasherized'() {
-    // tslint:disable-next-line:max-classes-per-file
-    const cs = new class CustomShrimp extends Shrimp {}()
-    cs._domain.should.be.equal('seagullcoreCustomShrimp')
   }
 
   @test
@@ -51,6 +51,13 @@ class Test {
     const todo = new Todo()
     todo.should.be.an('object')
     todo.should.be.instanceOf(Todo)
+  }
+
+  @test
+  async 'can get own SimpleDB domain name'() {
+    const shrimp = new Shrimp()
+    const domain = await shrimp._domain()
+    domain.should.be.equal('@seagull/core-dev-Shrimp-123')
   }
 
   @test
