@@ -12,7 +12,7 @@ class Todo extends Shrimp {
   @field done: boolean = false
 }
 // tslint:disable-next-line:max-classes-per-file
-@suite.only('Shrimp')
+@suite('Shrimp')
 class Test {
   db: any
 

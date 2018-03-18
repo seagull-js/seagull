@@ -1,12 +1,12 @@
 // external libraries
 import { PackageJson } from '@seagull/package-config'
 import { SimpleDB } from 'aws-sdk'
+import { Domain } from 'domain'
 import { find, fromPairs, isArray, pick } from 'lodash'
 import 'reflect-metadata'
 import { generate as newID } from 'shortid'
 import { Memoize } from 'typescript-memoize'
 import field from './model/field'
-import { Domain } from 'domain'
 
 // usage guide:
 // https://code.tutsplus.com/tutorials/building-a-rest-api-with-aws-simpledb-and-nodejs--cms-26086
