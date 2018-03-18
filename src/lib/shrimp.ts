@@ -95,7 +95,8 @@ export class Shrimp {
     const DomainName = await new this()._domain()
     const SelectExpression = `select * from \`${DomainName}\``
     const data = await DB.select({ SelectExpression }).promise()
-    return data.Items.map(item => Shrimp._deserialize(this, item.Attributes))
+    const items = data.Items || []
+    return items.map(item => Shrimp._deserialize(this, item.Attributes))
   }
 
   /**
