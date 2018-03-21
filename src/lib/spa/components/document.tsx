@@ -9,7 +9,7 @@ export default ({ content }) => {
   return (
     <html>
       <Head>
-        {config.hasAnalytics() ? (
+        {config && config.hasAnalytics() ? (
           <script>{`window.analytics = ${config.hasAnalytics()};`}</script>
         ) : (
           <></>

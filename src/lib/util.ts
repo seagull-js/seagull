@@ -24,7 +24,9 @@ export const deepFreeze = function deepFreezeFunction(obj) {
 
 export const loadConfig = (): Config => {
   try {
-    return new PackageJson().config
+    if (require('fs') && require('fs').readFileSync) {
+      return new PackageJson().config
+    }
   } catch (error) {
     // do nothing
   }
