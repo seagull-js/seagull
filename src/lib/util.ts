@@ -22,4 +22,10 @@ export const deepFreeze = function deepFreezeFunction(obj) {
   return Object.freeze(obj)
 }
 
-export const loadConfig = (): Config => new PackageJson().config
+export const loadConfig = (): Config => {
+  try {
+    return new PackageJson().config
+  } catch (error) {
+    // do nothing
+  }
+}
