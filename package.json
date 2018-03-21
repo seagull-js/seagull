@@ -1,6 +1,6 @@
 {
     "name": "@seagull/core",
-    "version": "0.9.5",
+    "version": "0.9.6",
     "description": "Featherweight Zero-Config Typesafe Isomorphic Cloud Framework",
     "main": "dist/lib/index.js",
     "types": "dist/lib/index.d.ts",
@@ -44,6 +44,7 @@
         "@types/chai": "^4.1.2",
         "@types/mocha": "^2.2.48",
         "@types/node": "^8.0.25",
+        "aws-sdk": "^2.104.0",
         "chai": "^4.1.2",
         "mocha": "^5.0.4",
         "mocha-typescript": "^1.1.12",
@@ -56,7 +57,7 @@
         "typescript": "^2.7.2"
     },
     "dependencies": {
-        "@seagull/package-config": "^0.3.1",
+        "@seagull/package-config": "^0.3.2",
         "@types/aws-lambda": "0.0.16",
         "@types/history": "^4.6.0",
         "@types/lodash": "^4.14.74",
@@ -66,7 +67,6 @@
         "@types/react-router": "^4.0.22",
         "@types/react-router-config": "^1.0.6",
         "@types/react-router-dom": "^4.2.4",
-        "aws-sdk": "^2.104.0",
         "aws-sdk-mock": "^1.7.0",
         "dashify": "^0.2.2",
         "history": "^4.7.2",
@@ -84,5 +84,9 @@
         "shortid": "^2.2.8",
         "typescript-memoize": "^1.0.0-alpha.3",
         "typestyle": "^1.7.2"
+    },
+    "peerDependencies": {
+        "aws-sdk": "^2.104.0",
+        "typescript": "^2.7.2"
     }
 }
