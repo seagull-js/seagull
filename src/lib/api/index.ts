@@ -34,7 +34,9 @@ export default class API {
     } catch (error) {
       // tslint:disable-next-line:no-console
       console.log('ERROR:', error)
-      return fn(new Error('500'), null)
+      // we dont use the error callback of lambda because that would trigger
+      // the default response of API-Gateway, removing easy header control
+      return fn(null, this.create().error('internal server error'))
     }
   }
 
