@@ -16,4 +16,4 @@ export { default as Meta } from './spa/components/meta'
 export { default as Tracking } from './spa/tracking'
 
 // Utility & Helpers
-export { isClient, isServer, history, loadConfig } from './util'
+export { isClient, isServer, history } from './util'
