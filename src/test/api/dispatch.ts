@@ -59,7 +59,7 @@ class DispatchTests {
     )) as any
     headers.should.be.an('object')
     headers.should.have.property('Cache-Control')
-    headers['Cache-Control'].should.equal('no-cache')
+    headers['Cache-Control'].should.equal('no-cache, no-store')
   }
 
   @test

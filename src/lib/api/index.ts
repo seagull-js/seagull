@@ -40,7 +40,7 @@ export default class API {
     }
     response.headers['Cache-Control'] = this.cache
       ? `max-age=${this.cache}`
-      : 'no-cache'
+      : 'no-cache, no-store'
     // we dont use the error callback of lambda because that would trigger
     // the default response of API-Gateway, removing easy header control
     fn(null, response)
