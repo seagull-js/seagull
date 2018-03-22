@@ -1,11 +1,11 @@
 import { get } from 'lodash'
 import * as React from 'react'
-import { loadConfig } from '../../util'
+import { ReadOnlyConfig } from '../../util'
 import Body from './body'
 import Favicons from './favicon'
 import Head from './head'
 export default ({ content }) => {
-  const config = loadConfig()
+  const config = ReadOnlyConfig.config
   return (
     <html>
       <Head>

@@ -7,13 +7,10 @@ import 'reflect-metadata'
 import { generate as newID } from 'shortid'
 import { Memoize } from 'typescript-memoize'
 import field from './model/field'
+import { ReadOnlyConfig } from './util'
 
 // usage guide:
 // https://code.tutsplus.com/tutorials/building-a-rest-api-with-aws-simpledb-and-nodejs--cms-26086
-
-// prepare database client
-const pkg = new PackageJson()
-const region = pkg.config.region
 
 /**
  * Polymorphic `this` type
@@ -91,7 +88,7 @@ export class Shrimp {
    * @param this prefilled by typescript, skip this param!
    */
   static async All<T extends Shrimp>(this: ISelf<T>): Promise<T[]> {
-    const DB = new SimpleDB({ region })
+    const DB = new SimpleDB({ region: ReadOnlyConfig.config.region })
     const DomainName = await new this()._domain()
     const SelectExpression = `select * from \`${DomainName}\``
     const data = await DB.select({ SelectExpression }).promise()
@@ -171,7 +168,7 @@ export class Shrimp {
    * @param id [[_id]] of the desired shrimp object
    */
   static async Find<T extends Shrimp>(this: ISelf<T>, id: string): Promise<T> {
-    const DB = new SimpleDB({ region })
+    const DB = new SimpleDB({ region: Shrimp.region })
     const DomainName = await new this()._domain()
     const data = await DB.getAttributes({ DomainName, ItemName: id }).promise()
     if (data && data.Attributes) {
@@ -326,11 +323,11 @@ export class Shrimp {
    */
   @Memoize()
   async _domain(): Promise<string> {
-    const DB = new SimpleDB({ region })
+    const DB = new SimpleDB({ region: Shrimp.region })
     const { DomainNames } = await DB.listDomains().promise()
     return find(DomainNames, domainName => {
       const [appName, stageName, shrimpName, hash] = domainName.split('-')
-      return appName === pkg.name && shrimpName === this._name
+      return appName === Shrimp.pkgName && shrimpName === this._name
     })
   }
 
@@ -397,7 +394,7 @@ export class Shrimp {
     if (!this._id) {
       return false
     }
-    const DB = new SimpleDB({ region })
+    const DB = new SimpleDB({ region: Shrimp.region })
     const DomainName = await this._domain()
     await DB.deleteAttributes({ DomainName, ItemName: this._id }).promise()
     return true
@@ -443,9 +440,17 @@ export class Shrimp {
     const DomainName = await this._domain()
     const ItemName = this._id
     const Attributes = Shrimp._serialize(this)
-    const DB = new SimpleDB({ region })
+    const DB = new SimpleDB({ region: Shrimp.region })
     const params = { Attributes, DomainName, ItemName }
     await DB.putAttributes(params).promise()
     return this
+  }
+
+  private static get region() {
+    return ReadOnlyConfig.config.region
+  }
+
+  private static get pkgName() {
+    return ReadOnlyConfig.pkgName
   }
 }

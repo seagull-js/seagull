@@ -4,6 +4,7 @@ import * as React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { Helmet } from 'react-helmet'
 import Document from '../../../lib/spa/components/document'
+import { ReadOnlyConfig } from '../../../lib/util'
 
 @suite('simple document component')
 class DocumentTest {
@@ -17,8 +18,7 @@ class DocumentTest {
   }
   @test
   async 'simple document with ga and analytics works'() {
-    const mock = { seagull: { analytics: { ga: 'UA-23423', enabled: true } } }
-    process.env.config_mock = JSON.stringify(mock)
+    ReadOnlyConfig.config.analytics = { ga: 'UA-23423', enabled: true }
     const content = renderToStaticMarkup(<Document content={'here yo are'} />)
     expect(content).to.contain('UA-23423')
     expect(content).to.contain('window.analytics')
