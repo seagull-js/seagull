@@ -1,7 +1,8 @@
 {
     "name": "@seagull/core",
-    "version": "0.9.8",
+    "version": "0.9.9",
     "description": "Featherweight Zero-Config Typesafe Isomorphic Cloud Framework",
+    "browser": "dist/lib/browser.js",
     "main": "dist/lib/index.js",
     "types": "dist/lib/index.d.ts",
     "engines": {
@@ -57,7 +58,7 @@
         "typescript": "^2.7.2"
     },
     "dependencies": {
-        "@seagull/package-config": "^0.3.4",
+        "@seagull/package-config": "^0.3.5",
         "@types/aws-lambda": "0.0.16",
         "@types/history": "^4.6.0",
         "@types/lodash": "^4.14.74",
