@@ -21,23 +21,29 @@ export default class API {
   // add CORS headers and OPTIONS Request for this route
   static cors: boolean = false
 
+  static cache: number = 0
+
   // more stuff here, like
   // timeout, ...
 
   // This will be invoked by AWS Lambda. Do not touch.
   static async dispatch(event: Event, context: Context, fn: Callback) {
+    const api: API = this.create()
+    let response: Response
     try {
       const request = Request.fromApiGateway(event)
-      const handler = this.create()
-      const response = await handler.handle(request)
-      return fn(null, response)
+      response = await api.handle(request)
     } catch (error) {
       // tslint:disable-next-line:no-console
       console.log('ERROR:', error)
-      // we dont use the error callback of lambda because that would trigger
-      // the default response of API-Gateway, removing easy header control
-      return fn(null, this.create().error('internal server error'))
+      response = api.error('internal server error')
     }
+    response.headers['Cache-Control'] = this.cache
+      ? `max-age=${this.cache}`
+      : 'no-cache'
+    // we dont use the error callback of lambda because that would trigger
+    // the default response of API-Gateway, removing easy header control
+    fn(null, response)
   }
 
   // convenience helper for `dispatch()`, useful for testing & devserver
