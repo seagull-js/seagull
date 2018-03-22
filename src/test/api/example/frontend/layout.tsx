@@ -7,8 +7,8 @@ export default function Html({ children }) {
         <title>My Application</title>
       </head>
       <body>
-        <div id='root'>{children}</div>
+        <div id="root">{children}</div>
       </body>
     </html>
-  );
+  )
 }
