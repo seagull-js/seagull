@@ -47,8 +47,8 @@ export default class API {
   }
 
   // convenience helper for `dispatch()`, useful for testing & devserver
-  static async dispatchPromise(event: any, ctx: any) {
-    return new Promise((resolve, reject) => {
+  static async dispatchPromise(event: Event, ctx: Context) {
+    return new Promise<Response>((resolve, reject) => {
       this.dispatch(event, ctx, (error, result) => {
         return error ? reject(error) : resolve(result)
       })
