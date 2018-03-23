@@ -1,6 +1,6 @@
 {
   "name": "@seagull/core",
-  "version": "0.10.2",
+  "version": "0.10.3",
   "description":
     "Featherweight Zero-Config Typesafe Isomorphic Cloud Framework",
   "browser": "dist/lib/browser.js",

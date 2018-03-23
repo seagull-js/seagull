@@ -1,7 +1,8 @@
 // library imports
-import { cloneDeep, keys, map, reduce, without } from 'lodash'
+import { cloneDeep, get, keys, map, noop, reduce, without } from 'lodash'
 import { inject, observer, Provider } from 'mobx-react'
 import { RouterStore, syncHistoryWithStore } from 'mobx-react-router'
+import { join } from 'path'
 import * as React from 'react'
 import {
   matchPath,
@@ -135,17 +136,13 @@ export default class Routing {
     )
   }
   private requireIndexByEnv() {
-    if (
-      process &&
-      process.env &&
-      process.env.LAMBDA_TASK_ROOT &&
-      process.env.AWS_EXECUTION_ENV
-    ) {
-      return require('/var/task/dist/frontend/index.js')
+    const isLambdaEnv = !get(process, 'env.LAMBDA_TASK_ROOT')
+    const isTestEnv = get(process, 'env.NODE_ENV') === 'test'
+    if (!isLambdaEnv && !isTestEnv) {
+      return require('../../../../../../.seagull/dist/frontend/index.js')
     }
-    if (process && process.env && process.env.NODE_ENV === 'test') {
-      return require('../../../../../../__tmp__/.seagull/dist/frontend/index.js')
-    }
-    return require('../../../../../../.seagull/dist/frontend/index.js')
+    let cwd = process.cwd().toString()
+    isTestEnv ? (cwd = join(cwd, '.seagull')) : noop()
+    return require(join(cwd, 'dist', 'frontend', 'index.js'))
   }
 }
