@@ -136,7 +136,7 @@ export default class Routing {
     )
   }
   private requireIndexByEnv() {
-    const isLambdaEnv = !get(process, 'env.LAMBDA_TASK_ROOT')
+    const isLambdaEnv = get(process, 'env.LAMBDA_TASK_ROOT')
     const isTestEnv = get(process, 'env.NODE_ENV') === 'test'
     if (!isLambdaEnv && !isTestEnv) {
       return require('../../../../../../.seagull/dist/frontend/index.js')
