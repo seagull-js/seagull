@@ -1,4 +1,4 @@
-import { expect } from 'chai'
+import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
@@ -10,8 +10,11 @@ class HeadTest {
   @test
   async 'simple head without anything works'() {
     const content = renderToStaticMarkup(<Head />)
-    expect(content).to.be.equal(
-      '<head><title data-react-helmet="true"></title><style id="styles-target"></style><link rel="icon" href="/favicon.ico"/></head>'
+    content.should.contain(
+      '<head><title data-react-helmet="true"></title><style id="styles-target">'
+    )
+    content.should.contain(
+      '</style><link rel="icon" href="/favicon.ico"/></head>'
     )
   }
 
@@ -25,8 +28,8 @@ class HeadTest {
         />
       </Head>
     )
-    expect(content).to.equal(
-      `<head><title data-react-helmet="true"></title><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/><style id="styles-target"></style><link rel="icon" href="/favicon.ico"/></head>`
+    content.should.contain(
+      `<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>`
     )
   }
 
@@ -46,8 +49,14 @@ class HeadTest {
         />
       </Head>
     )
-    expect(content).to.equal(
-      `<head><title data-react-helmet="true">My Title</title><meta data-react-helmet="true" charSet="utf-8"/><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/><style id="styles-target"></style><link rel="icon" href="/favicon.ico"/></head>`
+    content.should.contain(
+      `<head><title data-react-helmet="true">My Title</title><meta data-react-helmet="true" charSet="utf-8"/><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>`
     )
+  }
+
+  @test
+  async 'normalize css gets injected'() {
+    const content = renderToStaticMarkup(<Head />)
+    content.should.contain('margin:0')
   }
 }

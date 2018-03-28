@@ -1,6 +1,6 @@
 {
   "name": "@seagull/core",
-  "version": "0.10.4",
+  "version": "0.11.0",
   "description":
     "Featherweight Zero-Config Typesafe Isomorphic Cloud Framework",
   "browser": "dist/lib/browser.js",
@@ -87,7 +87,8 @@
     "reflect-metadata": "^0.1.10",
     "shortid": "^2.2.8",
     "typescript-memoize": "^1.0.0-alpha.3",
-    "typestyle": "^1.7.2"
+    "typestyle": "^1.7.2",
+    "csstips": "^0.2.3"
   },
   "peerDependencies": {
     "aws-sdk": "^2.104.0",
