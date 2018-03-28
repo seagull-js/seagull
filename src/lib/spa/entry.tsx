@@ -1,5 +1,6 @@
+import { normalize } from 'csstips'
 import { render } from 'react-dom'
-import {setStylesTarget} from 'typestyle'
+import { setStylesTarget } from 'typestyle'
 
 import Routing from './routing'
 import Tracking from './tracking'
@@ -12,6 +13,8 @@ async function fetchAndMount() {
     await page.componentDidMount()
   }
   render(appRouter.load(), document.getElementById('root'))
+  // add normalize to typestyles styles
+  normalize()
   setStylesTarget(document.getElementById('styles-target'))
   // tslint:disable-next-line:no-unused-expression
   new Tracking()
