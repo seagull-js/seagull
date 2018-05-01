@@ -38,7 +38,7 @@ export default class Model {
 
   // return a list of all objects in the database table
   static async all<T extends Model>(this: { new (): T }): Promise<T[]> {
-    const data = await DB.scanItems(new this()._name)
+    const data = await DB.scanItems(new this()._tableName)
     return data.map(item => Object.assign(new this(), item))
   }
 
@@ -62,7 +62,7 @@ export default class Model {
     this: { new (): T },
     id: string
   ): Promise<T> {
-    const data = await DB.getItem(new this()._name, 'id', id)
+    const data = await DB.getItem(new this()._tableName, 'id', id)
     if (data && data.id) {
       const instance: T = Object.assign(new this(), data)
       return instance
@@ -127,6 +127,11 @@ export default class Model {
 
   // helper for getting the model name for a given object
   get _name(): string {
+    return dashify(this.constructor.name)
+  }
+
+  // helper for getting the table name for a given object
+  get _tableName(): string {
     return `${ReadOnlyConfig.pkgName}-${dashify(this.constructor.name)}`
   }
 
@@ -170,7 +175,7 @@ export default class Model {
     if (!this._id) {
       return false
     }
-    return DB.removeItem(this._name, 'id', this._id)
+    return DB.removeItem(this._tableName, 'id', this._id)
   }
 
   // persist an object to the database, creating a new record or update existing
@@ -186,7 +191,7 @@ export default class Model {
     this.deleteAt = this.expiresAfter > 0 ? now + this.expiresAfter : null
     this.createdAt = !this.createdAt ? now : this.createdAt
     this.updatedAt = now
-    await DB.putItem(this._name, this)
+    await DB.putItem(this._tableName, this)
     return this
   }
 }

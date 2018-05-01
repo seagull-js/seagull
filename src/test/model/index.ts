@@ -11,7 +11,8 @@ class ModelsTest {
   async 'models have inferrable names and are dasherized'() {
     // tslint:disable-next-line:max-classes-per-file
     const cm = new class CustomModel extends Model {}()
-    expect(cm._name).to.be.equal(`${ReadOnlyConfig.pkgName}-custom-model`)
+    expect(cm._name).to.be.equal(`custom-model`)
+    expect(cm._tableName).to.be.equal(`${ReadOnlyConfig.pkgName}-custom-model`)
   }
 
   @test
