@@ -94,7 +94,7 @@ export default class Model {
   // auto-managed field: when was this object updated last
   @field private updatedAt: number = null
 
-  // auto-managed field: epoch of when to delete object
+  // auto-managed field: epoch in seconds of when to delete object
   @field private deleteAt: number = null
 
   /**
@@ -118,7 +118,7 @@ export default class Model {
 
   // safe read-only accessor for the deleteAt timestamp as a Date object
   get _deleteAt(): Date {
-    return this.deleteAt ? new Date(this.deleteAt) : null
+    return this.deleteAt ? new Date(this.deleteAt * 1000) : null
   }
 
   /**
@@ -188,7 +188,9 @@ export default class Model {
       this.id = newID()
     }
     const now = new Date().getTime()
-    this.deleteAt = this.expiresAfter > 0 ? now + this.expiresAfter : null
+    const nowSeconds = Math.floor(now / 1000)
+    this.deleteAt =
+      this.expiresAfter > 0 ? nowSeconds + this.expiresAfter : null
     this.createdAt = !this.createdAt ? now : this.createdAt
     this.updatedAt = now
     await DB.putItem(this._tableName, this)
