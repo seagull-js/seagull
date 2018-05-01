@@ -1,5 +1,7 @@
 import { expect } from 'chai'
+import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
+import { ReadOnlyConfig } from '../../lib'
 import Model from '../../lib/model/'
 import Todo from './example/todo'
 
@@ -9,7 +11,7 @@ class ModelsTest {
   async 'models have inferrable names and are dasherized'() {
     // tslint:disable-next-line:max-classes-per-file
     const cm = new class CustomModel extends Model {}()
-    expect(cm._name).to.be.equal('custom-model')
+    expect(cm._name).to.be.equal(`${ReadOnlyConfig.pkgName}-custom-model`)
   }
 
   @test
@@ -52,6 +54,24 @@ class ModelsTest {
     expect(todo._id.length).to.be.above(0)
     await todo.save()
     expect(todo._id).to.be.equal(_id)
+  }
+
+  @test
+  async 'models do not expire by default'() {
+    const todo = new Todo()
+    const { _id } = await todo.save()
+    // tslint:disable-next-line:no-unused-expression
+    ;(todo._deleteAt === null).should.be.true
+  }
+
+  @test
+  async 'models do expire if set'() {
+    const todo = new Todo()
+    todo.expiresAfter = 60
+    const { _id } = await todo.save()
+    // tslint:disable-next-line:no-unused-expression
+    ;(todo._deleteAt === null).should.be.false
+    todo._deleteAt.getTime().should.be.equal(todo._updatedAt.getTime() + 60)
   }
 
   @test

@@ -2,13 +2,15 @@
  * Import the SDK and prepare a fresh DynamoDB client instance
  */
 import * as DynamoDB from 'aws-sdk/clients/dynamodb'
+import { ReadOnlyConfig } from '../util'
+
 import OfflineClient from './ddb_offline'
 const client =
   process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'dev'
     ? new OfflineClient()
     : new DynamoDB.DocumentClient({
         convertEmptyValues: true,
-        region: 'eu-central-1',
+        region: ReadOnlyConfig.config.region,
       })
 
 /**

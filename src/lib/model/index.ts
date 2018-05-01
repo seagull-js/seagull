@@ -1,6 +1,7 @@
 import * as dashify from 'dashify'
 import 'reflect-metadata'
 import { generate as newID } from 'shortid'
+import { ReadOnlyConfig } from '..'
 import * as DB from './ddb'
 import field from './field'
 
@@ -76,6 +77,10 @@ export default class Model {
     return instance ? instance.remove() : false
   }
 
+  // anything different than 0 activates dynamodbs ttl feature
+  // autodeletes items after number in seconds
+  expiresAfter: number = 0
+
   /**
    * private data fields that get auto-managed and persisted
    */
@@ -88,6 +93,9 @@ export default class Model {
 
   // auto-managed field: when was this object updated last
   @field private updatedAt: number = null
+
+  // auto-managed field: epoch of when to delete object
+  @field private deleteAt: number = null
 
   /**
    * convenient read-only accessors for the private data fields
@@ -108,13 +116,18 @@ export default class Model {
     return this.updatedAt ? new Date(this.updatedAt) : null
   }
 
+  // safe read-only accessor for the deleteAt timestamp as a Date object
+  get _deleteAt(): Date {
+    return this.deleteAt ? new Date(this.deleteAt) : null
+  }
+
   /**
    * convenience helpers for metadata, typechecking and error handling
    */
 
   // helper for getting the model name for a given object
   get _name(): string {
-    return dashify(this.constructor.name)
+    return `${ReadOnlyConfig.pkgName}-${dashify(this.constructor.name)}`
   }
 
   // advanced magic stuff to get the data fields of the object and its types (!)
@@ -169,10 +182,10 @@ export default class Model {
     if (!this.id) {
       this.id = newID()
     }
-    if (!this.createdAt) {
-      this.createdAt = new Date().getTime()
-    }
-    this.updatedAt = new Date().getTime()
+    const now = new Date().getTime()
+    this.deleteAt = this.expiresAfter > 0 ? now + this.expiresAfter : null
+    this.createdAt = !this.createdAt ? now : this.createdAt
+    this.updatedAt = now
     await DB.putItem(this._name, this)
     return this
   }
