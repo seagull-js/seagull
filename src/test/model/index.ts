@@ -72,7 +72,8 @@ class ModelsTest {
     const { _id } = await todo.save()
     // tslint:disable-next-line:no-unused-expression
     ;(todo._deleteAt === null).should.be.false
-    todo._deleteAt.getTime().should.be.equal(todo._updatedAt.getTime() + 60)
+    const deleteAt = (Math.floor(todo._createdAt.getTime() / 1000) + 60) * 1000
+    todo._deleteAt.getTime().should.be.equal(deleteAt)
   }
 
   @test
