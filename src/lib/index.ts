@@ -11,6 +11,7 @@ mobx.extras.isolateGlobalState()
 export { default as Request } from './api/request'
 export { default as Response } from './api/response'
 export { default as API } from './api/index'
+export { default as Job } from './job/index'
 export { default as Model } from './model/index'
 export { default as field } from './model/field'
 export * from './shrimp'
