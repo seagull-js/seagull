@@ -14,9 +14,6 @@ export default class API {
    */
   // url path
   static path: string
-  
-  // schedule for cron triggers
-  static schedule: string
 
   // specify the desired HTTP Method
   static method: string = 'GET'
