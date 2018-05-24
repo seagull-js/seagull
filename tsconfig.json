@@ -1,21 +1,26 @@
 {
   "compilerOptions": {
+    "baseUrl": "./src/",
+    "paths": {
+      "@framework/*": ["framework/*"],
+      "@frontend/*": ["frontend/*"],
+      "@lib/*": ["lib/*"],
+      "@utilities/*": ["framework/utilities/*"]
+    },
     "module": "commonjs",
+    "skipLibCheck": true,
     "target": "es6",
-    "noImplicitAny": false,
     "removeComments": true,
-    "preserveConstEnums": true,
     "sourceMap": true,
-    "outDir": "./dist",
+    "declaration": true,
+    "outDir": "dist",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "declaration": true,
-    "jsx": "react"
+    "lib": ["es5", "es6", "es7", "dom", "dom.iterable"],
+    "jsx": "react",
+    "rootDirs": ["src", "test"],
+    "strict": true
   },
-  "include": [
-      "src/**/*",
-      "test/**/*"
-  ],
-  "lib": [ "es5", "es6", "es7", "dom", "dom.iterable" ],
-  "types": ["node", "react", "react-dom"]
+  "types": ["node"],
+  "typeRoots": ["node_modules/@types"]
 }

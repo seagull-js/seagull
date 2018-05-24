@@ -4,7 +4,9 @@
   "jsRules": {},
   "rules": {
     "quotemark": [true, "single", "jsx-double"],
-    "member-access": [true, "no-public"]
+    "member-access": [true, "no-public"],
+    "interface-over-type-literal": [false],
+    "max-classes-per-file": [false]
   },
   "rulesDirectory": []
 }
