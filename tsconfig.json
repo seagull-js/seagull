@@ -2,10 +2,9 @@
   "compilerOptions": {
     "baseUrl": "./src/",
     "paths": {
-      "@framework/*": ["framework/*"],
+      "@components/*": ["frontend/components/*"],
       "@frontend/*": ["frontend/*"],
-      "@lib/*": ["lib/*"],
-      "@utilities/*": ["framework/utilities/*"]
+      "@tdd/*": ["tdd/*"]
     },
     "module": "commonjs",
     "skipLibCheck": true,
