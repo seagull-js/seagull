@@ -3,7 +3,7 @@
     "version": "0.11.5",
     "description": "Featherweight Zero-Config Typesafe Isomorphic Cloud Framework",
     "bin": {
-        "seagull-server": "dist/src/bin/server.js"
+        "seagull-server": "bin/server.js"
     },
     "browser": "dist/src/client.js",
     "main": "dist/src/index.js",
