@@ -1,6 +1,12 @@
 #! /usr/bin/env node
 
-const Server = require('../dist/src/tools/server').default
+// imports
+const Watcher = require('../dist/src/tools/watcher').default
+const process = require('process')
 
-// TODO: get port from argv
-new Server()
+// configuration
+const srcFolder = process.cwd()
+    // TODO: get port from argv
+
+// start
+new Watcher(srcFolder).start()

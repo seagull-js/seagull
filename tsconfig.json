@@ -4,7 +4,8 @@
     "paths": {
       "@components/*": ["frontend/components/*"],
       "@frontend/*": ["frontend/*"],
-      "@tdd/*": ["tdd/*"]
+      "@tdd/*": ["tdd/*"],
+      "@tools/*": ["tools/*"]
     },
     "module": "commonjs",
     "skipLibCheck": true,
