@@ -1,6 +1,5 @@
 /** @module Tools */
 import * as fs from 'fs'
-import * as http from 'http'
 import * as log from 'npmlog'
 import { join, relative, resolve } from 'path'
 import * as ts from 'typescript'

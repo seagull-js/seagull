@@ -69,10 +69,306 @@
 						<section class="tsd-index-section ">
 							<h3>Classes</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-class tsd-parent-kind-external-module"><a href="../classes/tools.server.html" class="tsd-kind-icon">Server</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-external-module"><a href="../classes/tools.bundler.html" class="tsd-kind-icon">Bundler</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-external-module"><a href="../classes/tools.compiler.html" class="tsd-kind-icon">Compiler</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-external-module"><a href="../classes/tools.httpserver.html" class="tsd-kind-icon">HTTPServer</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-external-module"><a href="../classes/tools.watcher.html" class="tsd-kind-icon">Watcher</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Interfaces</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/tools.istrategies.html" class="tsd-kind-icon">IStrategies</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Functions</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="tools.html#listfiles" class="tsd-kind-icon">list<wbr>Files</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="tools.html#translatecode" class="tsd-kind-icon">translate<wbr>Code</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="tools.html#transpilecode" class="tsd-kind-icon">transpile<wbr>Code</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="tools.html#transpilefile" class="tsd-kind-icon">transpile<wbr>File</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="tools.html#transpilefolder" class="tsd-kind-icon">transpile<wbr>Folder</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="tools.html#writefile" class="tsd-kind-icon">write<wbr>File</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Object literals</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-object-literal tsd-parent-kind-external-module"><a href="tools.html#strategies" class="tsd-kind-icon">strategies</a></li>
 							</ul>
 						</section>
 					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
+					<a name="listfiles" class="tsd-anchor"></a>
+					<h3>list<wbr>Files</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
+						<li class="tsd-signature tsd-kind-icon">list<wbr>Files<span class="tsd-signature-symbol">(</span>cwd<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/seagull-js/seagull/blob/f8e0f15/src/tools/workers/compiler/transpile.ts#L72">tools/workers/compiler/transpile.ts:72</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>get a tree of files existing in the given source folder</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>cwd: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>root folder for walking down the tree</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
+					<a name="translatecode" class="tsd-anchor"></a>
+					<h3>translate<wbr>Code</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
+						<li class="tsd-signature tsd-kind-icon">translate<wbr>Code<span class="tsd-signature-symbol">(</span>sourceText<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, opts<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/seagull-js/seagull/blob/f8e0f15/src/tools/workers/compiler/transpile.ts#L40">tools/workers/compiler/transpile.ts:40</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Transpile a given blob of typescript code directly to a javascript blob.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>sourceText: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the code as string representation</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> opts: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>tsconfig settings</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
+					<a name="transpilecode" class="tsd-anchor"></a>
+					<h3>transpile<wbr>Code</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
+						<li class="tsd-signature tsd-kind-icon">transpile<wbr>Code<span class="tsd-signature-symbol">(</span>sourceText<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, to<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, opts<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/seagull-js/seagull/blob/f8e0f15/src/tools/workers/compiler/transpile.ts#L28">tools/workers/compiler/transpile.ts:28</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Transpile a given blob of typescript code directly to a javascript file.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>sourceText: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the code as string representation</p>
+									</div>
+								</li>
+								<li>
+									<h5>to: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>absolute path to the destination file</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> opts: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>tsconfig settings</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
+					<a name="transpilefile" class="tsd-anchor"></a>
+					<h3>transpile<wbr>File</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
+						<li class="tsd-signature tsd-kind-icon">transpile<wbr>File<span class="tsd-signature-symbol">(</span>from<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, to<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, opts<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/seagull-js/seagull/blob/f8e0f15/src/tools/workers/compiler/transpile.ts#L16">tools/workers/compiler/transpile.ts:16</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Directly transpiles a typescript source file to a javascript source file.
+										This will NOT actually parse modules, import things, and so on, so it can
+									be used in a fast way, ignoring <em>(missing)</em> node_modules.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>from: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>absolute path to the source file</p>
+									</div>
+								</li>
+								<li>
+									<h5>to: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>absolute path to the destination file</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> opts: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>tsconfig settings</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
+					<a name="transpilefolder" class="tsd-anchor"></a>
+					<h3>transpile<wbr>Folder</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
+						<li class="tsd-signature tsd-kind-icon">transpile<wbr>Folder<span class="tsd-signature-symbol">(</span>from<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, to<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, opts<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/seagull-js/seagull/blob/f8e0f15/src/tools/workers/compiler/transpile.ts#L57">tools/workers/compiler/transpile.ts:57</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Recursive transpilation of typescript files for a given folder. Files not
+									ending with <code>.ts</code> or <code>.tsx</code> are copied as-is.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>from: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>absolute path to the source folder</p>
+									</div>
+								</li>
+								<li>
+									<h5>to: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>absolute path to the destination folder</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> opts: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>tsconfig settings</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
+					<a name="writefile" class="tsd-anchor"></a>
+					<h3>write<wbr>File</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
+						<li class="tsd-signature tsd-kind-icon">write<wbr>File<span class="tsd-signature-symbol">(</span>filePath<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, content<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in tools/util/write_file.ts:7</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>write a file and ensure all intermediate folders exist</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>filePath: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>content: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Buffer</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Object literals</h2>
+				<section class="tsd-panel tsd-member tsd-kind-object-literal tsd-parent-kind-external-module">
+					<a name="strategies" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> strategies</h3>
+					<div class="tsd-signature tsd-kind-icon">strategies<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/seagull-js/seagull/blob/f8e0f15/src/tools/strategies.ts#L9">tools/strategies.ts:9</a></li>
+						</ul>
+					</aside>
+					<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-object-literal">
+						<a name="strategies.default" class="tsd-anchor"></a>
+						<h3>default</h3>
+						<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-object-literal">
+							<li class="tsd-signature tsd-kind-icon">default<span class="tsd-signature-symbol">(</span>watcher<span class="tsd-signature-symbol">: </span><a href="../classes/tools.watcher.html" class="tsd-signature-type">Watcher</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><a href="../classes/tools.compiler.html" class="tsd-signature-type">Compiler</a><span class="tsd-signature-symbol"> | </span><a href="../classes/tools.httpserver.html" class="tsd-signature-type">HTTPServer</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></li>
+						</ul>
+						<ul class="tsd-descriptions">
+							<li class="tsd-description">
+								<aside class="tsd-sources">
+									<ul>
+										<li>Defined in <a href="https://github.com/seagull-js/seagull/blob/f8e0f15/src/tools/strategies.ts#L10">tools/strategies.ts:10</a></li>
+									</ul>
+								</aside>
+								<h4 class="tsd-parameters-title">Parameters</h4>
+								<ul class="tsd-parameters">
+									<li>
+										<h5>watcher: <a href="../classes/tools.watcher.html" class="tsd-signature-type">Watcher</a></h5>
+									</li>
+								</ul>
+								<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><a href="../classes/tools.compiler.html" class="tsd-signature-type">Compiler</a><span class="tsd-signature-symbol"> | </span><a href="../classes/tools.httpserver.html" class="tsd-signature-type">HTTPServer</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></h4>
+							</li>
+						</ul>
+					</section>
 				</section>
 			</section>
 		</div>
@@ -99,7 +395,40 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/tools.server.html" class="tsd-kind-icon">Server</a>
+						<a href="../classes/tools.bundler.html" class="tsd-kind-icon">Bundler</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="../classes/tools.compiler.html" class="tsd-kind-icon">Compiler</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="../classes/tools.httpserver.html" class="tsd-kind-icon">HTTPServer</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="../classes/tools.watcher.html" class="tsd-kind-icon">Watcher</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/tools.istrategies.html" class="tsd-kind-icon">IStrategies</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="tools.html#listfiles" class="tsd-kind-icon">list<wbr>Files</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="tools.html#translatecode" class="tsd-kind-icon">translate<wbr>Code</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="tools.html#transpilecode" class="tsd-kind-icon">transpile<wbr>Code</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="tools.html#transpilefile" class="tsd-kind-icon">transpile<wbr>File</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="tools.html#transpilefolder" class="tsd-kind-icon">transpile<wbr>Folder</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="tools.html#writefile" class="tsd-kind-icon">write<wbr>File</a>
+					</li>
+					<li class=" tsd-kind-object-literal tsd-parent-kind-external-module">
+						<a href="tools.html#strategies" class="tsd-kind-icon">strategies</a>
 					</li>
 				</ul>
 			</nav>

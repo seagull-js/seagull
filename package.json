@@ -16,7 +16,7 @@
         "test:unit:watch": "npm run test:unit -- --watch --reporter min",
         "test:functional": "NODE_ENV=test mocha --opts test/functional/mocha.opts",
         "test:functional:watch": "npm run test:functional -- --watch --reporter min",
-        "docs": "rm -rf docs && typedoc --mode modules --excludeExternals --excludePrivate --excludeNotExported --exclude \"**/src/bin/**\" --out docs src",
+        "docs": "rm -rf docs && typedoc --mode modules --ignoreCompilerErrors --excludeExternals --excludePrivate --excludeNotExported --exclude \"**/src/bin/**\" --out docs src",
         "release": "npm run test && npm run docs && npm publish"
     },
     "repository": {
@@ -41,6 +41,7 @@
     },
     "homepage": "https://github.com/seagull-js/seagull#readme",
     "devDependencies": {
+        "@types/browserify": "^12.0.33",
         "@types/chai": "^4.1.3",
         "@types/chokidar": "^1.7.5",
         "@types/create-react-class": "^15.6.1",
@@ -58,7 +59,7 @@
         "@types/react-helmet": "^5.0.5",
         "@types/require-from-string": "^1.2.0",
         "aws-sdk": "^2.104.0",
-        "browserify": "^16.2.0",
+        "browserify": "^16.2.2",
         "chai": "^4.1.2",
         "clear-require": "^2.0.0",
         "common-shakeify": "^0.4.6",
@@ -80,6 +81,7 @@
         "uglify-es": "^3.3.9"
     },
     "dependencies": {
+        "browserify-incremental": "^3.1.1",
         "chokidar": "^2.0.3",
         "cli-clear": "^1.0.4",
         "csstips": "^0.2.3",
@@ -91,6 +93,7 @@
         "react-dom": "^16.3.2",
         "react-helmet": "^5.2.0",
         "require-from-string": "^2.0.2",
+        "stream-string": "^2.0.0",
         "typestyle": "^1.7.2",
         "universal-router": "^6.0.0"
     },

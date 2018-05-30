@@ -2,6 +2,7 @@
 import * as fs from 'fs'
 import { flatten } from 'lodash'
 import * as ts from 'typescript'
+import { writeFile } from '../../util'
 
 /**
  * Directly transpiles a typescript source file to a javascript source file.
@@ -26,7 +27,7 @@ export function transpileFile(from: string, to: string, opts?: any) {
  */
 export function transpileCode(sourceText: string, to: string, opts?: any) {
   const code = translateCode(sourceText, opts)
-  write(to, code)
+  writeFile(to, code)
 }
 
 /**
@@ -57,18 +58,11 @@ export function transpileFolder(from: string, to: string, opts?: any) {
   const srcList = listFiles(from)
   const rename = (file: string) => file.replace(from, to).replace(/tsx?$/, 'js')
   const tp = (file: string) => transpileFile(file, rename(file), opts)
-  const cp = (file: string) => write(rename(file), fs.readFileSync(file))
+  const cp = (file: string) => writeFile(rename(file), fs.readFileSync(file))
   srcList.forEach((file: string) => (/tsx?$/.test(file) ? tp(file) : cp(file)))
 }
 
-// write a file and ensure all intermediate folders exist
-function write(filePath: string, content: string | Buffer) {
-  const fragments = filePath.split('/')
-  fragments.pop()
-  const folder = fragments.join('/')
-  require('mkdirp').sync(folder)
-  fs.writeFileSync(filePath, content)
-}
+
 
 /**
  * get a tree of files existing in the given source folder

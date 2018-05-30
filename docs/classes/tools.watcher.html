@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>AtomTest | @seagull/core</title>
+	<title>Watcher | @seagull/core</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,13 +52,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/tdd.html">TDD</a>
+					<a href="../modules/tools.html">Tools</a>
 				</li>
 				<li>
-					<a href="tdd.atomtest.html">AtomTest</a>
+					<a href="tools.watcher.html">Watcher</a>
 				</li>
 			</ul>
-			<h1>Class AtomTest&lt;T&gt;</h1>
+			<h1>Class Watcher</h1>
 		</div>
 	</div>
 </header>
@@ -68,39 +68,16 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>When used in combination with the mocha-typescript decorators, this class
-						can help you to test your <a href="frontend.atom.html">Atom</a> component classes. Example:</p>
+						<p>Main Process for the development server: watches the current project folder,
+						triggers [[Worker]] on file system changes</p>
 					</div>
-					<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> <span class="hljs-string">'chai/register-should'</span>
-<span class="hljs-keyword">import</span> { skip, slow, suite, test, timeout } <span class="hljs-keyword">from</span> <span class="hljs-string">'mocha-typescript'</span>
-<span class="hljs-keyword">import</span> { AtomTest } <span class="hljs-keyword">from</span> <span class="hljs-string">'@seagull/framework'</span>
-<span class="hljs-keyword">import</span> YourAtom <span class="hljs-keyword">from</span> <span class="hljs-string">'path/to/your/atom'</span>
-
-<span class="hljs-meta">@suite</span>(<span class="hljs-string">'Unit::Atom::YourAtom'</span>)
-<span class="hljs-keyword">class</span> Test <span class="hljs-keyword">extends</span> AtomTest&lt;YourAtom&gt; {
-  page = YourPage
-
-  <span class="hljs-meta">@test</span>
-  <span class="hljs-string">'does work'</span>() {
-    <span class="hljs-keyword">this</span>.html(<span class="hljs-string">'/some/path'</span>).should.contain(<span class="hljs-string">'my page title'</span>)
-  }
-}
-</code></pre>
 				</div>
-			</section>
-			<section class="tsd-panel tsd-type-parameters">
-				<h3>Type parameters</h3>
-				<ul class="tsd-type-parameters">
-					<li>
-						<h4>T<span class="tsd-signature-symbol">: </span><a href="frontend.atom.html" class="tsd-signature-type">Atom</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/frontend.iatomprops.html" class="tsd-signature-type">IAtomProps</a><span class="tsd-signature-symbol">&gt;</span></h4>
-					</li>
-				</ul>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">AtomTest</span>
+						<span class="target">Watcher</span>
 					</li>
 				</ul>
 			</section>
@@ -109,124 +86,150 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="tools.watcher.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="tdd.atomtest.html#atom" class="tsd-kind-icon">atom</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="tools.watcher.html#codefolders" class="tsd-kind-icon">code<wbr>Folders</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="tools.watcher.html#srcfolder" class="tsd-kind-icon">src<wbr>Folder</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="tools.watcher.html#watcher" class="tsd-kind-icon">watcher</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="tdd.atomtest.html#before" class="tsd-kind-icon">before</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="tdd.atomtest.html#html" class="tsd-kind-icon">html</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="tdd.atomtest.html#instance" class="tsd-kind-icon">instance</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="tools.watcher.html#start" class="tsd-kind-icon">start</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="tools.watcher.html#stop" class="tsd-kind-icon">stop</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Watcher<span class="tsd-signature-symbol">(</span>srcFolder<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, strategyName<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="tools.watcher.html" class="tsd-signature-type">Watcher</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/seagull-js/seagull/blob/f8e0f15/src/tools/watcher.ts#L28">tools/watcher.ts:28</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>sets up common settings like folder paths and initializes Workers</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>srcFolder: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> strategyName: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;default&quot;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="tools.watcher.html" class="tsd-signature-type">Watcher</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="atom" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> atom</h3>
-					<div class="tsd-signature tsd-kind-icon">atom<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+					<a name="codefolders" class="tsd-anchor"></a>
+					<h3>code<wbr>Folders</h3>
+					<div class="tsd-signature tsd-kind-icon">code<wbr>Folders<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[&#x27;backend&#x27;, &#x27;frontend&#x27;, &#x27;lib&#x27;]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/seagull-js/seagull/blob/f8e0f15/src/tdd/atom_test.tsx#L34">tdd/atom_test.tsx:34</a></li>
+							<li>Defined in <a href="https://github.com/seagull-js/seagull/blob/f8e0f15/src/tools/watcher.ts#L16">tools/watcher.ts:16</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>the class of the page you want to test within this suite</p>
+							<p>directory names where code resides</p>
 						</div>
 					</div>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="srcfolder" class="tsd-anchor"></a>
+					<h3>src<wbr>Folder</h3>
+					<div class="tsd-signature tsd-kind-icon">src<wbr>Folder<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/seagull-js/seagull/blob/f8e0f15/src/tools/watcher.ts#L21">tools/watcher.ts:21</a></li>
 						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>where to read files from</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="watcher" class="tsd-anchor"></a>
+					<h3>watcher</h3>
+					<div class="tsd-signature tsd-kind-icon">watcher<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">FSWatcher</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/seagull-js/seagull/blob/f8e0f15/src/tools/watcher.ts#L26">tools/watcher.ts:26</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>instance of the watcher</p>
+						</div>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="before" class="tsd-anchor"></a>
-					<h3>before</h3>
+					<a name="start" class="tsd-anchor"></a>
+					<h3>start</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">before<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">start<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/seagull-js/seagull/blob/f8e0f15/src/tdd/atom_test.tsx#L55">tdd/atom_test.tsx:55</a></li>
+									<li>Defined in <a href="https://github.com/seagull-js/seagull/blob/f8e0f15/src/tools/watcher.ts#L42">tools/watcher.ts:42</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>This handler will be called before each test in the suite executes and will
-									reset all stores to their default state.</p>
+									<p>start the watching process and trigger all worker&#39;s lifecycle hooks.
+									Ordering of the workers DO matter!</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="html" class="tsd-anchor"></a>
-					<h3>html</h3>
+					<a name="stop" class="tsd-anchor"></a>
+					<h3>stop</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">html<span class="tsd-signature-symbol">(</span>props<span class="tsd-signature-symbol">: </span><a href="../interfaces/frontend.iatomprops.html" class="tsd-signature-type">IAtomProps</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Cheerio</span></li>
+						<li class="tsd-signature tsd-kind-icon">stop<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/seagull-js/seagull/blob/f8e0f15/src/tdd/atom_test.tsx#L47">tdd/atom_test.tsx:47</a></li>
+									<li>Defined in <a href="https://github.com/seagull-js/seagull/blob/f8e0f15/src/tools/watcher.ts#L51">tools/watcher.ts:51</a></li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Get the rendered HTML output of the atom.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>props: <a href="../interfaces/frontend.iatomprops.html" class="tsd-signature-type">IAtomProps</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Cheerio</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="instance" class="tsd-anchor"></a>
-					<h3>instance</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">instance<span class="tsd-signature-symbol">(</span>props<span class="tsd-signature-symbol">: </span><a href="../interfaces/frontend.iatomprops.html" class="tsd-signature-type">IAtomProps</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/seagull-js/seagull/blob/f8e0f15/src/tdd/atom_test.tsx#L40">tdd/atom_test.tsx:40</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Get an instance of the <a href="tdd.atomtest.html#atom">atom</a> class, useful for testing methods and
-									properties in isolation.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>props: <a href="../interfaces/frontend.iatomprops.html" class="tsd-signature-type">IAtomProps</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -244,37 +247,76 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/overview.html">Overview</a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/tdd.html">TDD</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="../modules/tools.html">Tools</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="tools.bundler.html" class="tsd-kind-icon">Bundler</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="tools.compiler.html" class="tsd-kind-icon">Compiler</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="tools.httpserver.html" class="tsd-kind-icon">HTTPServer</a>
+					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="tdd.atomtest.html" class="tsd-kind-icon">Atom<wbr>Test</a>
+					<li class="current tsd-kind-class tsd-parent-kind-external-module">
+						<a href="tools.watcher.html" class="tsd-kind-icon">Watcher</a>
 						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="tools.watcher.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="tdd.atomtest.html#atom" class="tsd-kind-icon">atom</a>
+								<a href="tools.watcher.html#codefolders" class="tsd-kind-icon">code<wbr>Folders</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="tools.watcher.html#srcfolder" class="tsd-kind-icon">src<wbr>Folder</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="tools.watcher.html#watcher" class="tsd-kind-icon">watcher</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="tdd.atomtest.html#before" class="tsd-kind-icon">before</a>
+								<a href="tools.watcher.html#start" class="tsd-kind-icon">start</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="tdd.atomtest.html#html" class="tsd-kind-icon">html</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="tdd.atomtest.html#instance" class="tsd-kind-icon">instance</a>
+								<a href="tools.watcher.html#stop" class="tsd-kind-icon">stop</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/tools.istrategies.html" class="tsd-kind-icon">IStrategies</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/tools.html#listfiles" class="tsd-kind-icon">list<wbr>Files</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/tools.html#translatecode" class="tsd-kind-icon">translate<wbr>Code</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/tools.html#transpilecode" class="tsd-kind-icon">transpile<wbr>Code</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/tools.html#transpilefile" class="tsd-kind-icon">transpile<wbr>File</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/tools.html#transpilefolder" class="tsd-kind-icon">transpile<wbr>Folder</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/tools.html#writefile" class="tsd-kind-icon">write<wbr>File</a>
+					</li>
+					<li class=" tsd-kind-object-literal tsd-parent-kind-external-module">
+						<a href="../modules/tools.html#strategies" class="tsd-kind-icon">strategies</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
