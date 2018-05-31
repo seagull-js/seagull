@@ -3,19 +3,21 @@ import * as fs from 'fs'
 import * as log from 'npmlog'
 import { join, relative, resolve } from 'path'
 import * as ts from 'typescript'
+import { TsConfig } from '../../../scaffold'
 import { Worker } from '../Worker'
 import * as Transpile from './transpile'
 
+/**
+ * Custom implementation of a TS/TSX compiler. Respects the tsconfig file in
+ * the target [[srcFolder]] or uses seagull-specific defaults.
+ */
 export class Compiler extends Worker {
-  /** where to write results to */
-  dstFolder: string
   /** a parsed tsconfig file */
-  tsConfig: object | undefined
+  config: any
 
-  constructor(public srcFolder: string, public codeFolders: string[]) {
+  constructor(public srcFolder: string) {
     super(srcFolder)
-    this.dstFolder = join(this.srcFolder, '.seagull', 'dist')
-    this.loadTsConfig()
+    this.config = this.parseTsConfig()
   }
 
   async onFileCreated(filePath: string) {
@@ -31,37 +33,45 @@ export class Compiler extends Worker {
   }
 
   async watcherWillStart() {
-    for (const folder of this.codeFolders) {
+    for (const folder of this.config.compilerOptions.rootDirs) {
       if (fs.existsSync(join(this.srcFolder, folder))) {
         this.compileCodeFolder(folder)
       }
     }
   }
 
-  private loadTsConfig() {
-    const file = resolve(join(this.srcFolder, 'tsconfig.json'))
-    const exists = fs.existsSync(file)
-    const reader = (path: string) => fs.readFileSync(path, 'utf-8')
-    this.tsConfig = exists ? ts.readConfigFile(file, reader).config : undefined
-  }
-
   private compileCodeFolder(name: string): void {
     const from = resolve(join(this.srcFolder, name))
-    const to = resolve(join(this.dstFolder, name))
-    Transpile.transpileFolder(from, to, this.tsConfig)
+    const outDir = this.config.compilerOptions.outDir
+    const to = resolve(join(this.srcFolder, outDir, name))
+    Transpile.transpileFolder(from, to, this.config)
   }
 
   private compileCodeFile(path: string): void {
     const from = resolve(path)
     const fragment = relative(this.srcFolder, from).replace(/tsx?$/, 'js')
-    const to = resolve(join(this.dstFolder, fragment))
-    Transpile.transpileFile(from, to, this.tsConfig)
+    const outDir = this.config.compilerOptions.outDir
+    const to = resolve(join(this.srcFolder, outDir, fragment))
+    Transpile.transpileFile(from, to, this.config)
   }
 
   private deleteFile(path: string): void {
     const from = resolve(path)
     const fragment = relative(this.srcFolder, from).replace(/tsx?$/, 'js')
-    const to = resolve(join(this.dstFolder, fragment))
+    const outDir = this.config.compilerOptions.outDir
+    const to = resolve(join(this.srcFolder, outDir, fragment))
     fs.unlinkSync(to)
+  }
+
+  private parseTsConfig() {
+    const actual = this.loadTsConfigFile()
+    return actual ? actual : TsConfig
+  }
+
+  private loadTsConfigFile() {
+    const file = resolve(join(this.srcFolder, 'tsconfig.json'))
+    const exists = fs.existsSync(file)
+    const reader = (path: string) => fs.readFileSync(path, 'utf-8')
+    return exists ? ts.readConfigFile(file, reader).config : undefined
   }
 }

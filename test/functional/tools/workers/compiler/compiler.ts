@@ -15,48 +15,47 @@ class Test extends FunctionalTest {
 
   @test
   'can be instantiated'() {
-    const compiler = new Compiler('/tmp', [])
+    const compiler = new Compiler('/tmp')
     compiler.should.be.an('object')
-    compiler.codeFolders.should.be.deep.equal([])
     compiler.srcFolder.should.be.equal('/tmp')
-    compiler.dstFolder.should.be.equal('/tmp/.seagull/dist')
+    compiler.config.compilerOptions.outDir.should.be.equal('.seagull/dist')
   }
 
   @test
   'does load tsconfig if existing'() {
     fs.writeFileSync('/tmp/tsconfig.json', '{"compilerOptions": {}}', 'utf-8')
-    const compiler = new Compiler('/tmp', [])
-    compiler.tsConfig!.should.be.deep.equal({ compilerOptions: {} })
+    const compiler = new Compiler('/tmp')
+    compiler.config.should.be.deep.equal({ compilerOptions: {} })
   }
 
   @test
   async 'can compile source folders'() {
-    fs.mkdirSync('/tmp/src')
-    fs.writeFileSync('/tmp/src/a.ts', 'export default {}', 'utf-8')
-    const compiler = new Compiler('/tmp', ['src'])
+    fs.mkdirSync('/tmp/frontend')
+    fs.writeFileSync('/tmp/frontend/a.ts', 'export default {}', 'utf-8')
+    const compiler = new Compiler('/tmp')
     await compiler.watcherWillStart()
-    const file = fs.readFileSync('/tmp/.seagull/dist/src/a.js', 'utf-8')
-    file.should.contain('default = {}')
+    const file = fs.readFileSync('/tmp/.seagull/dist/frontend/a.js', 'utf-8')
+    file.should.contain('exports["default"] = {}')
   }
 
   @test
   async 'can compile single file on created hook'() {
     fs.mkdirSync('/tmp/src')
     fs.writeFileSync('/tmp/src/a.ts', 'export default {}', 'utf-8')
-    const compiler = new Compiler('/tmp', ['src'])
+    const compiler = new Compiler('/tmp')
     await compiler.onFileCreated('/tmp/src/a.ts')
     const file = fs.readFileSync('/tmp/.seagull/dist/src/a.js', 'utf-8')
-    file.should.contain('default = {}')
+    file.should.contain('exports["default"] = {}')
   }
 
   @test
   async 'can compile single file on changed hook'() {
     fs.mkdirSync('/tmp/src')
     fs.writeFileSync('/tmp/src/a.ts', 'export default {}', 'utf-8')
-    const compiler = new Compiler('/tmp', ['src'])
+    const compiler = new Compiler('/tmp')
     await compiler.onFileChanged('/tmp/src/a.ts')
     const file = fs.readFileSync('/tmp/.seagull/dist/src/a.js', 'utf-8')
-    file.should.contain('default = {}')
+    file.should.contain('exports["default"] = {}')
   }
 
   @test
@@ -64,11 +63,11 @@ class Test extends FunctionalTest {
     const srcPath = '/tmp/src/a.ts'
     fs.mkdirSync('/tmp/src')
     fs.writeFileSync(srcPath, 'export default {}', 'utf-8')
-    const compiler = new Compiler('/tmp', ['src'])
+    const compiler = new Compiler('/tmp')
     await compiler.onFileChanged(srcPath)
     const dstPath = '/tmp/.seagull/dist/src/a.js'
     const file = fs.readFileSync(dstPath, 'utf-8')
-    file.should.contain('default = {}')
+    file.should.contain('exports["default"] = {}')
     await compiler.onFileRemoved(srcPath)
     fs.existsSync(dstPath).should.be.equal(false)
   }
