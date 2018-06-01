@@ -3,9 +3,9 @@ import * as fs from 'fs'
 import * as log from 'npmlog'
 import { join, relative, resolve } from 'path'
 import * as ts from 'typescript'
-import { TsConfig } from '../../../scaffold'
-import { Worker } from '../Worker'
-import * as Transpile from './transpile'
+import { TsConfig } from '../../scaffold'
+import { Worker } from './worker'
+import * as Transpile from '../util/transpile'
 
 /**
  * Custom implementation of a TS/TSX compiler. Respects the tsconfig file in

@@ -1,7 +1,7 @@
 /** @module Tools */
 import * as http from 'http'
 import * as log from 'npmlog'
-import { Worker } from '../Worker'
+import { Worker } from './worker'
 
 export class HTTPServer extends Worker {
   private server: http.Server | undefined

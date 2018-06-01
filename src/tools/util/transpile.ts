@@ -2,7 +2,7 @@
 import * as fs from 'fs'
 import { flatten } from 'lodash'
 import * as ts from 'typescript'
-import { listFiles, writeFile } from '../../util'
+import { listFiles, writeFile } from './'
 
 /**
  * Directly transpiles a typescript source file to a javascript source file.

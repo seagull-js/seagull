@@ -5,8 +5,8 @@ import { join, relative, resolve } from 'path'
 import * as browserify from 'browserify'
 import * as sts from 'stream-string'
 import * as browserifyInc from 'browserify-incremental'
-import { Worker } from '../Worker'
-import { writeFile } from '../../util'
+import { Worker } from './worker'
+import { writeFile } from '../util'
 
 export class Bundler extends Worker {
   /** where the file walk should start at */
@@ -22,7 +22,14 @@ export class Bundler extends Worker {
 
   constructor(public srcFolder: string) {
     super(srcFolder)
-    this.entryFile = join(srcFolder, '.seagull', 'dist', 'src', 'frontend', 'index.js')
+    this.entryFile = join(
+      srcFolder,
+      '.seagull',
+      'dist',
+      'src',
+      'frontend',
+      'index.js'
+    )
     this.outFile = join(srcFolder, '.seagull', 'assets', 'bundle.js')
     this.createBundlerInstance()
   }
@@ -62,7 +69,8 @@ export class Bundler extends Worker {
   private createBundlerInstance() {
     const bfy = browserify(this.entryFile, this.createBundlerOpts())
     this.browserifyInstance = browserifyInc(bfy)
-    this.browserifyInstance.on('time', (time: any) => console.log('time (ms): ', time))
+    this.browserifyInstance.on('time', (time: any) =>
+      console.log('time (ms): ', time)
+    )
   }
-
 }

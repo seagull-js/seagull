@@ -2,7 +2,7 @@ import { Bundler } from '@tools/workers'
 import 'chai/register-should'
 import * as fs from 'fs'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
-import FunctionalTest from '../../../../helper/functional_test'
+import FunctionalTest from '../../../helper/functional_test'
 
 @suite('Functional::Tools::Workers::Bundler')
 class Test extends FunctionalTest {
