@@ -1,17 +1,19 @@
 import { Atom } from '@components/atom'
 import { AtomTest } from '@tdd/atom_test'
 import 'chai/register-should'
-import { skip, slow, suite, test, timeout } from 'mocha-typescript'
+import { suite, test } from 'mocha-typescript'
 import * as React from 'react'
 
 class Button extends Atom<{ label: string; handler: () => string }> {
   render() {
-    return <button onClick={e => this.props.handler}>{this.props.label}</button>
+    return (
+      <button onClick={() => this.props.handler}>{this.props.label}</button>
+    )
   }
 }
 
 @suite('Unit::Frontend::Components::Atom')
-class Test extends AtomTest<Button> {
+export class Test extends AtomTest<Button> {
   atom = Button
 
   @test

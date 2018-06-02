@@ -7,7 +7,7 @@ import * as React from 'react'
  * on [[shouldComponentUpdate]].
  */
 export interface IAtomProps {
-  [propName: string]: string | number | boolean | (() => any)
+  [propName: string]: string | number | boolean | undefined | (() => any)
 }
 
 /**

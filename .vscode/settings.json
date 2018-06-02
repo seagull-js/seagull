@@ -4,5 +4,6 @@
   "prettier.trailingComma": "es5",
   "prettier.useTabs": false,
   "prettier.tabWidth": 2,
-  "prettier.semi": false
+  "prettier.semi": false,
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
