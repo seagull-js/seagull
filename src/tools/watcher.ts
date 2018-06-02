@@ -1,6 +1,6 @@
 /** @module Tools */
 import * as chokidar from 'chokidar'
-// import * as clear from 'cli-clear'
+import { noop } from 'lodash'
 import { join, resolve } from 'path'
 import { strategies } from './strategies'
 import { Worker } from './workers'
@@ -25,7 +25,10 @@ export default class Watcher {
    */
   watcher: chokidar.FSWatcher | undefined
 
-  private workers: Worker[] = []
+  /**
+   * the list of workers to invoke on events (ordering matters!)
+   */
+  private workers: Worker[]
 
   /**
    * sets up common settings like folder paths and initializes Workers
@@ -61,32 +64,37 @@ export default class Watcher {
 
   private async triggerPreWatchingHook() {
     for (const worker of this.workers) {
-      await worker.watcherWillStart()
+      const handler = worker.watcherWillStart || noop
+      await handler()
     }
   }
 
   private async triggerPostWatchingHook() {
     for (const worker of this.workers) {
-      await worker.watcherDidStart()
+      const handler = worker.watcherDidStart || noop
+      await handler()
     }
   }
 
   private async triggerPreStoppingHook() {
     for (const worker of this.workers) {
-      await worker.watcherWillStop()
+      const handler = worker.watcherWillStop || noop
+      await handler
     }
   }
 
   private async triggerPostStoppingHook() {
     for (const worker of this.workers) {
-      await worker.watcherDidStop()
+      const handler = worker.watcherDidStop || noop
+      await handler()
     }
   }
 
   private registerFileAddEvents() {
     this.watcher!.on('add', async (filePath: string) => {
       for (const worker of this.workers) {
-        await worker.onFileCreated(filePath)
+        const handler = worker.onFileCreated || worker.onFileEvent || noop
+        await handler(filePath)
       }
     })
   }
@@ -94,7 +102,8 @@ export default class Watcher {
   private registerFileChangedEvents() {
     this.watcher!.on('change', async (filePath: string) => {
       for (const worker of this.workers) {
-        await worker.onFileChanged(filePath)
+        const handler = worker.onFileChanged || worker.onFileEvent || noop
+        await handler
       }
     })
   }
@@ -102,7 +111,8 @@ export default class Watcher {
   private registerFileRemovedEvents() {
     this.watcher!.on('unlink', async (filePath: string) => {
       for (const worker of this.workers) {
-        await worker.onFileRemoved(filePath)
+        const handler = worker.onFileRemoved || worker.onFileEvent || noop
+        await handler(filePath)
       }
     })
   }

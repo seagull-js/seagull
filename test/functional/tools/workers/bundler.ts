@@ -7,7 +7,6 @@ import FunctionalTest from '../../../helper/functional_test'
 @suite('Functional::Tools::Workers::Bundler')
 class Test extends FunctionalTest {
   before() {
-    require('lodash')
     this.mockFolder('/tmp')
   }
   after() {

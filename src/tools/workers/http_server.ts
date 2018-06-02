@@ -1,24 +1,17 @@
 /** @module Tools */
 import * as http from 'http'
 import * as log from 'npmlog'
-import { Worker } from './worker'
+import { Worker } from './interface'
 
-export class HTTPServer extends Worker {
+/**
+ * A local http server, currently only somewhat mocked and without much purpose.
+ */
+export class HTTPServer implements Worker {
   private server: http.Server | undefined
 
-  constructor(public srcFolder: string, public port: number = 8080) {
-    super(srcFolder)
-  }
+  constructor(public srcFolder: string, public port: number = 8080) {}
 
-  async onFileCreated(filePath: string) {
-    await this.restart()
-  }
-
-  async onFileChanged(filePath: string) {
-    await this.restart()
-  }
-
-  async onFileRemoved(filePath: string) {
+  async onFileEvent(filePath: string) {
     await this.restart()
   }
 

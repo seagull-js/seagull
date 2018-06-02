@@ -8,7 +8,7 @@ export interface IStrategies {
 
 export const strategies: IStrategies = {
   default: watcher => [
-    new Workers.Compiler(watcher.srcFolder, watcher.codeFolders),
+    new Workers.Compiler(watcher.srcFolder),
     new Workers.HTTPServer(watcher.srcFolder, 8080),
   ],
   // default: [],

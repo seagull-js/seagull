@@ -39,21 +39,11 @@ class Test extends FunctionalTest {
   }
 
   @test
-  async 'can compile single file on created hook'() {
+  async 'can compile single file on created/changed hook'() {
     fs.mkdirSync('/tmp/src')
     fs.writeFileSync('/tmp/src/a.ts', 'export default {}', 'utf-8')
     const compiler = new Compiler('/tmp')
-    await compiler.onFileCreated('/tmp/src/a.ts')
-    const file = fs.readFileSync('/tmp/.seagull/dist/src/a.js', 'utf-8')
-    file.should.contain('exports["default"] = {}')
-  }
-
-  @test
-  async 'can compile single file on changed hook'() {
-    fs.mkdirSync('/tmp/src')
-    fs.writeFileSync('/tmp/src/a.ts', 'export default {}', 'utf-8')
-    const compiler = new Compiler('/tmp')
-    await compiler.onFileChanged('/tmp/src/a.ts')
+    await compiler.onFileEvent('/tmp/src/a.ts')
     const file = fs.readFileSync('/tmp/.seagull/dist/src/a.js', 'utf-8')
     file.should.contain('exports["default"] = {}')
   }
@@ -64,7 +54,7 @@ class Test extends FunctionalTest {
     fs.mkdirSync('/tmp/src')
     fs.writeFileSync(srcPath, 'export default {}', 'utf-8')
     const compiler = new Compiler('/tmp')
-    await compiler.onFileChanged(srcPath)
+    await compiler.onFileEvent(srcPath)
     const dstPath = '/tmp/.seagull/dist/src/a.js'
     const file = fs.readFileSync(dstPath, 'utf-8')
     file.should.contain('exports["default"] = {}')

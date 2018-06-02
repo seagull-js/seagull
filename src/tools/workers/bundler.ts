@@ -5,10 +5,18 @@ import { join, relative, resolve } from 'path'
 import * as browserify from 'browserify'
 import * as sts from 'stream-string'
 import * as browserifyInc from 'browserify-incremental'
-import { Worker } from './worker'
+import { Worker } from './interface'
 import { writeFile } from '../util'
 
-export class Bundler extends Worker {
+/**
+ * Browserify fitted into the [[Worker]] interface, basically bundling the
+ * frontend folder on every file event and on startup.
+ * Works with caching, leveraging `browserify-incremental` for fast rebuilds on
+ * all file events after the initial bundling on watcher start.
+ * Does read the entry file for bundling from the project's `package.json` file
+ * (the special `'browser'` field).
+ */
+export class Bundler implements Worker {
   /** where the file walk should start at */
   entryFile: string
   /** where the result will be saved to */
@@ -21,28 +29,12 @@ export class Bundler extends Worker {
   browserifyInstance: any
 
   constructor(public srcFolder: string) {
-    super(srcFolder)
-    this.entryFile = join(
-      srcFolder,
-      '.seagull',
-      'dist',
-      'src',
-      'frontend',
-      'index.js'
-    )
+    this.entryFile = join(srcFolder, this.getEntryFilePath())
     this.outFile = join(srcFolder, '.seagull', 'assets', 'bundle.js')
     this.createBundlerInstance()
   }
 
-  async onFileCreated(filePath: string) {
-    await this.bundle()
-  }
-
-  async onFileChanged(filePath: string) {
-    await this.bundle()
-  }
-
-  async onFileRemoved(filePath: string) {
+  async onFileEvent(filePath: string) {
     await this.bundle()
   }
 
@@ -72,5 +64,12 @@ export class Bundler extends Worker {
     this.browserifyInstance.on('time', (time: any) =>
       console.log('time (ms): ', time)
     )
+  }
+
+  private getEntryFilePath() {
+    const file = resolve(join(this.srcFolder, 'package.json'))
+    const exists = fs.existsSync(file)
+    const json = exists ? JSON.parse(fs.readFileSync(file, 'utf-8')) : {}
+    return json.browser || '.seagull/dist/src/frontend/index.js'
   }
 }

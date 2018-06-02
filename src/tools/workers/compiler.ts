@@ -4,32 +4,28 @@ import * as log from 'npmlog'
 import { join, relative, resolve } from 'path'
 import * as ts from 'typescript'
 import { TsConfig } from '../../scaffold'
-import { Worker } from './worker'
+import { Worker } from './interface'
 import * as Transpile from '../util/transpile'
 
 /**
  * Custom implementation of a TS/TSX compiler. Respects the tsconfig file in
  * the target [[srcFolder]] or uses seagull-specific defaults.
+ * See [[TsConfig]] from more details about default values.
  */
-export class Compiler extends Worker {
+export class Compiler implements Worker {
   /** a parsed tsconfig file */
   config: any
 
   constructor(public srcFolder: string) {
-    super(srcFolder)
     this.config = this.parseTsConfig()
   }
 
-  async onFileCreated(filePath: string) {
-    this.compileCodeFile(filePath)
-  }
-
-  async onFileChanged(filePath: string) {
-    this.compileCodeFile(filePath)
+  async onFileEvent(filePath: string) {
+    filePath.match(/tsx?$/) && this.compileCodeFile(filePath)
   }
 
   async onFileRemoved(filePath: string) {
-    this.deleteFile(filePath)
+    filePath.match(/tsx?$/) && this.deleteFile(filePath)
   }
 
   async watcherWillStart() {
