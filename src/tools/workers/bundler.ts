@@ -2,8 +2,7 @@
 import * as browserify from 'browserify'
 import * as browserifyInc from 'browserify-incremental'
 import * as fs from 'fs'
-import * as log from 'npmlog'
-import { join, relative, resolve } from 'path'
+import { join, resolve } from 'path'
 import * as sts from 'stream-string'
 import { writeFile } from '../util'
 import { IWorker } from './interface'
@@ -34,7 +33,7 @@ export class Bundler implements IWorker {
     this.createBundlerInstance()
   }
 
-  async onFileEvent(filePath: string) {
+  async onFileEvent() {
     await this.bundle()
   }
 

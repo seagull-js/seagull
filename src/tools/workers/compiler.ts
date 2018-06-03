@@ -1,7 +1,6 @@
 /** @module Tools */
 import * as fs from 'fs'
 import { noop } from 'lodash'
-import * as log from 'npmlog'
 import { join, relative, resolve } from 'path'
 import * as ts from 'typescript'
 import { TsConfig } from '../../scaffold'
