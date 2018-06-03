@@ -1,18 +1,19 @@
 /** @module Tools */
 import * as fs from 'fs'
+import { noop } from 'lodash'
 import * as log from 'npmlog'
 import { join, relative, resolve } from 'path'
 import * as ts from 'typescript'
 import { TsConfig } from '../../scaffold'
-import { Worker } from './interface'
 import * as Transpile from '../util/transpile'
+import { IWorker } from './interface'
 
 /**
  * Custom implementation of a TS/TSX compiler. Respects the tsconfig file in
  * the target [[srcFolder]] or uses seagull-specific defaults.
  * See [[TsConfig]] from more details about default values.
  */
-export class Compiler implements Worker {
+export class Compiler implements IWorker {
   /** a parsed tsconfig file */
   config: any
 
@@ -21,11 +22,11 @@ export class Compiler implements Worker {
   }
 
   async onFileEvent(filePath: string) {
-    filePath.match(/tsx?$/) && this.compileCodeFile(filePath)
+    filePath.match(/tsx?$/) ? this.compileCodeFile(filePath) : noop()
   }
 
   async onFileRemoved(filePath: string) {
-    filePath.match(/tsx?$/) && this.deleteFile(filePath)
+    filePath.match(/tsx?$/) ? this.deleteFile(filePath) : noop()
   }
 
   async watcherWillStart() {

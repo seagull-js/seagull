@@ -27,7 +27,7 @@
  * }
  * ```
  */
-export interface Worker {
+export interface IWorker {
   /**
    * every worker must have access to the actual project folder path to make
    * sense of the file events that might occur.

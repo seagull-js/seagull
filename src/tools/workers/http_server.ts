@@ -1,12 +1,12 @@
 /** @module Tools */
 import * as http from 'http'
 import * as log from 'npmlog'
-import { Worker } from './interface'
+import { IWorker } from './interface'
 
 /**
  * A local http server, currently only somewhat mocked and without much purpose.
  */
-export class HTTPServer implements Worker {
+export class HTTPServer implements IWorker {
   private server: http.Server | undefined
 
   constructor(public srcFolder: string, public port: number = 8080) {}

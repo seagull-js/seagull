@@ -1,12 +1,12 @@
 /** @module Tools */
+import * as browserify from 'browserify'
+import * as browserifyInc from 'browserify-incremental'
 import * as fs from 'fs'
 import * as log from 'npmlog'
 import { join, relative, resolve } from 'path'
-import * as browserify from 'browserify'
 import * as sts from 'stream-string'
-import * as browserifyInc from 'browserify-incremental'
-import { Worker } from './interface'
 import { writeFile } from '../util'
+import { IWorker } from './interface'
 
 /**
  * Browserify fitted into the [[Worker]] interface, basically bundling the
@@ -16,7 +16,7 @@ import { writeFile } from '../util'
  * Does read the entry file for bundling from the project's `package.json` file
  * (the special `'browser'` field).
  */
-export class Bundler implements Worker {
+export class Bundler implements IWorker {
   /** where the file walk should start at */
   entryFile: string
   /** where the result will be saved to */
@@ -62,6 +62,7 @@ export class Bundler implements Worker {
     const bfy = browserify(this.entryFile, this.createBundlerOpts())
     this.browserifyInstance = browserifyInc(bfy)
     this.browserifyInstance.on('time', (time: any) =>
+      // tslint:disable-next-line:no-console
       console.log('time (ms): ', time)
     )
   }
