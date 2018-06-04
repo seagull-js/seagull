@@ -1,13 +1,12 @@
 import { writeFile } from '@tools/util'
 import { HTTPServer, IndexFileGenerator } from '@tools/workers'
 import 'chai/register-should'
-import * as fs from 'fs'
 import 'isomorphic-fetch'
-import { skip, slow, suite, test, timeout } from 'mocha-typescript'
+import { suite, test } from 'mocha-typescript'
 import FunctionalTest from '../../../helper/functional_test'
 
 @suite('Functional::Tools::Workers::HTTPServer')
-class Test extends FunctionalTest {
+export class Test extends FunctionalTest {
   server: HTTPServer | undefined
   async before() {
     this.mockFolder('/tmp')

@@ -3,7 +3,7 @@ import * as chokidar from 'chokidar'
 import { noop } from 'lodash'
 import { join, resolve } from 'path'
 import { strategies } from './strategies'
-import { Worker } from './workers'
+import { IWorker } from './workers'
 
 /**
  * Main Process for the development server: watches the current project folder,
@@ -28,7 +28,7 @@ export default class Watcher {
   /**
    * the list of workers to invoke on events (ordering matters!)
    */
-  private workers: Worker[]
+  private workers: IWorker[]
 
   /**
    * sets up common settings like folder paths and initializes Workers
