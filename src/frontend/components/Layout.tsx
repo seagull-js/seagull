@@ -10,7 +10,7 @@ export interface ILayoutProps {
   helmet?: import('react-helmet').HelmetData
   styles?: string
   states?: any
-  children: React.ReactNode
+  children?: React.ReactNode
 }
 
 /**

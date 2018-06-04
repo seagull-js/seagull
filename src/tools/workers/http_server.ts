@@ -1,10 +1,12 @@
 /** @module Tools */
+import * as fs from 'fs'
 import * as http from 'http'
 import * as log from 'npmlog'
+import { join } from 'path'
 import { IWorker } from './interface'
 
 /**
- * A local http server, currently only somewhat mocked and without much purpose.
+ * A local http server, serving a statically compiled app.
  */
 export class HTTPServer implements IWorker {
   private server: http.Server | undefined
@@ -30,8 +32,7 @@ export class HTTPServer implements IWorker {
     return new Promise((resolve, reject) => {
       this.server = this.boot()
       this.server.listen(this.port, () => {
-        const message = `dev server started on port: ${this.port}`
-        // tslint:disable-next-line:no-console
+        const message = `dev server ready on port: ${this.port}`
         log.info('', message)
         resolve()
       })
@@ -46,8 +47,25 @@ export class HTTPServer implements IWorker {
 
   private boot() {
     return http.createServer(async (req, res) => {
-      res.write('hello seagull!')
+      let result: string
+      try {
+        result = await this.handleStaticApp(req)
+      } catch (error) {
+        result = JSON.stringify(error, null, 2)
+      }
+      res.write(result)
       res.end()
     })
+  }
+
+  private async handleStaticApp(req: http.IncomingMessage) {
+    const url = req.url || ''
+    const filePath = join(this.srcFolder, '.seagull/dist', url)
+    if (url && url !== '/' && fs.existsSync(filePath)) {
+      return fs.readFileSync(filePath, 'utf-8')
+    } else {
+      const indexFilePath = join(this.srcFolder, '.seagull/dist/index.html')
+      return fs.readFileSync(indexFilePath, 'utf-8')
+    }
   }
 }
