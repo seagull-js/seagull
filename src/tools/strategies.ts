@@ -8,6 +8,7 @@ export interface IStrategies {
 
 export const strategies: IStrategies = {
   default: watcher => [
+    new Workers.CopyFragments(watcher.srcFolder),
     new Workers.Compiler(watcher.srcFolder),
     new Workers.IndexFileGenerator(watcher.srcFolder),
     new Workers.Bundler(watcher.srcFolder),

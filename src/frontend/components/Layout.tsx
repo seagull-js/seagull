@@ -40,7 +40,7 @@ export const Layout = (props: ILayoutProps) => (
           }}
         />
       )}
-      <script src="/dist/assets/bundle.js" />
+      <script src="/assets/bundle.js" />
       <script>window.app.mount()</script>
     </body>
   </html>
