@@ -18,9 +18,7 @@ class Test extends FunctionalTest {
     const bundler = new Bundler('/tmp')
     bundler.should.be.an('object')
     bundler.srcFolder.should.be.equal('/tmp')
-    bundler.entryFile.should.be.equal(
-      '/tmp/.seagull/dist/src/frontend/index.js'
-    )
+    bundler.entryFile.should.be.equal('/tmp/.seagull/dist/frontend/index.js')
     bundler.outFile.should.be.equal('/tmp/.seagull/assets/bundle.js')
   }
 
@@ -28,14 +26,9 @@ class Test extends FunctionalTest {
   async 'can bundle source files'() {
     fs.mkdirSync('/tmp/.seagull')
     fs.mkdirSync('/tmp/.seagull/dist')
-    fs.mkdirSync('/tmp/.seagull/dist/src')
-    fs.mkdirSync('/tmp/.seagull/dist/src/frontend')
+    fs.mkdirSync('/tmp/.seagull/dist/frontend')
     const content = 'module.exports = {a: 1}'
-    fs.writeFileSync(
-      '/tmp/.seagull/dist/src/frontend/index.js',
-      content,
-      'utf-8'
-    )
+    fs.writeFileSync('/tmp/.seagull/dist/frontend/index.js', content, 'utf-8')
     fs.mkdirSync('/tmp/.seagull/assets')
     const bundler = new Bundler('/tmp')
     await bundler.watcherWillStart()
