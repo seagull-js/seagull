@@ -2,6 +2,7 @@
 import * as browserify from 'browserify'
 import * as browserifyInc from 'browserify-incremental'
 import * as fs from 'fs'
+import * as log from 'npmlog'
 import { join, resolve } from 'path'
 import * as sts from 'stream-string'
 import { writeFile } from '../util'
@@ -61,15 +62,15 @@ export class Bundler implements IWorker {
     const bfy = browserify(this.entryFile, this.createBundlerOpts())
     this.browserifyInstance = browserifyInc(bfy)
     this.browserifyInstance.on('time', (time: any) =>
-      // tslint:disable-next-line:no-console
-      console.log('time (ms): ', time)
+      log.info('[bundler]', `bundled frontend in ${time}ms`)
     )
   }
 
   private getEntryFilePath() {
+    log.info('[bundler]', 'loading settings from:', 'package.json')
     const file = resolve(join(this.srcFolder, 'package.json'))
     const exists = fs.existsSync(file)
     const json = exists ? JSON.parse(fs.readFileSync(file, 'utf-8')) : {}
-    return json.browser || '.seagull/dist/src/frontend/index.js'
+    return json.browser || '.seagull/dist/frontend/index.js'
   }
 }

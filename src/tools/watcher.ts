@@ -65,28 +65,28 @@ export default class Watcher {
   private async triggerPreWatchingHook() {
     for (const worker of this.workers) {
       const handler = worker.watcherWillStart || noop
-      await handler()
+      await handler.bind(worker)()
     }
   }
 
   private async triggerPostWatchingHook() {
     for (const worker of this.workers) {
       const handler = worker.watcherDidStart || noop
-      await handler()
+      await handler.bind(worker)()
     }
   }
 
   private async triggerPreStoppingHook() {
     for (const worker of this.workers) {
       const handler = worker.watcherWillStop || noop
-      await handler
+      await handler.bind(worker)()
     }
   }
 
   private async triggerPostStoppingHook() {
     for (const worker of this.workers) {
       const handler = worker.watcherDidStop || noop
-      await handler()
+      await handler.bind(worker)()
     }
   }
 
@@ -94,7 +94,7 @@ export default class Watcher {
     this.watcher!.on('add', async (filePath: string) => {
       for (const worker of this.workers) {
         const handler = worker.onFileCreated || worker.onFileEvent || noop
-        await handler(filePath)
+        await handler.bind(worker)(filePath)
       }
     })
   }
@@ -103,7 +103,7 @@ export default class Watcher {
     this.watcher!.on('change', async (filePath: string) => {
       for (const worker of this.workers) {
         const handler = worker.onFileChanged || worker.onFileEvent || noop
-        await handler
+        await handler.bind(worker)(filePath)
       }
     })
   }
@@ -112,7 +112,7 @@ export default class Watcher {
     this.watcher!.on('unlink', async (filePath: string) => {
       for (const worker of this.workers) {
         const handler = worker.onFileRemoved || worker.onFileEvent || noop
-        await handler(filePath)
+        await handler.bind(worker)(filePath)
       }
     })
   }

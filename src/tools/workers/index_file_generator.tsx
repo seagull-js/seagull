@@ -15,7 +15,7 @@ export class IndexFileGenerator implements IWorker {
 
   async watcherWillStart() {
     const html = renderToStaticMarkup(<Layout />)
-    const filePath = join(this.srcFolder, '.seagull/dist/index.html')
+    const filePath = join(this.srcFolder, '.seagull/index.html')
     writeFile(filePath, html)
   }
 }

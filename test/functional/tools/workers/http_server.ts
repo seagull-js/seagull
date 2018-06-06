@@ -14,7 +14,7 @@ export class Test extends FunctionalTest {
     indexFileGenerator.should.be.an('object')
     indexFileGenerator.srcFolder.should.be.equal('/tmp')
     await indexFileGenerator.watcherWillStart()
-    writeFile('/tmp/.seagull/dist/assets/bundle.js', 'module.exports = {}')
+    writeFile('/tmp/.seagull/assets/bundle.js', 'module.exports = {}')
     this.server = new HTTPServer('/tmp')
     await this.server.start()
   }

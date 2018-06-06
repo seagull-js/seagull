@@ -15,10 +15,12 @@ export class HTTPServer implements IWorker {
 
   async onFileEvent(filePath: string) {
     await this.restart()
+    log.info('[HTTPServer]', `restarted, ready on port: ${this.port}`)
   }
 
   async watcherDidStart() {
     await this.start()
+    log.info('[HTTPServer]', `ready on port: ${this.port}`)
   }
 
   async restart() {
@@ -32,8 +34,6 @@ export class HTTPServer implements IWorker {
     return new Promise((resolve, reject) => {
       this.server = this.boot()
       this.server.listen(this.port, () => {
-        const message = `dev server ready on port: ${this.port}`
-        log.info('', message)
         resolve()
       })
     })
@@ -60,11 +60,11 @@ export class HTTPServer implements IWorker {
 
   private async handleStaticApp(req: http.IncomingMessage) {
     const url = req.url || ''
-    const filePath = join(this.srcFolder, '.seagull/dist', url)
+    const filePath = join(this.srcFolder, '.seagull/', url)
     if (url && url !== '/' && fs.existsSync(filePath)) {
       return fs.readFileSync(filePath, 'utf-8')
     } else {
-      const indexFilePath = join(this.srcFolder, '.seagull/dist/index.html')
+      const indexFilePath = join(this.srcFolder, '.seagull/index.html')
       return fs.readFileSync(indexFilePath, 'utf-8')
     }
   }

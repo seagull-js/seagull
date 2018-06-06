@@ -1,6 +1,7 @@
 /** @module Tools */
 import * as fs from 'fs'
 import { noop } from 'lodash'
+import * as log from 'npmlog'
 import { join, relative, resolve } from 'path'
 import * as ts from 'typescript'
 import { TsConfig } from '../../scaffold'
@@ -22,16 +23,19 @@ export class Compiler implements IWorker {
 
   async onFileEvent(filePath: string) {
     filePath.match(/tsx?$/) ? this.compileCodeFile(filePath) : noop()
+    log.info('[compiler]', 'updated:', relative(this.srcFolder, filePath))
   }
 
   async onFileRemoved(filePath: string) {
     filePath.match(/tsx?$/) ? this.deleteFile(filePath) : noop()
+    log.info('[compiler]', 'removed:', relative(this.srcFolder, filePath))
   }
 
   async watcherWillStart() {
     for (const folder of this.config.compilerOptions.rootDirs) {
       if (fs.existsSync(join(this.srcFolder, folder))) {
         this.compileCodeFolder(folder)
+        log.info('[compiler]', 'prepared:', relative(this.srcFolder, folder))
       }
     }
   }
@@ -66,6 +70,7 @@ export class Compiler implements IWorker {
 
   private loadTsConfigFile() {
     const file = resolve(join(this.srcFolder, 'tsconfig.json'))
+    log.info('[compiler]', 'loading settings from:', 'tsconfig.json')
     const exists = fs.existsSync(file)
     const reader = (path: string) => fs.readFileSync(path, 'utf-8')
     return exists ? ts.readConfigFile(file, reader).config : undefined

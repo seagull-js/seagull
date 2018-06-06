@@ -26,7 +26,7 @@ class Test extends FunctionalTest {
     indexFileGenerator.should.be.an('object')
     indexFileGenerator.srcFolder.should.be.equal('/tmp')
     await indexFileGenerator.watcherWillStart()
-    const file = fs.readFileSync('/tmp/.seagull/dist/index.html', 'utf-8')
+    const file = fs.readFileSync('/tmp/.seagull/index.html', 'utf-8')
     file.should.contain('<div id="app"></div>')
   }
 }
