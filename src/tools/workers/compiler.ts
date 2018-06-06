@@ -4,7 +4,7 @@ import { noop } from 'lodash'
 import * as log from 'npmlog'
 import { join, relative, resolve } from 'path'
 import * as ts from 'typescript'
-import { TsConfig } from '../../scaffold'
+import { JsonTsconfig } from '../../scaffold'
 import * as Transpile from '../util/transpile'
 import { IWorker } from './interface'
 
@@ -65,7 +65,7 @@ export class Compiler implements IWorker {
 
   private parseTsConfig() {
     const actual = this.loadTsConfigFile()
-    return actual ? actual : TsConfig
+    return actual ? actual : JsonTsconfig().toObject()
   }
 
   private loadTsConfigFile() {
