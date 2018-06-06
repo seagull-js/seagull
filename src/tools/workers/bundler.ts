@@ -62,12 +62,12 @@ export class Bundler implements IWorker {
     const bfy = browserify(this.entryFile, this.createBundlerOpts())
     this.browserifyInstance = browserifyInc(bfy)
     this.browserifyInstance.on('time', (time: any) =>
-      log.info('[bundler]', `bundled frontend in ${time}ms`)
+      log.info('[Bundler]', `bundled frontend in ${time}ms`)
     )
   }
 
   private getEntryFilePath() {
-    log.info('[bundler]', 'loading settings from:', 'package.json')
+    log.info('[Bundler]', 'loading settings from:', 'package.json')
     const file = resolve(join(this.srcFolder, 'package.json'))
     const exists = fs.existsSync(file)
     const json = exists ? JSON.parse(fs.readFileSync(file, 'utf-8')) : {}

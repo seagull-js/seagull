@@ -3,10 +3,11 @@
   "extends": ["tslint:recommended", "tslint-config-prettier"],
   "jsRules": {},
   "rules": {
-    "quotemark": [true, "single", "jsx-double"],
-    "member-access": [true, "no-public"],
     "interface-over-type-literal": [false],
-    "max-classes-per-file": [false]
+    "max-classes-per-file": [false],
+    "member-access": [true, "no-public"],
+    "no-console": [true, "log", "error"],
+    "quotemark": [true, "single", "jsx-double"]
   },
   "rulesDirectory": []
 }

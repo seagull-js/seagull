@@ -1,6 +1,7 @@
 /** @module Tools */
 import * as chokidar from 'chokidar'
 import { noop } from 'lodash'
+import * as log from 'npmlog'
 import { join, resolve } from 'path'
 import { strategies } from './strategies'
 import { IWorker } from './workers'
@@ -63,6 +64,8 @@ export default class Watcher {
   }
 
   private async triggerPreWatchingHook() {
+    console.clear()
+    log.http('', 'preparing seagull development server toolchain')
     for (const worker of this.workers) {
       const handler = worker.watcherWillStart || noop
       await handler.bind(worker)()
@@ -77,6 +80,7 @@ export default class Watcher {
   }
 
   private async triggerPreStoppingHook() {
+    console.clear()
     for (const worker of this.workers) {
       const handler = worker.watcherWillStop || noop
       await handler.bind(worker)()
@@ -92,6 +96,7 @@ export default class Watcher {
 
   private registerFileAddEvents() {
     this.watcher!.on('add', async (filePath: string) => {
+      console.clear()
       for (const worker of this.workers) {
         const handler = worker.onFileCreated || worker.onFileEvent || noop
         await handler.bind(worker)(filePath)
@@ -101,6 +106,7 @@ export default class Watcher {
 
   private registerFileChangedEvents() {
     this.watcher!.on('change', async (filePath: string) => {
+      console.clear()
       for (const worker of this.workers) {
         const handler = worker.onFileChanged || worker.onFileEvent || noop
         await handler.bind(worker)(filePath)
@@ -110,6 +116,7 @@ export default class Watcher {
 
   private registerFileRemovedEvents() {
     this.watcher!.on('unlink', async (filePath: string) => {
+      console.clear()
       for (const worker of this.workers) {
         const handler = worker.onFileRemoved || worker.onFileEvent || noop
         await handler.bind(worker)(filePath)

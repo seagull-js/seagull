@@ -17,7 +17,7 @@ export class CopyFragments implements IWorker {
     await new Promise(done =>
       cnm(this.srcFolder, to, () => {
         const duration = new Date().getTime() - startTime
-        log.info('[fragments]', `prepared dependencies: ${duration}ms`)
+        log.info('[Fragments]', `prepared dependencies: ${duration}ms`)
         done()
       })
     )

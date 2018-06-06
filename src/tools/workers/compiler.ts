@@ -35,7 +35,7 @@ export class Compiler implements IWorker {
     for (const folder of this.config.compilerOptions.rootDirs) {
       if (fs.existsSync(join(this.srcFolder, folder))) {
         this.compileCodeFolder(folder)
-        log.info('[compiler]', 'prepared:', relative(this.srcFolder, folder))
+        log.info('[compiler]', 'transpiled:', relative(this.srcFolder, folder))
       }
     }
   }
@@ -70,7 +70,7 @@ export class Compiler implements IWorker {
 
   private loadTsConfigFile() {
     const file = resolve(join(this.srcFolder, 'tsconfig.json'))
-    log.info('[compiler]', 'loading settings from:', 'tsconfig.json')
+    log.info('[Compiler]', 'loading settings from:', 'tsconfig.json')
     const exists = fs.existsSync(file)
     const reader = (path: string) => fs.readFileSync(path, 'utf-8')
     return exists ? ts.readConfigFile(file, reader).config : undefined
