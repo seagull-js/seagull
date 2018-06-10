@@ -27,6 +27,7 @@ export interface IMethod {
   }>
   body?: string // inline stuff works for now
   doc?: string
+  decorator?: { name: string; arguments?: any[] }
 }
 
 export class Class extends Base {
@@ -47,6 +48,11 @@ export class Class extends Base {
     return this
   }
 
+  addDecorator(name: string, ...args: any[]): this {
+    this.classDeclaration.addDecorator({ name, arguments: args })
+    return this
+  }
+
   addMethod(params: IMethod): this {
     const opts = { isStatic: !!params.static, name: params.name }
     const method = this.classDeclaration.addMethod(opts)
@@ -64,6 +70,9 @@ export class Class extends Base {
     }
     if (params.doc) {
       method.addJsDoc({ description: params.doc })
+    }
+    if (params.decorator) {
+      method.addDecorator(params.decorator)
     }
     return this
   }
