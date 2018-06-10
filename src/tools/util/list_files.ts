@@ -1,3 +1,4 @@
+/** @module Tools */
 import * as fs from 'fs'
 import { flatten } from 'lodash'
 
