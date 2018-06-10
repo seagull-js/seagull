@@ -1,6 +1,5 @@
 /** @module Scaffold */
-import { join } from 'path'
-import { Json } from './'
+import { JsonGenerator as Json } from './'
 
 const rules = {
   'interface-over-type-literal': [false],
@@ -10,7 +9,7 @@ const rules = {
   quotemark: [true, 'single', 'jsx-double'],
 }
 
-export function JsonTslint(): Json {
+export function TslintJsonGenerator(): Json {
   const gen = new Json()
   gen.set('defaultSeverity', 'error')
   gen.set('extends', ['tslint:recommended', 'tslint-config-prettier'])

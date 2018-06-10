@@ -1,5 +1,5 @@
 /** @module Scaffold */
-import { Json } from './'
+import { JsonGenerator as Json } from './'
 
 const compilerOptions = {
   declaration: true,
@@ -17,7 +17,7 @@ const compilerOptions = {
   target: 'es5',
 }
 
-export function JsonTsconfig(): Json {
+export function TsconfigJsonGenerator(): Json {
   const gen = new Json()
   gen.set('compilerOptions', compilerOptions)
   gen.set('typeRoots', ['node_modules/@types'])

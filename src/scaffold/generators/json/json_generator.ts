@@ -1,10 +1,10 @@
 /** @module Scaffold */
-import { writeFileSync } from 'fs'
+import { writeFile } from '../../../tools/util'
 
 /**
  * Common Functionality for reading and generating JSON files
  */
-export class Json {
+export class JsonGenerator {
   protected file: any
 
   constructor() {
@@ -85,7 +85,7 @@ export class Json {
    * @param filePath absolute path where the file will get written
    */
   toFile(filePath: string): void {
-    writeFileSync(filePath, this.toString(), 'utf-8')
+    writeFile(filePath, this.toString())
   }
 
   /**

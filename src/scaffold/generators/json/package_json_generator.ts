@@ -1,8 +1,7 @@
 /** @module Scaffold */
-import { join } from 'path'
-import { Json } from './'
+import { JsonGenerator as Json } from './'
 
-export function JsonPackage(name: string, version: string): Json {
+export function PackageJsonGenerator(name: string, version: string): Json {
   const gen = new Json()
   // basic info
   gen.set('name', name)
