@@ -19,16 +19,21 @@ class Test extends FunctionalTest {
     organismPlan.should.be.an('object')
     organismPlan.srcFolder.should.be.equal('/tmp')
     const expectedFilePath = './frontend/organisms/Button.tsx'
-    organismPlan.structure.should.have.key(expectedFilePath)
+    organismPlan.structure.should.have.keys([
+      './frontend/organisms/Button.tsx',
+      './test/frontend/organisms/Button.tsx',
+    ])
   }
 
   @test
   async 'can create files when applied'() {
     const organismPlan = new OrganismPlan('/tmp', 'Button')
     organismPlan.apply()
-    const expectedFilePath = '/tmp/frontend/organisms/Button.tsx'
-    const file = fs.readFileSync(expectedFilePath, 'utf-8')
-    file.should.contain('import { Organism }')
-    file.should.contain('export default class Button extends Organism')
+    const organismFilePath = '/tmp/frontend/organisms/Button.tsx'
+    const organismFile = fs.readFileSync(organismFilePath, 'utf-8')
+    organismFile.should.contain('export default class Button extends Organism')
+    const organismTestFilePath = '/tmp/test/frontend/organisms/Button.tsx'
+    const organismTestFile = fs.readFileSync(organismTestFilePath, 'utf-8')
+    organismTestFile.should.contain('class Test extends OrganismTest<Button>')
   }
 }

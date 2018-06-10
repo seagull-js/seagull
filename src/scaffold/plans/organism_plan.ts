@@ -1,12 +1,12 @@
-import { OrganismGenerator } from '../generators'
+import { OrganismGenerator, OrganismTestGenerator } from '../generators'
 import { Plan } from './plan'
 
 export class OrganismPlan extends Plan {
   constructor(srcFolder: string, public name: string) {
     super(srcFolder)
-    const organismPath = `./frontend/organisms/${name}.tsx`
-    const organismGenerator = OrganismGenerator(name)
-    this.structure = {}
-    this.structure[organismPath] = organismGenerator
+    this.structure = {
+      [`./frontend/organisms/${name}.tsx`]: OrganismGenerator(name),
+      [`./test/frontend/organisms/${name}.tsx`]: OrganismTestGenerator(name),
+    }
   }
 }
