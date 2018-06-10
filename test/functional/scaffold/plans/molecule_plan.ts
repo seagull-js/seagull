@@ -1,11 +1,11 @@
 import { MoleculePlan } from '@scaffold/plans'
 import 'chai/register-should'
 import * as fs from 'fs'
-import { skip, slow, suite, test, timeout } from 'mocha-typescript'
+import { suite, test } from 'mocha-typescript'
 import FunctionalTest from '../../../helper/functional_test'
 
 @suite('Functional::Scaffold::Plans::MoleculePlan')
-class Test extends FunctionalTest {
+export class Test extends FunctionalTest {
   before() {
     this.mockFolder('/tmp')
   }
@@ -18,17 +18,21 @@ class Test extends FunctionalTest {
     const moleculePlan = new MoleculePlan('/tmp', 'Button')
     moleculePlan.should.be.an('object')
     moleculePlan.srcFolder.should.be.equal('/tmp')
-    const expectedFilePath = './frontend/molecules/Button.tsx'
-    moleculePlan.structure.should.have.key(expectedFilePath)
+    moleculePlan.structure.should.have.keys([
+      './frontend/molecules/Button.tsx',
+      './test/frontend/molecules/Button.tsx',
+    ])
   }
 
   @test
   async 'can create files when applied'() {
     const moleculePlan = new MoleculePlan('/tmp', 'Button')
     moleculePlan.apply()
-    const expectedFilePath = '/tmp/frontend/molecules/Button.tsx'
-    const file = fs.readFileSync(expectedFilePath, 'utf-8')
-    file.should.contain('import { Molecule }')
-    file.should.contain('export default class Button extends Molecule')
+    const moleculeFilePath = '/tmp/frontend/molecules/Button.tsx'
+    const moleculeFile = fs.readFileSync(moleculeFilePath, 'utf-8')
+    moleculeFile.should.contain('export default class Button extends Molecule')
+    const moleculeTestFilePath = '/tmp/test/frontend/molecules/Button.tsx'
+    const moleculeTestFile = fs.readFileSync(moleculeTestFilePath, 'utf-8')
+    moleculeTestFile.should.contain('class Test extends MoleculeTest<Button>')
   }
 }
