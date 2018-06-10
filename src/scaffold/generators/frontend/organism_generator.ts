@@ -1,11 +1,11 @@
 /** @module Scaffold */
 import { Class } from '../'
 
-export function AtomGenerator(name: string) {
-  const gen = new Class(name, `Atom<I${name}Props>`, [`I${name}Props`])
+export function OrganismGenerator(name: string) {
+  const gen = new Class(name, `Organism<I${name}Props>`, [`I${name}Props`])
   // gen.addInterface('IProps')
-  gen.addNamedImports('@seagull/core', ['Atom'])
-  const docRender = `Atom := only use native HTML tags, no other components/children`
+  gen.addNamedImports('@seagull/core', ['Organism'])
+  const docRender = `Organism := use Atoms, Molecules and other Organisms as children/props`
   const bodyRender = `return (
   <div>replace me!</div>
 )`

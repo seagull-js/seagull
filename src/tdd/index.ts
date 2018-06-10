@@ -1,2 +1,1 @@
-/** @module TDD */
-export * from './atom_test'
+export * from './frontend'

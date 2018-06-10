@@ -1,23 +1,23 @@
-/** @module TDD */
+import 'chai/register-should'
 import { configure, render, shallow } from 'enzyme'
 import * as Adapter from 'enzyme-adapter-react-16'
 import * as React from 'react'
-import { Atom, IAtomProps } from '../frontend/components/atom'
+import { IMoleculeProps, Molecule } from '../../frontend'
 
 configure({ adapter: new Adapter() })
 
 /**
  * When used in combination with the mocha-typescript decorators, this class
- * can help you to test your [[Atom]] component classes. Example:
+ * can help you to test your [[Molecule]] component classes. Example:
  *
  * ```typescript
  * import 'chai/register-should'
  * import { skip, slow, suite, test, timeout } from 'mocha-typescript'
- * import { AtomTest } from '@seagull/framework'
- * import YourAtom from 'path/to/your/atom'
+ * import { MoleculeTest } from '@seagull/framework'
+ * import YourMolecule from 'path/to/your/Molecule'
  *
- * @suite('Unit::Atom::YourAtom')
- * class Test extends AtomTest<YourAtom> {
+ * @suite('Unit::Molecule::YourMolecule')
+ * class Test extends MoleculeTest<YourMolecule> {
  *   page = YourPage
  *
  *   @test
@@ -27,25 +27,25 @@ configure({ adapter: new Adapter() })
  * }
  * ```
  */
-export abstract class AtomTest<T extends Atom<IAtomProps>> {
+export abstract class MoleculeTest<T extends Molecule<IMoleculeProps>> {
   /**
    * the class of the page you want to test within this suite
    */
-  abstract atom: { new (props: IAtomProps): T }
+  abstract molecule: { new (props: IMoleculeProps): T }
 
   /**
-   * Get an instance of the [[atom]] class, useful for testing methods and
+   * Get an instance of the [[Molecule]] class, useful for testing methods and
    * properties in isolation.
    */
-  instance(props: IAtomProps) {
-    return new this.atom(props)
+  instance(props: IMoleculeProps) {
+    return new this.molecule(props)
   }
 
   /**
-   * Get the rendered HTML output of the atom.
+   * Get the rendered HTML output of the Molecule.
    */
-  html(props: IAtomProps) {
-    return render(<this.atom {...props} />)
+  html(props: IMoleculeProps) {
+    return render(<this.molecule {...props} />)
   }
 
   /**

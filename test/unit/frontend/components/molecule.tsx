@@ -1,10 +1,10 @@
-import { Atom } from '@components/atom'
-import { AtomTest } from '@tdd/frontend'
+import { Molecule } from '@components/molecule'
+import { MoleculeTest } from '@tdd/frontend'
 import 'chai/register-should'
 import { suite, test } from 'mocha-typescript'
 import * as React from 'react'
 
-class Button extends Atom<{ label: string; handler: () => string }> {
+class Button extends Molecule<{ label: string; handler: () => string }> {
   render() {
     return (
       <button onClick={() => this.props.handler}>{this.props.label}</button>
@@ -13,8 +13,8 @@ class Button extends Atom<{ label: string; handler: () => string }> {
 }
 
 @suite('Unit::Frontend::Components::Atom')
-export class Test extends AtomTest<Button> {
-  atom = Button
+export class Test extends MoleculeTest<Button> {
+  molecule = Button
 
   @test
   async 'can be instantiated with props'() {
