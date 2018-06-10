@@ -32,12 +32,9 @@ export interface IMethod {
 export class Class extends Base {
   private classDeclaration: ClassDeclaration
 
-  constructor(name: string, parent?: string, addDefaultInterfaces?: boolean) {
+  constructor(name: string, parent?: string, interfaces: string[] = []) {
     super()
-    if (addDefaultInterfaces) {
-      this.addInterface('IProps')
-      this.addInterface('IState')
-    }
+    interfaces.forEach(itf => this.addInterface(itf))
     this.classDeclaration = this.sourceFile.addClass({ name })
     this.classDeclaration.setIsDefaultExport(true)
     if (parent) {

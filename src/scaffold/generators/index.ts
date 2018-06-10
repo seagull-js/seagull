@@ -19,3 +19,6 @@ export * from './json_tslint'
 
 // full app
 export * from './app'
+
+// frontend generators
+export * from './frontend'

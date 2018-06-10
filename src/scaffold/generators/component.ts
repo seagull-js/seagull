@@ -11,7 +11,8 @@ export function Component(
 }
 
 function generateClass(name: string): NS.Class {
-  const gen = new NS.Class(name, 'React.Component<IProps, IState>', true)
+  const interfaces = ['IProps', 'IState']
+  const gen = new NS.Class(name, 'React.Component<IProps, IState>', interfaces)
   gen.addConstructor({
     bodyText: 'super(props)\n this.state = {}',
     parameters: [{ name: 'props', type: 'IProps' }],

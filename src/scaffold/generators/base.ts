@@ -1,8 +1,8 @@
 /** @module Scaffold */
-import { writeFileSync } from 'fs'
 import * as prettier from 'prettier'
 import Ast, { IndentationText, QuoteKind, SourceFile } from 'ts-simple-ast'
 import * as ts from 'typescript'
+import { writeFile } from '../../tools/util'
 
 const astSettings = {
   manipulationSettings: {
@@ -96,6 +96,6 @@ export class Base {
    * @param filePath absolute path where the file will get written
    */
   toFile(filePath: string): void {
-    writeFileSync(filePath, this.toString(), 'utf-8')
+    writeFile(filePath, this.toString())
   }
 }
