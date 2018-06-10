@@ -1,4 +1,4 @@
-import { JsonTslint } from '@scaffold'
+import { JsonTslint } from '@scaffold/generators'
 import { expect } from 'chai'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import { join } from 'path'

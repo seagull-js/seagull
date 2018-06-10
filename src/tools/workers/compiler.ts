@@ -4,7 +4,7 @@ import { noop } from 'lodash'
 import * as log from 'npmlog'
 import { join, relative, resolve } from 'path'
 import * as ts from 'typescript'
-import { JsonTsconfig } from '../../scaffold'
+import { JsonTsconfig } from '../../scaffold/generators'
 import * as Transpile from '../util/transpile'
 import { IWorker } from './interface'
 

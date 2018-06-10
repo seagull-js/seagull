@@ -1,4 +1,4 @@
-import { Function as GenFunction } from '@scaffold'
+import { Function as GenFunction } from '@scaffold/generators'
 import { expect } from 'chai'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import { join } from 'path'

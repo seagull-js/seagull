@@ -5,7 +5,7 @@
       "@components/*": ["frontend/components/*"],
       "@frontend/*": ["frontend/*"],
       "@tdd/*": ["tdd/*"],
-      "@scaffold": ["scaffold/"],
+      "@scaffold/*": ["scaffold/*"],
       "@tools/*": ["tools/*"]
     },
     "module": "commonjs",
