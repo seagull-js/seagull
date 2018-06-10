@@ -5,13 +5,20 @@ import * as log from 'npmlog'
 import { join } from 'path'
 import { IWorker } from './interface'
 
+export type HTTPServerMode = 'static' | 'feathers'
+
 /**
  * A local http server, serving a statically compiled app.
  */
 export class HTTPServer implements IWorker {
+  private mode: HTTPServerMode
+  private port: number
   private server: http.Server | undefined
 
-  constructor(public srcFolder: string, public port: number = 8080) {}
+  constructor(public srcFolder: string, mode?: HTTPServerMode, port?: number) {
+    this.mode = mode || 'static'
+    this.port = port || 8080
+  }
 
   async onFileEvent(filePath: string) {
     await this.restart()
@@ -33,9 +40,7 @@ export class HTTPServer implements IWorker {
   async start() {
     return new Promise((resolve, reject) => {
       this.server = this.boot()
-      this.server.listen(this.port, () => {
-        resolve()
-      })
+      this.server.listen(this.port, resolve)
     })
   }
 
@@ -67,5 +72,10 @@ export class HTTPServer implements IWorker {
       const indexFilePath = join(this.srcFolder, '.seagull/index.html')
       return fs.readFileSync(indexFilePath, 'utf-8')
     }
+  }
+
+  private async handleFeathersApp(req: http.IncomingMessage) {
+    const atoms = [] // todo: read list from disk, display this
+    return 'hello feathers!'
   }
 }

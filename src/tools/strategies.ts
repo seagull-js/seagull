@@ -12,6 +12,6 @@ export const strategies: IStrategies = {
     new Workers.Compiler(watcher.srcFolder),
     new Workers.IndexFileGenerator(watcher.srcFolder),
     new Workers.Bundler(watcher.srcFolder),
-    new Workers.HTTPServer(watcher.srcFolder, 8080),
+    new Workers.HTTPServer(watcher.srcFolder, 'static', 8080),
   ],
 }
