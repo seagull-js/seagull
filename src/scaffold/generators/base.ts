@@ -64,6 +64,29 @@ export class Base {
   }
 
   /**
+   * Export a module with the 'export { default as name } from "from"' style
+   *
+   * @param from module or filepath to load code from
+   * @param name how to name the export for further usage
+   */
+  addNamedDefaultExport(from: string, name: string): this {
+    this.sourceFile.addExportDeclaration({
+      moduleSpecifier: from,
+      namedExports: [{ name: 'default', alias: name }],
+    })
+    return this
+  }
+
+  /**
+   * Export '* from "from"' declaration
+   * @param from module or filepath to load code from
+   */
+  addNamespacedExport(from: string): this {
+    this.sourceFile.addExportDeclaration({ moduleSpecifier: from })
+    return this
+  }
+
+  /**
    * Add a simple interface declaration and export it
    *
    * @param name name of the interface

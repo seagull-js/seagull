@@ -14,6 +14,7 @@ export * from './page'
 export * from './component'
 
 // generators
+export * from './code'
 export * from './frontend'
 export * from './json'
 export * from './text'
