@@ -1,9 +1,13 @@
 /** @module Scaffold */
 import { Class } from '../'
 
+/**
+ * Generator for an [[Atom]] class
+ *
+ * @param name how to name the file. Must be CamelCased.
+ */
 export function AtomGenerator(name: string) {
   const gen = new Class(name, `Atom<I${name}Props>`, [`I${name}Props`])
-  // gen.addInterface('IProps')
   gen.addNamedImports('@seagull/core', ['Atom'])
   const docRender = `Atom := only use native HTML tags, no other components/children`
   const bodyRender = `return (

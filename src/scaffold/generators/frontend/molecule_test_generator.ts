@@ -1,6 +1,11 @@
 /** @module Scaffold */
 import { Class } from '../'
 
+/**
+ * Generator that returns an [[MoleculeTest]] class
+ *
+ * @param name the Name of the tested Molecule. Must be CamelCased.
+ */
 export function MoleculeTestGenerator(name: string) {
   const gen = new Class('Test', `MoleculeTest<${name}>`)
   gen.addDecorator('suite', `'Unit::Frontend::Molecules::${name}'`)
@@ -15,8 +20,7 @@ export function MoleculeTestGenerator(name: string) {
   gen.addMethod({
     body: `this.html({}).should.be.equal('<div>replace me!</div>')`,
     decorator: { name: 'test' },
-    // tslint:disable-next-line:quotemark
-    name: "'returns html'",
+    name: `'returns html'`,
     parameter: [],
     returnType: undefined,
   })

@@ -1,7 +1,10 @@
 /** @module Scaffold */
 import { JsonGenerator as Json } from './'
 
-const compilerOptions = {
+/**
+ * the default settings for the typescript compiler
+ */
+export const compilerOptions = {
   declaration: true,
   emitDecoratorMetadata: true,
   experimentalDecorators: true,
@@ -17,6 +20,9 @@ const compilerOptions = {
   target: 'es5',
 }
 
+/**
+ * Create a tsconfig.json for a seagull project based on [[compilerOptions]]
+ */
 export function TsconfigJsonGenerator(): Json {
   const gen = new Json()
   gen.set('compilerOptions', compilerOptions)

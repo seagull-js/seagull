@@ -1,6 +1,11 @@
 /** @module Scaffold */
 import { Class } from '../'
 
+/**
+ * Generator that returns an [[OrganismTest]] class
+ *
+ * @param name the Name of the tested Organism. Must be CamelCased.
+ */
 export function OrganismTestGenerator(name: string) {
   const gen = new Class('Test', `OrganismTest<${name}>`)
   gen.addDecorator('suite', `'Unit::Frontend::Organisms::${name}'`)
@@ -15,8 +20,7 @@ export function OrganismTestGenerator(name: string) {
   gen.addMethod({
     body: `this.html({}).should.be.equal('<div>replace me!</div>')`,
     decorator: { name: 'test' },
-    // tslint:disable-next-line:quotemark
-    name: "'returns html'",
+    name: `'returns html'`,
     parameter: [],
     returnType: undefined,
   })

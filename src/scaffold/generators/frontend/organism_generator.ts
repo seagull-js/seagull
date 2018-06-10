@@ -1,9 +1,13 @@
 /** @module Scaffold */
 import { Class } from '../'
 
+/**
+ * Generator for an [[Organism]] class
+ *
+ * @param name how to name the file. Must be CamelCased.
+ */
 export function OrganismGenerator(name: string) {
   const gen = new Class(name, `Organism<I${name}Props>`, [`I${name}Props`])
-  // gen.addInterface('IProps')
   gen.addNamedImports('@seagull/core', ['Organism'])
   const docRender = `Organism := use Atoms, Molecules and other Organisms as children/props`
   const bodyRender = `return (

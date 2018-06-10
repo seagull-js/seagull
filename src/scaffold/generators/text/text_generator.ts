@@ -1,6 +1,9 @@
 /** @module Scaffold */
 import { writeFile } from '../../../tools/util'
 
+/**
+ * Custom generator for plain text files
+ */
 export class TextGenerator {
   constructor(public content: string = '') {}
 

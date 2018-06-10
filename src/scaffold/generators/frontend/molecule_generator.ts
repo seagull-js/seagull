@@ -1,6 +1,11 @@
 /** @module Scaffold */
 import { Class } from '../'
 
+/**
+ * Generator for an [[Molecule]] class
+ *
+ * @param name how to name the file. Must be CamelCased.
+ */
 export function MoleculeGenerator(name: string) {
   const gen = new Class(name, `Molecule<I${name}Props>`, [`I${name}Props`])
   // gen.addInterface('IProps')

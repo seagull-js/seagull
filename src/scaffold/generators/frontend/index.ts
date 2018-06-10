@@ -1,3 +1,4 @@
+/** @module Scaffold */
 export * from './atom_generator'
 export * from './atom_test_generator'
 export * from './molecule_generator'

@@ -17,12 +17,4 @@ export class Test {
     text.should.contain('.seagull')
     text.should.contain('node_modules')
   }
-
-  @test
-  'defaults can be overwritten'() {
-    const gen = GitignoreTextGenerator(['a', 'b'])
-    const text = gen.toString()
-    text.should.contain('a')
-    text.should.contain('b')
-  }
 }
