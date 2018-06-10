@@ -1,10 +1,17 @@
 /** @module Scaffold */
+import { dasherize } from 'inflection'
 import { JsonGenerator as Json } from './'
 
+/**
+ * Generate a package.json file with seagull app defaults
+ *
+ * @param name the name of the app
+ * @param version the seagull framework version
+ */
 export function PackageJsonGenerator(name: string, version: string): Json {
   const gen = new Json()
   // basic info
-  gen.set('name', name)
+  gen.set('name', dasherize(name))
   gen.set('version', '0.1.0')
   gen.set('description', 'my new seagull app')
   gen.set('private', true)
