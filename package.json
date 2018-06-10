@@ -10,7 +10,7 @@
   "types": "dist/src/index.d.ts",
   "scripts": {
     "build": "rm -rf dist && tsc",
-    "test": "NODE_ENV=test mocha --opts test/mocha.opts",
+    "test": "NODE_ENV=test nyc mocha --opts test/mocha.opts",
     "test:watch": "npm run test -- --watch --reporter min",
     "test:unit": "NODE_ENV=test mocha --opts test/unit/mocha.opts",
     "test:unit:watch": "npm run test:unit -- --watch --reporter min",
@@ -74,6 +74,7 @@
     "mocha-typescript": "^1.1.12",
     "mock-fs": "^4.5.0",
     "mock-require": "^3.0.2",
+    "nyc": "^12.0.2",
     "source-map-support": "^0.5.4",
     "ts-node": "^6.0.0",
     "tsconfig-paths": "^3.3.1",
@@ -108,5 +109,21 @@
   "peerDependencies": {
     "aws-sdk": "^2.104.0",
     "typescript": "^2.9.0"
+  },
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "exclude": [
+      "**/*.d.ts",
+      "coverage"
+    ],
+    "reporter": [
+      "html",
+      "text",
+      "text-summary"
+    ],
+    "all": true
   }
 }
