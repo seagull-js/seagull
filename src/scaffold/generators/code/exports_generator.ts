@@ -1,4 +1,5 @@
 /** @module Scaffold */
+import { camelize, singularize } from 'inflection'
 import { basename, extname } from 'path'
 import { Base } from '../'
 
@@ -14,5 +15,5 @@ function addAll(gen: Base, file: string): void {
 
 function addNamed(gen: Base, file: string): void {
   const name = basename(file, extname(file))
-  gen.addNamedDefaultExport(file, name)
+  gen.addNamedDefaultExport(file, singularize(camelize(name)))
 }

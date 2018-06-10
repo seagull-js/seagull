@@ -21,6 +21,8 @@ class Test extends FunctionalTest {
     appPlan.srcFolder.should.be.equal('/tmp')
     appPlan.structure.should.have.keys([
       './frontend/atoms/index.ts',
+      './frontend/molecules/index.ts',
+      './frontend/organisms/index.ts',
       './frontend/index.ts',
       '.gitignore',
       'package.json',
@@ -43,5 +45,7 @@ class Test extends FunctionalTest {
     gitignore.should.contain('node_modules')
     const folders = fs.readdirSync('/tmp/DemoApp')
     folders.should.contain('frontend')
+    const frontend = fs.readFileSync('/tmp/DemoApp/frontend/index.ts', 'utf-8')
+    frontend.should.contain('export { default as Atom }')
   }
 }

@@ -24,7 +24,7 @@ export class Test {
     const gen = ExportsGenerator(['./a', './b'])
     gen.should.be.an('object')
     const code = gen.toString()
-    code.should.contain(`export { default as a } from './a'`)
-    code.should.contain(`export { default as b } from './b'`)
+    code.should.contain(`export { default as A } from './a'`)
+    code.should.contain(`export { default as B } from './b'`)
   }
 }
