@@ -2,22 +2,22 @@ import 'chai/register-should'
 import { configure, render, shallow } from 'enzyme'
 import * as Adapter from 'enzyme-adapter-react-16'
 import * as React from 'react'
-import { Organism } from '../../frontend'
+import { Template } from '../../frontend'
 
 configure({ adapter: new Adapter() })
 
 /**
  * When used in combination with the mocha-typescript decorators, this class
- * can help you to test your [[Organism]] component classes. Example:
+ * can help you to test your [[Template]] component classes. Example:
  *
  * ```typescript
  * import 'chai/register-should'
  * import { skip, slow, suite, test, timeout } from 'mocha-typescript'
- * import { OrganismTest } from '@seagull/framework'
- * import YourOrganism from 'path/to/your/Organism'
+ * import { TemplateTest } from '@seagull/framework'
+ * import YourTemplate from 'path/to/your/Template'
  *
- * @suite('Unit::Organism::YourOrganism')
- * class Test extends OrganismTest<YourOrganism> {
+ * @suite('Unit::Template::YourTemplate')
+ * class Test extends TemplateTest<YourTemplate> {
  *   page = YourPage
  *
  *   @test
@@ -27,25 +27,25 @@ configure({ adapter: new Adapter() })
  * }
  * ```
  */
-export abstract class OrganismTest<T extends Organism> {
+export abstract class TemplateTest<T extends Template> {
   /**
    * the class of the page you want to test within this suite
    */
-  abstract organism: { new (props: any): T }
+  abstract template: { new (props: any): T }
 
   /**
-   * Get an instance of the [[Organism]] class, useful for testing methods and
+   * Get an instance of the [[Template]] class, useful for testing methods and
    * properties in isolation.
    */
   instance(props: any) {
-    return new this.organism(props)
+    return new this.template(props)
   }
 
   /**
-   * Get the rendered HTML output of the Organism.
+   * Get the rendered HTML output of the Template.
    */
   html(props: any) {
-    return render(<this.organism {...props} />)
+    return render(<this.template {...props} />)
   }
 
   /**
