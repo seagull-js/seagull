@@ -1,5 +1,5 @@
 import 'chai/register-should'
-import { App, IPageProps, Page, ssr } from '../../frontend'
+import { App, IPageProps, Page, Registry, ssr } from '../../frontend'
 
 /**
  * When used in combination with the mocha-typescript decorators, this class
@@ -66,7 +66,7 @@ export abstract class PageTest<T extends Page> {
    */
   before() {
     require('clear-require').match(/\.tsx?/)
-    // Registry.reset()
+    Registry.reset()
   }
 
   private app() {

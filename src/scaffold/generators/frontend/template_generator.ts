@@ -9,6 +9,7 @@ import { Class } from '../'
 export function TemplateGenerator(name: string) {
   const gen = new Class(name, `Template<I${name}Props>`, [`I${name}Props`])
   gen.addNamedImports('@seagull/core', ['Template'])
+  gen.addDefaultImport('react', 'React', true)
   const docRender = `Template := organize organisms into a page-like structure`
   const bodyRender = `return (
   <div>replace me!</div>

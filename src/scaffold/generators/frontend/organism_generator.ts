@@ -8,6 +8,7 @@ import { Class } from '../'
  */
 export function OrganismGenerator(name: string) {
   const gen = new Class(name, `Organism<I${name}Props>`, [`I${name}Props`])
+  gen.addDefaultImport('react', 'React', true)
   gen.addNamedImports('@seagull/core', ['Organism'])
   const docRender = `Organism := use Atoms, Molecules and other Organisms as children/props`
   const bodyRender = `return (

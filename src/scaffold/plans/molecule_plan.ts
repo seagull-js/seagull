@@ -1,3 +1,4 @@
+/** @module Scaffold */
 import { MoleculeGenerator, MoleculeTestGenerator } from '../generators'
 import { Plan } from './plan'
 

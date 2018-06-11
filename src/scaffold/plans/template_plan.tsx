@@ -1,3 +1,4 @@
+/** @module Scaffold */
 import { TemplateGenerator, TemplateTestGenerator } from '../generators'
 import { Plan } from './plan'
 

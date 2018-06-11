@@ -8,8 +8,8 @@ import { Class } from '../'
  */
 export function MoleculeGenerator(name: string) {
   const gen = new Class(name, `Molecule<I${name}Props>`, [`I${name}Props`])
-  // gen.addInterface('IProps')
   gen.addNamedImports('@seagull/core', ['Molecule'])
+  gen.addDefaultImport('react', 'React', true)
   const docRender = `Molecule := only use native HTML tags or Atoms`
   const bodyRender = `return (
   <div>replace me!</div>
