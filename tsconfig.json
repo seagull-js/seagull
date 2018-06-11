@@ -4,6 +4,7 @@
     "paths": {
       "@components/*": ["frontend/components/*"],
       "@frontend/*": ["frontend/*"],
+      "@frontend": ["frontend"],
       "@tdd/*": ["tdd/*"],
       "@scaffold/*": ["scaffold/*"],
       "@tools/*": ["tools/*"]
