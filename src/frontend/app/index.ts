@@ -3,7 +3,7 @@ import * as History from 'history'
 import { noop } from 'lodash'
 import * as QS from 'query-string'
 import * as React from 'react'
-import { hydrate } from 'react-dom'
+import { render } from 'react-dom'
 import { setStylesTarget } from 'typestyle'
 import * as UniversalRouter from 'universal-router'
 import * as generateUrls from 'universal-router/generateUrls'
@@ -46,7 +46,7 @@ export class App {
   private async renderClient() {
     const pathname = window.location.pathname + window.location.search
     const component = await this.match(pathname)
-    hydrate(component, document.querySelector('#app'))
+    render(component, document.querySelector('#app'))
   }
 
   private get registry() {
