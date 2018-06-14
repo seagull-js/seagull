@@ -11,7 +11,7 @@
     },
     "module": "commonjs",
     "skipLibCheck": true,
-    "target": "es6",
+    "target": "es5",
     "removeComments": true,
     "sourceMap": true,
     "declaration": true,
@@ -23,6 +23,8 @@
     "rootDirs": ["src", "test"],
     "strict": true
   },
+  "include": ["src/**/*", "test/**/*", "declarations.d.ts"],
+  "exclude": ["examples", "node_modules"],
   "types": ["node"],
   "typeRoots": ["node_modules/@types"]
 }
