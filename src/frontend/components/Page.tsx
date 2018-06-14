@@ -1,7 +1,7 @@
 import { flow, isString, merge, noop } from 'lodash'
 import * as React from 'react'
 import Helmet from 'react-helmet'
-import { App } from '../'
+import { App, Registry } from '../'
 
 /**
  * Props for creating internal links via the [[Link]] method.
@@ -244,6 +244,5 @@ function generateProps(ctx: any) {
   const baseUrl = ctx.baseUrl
   const params = merge({}, ctx.params, ctx.query)
   const path = ctx.path
-  // return { baseUrl, params, path, stores: Registry.stores }
-  return { baseUrl, params, path, stores: {} }
+  return { baseUrl, params, path, stores: Registry.stores }
 }
