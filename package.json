@@ -1,6 +1,6 @@
 {
   "name": "@seagull/core",
-  "version": "0.11.6",
+  "version": "0.11.7",
   "description": "Featherweight Zero-Config Typesafe Isomorphic Cloud Framework",
   "browser": "dist/lib/browser.js",
   "main": "dist/lib/index.js",
@@ -55,7 +55,8 @@
     "tslint": "^5.9.1",
     "tslint-config-prettier": "^1.10.0",
     "typedoc": "^0.11.1",
-    "typescript": "2.8"
+    "typescript": "2.8",
+    "babel-polyfill": "^6.26.0"
   },
   "dependencies": {
     "@seagull/package-config": "^0.4.1",
@@ -89,6 +90,7 @@
   },
   "peerDependencies": {
     "aws-sdk": "^2.104.0",
-    "typescript": "^2.7.2"
+    "typescript": "^2.7.2",
+    "babel-polyfill": "^6.26.0"
   }
 }

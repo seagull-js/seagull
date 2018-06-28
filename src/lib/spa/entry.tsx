@@ -1,3 +1,5 @@
+// tslint:disable-next-line:no-var-requires
+require('babel-polyfill')
 import { normalize } from 'csstips'
 import { render } from 'react-dom'
 import { setStylesTarget } from 'typestyle'
