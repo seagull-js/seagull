@@ -1,8 +1,7 @@
 {
   "name": "@seagull/core",
-  "version": "0.11.5",
-  "description":
-    "Featherweight Zero-Config Typesafe Isomorphic Cloud Framework",
+  "version": "0.11.6",
+  "description": "Featherweight Zero-Config Typesafe Isomorphic Cloud Framework",
   "browser": "dist/lib/browser.js",
   "main": "dist/lib/index.js",
   "types": "dist/lib/index.d.ts",
@@ -12,15 +11,13 @@
   "engineStrict": true,
   "scripts": {
     "lint": "tslint -c tslint.json 'src/**/*.ts' --fix",
-    "prettier":
-      "prettier --single-quote --no-semi --trailing-comma es5 --write 'src/**/*.ts'",
+    "prettier": "prettier --single-quote --no-semi --trailing-comma es5 --write 'src/**/*.ts'",
     "prebuild": "npm run lint && npm run prettier",
     "build": "rm -rf dist && tsc",
     "pretest": "npm run build",
     "test": "NODE_ENV=test mocha --opts mocha.opts",
     "test:watch": "NODE_ENV=test mocha-typescript-watch --opts mocha.opts",
-    "docs":
-      "typedoc --mode file --excludeExternals --excludePrivate --out docs src/lib",
+    "docs": "typedoc --mode file --excludeExternals --excludePrivate --out docs src/lib",
     "release": "npm run test && npm run docs && npm publish"
   },
   "repository": {
@@ -58,10 +55,10 @@
     "tslint": "^5.9.1",
     "tslint-config-prettier": "^1.10.0",
     "typedoc": "^0.11.1",
-    "typescript": "^2.7.2"
+    "typescript": "2.8"
   },
   "dependencies": {
-    "@seagull/package-config": "^0.4.0",
+    "@seagull/package-config": "^0.4.1",
     "@types/aws-lambda": "0.0.16",
     "@types/history": "^4.6.0",
     "@types/lodash": "^4.14.74",
