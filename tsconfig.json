@@ -24,7 +24,7 @@
     "strict": true
   },
   "include": ["src/**/*", "test/**/*", "declarations.d.ts"],
-  "exclude": ["examples", "node_modules"],
+  "exclude": ["dist", "examples", "node_modules"],
   "types": ["node"],
   "typeRoots": ["node_modules/@types"]
 }

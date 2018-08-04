@@ -7,7 +7,7 @@ import * as React from 'react'
  * on [[shouldComponentUpdate]].
  */
 export interface IMoleculeProps {
-  [propName: string]: string | number | boolean | (() => any)
+  [propName: string]: any
 }
 
 /**
@@ -28,4 +28,4 @@ export interface IMoleculeProps {
  * }
  * ```
  */
-export class Molecule<P = {}> extends React.PureComponent<IMoleculeProps> {}
+export class Molecule<P = {}> extends React.PureComponent<P & IMoleculeProps> {}

@@ -19,6 +19,8 @@ export function PackageJsonGenerator(name: string, version: string): Json {
   // enforce node version for lambda compatibility
   gen.set('engineStrict', true)
   gen.set('engines', { node: '8.10' })
+  // add CLI scripts
+  gen.set('scripts', { start: 'seagull-server' })
   // add dependencies
   gen.set('dependencies', { '@seagull/core': `^${version}` })
   gen.set('devDependencies', {

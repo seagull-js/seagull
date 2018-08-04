@@ -27,24 +27,24 @@ configure({ adapter: new Adapter() })
  * }
  * ```
  */
-export abstract class AtomTest<T extends Atom<IAtomProps>> {
+export abstract class AtomTest<T extends Atom> {
   /**
    * the class of the page you want to test within this suite
    */
-  abstract atom: { new (props: IAtomProps): T }
+  abstract atom: { new (props: any): T }
 
   /**
    * Get an instance of the [[atom]] class, useful for testing methods and
    * properties in isolation.
    */
-  instance(props: IAtomProps) {
+  instance(props: any) {
     return new this.atom(props)
   }
 
   /**
    * Get the rendered HTML output of the atom.
    */
-  html(props: IAtomProps) {
+  html(props: any) {
     return render(<this.atom {...props} />)
   }
 

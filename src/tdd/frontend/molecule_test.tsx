@@ -27,24 +27,24 @@ configure({ adapter: new Adapter() })
  * }
  * ```
  */
-export abstract class MoleculeTest<T extends Molecule<IMoleculeProps>> {
+export abstract class MoleculeTest<T extends Molecule> {
   /**
    * the class of the page you want to test within this suite
    */
-  abstract molecule: { new (props: IMoleculeProps): T }
+  abstract molecule: { new (props: any): T }
 
   /**
    * Get an instance of the [[Molecule]] class, useful for testing methods and
    * properties in isolation.
    */
-  instance(props: IMoleculeProps) {
+  instance(props: any) {
     return new this.molecule(props)
   }
 
   /**
    * Get the rendered HTML output of the Molecule.
    */
-  html(props: IMoleculeProps) {
+  html(props: any) {
     return render(<this.molecule {...props} />)
   }
 

@@ -19,7 +19,7 @@ export default class TodoInput extends Organism<
     this.setState({ value: e.target.value })
 
   submit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    this.props.onSubmit(this.state.value)
+    this.props.onSubmit(this.state.value || '')
     this.setState({ value: '' })
   }
 
@@ -30,6 +30,7 @@ export default class TodoInput extends Organism<
           type="text"
           placeholder={'eg.: "buy milk"'}
           onChange={this.updateValue}
+          value={this.state.value}
         />
         <button onClick={this.submit}>submit</button>
       </div>

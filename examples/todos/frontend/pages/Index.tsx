@@ -7,7 +7,7 @@ export default class Index extends Page {
   path = '/'
 
   /** minimal inline state management */
-  state = { todos: [] as Array<{ done: boolean; text: string }> }
+  state = { input: '', todos: [] as Array<{ done: boolean; text: string }> }
 
   addTodo = (text: string) => {
     const todos = this.state.todos.concat({ done: false, text })
@@ -26,6 +26,7 @@ export default class Index extends Page {
         todos={this.state.todos}
         addTodo={this.addTodo}
         toggleTodo={this.toggleTodo}
+        input={this.state.input}
       />
     )
   }

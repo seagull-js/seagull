@@ -7,7 +7,7 @@ import * as React from 'react'
  * on [[shouldComponentUpdate]].
  */
 export interface IAtomProps {
-  [propName: string]: string | number | boolean | undefined | (() => any)
+  [propName: string]: any
 }
 
 /**
@@ -32,4 +32,4 @@ export interface IAtomProps {
  * }
  * ```
  */
-export class Atom<P = {}> extends React.PureComponent<IAtomProps> {}
+export class Atom<P = {}> extends React.PureComponent<P & IAtomProps> {}
