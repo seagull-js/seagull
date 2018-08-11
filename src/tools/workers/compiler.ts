@@ -52,7 +52,11 @@ export class Compiler implements IWorker {
     const fragment = relative(this.srcFolder, from).replace(/tsx?$/, 'js')
     const outDir = this.config.compilerOptions.outDir
     const to = resolve(join(this.srcFolder, outDir, fragment))
-    Transpile.transpileFile(from, to, this.config)
+    try {
+      Transpile.transpileFile(from, to, this.config)
+    } catch (error) {
+      log('COMPILER: ', error)
+    }
   }
 
   private deleteFile(path: string): void {
