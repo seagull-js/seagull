@@ -18,14 +18,7 @@ export class AppPlan extends Plan {
 
   private modeStatic() {
     this.structure = {
-      './frontend/atoms/index.ts': Gen.ExportsGenerator([]),
-      './frontend/index.ts': Gen.ExportsGenerator([
-        './atoms',
-        './molecules',
-        './organisms',
-      ]),
-      './frontend/molecules/index.ts': Gen.ExportsGenerator([]),
-      './frontend/organisms/index.ts': Gen.ExportsGenerator([]),
+      './frontend/pages/Index.tsx': Gen.PageGenerator('IndexPage'),
       '.gitignore': Gen.GitignoreTextGenerator(),
       'package.json': Gen.PackageJsonGenerator(this.name, this.getVersion()),
       'tsconfig.json': Gen.TsconfigJsonGenerator(),

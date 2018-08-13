@@ -20,10 +20,7 @@ class Test extends FunctionalTest {
     appPlan.should.be.an('object')
     appPlan.srcFolder.should.be.equal('/tmp')
     appPlan.structure.should.have.keys([
-      './frontend/atoms/index.ts',
-      './frontend/molecules/index.ts',
-      './frontend/organisms/index.ts',
-      './frontend/index.ts',
+      './frontend/pages/Index.tsx',
       '.gitignore',
       'package.json',
       'tsconfig.json',
@@ -35,17 +32,19 @@ class Test extends FunctionalTest {
   async 'can create initial app files for static apps'() {
     const appPlan = new AppPlan('/tmp', 'DemoApp', 'static')
     appPlan.apply()
-    const pkg = fs.readFileSync('/tmp/DemoApp/package.json', 'utf-8')
+    const read = (path: string) => fs.readFileSync(path, 'utf-8')
+    const pkg = read('/tmp/DemoApp/package.json')
     JSON.parse(pkg).name.should.be.equal('DemoApp')
-    const config = fs.readFileSync('/tmp/DemoApp/tsconfig.json', 'utf-8')
+    const config = read('/tmp/DemoApp/tsconfig.json')
     JSON.parse(config).should.be.an('object')
-    const lint = fs.readFileSync('/tmp/DemoApp/tslint.json', 'utf-8')
+    const lint = read('/tmp/DemoApp/tslint.json')
     JSON.parse(lint).should.be.an('object')
-    const gitignore = fs.readFileSync('/tmp/DemoApp/.gitignore', 'utf-8')
+    const gitignore = read('/tmp/DemoApp/.gitignore')
     gitignore.should.contain('node_modules')
     const folders = fs.readdirSync('/tmp/DemoApp')
     folders.should.contain('frontend')
-    const frontend = fs.readFileSync('/tmp/DemoApp/frontend/index.ts', 'utf-8')
-    frontend.should.contain('export { default as Atom }')
+    const indexPage = read('/tmp/DemoApp/frontend/pages/Index.tsx')
+    indexPage.should.contain('export default class IndexPage extends Page')
+    indexPage.should.contain(`path: string = '/'`)
   }
 }
