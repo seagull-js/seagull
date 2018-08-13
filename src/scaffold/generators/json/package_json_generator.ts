@@ -26,8 +26,8 @@ export function PackageJsonGenerator(name: string, version: string): Json {
   gen.set('devDependencies', {
     '@types/history': '^4.6.0',
     '@types/node': '^8.0.25',
-    '@types/react': '^16.3.12',
-    '@types/react-dom': '^16.4.1',
+    '@types/react': '^16.4.9',
+    '@types/react-dom': '^16.0.7',
     'aws-sdk': '^2.104.0',
     typescript: '^2.9.0',
   })

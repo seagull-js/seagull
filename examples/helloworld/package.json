@@ -1,0 +1,25 @@
+{
+  "name": "helloworld",
+  "version": "0.1.0",
+  "description": "my new seagull app",
+  "private": true,
+  "browser": ".seagull/dist/frontend/index.js",
+  "engineStrict": true,
+  "engines": {
+    "node": "8.10"
+  },
+  "scripts": {
+    "start": "seagull-server"
+  },
+  "dependencies": {
+    "@seagull/core": "file:../../"
+  },
+  "devDependencies": {
+    "@types/history": "^4.6.0",
+    "@types/node": "^8.0.25",
+    "@types/react": "^16.4.9",
+    "@types/react-dom": "^16.0.7",
+    "aws-sdk": "^2.104.0",
+    "typescript": "^2.9.0"
+  }
+}

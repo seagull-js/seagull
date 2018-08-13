@@ -3,6 +3,7 @@
   "version": "0.11.5",
   "description": "Featherweight Zero-Config Typesafe Isomorphic Cloud Framework",
   "bin": {
+    "seagull-create": "bin/create.js",
     "seagull-server": "bin/server.js"
   },
   "browser": "dist/src/client.js",
@@ -17,7 +18,8 @@
     "test:functional": "NODE_ENV=test mocha --opts test/functional/mocha.opts",
     "test:functional:watch": "npm run test:functional -- --watch --reporter min",
     "docs": "rm -rf docs && typedoc --mode modules --ignoreCompilerErrors --excludeExternals --excludePrivate --excludeNotExported --exclude \"**/src/bin/**\" --out docs src",
-    "release": "npm run test && npm run docs && npm publish"
+    "release": "npm run test && npm run docs && npm publish",
+    "scaffold:example": ""
   },
   "repository": {
     "type": "git",
