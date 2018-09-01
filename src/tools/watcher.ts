@@ -58,12 +58,7 @@ export default class Watcher {
     await this.triggerPostStoppingHook()
   }
 
-  private createWatcher() {
-    const folders = this.codeFolders.map(f => join(this.srcFolder, f))
-    this.watcher = chokidar.watch(folders, { ignoreInitial: true })
-  }
-
-  private async triggerPreWatchingHook() {
+  async triggerPreWatchingHook() {
     console.clear()
     log.http('', 'preparing seagull development server toolchain')
     for (const worker of this.workers) {
@@ -72,14 +67,14 @@ export default class Watcher {
     }
   }
 
-  private async triggerPostWatchingHook() {
+  async triggerPostWatchingHook() {
     for (const worker of this.workers) {
       const handler = worker.watcherDidStart || noop
       await handler.bind(worker)()
     }
   }
 
-  private async triggerPreStoppingHook() {
+  async triggerPreStoppingHook() {
     console.clear()
     for (const worker of this.workers) {
       const handler = worker.watcherWillStop || noop
@@ -87,11 +82,16 @@ export default class Watcher {
     }
   }
 
-  private async triggerPostStoppingHook() {
+  async triggerPostStoppingHook() {
     for (const worker of this.workers) {
       const handler = worker.watcherDidStop || noop
       await handler.bind(worker)()
     }
+  }
+
+  private createWatcher() {
+    const folders = this.codeFolders.map(f => join(this.srcFolder, f))
+    this.watcher = chokidar.watch(folders, { ignoreInitial: true })
   }
 
   private registerFileAddEvents() {
