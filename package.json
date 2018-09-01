@@ -4,6 +4,7 @@
   "description": "Featherweight Zero-Config Typesafe Isomorphic Cloud Framework",
   "bin": {
     "seagull-create": "bin/create.js",
+    "seagull-deploy": "bin/deploy.js",
     "seagull-server": "bin/server.js"
   },
   "browser": "dist/src/client.js",

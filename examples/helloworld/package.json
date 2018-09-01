@@ -9,6 +9,7 @@
     "node": "8.10"
   },
   "scripts": {
+    "deploy": "seagull-deploy",
     "start": "seagull-server"
   },
   "dependencies": {
