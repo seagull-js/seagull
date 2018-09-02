@@ -3,7 +3,7 @@ import * as fs from 'fs'
 import { join } from 'path'
 import { sync as rmSync } from 'rimraf'
 import { DeployCommand } from '../'
-import { listFiles } from '../../tools/util'
+import { copyFile, listFiles } from '../../tools/util'
 
 /**
  * Generate a folder named "public" within the app folder, where a static web
@@ -44,7 +44,7 @@ export class Folder extends DeployCommand {
   private copyIndexHtmlFile() {
     const src = join(this.tmpFolder, 'index.html')
     const dest = join(this.distFolder, 'index.html')
-    this.copyFile(src, dest)
+    copyFile(src, dest)
   }
 
   private copyAssetsFolder() {
@@ -53,11 +53,7 @@ export class Folder extends DeployCommand {
     fs.mkdirSync(destFolder)
     for (const file of listFiles(srcFolder)) {
       const target = file.replace('.seagull/', 'public/')
-      this.copyFile(file, target)
+      copyFile(file, target)
     }
-  }
-
-  private copyFile(from: string, to: string) {
-    fs.writeFileSync(to, fs.readFileSync(from))
   }
 }
