@@ -1,3 +1,4 @@
+/** @module Frontend */
 export class NamedCache {
   private dict: { [name: string]: { [key: string]: any } } = {}
 

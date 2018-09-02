@@ -1,3 +1,4 @@
+/** @module TDD */
 import 'chai/register-should'
 import { App, IPageProps, Page, Registry, ssr } from '../../frontend'
 

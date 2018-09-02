@@ -1,3 +1,4 @@
+/** @module Frontend */
 export function deepFreeze(o: any) {
   Object.freeze(o)
   Object.getOwnPropertyNames(o).forEach((prop: string) => {

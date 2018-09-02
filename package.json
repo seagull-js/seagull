@@ -126,6 +126,7 @@
       "bin",
       "coverage",
       "dist",
+      "docs",
       "examples",
       "node_modules"
     ],

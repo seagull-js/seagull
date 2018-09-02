@@ -1,3 +1,4 @@
+/** @module Frontend */
 import { flow, isString, merge, noop } from 'lodash'
 import * as React from 'react'
 import Helmet from 'react-helmet'

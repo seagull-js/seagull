@@ -1,3 +1,4 @@
+/** @module Frontend */
 import * as React from 'react'
 
 /**

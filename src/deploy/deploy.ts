@@ -1,3 +1,4 @@
+/** @module Deploy */
 import { join } from 'path'
 import { Watcher } from '../tools/'
 

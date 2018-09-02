@@ -1,3 +1,4 @@
+/** @module Frontend */
 import * as React from 'react'
 import { renderToStaticMarkup, renderToString } from 'react-dom/server'
 import Helmet from 'react-helmet'

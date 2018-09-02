@@ -1,3 +1,4 @@
+/** @module Frontend */
 import { normalize, setupPage } from 'csstips'
 import * as History from 'history'
 import { noop } from 'lodash'

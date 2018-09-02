@@ -1,3 +1,4 @@
+/** @module Frontend */
 import { root } from '../util'
 import * as Store from './store'
 
