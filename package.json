@@ -94,7 +94,6 @@
     "chokidar": "^2.0.3",
     "copy-node-modules": "^1.0.5",
     "csstips": "^0.2.3",
-    "fs-extra": "^7.0.0",
     "history": "^4.7.2",
     "inflection": "^1.12.0",
     "isomorphic-fetch": "^2.2.1",
