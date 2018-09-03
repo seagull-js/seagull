@@ -65,6 +65,7 @@
     "@types/require-from-string": "^1.2.0",
     "@types/rimraf": "^2.0.2",
     "aws-sdk": "^2.254.1",
+    "aws-sdk-mock": "^1.7.0",
     "browserify": "^16.2.2",
     "chai": "^4.1.2",
     "clear-require": "^2.0.0",

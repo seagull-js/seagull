@@ -1,3 +1,4 @@
+declare module 'aws-sdk-mock'
 declare module 'copy-node-modules'
 declare module 'npmlog'
 declare module 'browserify-incremental'
