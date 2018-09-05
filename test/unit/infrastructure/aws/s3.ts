@@ -1,10 +1,9 @@
 import { S3 } from '@infrastructure/aws'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
-import FunctionalTest from '../../../helper/functional_test'
 
-@suite('Functional::Infrastructure::AWS::S3')
-class Test extends FunctionalTest {
+@suite('Unit::Infrastructure::AWS::S3')
+class Test {
   @test
   'can be instantiated'() {
     const meta = new S3('demoApp', '1234', 'accessId')
