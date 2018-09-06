@@ -7,15 +7,16 @@ import Unit from '../../../helper/functional_test'
 class Test {
   @test
   'can be instantiated'() {
-    const cf = new Template('some name', 'some text')
-    cf.should.be.an('object')
+    const tpl = new Template('name', 'some text', 'id')
+    tpl.should.be.an('object')
   }
 
   @test
   'can transform into resources template object'() {
-    const cf = new Template('some name', 'some text')
-    cf.service.should.be.equal('some name')
-    cf.provider.should.be.an('object')
-    cf.provider.description.should.be.equal('some text')
+    const tpl = new Template('name', 'some text', 'id')
+    tpl.service.should.be.equal('name')
+    tpl.provider.should.be.an('object')
+    tpl.provider.description.should.be.equal('some text')
+    tpl.resources.should.be.an('object')
   }
 }

@@ -1,3 +1,6 @@
+import { Resource } from 'cloudformation-declarations'
+import { merge } from 'lodash'
+import { CloudFront } from './cloudfront'
 import { Provider } from './provider'
 
 export class Template {
@@ -14,7 +17,7 @@ export class Template {
   /**
    * custom AWS resources, like cloudfront and S3
    */
-  resources: any = undefined
+  resources: { [name: string]: Resource }
 
   /**
    * the name of the target cloudformation stack
@@ -24,8 +27,10 @@ export class Template {
   /**
    * create a fresh serverless stack for AWS
    */
-  constructor(name: string, description: string) {
+  constructor(name: string, description: string, accountId: string) {
     this.provider = new Provider(description)
     this.service = name
+    const cf = new CloudFront(name, accountId, []).resources
+    this.resources = merge({}, cf)
   }
 }

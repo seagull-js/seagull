@@ -41,7 +41,7 @@ export class CloudFront {
   get resources(): { [name: string]: Resource } {
     const { appName, accountId, accessOriginResourceName: name } = this
     const assets = new S3(appName, accountId, name)
-    return merge({}, assets, this.accessIdentity)
+    return merge({}, assets.resources, this.accessIdentity)
   }
 
   // identity-resource needed for communication between cloudfront and S3
