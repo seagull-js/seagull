@@ -1,4 +1,4 @@
-import { Folder } from '@deploy'
+import { DeployToFolder } from '@deploy'
 import { AppPlan } from '@scaffold/plans'
 import { listFiles } from '@tools/util'
 import 'chai/register-should'
@@ -19,7 +19,7 @@ export class Test extends FunctionalTest {
   async 'creates public folder with all files'() {
     const appPlan = new AppPlan('/tmp', 'DemoApp', 'static')
     appPlan.apply()
-    const deployCommand = new Folder('/tmp/DemoApp')
+    const deployCommand = new DeployToFolder('/tmp/DemoApp')
     await deployCommand.run()
     const files = listFiles('/tmp/DemoApp/public')
     files.should.include('/tmp/DemoApp/public/assets/bundle.js')

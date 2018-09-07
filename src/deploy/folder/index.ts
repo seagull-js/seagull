@@ -11,7 +11,7 @@ import { copyFile, listFiles } from '../../tools/util'
  * folder called "assets" containing the file "bundle.js", which includes the
  * frontend app code.
  */
-export class Folder extends DeployCommand {
+export class DeployToFolder extends DeployCommand {
   /**
    * where to generate the result folder
    */
