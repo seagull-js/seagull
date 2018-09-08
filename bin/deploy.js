@@ -1,12 +1,13 @@
 #! /usr/bin/env node
 
 // imports
-const Deploy = require('../dist/src/deploy').Folder
+const deploy = require('../dist/src/deploy').strategy
 const process = require('process')
 
 // configuration
 const srcFolder = process.cwd()
-// TODO: get port from argv
+const args = process.argv.slice(2)
+const strategyName = args[0] || 'folder'
 
 // start
-new Deploy(srcFolder).run()
+deploy(srcFolder, strategyName)
