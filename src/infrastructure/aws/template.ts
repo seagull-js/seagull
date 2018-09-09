@@ -7,7 +7,7 @@ export class Template {
   /**
    * TODO: Lambda functions for the backend
    */
-  functions = undefined
+  functions: any[] = []
 
   /**
    * general configuration settings via the [[Provider]] class
@@ -17,7 +17,7 @@ export class Template {
   /**
    * custom AWS resources, like cloudfront and S3
    */
-  resources: { [name: string]: Resource }
+  resources: { Resources: { [name: string]: Resource } }
 
   /**
    * the name of the target cloudformation stack
@@ -31,6 +31,6 @@ export class Template {
     this.provider = new Provider(description)
     this.service = name
     const cf = new CloudFront(name, accountId, []).resources
-    this.resources = merge({}, cf)
+    this.resources = { Resources: merge({}, cf) }
   }
 }

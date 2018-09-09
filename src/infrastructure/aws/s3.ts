@@ -8,6 +8,7 @@ import { merge } from 'lodash'
  * on the S3 bucket.
  */
 export class S3 {
+  bucketName: string
   private appName: string
   private access: string
   private accountId: string
@@ -24,6 +25,7 @@ export class S3 {
     this.appName = appName
     this.accountId = accountId
     this.access = access
+    this.bucketName = `${this.appName}-${this.accountId}-assets-bucket`
   }
 
   /**
@@ -37,7 +39,7 @@ export class S3 {
   private bucket(): { [name: string]: AWS.S3.Bucket } {
     const res: { [name: string]: AWS.S3.Bucket } = {}
     const Type = 'AWS::S3::Bucket'
-    const BucketName = `${this.appName}-${this.accountId}-assets-bucket`
+    const BucketName = this.bucketName
     const Properties = { AccessControl: 'Private', BucketName }
     return { appBucket: { Properties, Type } }
   }
