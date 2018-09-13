@@ -111,7 +111,7 @@ export class CloudFront {
     return {
       DomainName: `${this.bucketName}.s3.amazonaws.com`,
       Id: 's3-wildcard',
-      OriginPath: '/assets',
+      // OriginPath: '/public',
       S3OriginConfig: {
         OriginAccessIdentity: {
           'Fn::Join': [

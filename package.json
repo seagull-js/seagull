@@ -112,7 +112,7 @@
     "ts-simple-ast": "^10.1.0",
     "typestyle": "^1.7.2",
     "universal-router": "^6.0.0",
-    "yaml": "^1.0.0-rc.8"
+    "yamljs": "^0.3.0"
   },
   "peerDependencies": {
     "aws-sdk": "^2.104.0",
