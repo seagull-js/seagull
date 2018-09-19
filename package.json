@@ -65,8 +65,6 @@
     "@types/react-helmet": "^5.0.5",
     "@types/require-from-string": "^1.2.0",
     "@types/rimraf": "^2.0.2",
-    "aws-sdk": "^2.254.1",
-    "aws-sdk-mock": "^1.7.0",
     "browserify": "^16.2.2",
     "chai": "^4.1.2",
     "clear-require": "^2.0.0",
@@ -91,6 +89,8 @@
     "uglify-es": "^3.3.9"
   },
   "dependencies": {
+    "aws-sdk": "^2.254.1",
+    "aws-sdk-mock": "^1.7.0",
     "browserify-incremental": "^3.1.1",
     "chokidar": "^2.0.3",
     "cloudformation-declarations": "^0.2.0",
