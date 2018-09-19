@@ -6,9 +6,9 @@ import { Command } from '../../patterns'
  */
 export class WriteFile implements Command {
   /**
-   * AWS Lambda stage environment
+   * name of the target bucket
    */
-  stage: 'prod' | 'dev'
+  bucketName: string
 
   /**
    * Absolute Path to the file including file name and extension
@@ -23,8 +23,8 @@ export class WriteFile implements Command {
   /**
    * see the individual property descriptions within this command class
    */
-  constructor(stage: 'prod' | 'dev', filePath: string, content: string) {
-    this.stage = stage
+  constructor(bucketName: string, filePath: string, content: string) {
+    this.bucketName = bucketName
     this.filePath = filePath
     this.content = content
   }
@@ -49,7 +49,9 @@ export class WriteFile implements Command {
   }
 
   private generateS3Params() {
-    const Bucket = `scarlett-${this.stage}-data`
-    return { Bucket, Key: this.filePath, Body: this.content }
+    const Bucket = this.bucketName
+    const Key = this.filePath
+    const Body = this.content
+    return { Bucket, Key, Body }
   }
 }

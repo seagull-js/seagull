@@ -7,9 +7,9 @@ import { Command } from '../../patterns'
  */
 export class ReadFile implements Command {
   /**
-   * AWS Lambda stage environment
+   * name of the target bucket
    */
-  stage: 'prod' | 'dev'
+  bucketName: string
 
   /**
    * Absolute Path to the file including file name and extension
@@ -19,8 +19,8 @@ export class ReadFile implements Command {
   /**
    * see the individual property descriptions within this command class
    */
-  constructor(stage: 'prod' | 'dev', filePath: string) {
-    this.stage = stage
+  constructor(bucketName: string, filePath: string) {
+    this.bucketName = bucketName
     this.filePath = filePath
   }
 
@@ -28,7 +28,7 @@ export class ReadFile implements Command {
    * write a file to the stack's dataBucket on AWS S3
    */
   async execute() {
-    const params = this.generateS3Params()
+    const params = { Bucket: this.bucketName, Key: this.filePath }
     const client = new AWS.S3()
     const { Body } = await client.getObject(params).promise()
     return (Body || '').toString()
@@ -39,10 +39,5 @@ export class ReadFile implements Command {
    */
   async revert() {
     return noop()
-  }
-
-  private generateS3Params() {
-    const Bucket = `scarlett-${this.stage}-data`
-    return { Bucket, Key: this.filePath }
   }
 }
