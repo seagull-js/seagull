@@ -31,4 +31,18 @@ export class Test extends BasicTest {
     const file = await reader.execute()
     file.should.be.equal('')
   }
+
+  @test
+  async 'CopyFile works'() {
+    const content = '<html />'
+    await new FS.WriteFile('/tmp/index.html', content).execute()
+    const cmd = new FS.CopyFile('/tmp/index.html', '/tmp/about.html')
+    await cmd.execute()
+    const reader = new FS.ReadFile('/tmp/about.html')
+    const copyBeforeRevert = await reader.execute()
+    copyBeforeRevert.should.be.equal(content)
+    await cmd.revert()
+    const copyAfterRevert = await reader.execute()
+    copyAfterRevert.should.be.equal('')
+  }
 }
