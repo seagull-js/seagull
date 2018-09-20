@@ -45,4 +45,14 @@ export class Test extends BasicTest {
     const copyAfterRevert = await reader.execute()
     copyAfterRevert.should.be.equal('')
   }
+
+  @test
+  async 'ListFiles works'() {
+    await new FS.WriteFile('/tmp/a.txt', '').execute()
+    await new FS.WriteFile('/tmp/b/c.txt', '').execute()
+    const cmd = new FS.ListFiles('/tmp')
+    const result = await cmd.execute()
+    result.should.be.an('array')
+    result.should.have.members(['/tmp/a.txt', '/tmp/b/c.txt'])
+  }
 }
