@@ -55,4 +55,18 @@ export class Test extends BasicTest {
     result.should.be.an('array')
     result.should.have.members(['/tmp/a.txt', '/tmp/b/c.txt'])
   }
+
+  @test
+  async 'DeleteFile works and can be reverted'() {
+    const content = '<html />'
+    const path = '/tmp/index.html'
+    await new FS.WriteFile(path, content).execute()
+    const cmd = new FS.DeleteFile(path)
+    await cmd.execute()
+    const exists = await new FS.Exists(path).execute()
+    exists.should.be.equal(false)
+    await cmd.revert()
+    const file = await new FS.ReadFile(path).execute()
+    file.should.be.equal(content)
+  }
 }

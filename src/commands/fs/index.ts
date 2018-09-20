@@ -1,4 +1,6 @@
 export * from './copy_file'
+export * from './delete_file'
+export * from './exists'
 export * from './list_files'
 export * from './read_file'
 export * from './write_file'
