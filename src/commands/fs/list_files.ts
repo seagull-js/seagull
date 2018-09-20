@@ -3,11 +3,11 @@ import { flatten, noop } from 'lodash'
 import { Command } from '../../patterns'
 
 /**
- * Command to read a file from the given filepath
+ * Command to a files list from disk
  */
 export class ListFiles implements Command {
   /**
-   * Absolute Path to the file including file name and extension
+   * Absolute Path to the folder
    */
   filePath: string
 
@@ -19,14 +19,14 @@ export class ListFiles implements Command {
   }
 
   /**
-   * write a file to the stack's dataBucket on AWS S3
+   * read a file list for usage later on other commands
    */
   async execute() {
     return this.listFiles(this.filePath)
   }
 
   /**
-   * remove a file from the stack's dataBucket on AWS S3
+   * does nothing
    */
   async revert() {
     return noop()
