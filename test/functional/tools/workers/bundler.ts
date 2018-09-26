@@ -5,7 +5,7 @@ import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import FunctionalTest from '../../../helper/functional_test'
 
 @suite('Functional::Tools::Workers::Bundler')
-class Test extends FunctionalTest {
+export class Test extends FunctionalTest {
   before() {
     this.mockFolder('/tmp')
   }

@@ -1,11 +1,10 @@
 /** @module Tools */
 import * as browserify from 'browserify'
 import * as browserifyInc from 'browserify-incremental'
-import * as fs from 'fs'
 import * as log from 'npmlog'
 import { join, resolve } from 'path'
 import * as sts from 'stream-string'
-import { writeFile } from '../util'
+import { FS } from '../../commands'
 import { IWorker } from './interface'
 
 /**
@@ -29,7 +28,7 @@ export class Bundler implements IWorker {
   browserifyInstance: any
 
   constructor(public srcFolder: string) {
-    this.entryFile = join(srcFolder, this.getEntryFilePath())
+    this.entryFile = join(srcFolder, '.seagull', 'dist', 'frontend', 'index.js')
     this.outFile = join(srcFolder, '.seagull', 'assets', 'bundle.js')
     this.createBundlerInstance()
   }
@@ -45,7 +44,7 @@ export class Bundler implements IWorker {
   private async bundle() {
     const stream = this.browserifyInstance.bundle()
     const content = await sts(stream)
-    writeFile(this.outFile, content)
+    await new FS.WriteFile(this.outFile, content).execute()
   }
 
   private createBundlerOpts(): browserify.Options {
@@ -64,13 +63,5 @@ export class Bundler implements IWorker {
     this.browserifyInstance.on('time', (time: any) =>
       log.info('[Bundler]', `bundled frontend in ${time}ms`)
     )
-  }
-
-  private getEntryFilePath() {
-    log.info('[Bundler]', 'loading settings from:', 'package.json')
-    const file = resolve(join(this.srcFolder, 'package.json'))
-    const exists = fs.existsSync(file)
-    const json = exists ? JSON.parse(fs.readFileSync(file, 'utf-8')) : {}
-    return json.browser || '.seagull/dist/frontend/index.js'
   }
 }
