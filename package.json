@@ -6,7 +6,7 @@
     "build": "lerna run build",
     "changes": "lerna changed",
     "publish": "lerna publish",
-    "test": "lern run test"
+    "test": "lerna run test"
   },
   "devDependencies": {
     "lerna": "^3.4.0"
