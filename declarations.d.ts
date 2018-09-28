@@ -1,8 +1,0 @@
-declare module 'aws-sdk-mock'
-declare module 'copy-node-modules'
-declare module 'npmlog'
-declare module 'browserify-incremental'
-declare module 'stream-string'
-declare module 'universal-router'
-declare module 'universal-router/generateUrls'
-declare module 'yamljs'

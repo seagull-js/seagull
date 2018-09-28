@@ -1,3 +1,10 @@
+# documentation
+docs
+
+# test artifacts
+.nyc_output
+coverage
+
 # dependencies & NPM stuff
 node_modules
 npm-debug.log
