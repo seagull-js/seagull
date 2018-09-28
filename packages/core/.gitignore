@@ -1,13 +1,16 @@
-# documentation
+# dependencies & NPM stuff
+node_modules
+npm-debug.log
+
+# documentation artifacts
 docs
+
+# build outputs
+dist
 
 # test artifacts
 .nyc_output
 coverage
-
-# dependencies & NPM stuff
-node_modules
-npm-debug.log
 
 # junk files
 .DS_Store
