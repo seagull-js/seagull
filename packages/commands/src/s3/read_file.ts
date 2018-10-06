@@ -1,5 +1,5 @@
-import { Command } from '@seagull/core'
 import * as AWS from 'aws-sdk'
+import { Command } from '../Command'
 
 /**
  * Command to write File to a specific S3 bucket

@@ -6,10 +6,10 @@ export interface Mock {
   /**
    * Activate the Mock, so subsequent code runs against a fake implementation
    */
-  activate(): any
+  activate: () => any
 
   /**
    * Deactivate the Mock, so subsequent code runs as usual
    */
-  deactivate(): any
+  deactivate: () => any
 }

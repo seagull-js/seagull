@@ -1,5 +1,5 @@
-import { Command } from '@seagull/core'
 import * as fs from 'fs'
+import { Command } from '../Command'
 
 /**
  * Command to read a file from the given filepath

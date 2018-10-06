@@ -1,18 +1,18 @@
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
-import { Library } from '../src'
+import { Library, memoize } from '../src'
 
 class TestLib extends Library {
   static double(num: number) {
     return num * 2
   }
 
-  @Library.memoize()
+  @memoize()
   static triple(num: number) {
     return num * 3
   }
 
-  @Library.memoize()
+  @memoize()
   static generate() {
     return { some: 'data' }
   }

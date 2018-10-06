@@ -1,7 +1,7 @@
 {
-    "name": "@seagull/testing",
+    "name": "@seagull/pages",
     "version": "0.20.0",
-    "description": "Testing Utilities for the Seagull Framework",
+    "description": "View Layer implementation in React for the Seagull Framework",
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
     "scripts": {
@@ -36,28 +36,29 @@
         "@types/chai": "^4.1.3",
         "@types/lodash": "^4.14.107",
         "@types/mocha": "^5.2.1",
-        "@types/mock-fs": "^3.6.30",
         "@types/node": "^9.6.21",
-        "aws-sdk": "*",
+        "@types/react": "^16.4.14",
+        "@types/react-dom": "^16.0.8",
+        "@types/react-helmet": "^5.0.5",
         "chai": "^4.1.2",
         "mocha": "^5.1.1",
         "mocha-typescript": "^1.1.16",
-        "mock-fs": "^4.5.0",
         "nyc": "^12.0.2",
         "source-map-support": "^0.5.4",
         "ts-node": "^6.1.0",
         "tslint": "^5.10.0",
+        "tslint-config-prettier": "^1.12.0",
         "typedoc": "^0.11.1",
         "typedoc-plugin-external-module-name": "^1.1.1",
         "typescript": "^3.0.3"
     },
     "dependencies": {
-        "aws-sdk-mock": "^1.7.0",
-        "lodash": "^4.17.5"
-    },
-    "peerDependencies": {
-        "aws-sdk": "*",
-        "typescript": "^3.0.3"
+        "csstips": "^0.2.3",
+        "lodash": "^4.17.5",
+        "react": "^16.5.2",
+        "react-dom": "^16.5.2",
+        "react-helmet": "^5.2.0",
+        "typestyle": "^1.7.2"
     },
     "nyc": {
         "extension": [

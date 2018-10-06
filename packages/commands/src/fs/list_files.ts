@@ -1,6 +1,6 @@
-import { Command } from '@seagull/core'
 import * as fs from 'fs'
 import { flatten } from 'lodash'
+import { Command } from '../Command'
 
 /**
  * Command to a files list from disk

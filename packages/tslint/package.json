@@ -1,0 +1,34 @@
+{
+    "name": "@seagull/tslint",
+    "version": "0.20.0",
+    "description": "Coding Standards for the Seagull Framework",
+    "main": "tslint.json",
+    "scripts": {
+        "build": "echo \"Nothing to build\"",
+        "test": "echo \"Nothing to test\""
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/seagull-js/seagull.git"
+    },
+    "keywords": [
+        "web",
+        "framework",
+        "web framework",
+        "serverless",
+        "cloud",
+        "aws",
+        "react",
+        "react.js",
+        "isomorphic"
+    ],
+    "author": "Maximilian Stroh",
+    "license": "LGPL-3.0",
+    "bugs": {
+        "url": "https://github.com/seagull-js/seagull/issues"
+    },
+    "homepage": "https://github.com/seagull-js/seagull#readme",
+    "dependencies": {
+        "tslint-config-prettier": "^1.12.0"
+    }
+}

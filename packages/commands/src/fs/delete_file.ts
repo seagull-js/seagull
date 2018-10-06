@@ -1,5 +1,5 @@
-import { Command } from '@seagull/core'
 import * as fs from 'fs'
+import { Command } from '../Command'
 
 /**
  * Command to delete a file to the given filepath
