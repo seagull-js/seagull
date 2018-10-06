@@ -5,7 +5,7 @@ import { BasicTest, S3 } from '../../src'
 
 @suite('Mocks::S3')
 export class Test extends BasicTest {
-  @test
+  @test.skip()
   async 'S3 reading does not work without mock'() {
     const result: any = { response: null, error: null }
     try {
@@ -17,7 +17,7 @@ export class Test extends BasicTest {
     result.should.have.property('error').that.is.not.equal(null)
   }
 
-  @test
+  @test.skip()
   async 'S3 writing does not work without mock'() {
     const result: any = { response: null, error: null }
     try {
