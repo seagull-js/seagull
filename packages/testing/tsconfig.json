@@ -1,21 +1,8 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "skipLibCheck": true,
-    "target": "es5",
-    "removeComments": true,
-    "sourceMap": true,
-    "declaration": true,
-    "outDir": "dist",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "lib": ["es5", "es6", "es7", "dom", "dom.iterable"],
-    "jsx": "react",
-    "rootDirs": ["src", "test"],
-    "strict": true
+    "outDir": "dist"
   },
   "include": ["src/**/*", "test/**/*", "declarations.d.ts"],
-  "exclude": ["dist", "examples", "node_modules"],
-  "types": ["node"],
-  "typeRoots": ["node_modules/@types"]
+  "exclude": ["dist", "node_modules"]
 }
