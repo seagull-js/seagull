@@ -35,11 +35,13 @@
         "@seagull/pages": "0.20.0",
         "@seagull/testing": "0.20.0",
         "@seagull/tslint": "0.20.0",
+        "@types/express": "^4.16.0",
         "@types/lodash": "^4.14.107",
         "@types/mock-fs": "^3.6.30",
         "mock-fs": "^4.5.0"
     },
     "dependencies": {
+        "express": "^4.16.3",
         "lodash": "^4.17.5"
     },
     "nyc": {
