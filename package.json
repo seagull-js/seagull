@@ -6,7 +6,7 @@
         "build": "lerna run build",
         "changes": "lerna changed",
         "publish": "lerna publish",
-        "test": "lerna run test"
+        "test": "lerna run test --parallel"
     },
     "devDependencies": {
         "@types/chai": "^4.1.3",
