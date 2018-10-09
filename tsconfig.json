@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "skipLibCheck": true,
-    "target": "es5",
+    "target": "es6",
     "removeComments": true,
     "sourceMap": true,
     "declaration": true,
