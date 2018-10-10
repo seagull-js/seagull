@@ -1,5 +1,5 @@
-import * as MockImplementations from '../src/mocks'
-import { Mock } from '../src/mocks'
+import * as MockImplementations from './mocks'
+import { Mock } from './mocks'
 
 export class BasicTest {
   /**
