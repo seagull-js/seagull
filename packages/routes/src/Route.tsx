@@ -1,6 +1,9 @@
 import { PageType, render } from '@seagull/pages'
 import { Express, Request, Response } from 'express'
 import * as fs from 'fs'
+import { isString } from 'lodash'
+import * as React from 'react'
+import * as rfs from 'require-from-string'
 
 export abstract class Route {
   static cache: number = 0
@@ -35,6 +38,7 @@ export abstract class Route {
 
   // send response as HTML
   html(data: string) {
+    this.response.type('html')
     this.response.send(data)
   }
 
@@ -56,16 +60,27 @@ export abstract class Route {
   }
 
   // render a Page with data
-  render(pageFileName: string, data: any) {
-    const pagePath = `${process.cwd()}/dist/assets/pages/${pageFileName}.js`
-    const pageBlob = fs.readFileSync(pagePath, 'utf-8')
-    const page = require(pagePath).default as PageType
-    const html = render(pageBlob, page, data)
+  render(src: string | PageType, data: any) {
+    const renderer: any = isString(src) ? this.renderUMD : this.renderPage
+    const html = renderer(src, data)
+    this.response.type('html')
     this.response.send(html)
   }
 
   // send response as plain text
   text(data: string) {
+    this.response.type('txt')
     this.response.send(data)
+  }
+
+  private renderUMD(pageSource: string, data: any) {
+    const pagePath = `${process.cwd()}/dist/assets/pages/${pageSource}.js`
+    const pageBlob = fs.readFileSync(pagePath, 'utf-8')
+    const page = rfs(pageBlob).default as PageType
+    return render(pageBlob, page, data)
+  }
+
+  private renderPage(pageSource: PageType, data: any) {
+    return render('', pageSource, data)
   }
 }

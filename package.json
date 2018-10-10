@@ -6,8 +6,8 @@
         "build": "lerna run build",
         "changes": "lerna changed",
         "publish": "lerna publish",
-        "test": "lerna run test --parallel",
-        "test:watch": "lerna run test:watch --parallel"
+        "test": "NODE_ENV=test lerna run test --parallel",
+        "test:watch": "NODE_ENV=test lerna run test:watch --parallel"
     },
     "devDependencies": {
         "@types/chai": "^4.1.3",
