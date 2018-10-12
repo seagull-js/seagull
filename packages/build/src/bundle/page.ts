@@ -20,10 +20,14 @@ export class Page implements Command {
   /** browserify instance */
   browserifyInstance: any
 
-  constructor(srcFile: string, dstFile: string, cache?: any) {
+  /** which npm packages to ignore */
+  excludes: any[]
+
+  constructor(srcFile: string, dstFile: string, cache?: any, excludes?: any[]) {
     this.srcFile = srcFile
     this.dstFile = dstFile
     this.dependencyCache = cache || {}
+    this.excludes = excludes || []
     this.createBundlerInstance()
   }
 
@@ -42,14 +46,14 @@ export class Page implements Command {
     const cache = this.codeCache
     const packageCache = this.dependencyCache
     const standalone = 'Page'
-    const paths = []
-    paths.push(resolve(join(process.cwd(), 'node_modules')))
+    const paths = [resolve(join(process.cwd(), 'node_modules'))]
     return { cache, ignoreMissing, packageCache, paths, standalone }
   }
 
   private createBundlerInstance() {
     const bfy = browserify(this.srcFile, this.createBundlerOpts())
     this.browserifyInstance = browserifyInc(bfy)
+    this.excludes.forEach(x => this.browserifyInstance.ignore(x))
     this.browserifyInstance.on('time', (time: any) =>
       // tslint:disable-next-line:no-console
       console.log('[Bundler]', `bundled frontend in ${time}ms`)
