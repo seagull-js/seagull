@@ -1,12 +1,13 @@
 import { Command, FS } from '@seagull/commands'
 import * as browserify from 'browserify'
 import * as browserifyInc from 'browserify-incremental'
+import * as intoStream from 'into-stream'
 import { join, resolve } from 'path'
 import * as sts from 'stream-string'
 
-export class Page implements Command {
-  /** where to read a file from */
-  srcFile: string
+export class Backend implements Command {
+  /** code surrounding the "app" express.js object */
+  entry: string
 
   /** where to write a bundle file to */
   dstFile: string
@@ -20,14 +21,10 @@ export class Page implements Command {
   /** browserify instance */
   browserifyInstance: any
 
-  /** which npm packages to ignore */
-  excludes: any[]
-
-  constructor(srcFile: string, dstFile: string, cache?: any, excludes?: any[]) {
-    this.srcFile = srcFile
+  constructor(entry: string, dstFile: string, cache?: any) {
+    this.entry = entry
     this.dstFile = dstFile
     this.dependencyCache = cache || {}
-    this.excludes = excludes || []
     this.createBundlerInstance()
   }
 
@@ -45,18 +42,16 @@ export class Page implements Command {
     const ignoreMissing = true
     const cache = this.codeCache
     const packageCache = this.dependencyCache
-    const standalone = 'Page'
     const paths = [resolve(join(process.cwd(), 'node_modules'))]
-    return { cache, ignoreMissing, packageCache, paths, standalone }
+    return { bare: true, cache, ignoreMissing, packageCache, paths }
   }
 
   private createBundlerInstance() {
-    const bfy = browserify(this.srcFile, this.createBundlerOpts())
+    const bfy = browserify(intoStream(this.entry), this.createBundlerOpts())
     this.browserifyInstance = browserifyInc(bfy)
-    this.excludes.forEach(x => this.browserifyInstance.ignore(x))
     // this.browserifyInstance.on('time', (time: any) =>
     //   // tslint:disable-next-line:no-console
-    //   console.log('[Bundler]', `bundled frontend in ${time}ms`)
+    //   console.log('[Bundler]', `bundled backend in ${time}ms`)
     // )
   }
 }

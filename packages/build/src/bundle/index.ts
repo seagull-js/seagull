@@ -1,3 +1,4 @@
+import { Backend } from './backend'
 import { Page } from './page'
 
-export const Bundle = { Page }
+export const Bundle = { Backend, Page }
