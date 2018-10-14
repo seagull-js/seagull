@@ -3,11 +3,16 @@
 /**
  * minimalistic build script, easier than massiv scripts in package.json
  */
-
+const { Bundle, Compile } = require('@seagull/build')
 const sh = require('shelljs')
 const fs = require('fs')
 const path = require('path')
 const flatten = require('lodash').flatten
+
+/**
+ * performance helpers
+ */
+const cache = {}
 
 // reset and prepare target folder
 sh.exec("rm -rf dist")
@@ -38,17 +43,14 @@ function bundleVendor() {
 }
 
 function bundleBackend() {
-    const uglify = 'node_modules/.bin/uglifyjs --compress --mangle --keep-classnames --safari10'
-    sh.exec(`browserify --node dist/index.js | ${uglify} > dist/assets/backend/server.js`)
-    sh.exec(`browserify --node dist/lambda.js | ${uglify} > dist/assets/backend/lambda.js`)
+    new Bundle.Backend('dist/index.js', 'dist/assets/backend/server.js', cache).execute()
+    new Bundle.Backend('dist/lambda.js', 'dist/assets/backend/lambda.js', cache).execute()
 }
 
 function bundlePage(filePath) {
-    const uglify = 'node_modules/.bin/uglifyjs --compress --mangle --keep-classnames --safari10'
-    const params = '-x react -x react-dom -x lodash --standalone Page'
     const from = `dist/pages/${filePath}`
     const to = `dist/assets/pages/${filePath}`
-    sh.exec(`browserify ${params} ${from} | ${uglify} > ${to}`)
+    new Bundle.Page(from, to, cache, ['react', 'react-dom']).execute()
 }
 
 function listFiles(cwd) {
