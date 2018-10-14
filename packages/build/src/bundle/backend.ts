@@ -6,8 +6,8 @@ import { join, resolve } from 'path'
 import * as sts from 'stream-string'
 
 export class Backend implements Command {
-  /** code surrounding the "app" express.js object */
-  entry: string
+  /** where to read a file from */
+  srcFile: string
 
   /** where to write a bundle file to */
   dstFile: string
@@ -21,8 +21,8 @@ export class Backend implements Command {
   /** browserify instance */
   browserifyInstance: any
 
-  constructor(entry: string, dstFile: string, cache?: any) {
-    this.entry = entry
+  constructor(srcFile: string, dstFile: string, cache?: any) {
+    this.srcFile = srcFile
     this.dstFile = dstFile
     this.dependencyCache = cache || {}
     this.createBundlerInstance()
@@ -47,7 +47,7 @@ export class Backend implements Command {
   }
 
   private createBundlerInstance() {
-    const bfy = browserify(intoStream(this.entry), this.createBundlerOpts())
+    const bfy = browserify(this.srcFile, this.createBundlerOpts())
     this.browserifyInstance = browserifyInc(bfy)
     // this.browserifyInstance.on('time', (time: any) =>
     //   // tslint:disable-next-line:no-console
