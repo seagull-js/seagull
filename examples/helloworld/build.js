@@ -37,9 +37,7 @@ listFiles(`${process.cwd()}/dist/pages`).forEach(file => {
  */
 
 function bundleVendor() {
-    const params = '-r react -r react-dom -r lodash'
-    const uglify = 'node_modules/.bin/uglifyjs --compress --mangle --keep-classnames --safari10'
-    sh.exec(`browserify ${params} | ${uglify} > dist/assets/static/vendor.js`)
+    new Bundle.Vendor(['react', 'react-dom', 'lodash'], 'dist/assets/static/vendor.js').execute()
 }
 
 function bundleBackend() {
