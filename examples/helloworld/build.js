@@ -3,7 +3,7 @@
 /**
  * minimalistic build script, easier than massiv scripts in package.json
  */
-const { Bundle, Compile } = require('@seagull/build')
+const { Bundle, Compile, Generate } = require('@seagull/build')
 const sh = require('shelljs')
 const fs = require('fs')
 const path = require('path')
@@ -41,6 +41,9 @@ function bundleVendor() {
 }
 
 function bundleBackend() {
+    new Generate.Express(['index_route', 'page_route', 'params_route', 'tic_tac_toe'], 'dist/app.js').execute()
+    new Generate.Server('dist/index.js').execute()
+    new Generate.Lambda('dist/lambda.js').execute()
     new Bundle.Backend('dist/index.js', 'dist/assets/backend/server.js', cache).execute()
     new Bundle.Backend('dist/lambda.js', 'dist/assets/backend/lambda.js', cache).execute()
 }
@@ -48,7 +51,7 @@ function bundleBackend() {
 function bundlePage(filePath) {
     const from = `dist/pages/${filePath}`
     const to = `dist/assets/pages/${filePath}`
-    new Bundle.Page(from, to, cache, ['react', 'react-dom']).execute()
+    new Bundle.Page(from, to, ['react', 'react-dom', 'lodash']).execute()
 }
 
 function listFiles(cwd) {

@@ -1,6 +1,6 @@
 import { Route } from '@seagull/routes'
 
-export class ParamsRoute extends Route {
+export default class ParamsRoute extends Route {
   static method = 'get'
   static path = '/params/:id'
   async handler() {

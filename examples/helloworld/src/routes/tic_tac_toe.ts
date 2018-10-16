@@ -1,6 +1,6 @@
 import { Route } from '@seagull/routes'
 
-export class TicTacToe extends Route {
+export default class TicTacToe extends Route {
   static method = 'get'
   static path = '/games/tic-tac-toe'
   async handler() {

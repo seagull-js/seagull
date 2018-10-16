@@ -1,7 +1,6 @@
 import { Command, FS } from '@seagull/commands'
 import * as browserify from 'browserify'
 import * as browserifyInc from 'browserify-incremental'
-import * as intoStream from 'into-stream'
 import { join, resolve } from 'path'
 import * as sts from 'stream-string'
 
@@ -39,11 +38,12 @@ export class Backend implements Command {
   }
 
   private createBundlerOpts(): browserify.Options {
-    const ignoreMissing = true
+    const ignoreMissing = false
     const cache = this.codeCache
     const packageCache = this.dependencyCache
     const paths = [resolve(join(process.cwd(), 'node_modules'))]
-    return { bare: true, cache, ignoreMissing, packageCache, paths }
+    // return { bare: true, cache, ignoreMissing, packageCache, paths }
+    return { cache, ignoreMissing, node: true, packageCache, paths }
   }
 
   private createBundlerInstance() {

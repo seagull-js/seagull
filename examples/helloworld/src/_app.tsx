@@ -1,9 +1,9 @@
 import * as express from 'express'
 
-import { IndexRoute } from './routes/index_route'
-import { PageRoute } from './routes/page_route'
-import { ParamsRoute } from './routes/params_route'
-import { TicTacToe } from './routes/tic_tac_toe'
+import IndexRoute from './routes/index_route'
+import PageRoute from './routes/page_route'
+import ParamsRoute from './routes/params_route'
+import TicTacToe from './routes/tic_tac_toe'
 
 const app = express()
 

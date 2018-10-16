@@ -1,5 +1,5 @@
 import * as serverless from 'serverless-http'
-import app from './app'
+import app from './_app'
 
 module.exports.handler = serverless(app, {
   // Your Content-Type is matched against this and base64 encoding is automatically

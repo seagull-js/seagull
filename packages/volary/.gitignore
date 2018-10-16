@@ -1,0 +1,17 @@
+# dependencies & NPM stuff
+node_modules
+npm-debug.log
+
+# documentation artifacts
+docs
+
+# build outputs
+dist
+
+# test artifacts
+.nyc_output
+coverage
+
+# junk files
+.DS_Store
+old_code
