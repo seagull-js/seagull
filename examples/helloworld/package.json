@@ -5,7 +5,7 @@
     "description": "Helloworld example app using the Seagull Framework",
     "main": "index.js",
     "scripts": {
-        "build": "./build.js",
+        "build": "seagull-build",
         "compile": "tsc",
         "deploy": "sls deploy --stage=test",
         "start": "node dist/assets/backend/server.js",
