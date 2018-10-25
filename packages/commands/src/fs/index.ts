@@ -1,4 +1,5 @@
 import { CopyFile } from './copy_file'
+import { CopyFolder } from './copy_folder'
 import { DeleteFile } from './delete_file'
 import { DeleteFolder } from './delete_folder'
 import { Exists } from './exists'
@@ -8,6 +9,7 @@ import { WriteFile } from './write_file'
 
 export const FS = {
   CopyFile,
+  CopyFolder,
   DeleteFile,
   DeleteFolder,
   Exists,
