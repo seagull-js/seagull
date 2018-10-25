@@ -42,7 +42,7 @@ export class Page implements Command {
   }
 
   private createBundlerOpts(): browserify.Options {
-    const ignoreMissing = true
+    const ignoreMissing = false
     const cache = this.codeCache
     const packageCache = this.dependencyCache
     const standalone = 'Page'
@@ -52,8 +52,9 @@ export class Page implements Command {
 
   private createBundlerInstance() {
     const bfy = browserify(this.srcFile, this.createBundlerOpts())
+    this.excludes.forEach(x => bfy.external(x))
+    this.excludes.forEach(x => bfy.ignore(x))
     this.browserifyInstance = browserifyInc(bfy)
-    this.excludes.forEach(x => this.browserifyInstance.ignore(x))
     // this.browserifyInstance.on('time', (time: any) =>
     //   // tslint:disable-next-line:no-console
     //   console.log('[Bundler]', `bundled frontend in ${time}ms`)
