@@ -40,6 +40,14 @@ export class Test extends BasicTest {
     list.should.have.members(['/tmp/index.html', '/tmp/a/index.html'])
   }
 
+  async 'can apply filter pattern to result list optionally'() {
+    fs.writeFileSync('/tmp/index.html', '', 'utf-8')
+    fs.writeFileSync('/tmp/index.js', '', 'utf-8')
+    const list = await new FS.ListFiles('/tmp', /html$/).execute()
+    list.should.be.an('array')
+    list.should.have.members(['/tmp/index.html'])
+  }
+
   @test
   async 'revert method should be a no-op'() {
     const cmd = new FS.ListFiles('/tmp')

@@ -12,17 +12,25 @@ export class ListFiles implements Command {
   filePath: string
 
   /**
+   * Optional patern to filter the result list
+   */
+  pattern: RegExp | undefined
+
+  /**
    * see the individual property descriptions within this command class
    */
-  constructor(filePath: string) {
+  constructor(filePath: string, pattern?: RegExp) {
     this.filePath = filePath
+    this.pattern = pattern
   }
 
   /**
    * read a file list for usage later on other commands
    */
   async execute() {
-    return fs.existsSync(this.filePath) ? this.listFiles(this.filePath) : []
+    const exists = fs.existsSync(this.filePath)
+    const list = exists ? this.listFiles(this.filePath) : []
+    return this.pattern ? list.filter(f => this.pattern!.test(f)) : list
   }
 
   /**
