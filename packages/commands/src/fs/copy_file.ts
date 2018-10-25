@@ -28,7 +28,7 @@ export class CopyFile implements Command {
    * copy a file from [[filePathFrom]] to [[filePathTo]]
    */
   async execute() {
-    return fs.writeFileSync(this.filePathTo, fs.readFileSync(this.filePathFrom))
+    return fs.copyFileSync(this.filePathFrom, this.filePathTo)
   }
 
   /**
