@@ -1,4 +1,4 @@
-export * from './queue'
+export * from './service'
 export * from './bundler'
 export * from './cleaner'
 export * from './compiler'

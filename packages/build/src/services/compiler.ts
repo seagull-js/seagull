@@ -3,9 +3,9 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as ts from 'typescript'
 import { Compile } from '../compile'
-import { Queue } from './queue'
+import { Service } from './service'
 
-export class Compiler extends Queue {
+export class Compiler extends Service {
   /**
    * reference to where the app code resides in
    */

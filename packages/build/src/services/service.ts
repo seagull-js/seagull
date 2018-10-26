@@ -1,6 +1,6 @@
 import { Command } from '@seagull/commands'
 
-export class Queue {
+export class Service {
   list: { [key: string]: Command } = {}
 
   register(key: string, cmd: Command) {

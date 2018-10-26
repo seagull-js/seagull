@@ -1,9 +1,9 @@
 import { FS } from '@seagull/commands'
 import * as path from 'path'
 import { Bundle } from '../bundle'
-import { Queue } from './queue'
+import { Service } from './service'
 
-export class Bundler extends Queue {
+export class Bundler extends Service {
   /**
    * reference to where the app code resides in
    */
