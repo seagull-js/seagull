@@ -1,6 +1,16 @@
 import { Command } from '@seagull/commands'
 
-export class Service {
+export abstract class Service {
+  // TODO: use the real constructor types instead of any for ...args here
+  static async create<T extends Service>(
+    this: { new (...args: any): T },
+    ...args: any
+  ) {
+    const instance = new this(...args)
+    await instance.initialize()
+    return instance
+  }
+
   list: { [key: string]: Command } = {}
 
   register(key: string, cmd: Command) {
@@ -27,4 +37,6 @@ export class Service {
       // )
     }
   }
+
+  abstract async initialize(): Promise<void>
 }
