@@ -10,16 +10,17 @@ export class Test extends BasicTest {
 
   @test
   async 'can write an express.js boilerplate file'() {
-    await new Generate.Express([], '/tmp/app.js').execute()
+    await new Generate.Express('/tmp', '/tmp/app.js').execute()
     const result = await new FS.ReadFile('/tmp/app.js').execute()
     result.should.be.a('string').that.is.not.equal('')
   }
 
   @test
   async 'can include route handlers'() {
-    await new Generate.Express(['a.js'], '/tmp/app.js').execute()
+    await new FS.WriteFile('/tmp/src/routes/demo.ts', '').execute()
+    await new Generate.Express('/tmp', '/tmp/app.js').execute()
     const result = await new FS.ReadFile('/tmp/app.js').execute()
     result.should.be.a('string').that.is.not.equal('')
-    result.should.contain('require("./routes/a.js").default.register(app);')
+    result.should.contain('require("./routes/demo").default.register(app);')
   }
 }

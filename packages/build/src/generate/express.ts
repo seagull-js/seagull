@@ -1,19 +1,23 @@
 import { Command, FS } from '@seagull/commands'
+import * as path from 'path'
 
 export class Express implements Command {
   /** where to write a bundle file to */
   dstFile: string
 
   /** paths to page files */
-  routes: string[]
+  appFolder: string
 
-  constructor(routes: string[], dstFile: string) {
-    this.routes = routes || []
+  constructor(appFolder: string, dstFile: string) {
+    this.appFolder = appFolder
     this.dstFile = dstFile
   }
 
   async execute() {
-    const content = [this.header(), this.body(), this.footer()].join('\n')
+    const srcFolder = path.join(this.appFolder, 'src', 'routes')
+    const routeFiles = await new FS.ListFiles(srcFolder, /tsx?$/).execute()
+    const routes = routeFiles.map(f => this.getRelativeRouteName(f))
+    const content = [this.header(), this.body(routes), this.footer()].join('\n')
     await new FS.WriteFile(this.dstFile, content).execute()
   }
 
@@ -31,13 +35,18 @@ export class Express implements Command {
     ].join('\n')
   }
 
-  private body() {
-    return this.routes
-      .map(r => `require("./routes/${r}").default.register(app);`)
+  private body(routes: string[]) {
+    return routes
+      .map(r => `require("./routes${r}").default.register(app);`)
       .join('\n')
   }
 
   private footer() {
     return ['exports.default = app;'].join('\n')
+  }
+
+  private getRelativeRouteName(filePath: string) {
+    const srcFolder = path.join(this.appFolder, 'src', 'routes')
+    return filePath.replace(srcFolder, '').replace(/\.tsx?$/, '')
   }
 }
