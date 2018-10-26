@@ -7,3 +7,5 @@ const options = {
 }
 
 build(process.cwd(), options)
+  .then(() => console.log('done'))
+  .catch(error => console.log('error', error))
