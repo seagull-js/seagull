@@ -26,17 +26,17 @@ export class Compiler extends Service {
     files.forEach(f => this.registerSourceFile(f))
   }
 
-  private async listSourceFiles() {
-    const srcFolder = path.join(this.appFolder, 'src')
-    return await new FS.ListFiles(srcFolder, /tsx?$/).execute()
-  }
-
-  private registerSourceFile(sourcePath: string) {
+  registerSourceFile(sourcePath: string) {
     const srcFolder = path.join(this.appFolder, 'src')
     const from = path.resolve(path.join(sourcePath))
     const fragment = path.relative(srcFolder, from).replace(/tsx?$/, 'js')
     const to = path.resolve(path.join(this.appFolder, 'dist', fragment))
     this.register(sourcePath, new Compile.Typescript(from, to, this.tsconfig))
+  }
+
+  private async listSourceFiles() {
+    const srcFolder = path.join(this.appFolder, 'src')
+    return await new FS.ListFiles(srcFolder, /tsx?$/).execute()
   }
 
   private async readTsconfig() {
