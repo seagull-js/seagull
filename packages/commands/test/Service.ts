@@ -43,4 +43,16 @@ export class Test {
     service.register('cmd', cmd)
     service.list.should.be.deep.equal({ cmd })
   }
+
+  @test
+  async 'can process only whitelisted or blacklisted keys'() {
+    const cmd = new CMD()
+    const service = await SRV.create()
+    service.register('cmd1', cmd)
+    service.register('cmd2', cmd)
+    const resultsOnly = await service.processOnly(['cmd1'])
+    resultsOnly.should.be.deep.equal(['execute'])
+    const resultsWithout = await service.processWithout(['cmd1'])
+    resultsWithout.should.be.deep.equal(['execute'])
+  }
 }

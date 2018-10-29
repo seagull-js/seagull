@@ -53,14 +53,40 @@ export abstract class Service {
     const results: any[] = []
     // TODO: revert all processed in case of error
     for (const key of Object.keys(this.list)) {
-      // const startTime = new Date().getTime()
       const result = await this.list[key].execute()
       results.push(result)
-      // const endTime = new Date().getTime()
-      // tslint:disable-next-line:no-console
-      // console.log(
-      //   `${this.list[key].constructor.name}: ${key} -- ${endTime - startTime}ms`
-      // )
+    }
+    return results
+  }
+
+  /**
+   * execute all commands in the list one-after-another. The ordering is the
+   * sorted key list. Same as [[processAll]] but with whitelisted keys.
+   */
+  async processOnly(keys: string[]) {
+    const results: any[] = []
+    // TODO: revert all processed in case of error
+    for (const key of Object.keys(this.list)) {
+      if (keys.includes(key)) {
+        const result = await this.list[key].execute()
+        results.push(result)
+      }
+    }
+    return results
+  }
+
+  /**
+   * execute all commands in the list one-after-another. The ordering is the
+   * sorted key list. Same as [[processAll]] but with blacklisted keys.
+   */
+  async processWithout(keys: string[]) {
+    const results: any[] = []
+    // TODO: revert all processed in case of error
+    for (const key of Object.keys(this.list)) {
+      if (!keys.includes(key)) {
+        const result = await this.list[key].execute()
+        results.push(result)
+      }
     }
     return results
   }
