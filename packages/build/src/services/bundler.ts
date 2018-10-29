@@ -1,7 +1,6 @@
-import { FS } from '@seagull/commands'
+import { FS, Service } from '@seagull/commands'
 import * as path from 'path'
 import { Bundle } from '../bundle'
-import { Service } from './service'
 
 export class Bundler extends Service {
   /**

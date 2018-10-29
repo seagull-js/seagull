@@ -1,7 +1,6 @@
-import { FS } from '@seagull/commands'
+import { FS, Service } from '@seagull/commands'
 import * as path from 'path'
 import { Generate } from '../generate'
-import { Service } from './service'
 
 export class Generator extends Service {
   /**

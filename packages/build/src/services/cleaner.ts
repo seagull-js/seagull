@@ -1,6 +1,5 @@
-import { FS } from '@seagull/commands'
+import { FS, Service } from '@seagull/commands'
 import * as path from 'path'
-import { Service } from './service'
 
 export class Cleaner extends Service {
   /**

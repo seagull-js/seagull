@@ -1,9 +1,8 @@
-import { FS } from '@seagull/commands'
+import { FS, Service } from '@seagull/commands'
 import * as fs from 'fs'
 import * as path from 'path'
 import * as ts from 'typescript'
 import { Compile } from '../compile'
-import { Service } from './service'
 
 export class Compiler extends Service {
   /**
