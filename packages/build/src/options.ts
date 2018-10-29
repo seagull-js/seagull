@@ -1,6 +1,11 @@
 export interface Options {
   /**
-   * list of package names classified as "vendor"
+   * port for the dev server, defaults to 8080
+   */
+  port?: number
+
+  /**
+   * list of package names classified as "vendor", such as "react"
    */
   vendor?: string[]
 }
