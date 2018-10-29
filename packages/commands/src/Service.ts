@@ -1,4 +1,4 @@
-import { Command } from './command'
+import { Command } from './Command'
 
 /**
  * A Service manages a bag of initialized Command instances and can process them
