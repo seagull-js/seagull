@@ -34,6 +34,20 @@ export class Bundler extends Service {
     files.forEach(f => this.registerPage(f))
   }
 
+  async processPages() {
+    const ignoredKeys = ['vendor.js', 'lambda.js', 'backend.js']
+    return await this.processWithout(ignoredKeys)
+  }
+
+  registerPage(sourcePath: string) {
+    const srcFolder = path.join(this.appFolder, 'src', 'pages')
+    const relative = path.relative(srcFolder, sourcePath.replace(/tsx?$/, 'js'))
+    const from = path.join(this.appFolder, 'dist', 'pages', relative)
+    const to = path.join(this.appFolder, 'dist', 'assets', 'pages', relative)
+    const command = new Bundle.Page(from, to, this.pkgCache, this.vendor)
+    this.register(sourcePath, command)
+  }
+
   private registerVendorBundling(name: string = 'vendor.js') {
     const to = path.join(this.appFolder, 'dist/assets/static/vendor.js')
     this.register(name, new Bundle.Vendor(this.vendor, to, this.pkgCache))
@@ -52,14 +66,5 @@ export class Bundler extends Service {
   private async listPageSourceFiles() {
     const srcFolder = path.join(this.appFolder, 'src', 'pages')
     return await new FS.ListFiles(srcFolder, /\.tsx?$/).execute()
-  }
-
-  private registerPage(sourcePath: string) {
-    const srcFolder = path.join(this.appFolder, 'src', 'pages')
-    const relative = path.relative(srcFolder, sourcePath.replace(/tsx?$/, 'js'))
-    const from = path.join(this.appFolder, 'dist', 'pages', relative)
-    const to = path.join(this.appFolder, 'dist', 'assets', 'pages', relative)
-    const command = new Bundle.Page(from, to, this.pkgCache, this.vendor)
-    this.register(sourcePath, command)
   }
 }

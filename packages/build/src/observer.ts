@@ -80,10 +80,13 @@ export class Observer {
         this.compiler.registerSourceFile(filePath)
         await this.compiler.processOne(filePath)
         await this.generator.processAll()
-        await this.bundler.processAll() // TODO: bundle only what is needed!
+        if (filePath.startsWith(path.join(this.srcFolder, 'src', 'pages'))) {
+          this.bundler.registerPage(filePath)
+        }
+        await this.bundler.processPages()
         const duration = new Date().getTime() - timeStart
         // tslint:disable-next-line:no-console
-        console.log(`processed ${filePath} in ${duration}ms`)
+        console.log(`added ${filePath} in ${duration}ms`)
       } else {
         this.cleaner.processOne('copy-static')
       }
@@ -96,10 +99,10 @@ export class Observer {
       if (/tsx?$/.test(filePath)) {
         await this.compiler.processOne(filePath)
         await this.generator.processAll()
-        await this.bundler.processAll() // TODO: bundle only what is needed!
+        await this.bundler.processPages()
         const duration = new Date().getTime() - timeStart
         // tslint:disable-next-line:no-console
-        console.log(`processed ${filePath} in ${duration}ms`)
+        console.log(`updated ${filePath} in ${duration}ms`)
       } else {
         this.cleaner.processOne('copy-static')
       }
@@ -117,10 +120,13 @@ export class Observer {
         const to = path.resolve(path.join(this.srcFolder, 'dist', fragment))
         await new FS.DeleteFile(to).execute()
         await this.generator.processAll()
-        await this.bundler.processAll() // TODO: bundle only what is needed!
+        if (filePath.startsWith(path.join(this.srcFolder, 'src', 'pages'))) {
+          this.bundler.remove(filePath)
+        }
+        await this.bundler.processPages()
         const duration = new Date().getTime() - timeStart
         // tslint:disable-next-line:no-console
-        console.log(`processed ${filePath} in ${duration}ms`)
+        console.log(`removed ${filePath} in ${duration}ms`)
       } else {
         this.cleaner.processOne('copy-static')
       }
