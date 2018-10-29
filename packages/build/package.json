@@ -48,6 +48,7 @@
         "browserify-incremental": "^3.1.1",
         "chokidar": "^2.0.3",
         "lodash": "^4.17.5",
+        "stoppable": "1.0.5",
         "stream-string": "^2.0.1",
         "uglify-es": "^3.3.9"
     },

@@ -1,6 +1,7 @@
 import { FS } from '@seagull/commands'
 import * as chokidar from 'chokidar'
 import * as path from 'path'
+import * as stoppable from 'stoppable'
 import { Bundler, Cleaner, Compiler, Generator } from './services'
 
 export interface ObserverProps {
@@ -27,6 +28,7 @@ export class Observer {
   private compiler: Compiler
   private generator: Generator
   private bundler: Bundler
+  private server: any
 
   /**
    * initialize the Observer with configuration
@@ -67,9 +69,11 @@ export class Observer {
     this.registerFileAddEvents()
     this.registerFileChangedEvents()
     this.registerFileRemovedEvents()
+    this.restartAppServer()
   }
 
   async stop() {
+    this.stopAppServer()
     return this.watcher && this.watcher.close()
   }
 
@@ -87,8 +91,9 @@ export class Observer {
         const duration = new Date().getTime() - timeStart
         // tslint:disable-next-line:no-console
         console.log(`added ${filePath} in ${duration}ms`)
+        await this.restartAppServer()
       } else {
-        this.cleaner.processOne('copy-static')
+        await this.cleaner.processOne('copy-static')
       }
     })
   }
@@ -103,8 +108,10 @@ export class Observer {
         const duration = new Date().getTime() - timeStart
         // tslint:disable-next-line:no-console
         console.log(`updated ${filePath} in ${duration}ms`)
+        this.bustRequireCache(filePath)
+        await this.restartAppServer()
       } else {
-        this.cleaner.processOne('copy-static')
+        await this.cleaner.processOne('copy-static')
       }
     })
   }
@@ -127,9 +134,37 @@ export class Observer {
         const duration = new Date().getTime() - timeStart
         // tslint:disable-next-line:no-console
         console.log(`removed ${filePath} in ${duration}ms`)
+        await this.restartAppServer()
       } else {
-        this.cleaner.processOne('copy-static')
+        await this.cleaner.processOne('copy-static')
       }
     })
+  }
+
+  private async restartAppServer() {
+    await this.stopAppServer()
+    await this.startAppServer()
+  }
+
+  private async startAppServer() {
+    const entry = path.join(this.srcFolder, 'dist', 'app.js')
+    delete require.cache[entry]
+    const app = require(entry).default
+    this.server = stoppable(app, 0).listen(8080, () => {
+      // tslint:disable-next-line:no-console
+      console.log('started on localhost:8080')
+    })
+  }
+
+  private async stopAppServer() {
+    return this.server && this.server.close()
+  }
+
+  private bustRequireCache(sourceFilePath: string) {
+    const srcFolder = path.join(this.srcFolder, 'src')
+    const from = path.resolve(path.join(sourceFilePath))
+    const fragment = path.relative(srcFolder, from).replace(/tsx?$/, 'js')
+    const to = path.resolve(path.join(this.srcFolder, 'dist', fragment))
+    delete require.cache[to]
   }
 }
