@@ -6,7 +6,7 @@
     "main": "index.js",
     "scripts": {
         "build": "seagull-build",
-        "compile": "tsc",
+        "dev": "seagull-dev",
         "deploy": "sls deploy --stage=test",
         "start": "node dist/assets/backend/server.js",
         "test": "echo \"Error: no test specified\" && exit 0",

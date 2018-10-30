@@ -38,7 +38,7 @@ export class Backend implements Command {
   }
 
   private createBundlerOpts(): browserify.Options {
-    const ignoreMissing = false
+    const ignoreMissing = true
     const cache = this.codeCache
     const packageCache = this.dependencyCache
     const paths = [resolve(join(process.cwd(), 'node_modules'))]

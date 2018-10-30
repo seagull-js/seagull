@@ -37,7 +37,14 @@ export class Express implements Command {
 
   private body(routes: string[]) {
     return routes
-      .map(r => `require("./routes${r}").default.register(app);`)
+      .map(
+        r => `
+      try {
+        require("./routes${r}").default.register(app);
+      } catch (error) {
+        console.log('error loading route:', '${r}', error);
+      }`
+      )
       .join('\n')
   }
 
