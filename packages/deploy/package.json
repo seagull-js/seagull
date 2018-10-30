@@ -1,0 +1,70 @@
+{
+    "name": "@seagull/deploy",
+    "version": "0.20.0",
+    "description": "Code deploying for the Seagull Framework",
+    "main": "dist/src/index.js",
+    "types": "dist/src/index.d.ts",
+    "scripts": {
+        "build": "rm -rf dist && tsc",
+        "test": "NODE_ENV=test tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
+        "test:watch": "npm run test -- --watch --reporter min",
+        "docs": "rm -rf docs && typedoc --mode modules --ignoreCompilerErrors --excludeExternals --excludePrivate --excludeNotExported --out docs src"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/seagull-js/seagull.git"
+    },
+    "keywords": [
+        "web",
+        "framework",
+        "web framework",
+        "serverless",
+        "cloud",
+        "aws",
+        "react",
+        "react.js",
+        "isomorphic"
+    ],
+    "author": "Peter Melinat",
+    "license": "LGPL-3.0",
+    "bugs": {
+        "url": "https://github.com/seagull-js/seagull/issues"
+    },
+    "homepage": "https://github.com/seagull-js/seagull#readme",
+    "devDependencies": {
+        "@seagull/testing": "0.20.0",
+        "@seagull/tslint": "0.20.0",
+        "@types/browserify": "^12.0.36",
+        "@types/lodash": "^4.14.107"
+    },
+    "dependencies": {
+        "@seagull/commands": "0.20.0",
+        "browserify": "^16.2.0",
+        "browserify-incremental": "^3.1.1",
+        "lodash": "^4.17.5",
+        "stream-string": "^2.0.1",
+        "uglify-es": "^3.3.9"
+    },
+    "peerDependencies": {
+        "typescript": "*"
+    },
+    "nyc": {
+        "extension": [
+            ".ts",
+            ".tsx"
+        ],
+        "exclude": [
+            "**/*.d.ts",
+            "coverage",
+            "dist",
+            "docs",
+            "node_modules",
+            "test"
+        ],
+        "reporter": [
+            "html",
+            "text",
+            "text-summary"
+        ]
+    }
+}
