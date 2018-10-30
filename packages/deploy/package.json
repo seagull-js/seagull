@@ -34,16 +34,11 @@
     "devDependencies": {
         "@seagull/testing": "0.20.0",
         "@seagull/tslint": "0.20.0",
-        "@types/browserify": "^12.0.36",
         "@types/lodash": "^4.14.107"
     },
     "dependencies": {
         "@seagull/commands": "0.20.0",
-        "browserify": "^16.2.0",
-        "browserify-incremental": "^3.1.1",
-        "lodash": "^4.17.5",
-        "stream-string": "^2.0.1",
-        "uglify-es": "^3.3.9"
+        "lodash": "^4.17.5"
     },
     "peerDependencies": {
         "typescript": "*"
