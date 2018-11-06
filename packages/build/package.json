@@ -36,7 +36,6 @@
     },
     "homepage": "https://github.com/seagull-js/seagull#readme",
     "devDependencies": {
-        "@seagull/testing": "0.20.0",
         "@seagull/tslint": "0.20.0",
         "@types/browserify": "^12.0.36",
         "@types/chokidar": "^1.7.5",
@@ -44,6 +43,7 @@
     },
     "dependencies": {
         "@seagull/commands": "0.20.0",
+        "@seagull/testing": "0.20.0",
         "browserify": "^16.2.0",
         "browserify-incremental": "^3.1.1",
         "chokidar": "^2.0.3",

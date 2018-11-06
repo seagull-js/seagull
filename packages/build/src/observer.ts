@@ -1,4 +1,5 @@
 import { FS } from '@seagull/commands'
+import { S3 } from '@seagull/testing'
 import * as chokidar from 'chokidar'
 import * as path from 'path'
 import * as stoppable from 'stoppable'
@@ -40,6 +41,14 @@ export class Observer {
     this.compiler = new Compiler(this.srcFolder)
     this.generator = new Generator(this.srcFolder)
     this.bundler = new Bundler(this.srcFolder, this.props.vendor)
+    this.shim()
+  }
+
+  /**
+   * enable redirection of used AWS resources for local development flow
+   */
+  shim() {
+    new S3().activate()
   }
 
   /**
