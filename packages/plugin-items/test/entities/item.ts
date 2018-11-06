@@ -5,8 +5,18 @@ import { Item } from '../../src'
 
 class Config extends Item {
   id: string = 'i18n'
-
   setting: boolean = true
+}
+
+class Todo extends Item {
+  id: string
+  text: string
+
+  constructor(id: string, text: string) {
+    super()
+    this.id = id
+    this.text = text
+  }
 }
 
 @suite('Item')
@@ -48,5 +58,20 @@ export class Test extends BasicTest {
     } catch (error) {
       error.should.be.not.equal(null)
     }
+  }
+
+  @test
+  async 'can get a list of all instances'() {
+    await Config.put({ id: 'something' })
+    const list = await Config.all()
+    list.should.be.deep.equal([{ id: 'something', setting: true }])
+  }
+
+  @test
+  async 'can be used with items that have a constructor'() {
+    await new Todo('1', 'a').save()
+    await Todo.put({ id: '2', text: 'b' })
+    const list = await Todo.all()
+    list.should.be.deep.equal([{ id: '1', text: 'a' }, { id: '2', text: 'b' }])
   }
 }
