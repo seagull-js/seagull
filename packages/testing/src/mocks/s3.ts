@@ -17,6 +17,7 @@ export class S3 implements Mock {
   activate = () => {
     const s3 = new S3()
     AWSMock.mock('S3', 'getObject', s3.getObject)
+    AWSMock.mock('S3', 'listObjectsV2', s3.listObjects)
     AWSMock.mock('S3', 'putObject', s3.putObject)
     AWSMock.mock('S3', 'deleteObject', s3.deleteObject)
     return s3
@@ -46,6 +47,19 @@ export class S3 implements Mock {
     this.ensureBucket(Input.Bucket)
     const Body = this.storage[Input.Bucket][Input.Key]
     const result: import('aws-sdk').S3.GetObjectOutput = { Body }
+    cb(null, result)
+  }
+
+  /**
+   * list all files from a bucket with optional prefix
+   */
+  listObjects = (Input: import('aws-sdk').S3.ListObjectsV2Request, cb: any) => {
+    this.ensureBucket(Input.Bucket)
+    const prefix = Input.Prefix || ''
+    const keys = Object.keys(this.storage[Input.Bucket])
+    const list = prefix ? keys.filter(key => key.startsWith(prefix)) : keys
+    const Contents = list.map(key => ({ Key: key }))
+    const result: import('aws-sdk').S3.ListObjectsV2Output = { Contents }
     cb(null, result)
   }
 

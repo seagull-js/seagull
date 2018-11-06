@@ -36,6 +36,10 @@ export class Test extends BasicTest {
     await this.writeFileToS3('stuff.txt', 'lorem ipsum')
     const { Body } = await this.readFileFromS3('stuff.txt')
     Body!.should.be.equal('lorem ipsum')
+    const matchAll = await this.listFilesinS3('')
+    matchAll.Contents!.should.be.deep.equal([{ Key: 'stuff.txt' }])
+    const matchNone = await this.listFilesinS3('does not exist')
+    matchNone.Contents!.should.be.deep.equal([])
     const response = await this.deleteFileFromS3('stuff.txt')
     response.should.be.deep.equal({})
     mock.deactivate()
@@ -45,6 +49,12 @@ export class Test extends BasicTest {
     const params = { Bucket: 'DemoBucket123', Key: path }
     const client = new AWS.S3()
     return await client.deleteObject(params).promise()
+  }
+
+  private async listFilesinS3(path: string) {
+    const params = { Bucket: 'DemoBucket123', Prefix: path }
+    const client = new AWS.S3()
+    return await client.listObjectsV2(params).promise()
   }
 
   private async readFileFromS3(path: string) {
