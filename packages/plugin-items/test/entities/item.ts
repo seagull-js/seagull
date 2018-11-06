@@ -37,4 +37,16 @@ export class Test extends BasicTest {
       error.should.be.not.equal(null)
     }
   }
+
+  @test
+  async 'can be deleted'() {
+    await Config.put({ id: 'remover' })
+    await Config.delete('remover')
+    try {
+      const cfg = await Config.get('remover')
+      cfg.id.should.be.equal('this should never run')
+    } catch (error) {
+      error.should.be.not.equal(null)
+    }
+  }
 }

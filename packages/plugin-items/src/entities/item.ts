@@ -4,6 +4,13 @@ import { S3 } from '@seagull/commands'
 const bucketName = 'demo-bucket'
 
 export abstract class Item {
+  // delete an existing object from the database
+  static async delete<T extends Item>(this: { new (): T }, id: string) {
+    const name = new this().constructor.name
+    const key = `${name}/${id}.json`
+    return await new S3.DeleteFile(bucketName, key).execute()
+  }
+
   // Fetch an object from the database by id
   static async get<T extends Item>(this: { new (): T }, id: string) {
     const name = new this().constructor.name
