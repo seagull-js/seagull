@@ -1,5 +1,6 @@
 import * as AWS from 'aws-sdk'
 import 'chai/register-should'
+import * as fs from 'fs'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import { BasicTest, S3 } from '../../src'
 
@@ -43,6 +44,21 @@ export class Test extends BasicTest {
     const response = await this.deleteFileFromS3('stuff.txt')
     response.should.be.deep.equal({})
     mock.deactivate()
+  }
+
+  @test
+  async 'can work with synchronized disc data'() {
+    const fsMock = new this.mock.FS('/tmp')
+    fsMock.activate()
+    const mock = new S3('/tmp/.data')
+    mock.activate()
+    await this.writeFileToS3('stuff', '17')
+    const dataFile = fs.readFileSync('/tmp/.data/s3.json', 'utf-8')
+    dataFile.should.be.equal('{"DemoBucket123":{"stuff":"17"}}')
+    mock.deactivate()
+    const restored = new S3('/tmp/.data')
+    restored.storage.should.be.deep.equal({ DemoBucket123: { stuff: '17' } })
+    fsMock.deactivate()
   }
 
   private async deleteFileFromS3(path: string) {

@@ -1,12 +1,10 @@
 import { FS } from '@seagull/commands'
+import { S3 } from '@seagull/testing'
 import * as chokidar from 'chokidar'
 import * as path from 'path'
 import * as stoppable from 'stoppable'
+import { Options } from './options'
 import { Bundler, Cleaner, Compiler, Generator } from './services'
-
-export interface ObserverProps {
-  vendor?: string[]
-}
 
 /**
  * Process an app foldr incrementally
@@ -20,7 +18,7 @@ export class Observer {
   /**
    * configuration options for the observer
    */
-  props: ObserverProps
+  props: Options
 
   // internal worker services
   private watcher: chokidar.FSWatcher | undefined
@@ -33,13 +31,23 @@ export class Observer {
   /**
    * initialize the Observer with configuration
    */
-  constructor(srcFolder: string, props?: ObserverProps) {
+  constructor(srcFolder: string, props?: Options) {
     this.srcFolder = path.resolve(srcFolder)
     this.props = props || {}
     this.cleaner = new Cleaner(this.srcFolder)
     this.compiler = new Compiler(this.srcFolder)
     this.generator = new Generator(this.srcFolder)
     this.bundler = new Bundler(this.srcFolder, this.props.vendor)
+    this.shim()
+  }
+
+  /**
+   * enable redirection of used AWS resources for local development flow
+   */
+  shim() {
+    const folder = this.props.dataPath
+    const dataPath = folder ? path.join(this.srcFolder, folder) : undefined
+    new S3(dataPath).activate()
   }
 
   /**
@@ -150,9 +158,10 @@ export class Observer {
     const entry = path.join(this.srcFolder, 'dist', 'app.js')
     delete require.cache[entry]
     const app = require(entry).default
-    this.server = stoppable(app, 0).listen(8080, () => {
+    const port = this.props.port || 8080
+    this.server = stoppable(app, 0).listen(port, () => {
       // tslint:disable-next-line:no-console
-      console.log('started on localhost:8080')
+      console.log(`started on localhost:${port}`)
     })
   }
 

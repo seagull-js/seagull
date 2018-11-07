@@ -1,4 +1,6 @@
 import * as AWSMock from 'aws-sdk-mock'
+import * as fs from 'fs'
+import * as path from 'path'
 import { Mock } from './mock'
 
 /**
@@ -12,15 +14,24 @@ export class S3 implements Mock {
   storage: { [Bucket: string]: { [Key: string]: any } } = {}
 
   /**
+   * When true, save/load the state of storage to local disk
+   */
+  localFolder: string | undefined
+
+  constructor(localFolder?: string) {
+    this.localFolder = localFolder
+    this.loadFromDisk()
+  }
+
+  /**
    * redirect S3 interactions to local folder
    */
   activate = () => {
-    const s3 = new S3()
-    AWSMock.mock('S3', 'getObject', s3.getObject)
-    AWSMock.mock('S3', 'listObjectsV2', s3.listObjects)
-    AWSMock.mock('S3', 'putObject', s3.putObject)
-    AWSMock.mock('S3', 'deleteObject', s3.deleteObject)
-    return s3
+    AWSMock.mock('S3', 'getObject', this.getObject)
+    AWSMock.mock('S3', 'listObjectsV2', this.listObjects)
+    AWSMock.mock('S3', 'putObject', this.putObject)
+    AWSMock.mock('S3', 'deleteObject', this.deleteObject)
+    return this
   }
 
   /**
@@ -28,6 +39,7 @@ export class S3 implements Mock {
    */
   deactivate = () => {
     AWSMock.restore('S3')
+    return this
   }
 
   /**
@@ -36,6 +48,7 @@ export class S3 implements Mock {
   deleteObject = (Input: import('aws-sdk').S3.DeleteObjectRequest, cb: any) => {
     this.ensureBucket(Input.Bucket)
     delete this.storage[Input.Bucket][Input.Key]
+    this.synchronizeToDisk()
     const result: import('aws-sdk').S3.DeleteObjectOutput = {}
     cb(null, result)
   }
@@ -69,6 +82,7 @@ export class S3 implements Mock {
   putObject = (Input: import('aws-sdk').S3.PutObjectRequest, cb: any) => {
     this.ensureBucket(Input.Bucket)
     this.storage[Input.Bucket][Input.Key] = Input.Body
+    this.synchronizeToDisk()
     const result: import('aws-sdk').S3.PutObjectOutput = {}
     cb(null, result)
   }
@@ -76,5 +90,26 @@ export class S3 implements Mock {
   // little helper to ensure that the "bucket" key exists in [[storage]]
   private ensureBucket = (name: string) => {
     this.storage[name] = this.storage[name] || {}
+  }
+
+  private loadFromDisk() {
+    if (this.localFolder) {
+      const filePath = path.join(this.localFolder, 's3.json')
+      if (fs.existsSync(filePath)) {
+        const data = fs.readFileSync(filePath, 'utf-8')
+        this.storage = JSON.parse(data)
+      }
+    }
+  }
+
+  private synchronizeToDisk() {
+    if (this.localFolder) {
+      if (!fs.existsSync(this.localFolder)) {
+        fs.mkdirSync(this.localFolder)
+      }
+      const filePath = path.join(this.localFolder, 's3.json')
+      const fileContent = JSON.stringify(this.storage)
+      fs.writeFileSync(filePath, fileContent, 'utf-8')
+    }
   }
 }

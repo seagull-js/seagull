@@ -3,6 +3,7 @@
 const { Observer } = require('../dist/src/observer')
 
 const options = {
+  dataPath: '.data',
   vendor: ['react', 'react-dom', 'react-helmet', 'lodash', 'typestyle'],
 }
 
