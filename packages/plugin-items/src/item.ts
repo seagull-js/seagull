@@ -1,13 +1,11 @@
 import { S3 } from '@seagull/commands'
-
-// TODO make the bucket name configurable (singleton)
-const bucketName = 'demo-bucket'
+import { config } from './config'
 
 export abstract class Item {
   // get all instances of a given Item subclass
   static async all<T extends Item>(this: { new (...args: any[]): T }) {
     const name = new this().constructor.name
-    const keys = await new S3.ListFiles(bucketName, name).execute()
+    const keys = await new S3.ListFiles(config.bucket, name).execute()
     return await Promise.all(
       keys.map(async key => {
         const data = await loadJSONFile(key)
@@ -23,7 +21,7 @@ export abstract class Item {
   ) {
     const name = new this().constructor.name
     const key = `${name}/${id}.json`
-    return await new S3.DeleteFile(bucketName, key).execute()
+    return await new S3.DeleteFile(config.bucket, key).execute()
   }
 
   // Fetch an object from the database by id
@@ -52,13 +50,13 @@ export abstract class Item {
     const name = this.constructor.name
     const key = `${name}/${this.id}.json`
     const content = JSON.stringify(this)
-    return new S3.WriteFile(bucketName, key, content).execute()
+    return new S3.WriteFile(config.bucket, key, content).execute()
   }
 }
 
 // helper method for typescript's sake
 async function loadJSONFile(key: string) {
-  const content = await new S3.ReadFile(bucketName, key).execute()
+  const content = await new S3.ReadFile(config.bucket, key).execute()
   if (content !== '') {
     return JSON.parse(content)
   } else {

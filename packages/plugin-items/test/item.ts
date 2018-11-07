@@ -1,7 +1,7 @@
 import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
-import { Item } from '../../src'
+import { Item } from '../src'
 
 class Config extends Item {
   id: string = 'i18n'
