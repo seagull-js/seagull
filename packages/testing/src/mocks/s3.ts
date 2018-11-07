@@ -15,12 +15,11 @@ export class S3 implements Mock {
    * redirect S3 interactions to local folder
    */
   activate = () => {
-    const s3 = new S3()
-    AWSMock.mock('S3', 'getObject', s3.getObject)
-    AWSMock.mock('S3', 'listObjectsV2', s3.listObjects)
-    AWSMock.mock('S3', 'putObject', s3.putObject)
-    AWSMock.mock('S3', 'deleteObject', s3.deleteObject)
-    return s3
+    AWSMock.mock('S3', 'getObject', this.getObject)
+    AWSMock.mock('S3', 'listObjectsV2', this.listObjects)
+    AWSMock.mock('S3', 'putObject', this.putObject)
+    AWSMock.mock('S3', 'deleteObject', this.deleteObject)
+    return this
   }
 
   /**
@@ -28,6 +27,7 @@ export class S3 implements Mock {
    */
   deactivate = () => {
     AWSMock.restore('S3')
+    return this
   }
 
   /**
