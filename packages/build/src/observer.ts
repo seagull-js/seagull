@@ -45,7 +45,9 @@ export class Observer {
    * enable redirection of used AWS resources for local development flow
    */
   shim() {
-    new S3().activate()
+    const folder = this.props.dataPath
+    const dataPath = folder ? path.join(this.srcFolder, folder) : undefined
+    new S3(dataPath).activate()
   }
 
   /**
