@@ -1,7 +1,7 @@
 {
-    "name": "@seagull/commands",
+    "name": "@seagull/deploy",
     "version": "0.20.0",
-    "description": "Side Effect Functions implemented as Command Pattern for the Seagull Framework",
+    "description": "Code deploying for the Seagull Framework",
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
     "scripts": {
@@ -25,7 +25,7 @@
         "react.js",
         "isomorphic"
     ],
-    "author": "Maximilian Stroh",
+    "author": "Peter Melinat",
     "license": "LGPL-3.0",
     "bugs": {
         "url": "https://github.com/seagull-js/seagull/issues"
@@ -34,12 +34,14 @@
     "devDependencies": {
         "@seagull/testing": "0.20.0",
         "@seagull/tslint": "0.20.0",
-        "@types/lodash": "^4.14.107",
-        "@types/mock-fs": "^3.6.30",
-        "mock-fs": "^4.5.0"
+        "@types/lodash": "^4.14.107"
     },
     "dependencies": {
+        "@seagull/commands": "0.20.0",
         "lodash": "^4.17.5"
+    },
+    "peerDependencies": {
+        "typescript": "*"
     },
     "nyc": {
         "extension": [

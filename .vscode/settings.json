@@ -5,5 +5,14 @@
   "prettier.useTabs": false,
   "prettier.tabWidth": 2,
   "prettier.semi": false,
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "spellright.language": [
+    "de",
+    "en"
+  ],
+  "spellright.documentTypes": [
+    "markdown",
+    "latex",
+    "plaintext"
+  ]
 }
