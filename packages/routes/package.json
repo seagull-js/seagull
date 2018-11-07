@@ -41,6 +41,7 @@
     "mock-fs": "^4.5.0"
   },
   "dependencies": {
+    "body-parser": "^1.18.3",
     "express": "^4.16.3",
     "lodash": "^4.17.5",
     "node-mocks-http": "^1.7.2",

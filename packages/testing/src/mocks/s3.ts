@@ -104,7 +104,9 @@ export class S3 implements Mock {
 
   private synchronizeToDisk() {
     if (this.localFolder) {
-      fs.mkdirSync(this.localFolder)
+      if (!fs.existsSync(this.localFolder)) {
+        fs.mkdirSync(this.localFolder)
+      }
       const filePath = path.join(this.localFolder, 's3.json')
       const fileContent = JSON.stringify(this.storage)
       fs.writeFileSync(filePath, fileContent, 'utf-8')
