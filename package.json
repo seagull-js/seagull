@@ -1,10 +1,12 @@
 {
-  "name": "seagull-monorepo",
+  "name": "seagull.js",
   "private": true,
   "scripts": {
     "bootstrap": "lerna bootstrap --hoist",
     "build": "lerna run build",
     "changes": "lerna changed",
+    "docs:build": "docz build",
+    "docs:dev": "docz dev",
     "publish": "lerna publish",
     "test": "NODE_ENV=test lerna run test --parallel",
     "test:watch": "NODE_ENV=test lerna run test:watch --parallel"
@@ -14,6 +16,7 @@
     "@types/mocha": "^5.2.1",
     "@types/node": "^9.6.21",
     "chai": "^4.1.2",
+    "docz": "^0.12.9",
     "lerna": "^3.4.0",
     "mocha": "^5.1.1",
     "mocha-typescript": "^1.1.16",

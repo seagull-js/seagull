@@ -1,5 +1,6 @@
 # build artifacts
 .data
+.docz
 dist
 
 # dependencies & NPM stuff
