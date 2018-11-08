@@ -1,5 +1,7 @@
 # build artifacts
 .data
+.docz
+.serverless
 dist
 
 # dependencies & NPM stuff
