@@ -38,4 +38,4 @@ custom:
       - '*/*'
 
 functions:
-  lambda: ${file(./dist/helloworld/lambda.js):${opt:stage}}
+  lambda: ${file(./dist/assets/backend/lambda.js):${opt:stage}}
