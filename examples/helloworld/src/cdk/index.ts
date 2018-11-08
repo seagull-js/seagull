@@ -22,7 +22,7 @@ module.exports.handler = serverless(app_1.default, {
 class AppStack extends cdk.Stack {
   constructor(parent: cdk.App, id: string, props?: cdk.StackProps) {
     super(parent, id, props)
-    const lambdaName = `${pkg.name}-${process.env.STAGE}-handler`
+    const lambdaName = `${pkg.name}-handler`
     const lambdaParams: lambda.FunctionProps = {
       code: lambda.Code.asset('./dist/assets'),
       description: 'universal route',
