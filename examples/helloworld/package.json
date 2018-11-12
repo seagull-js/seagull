@@ -17,6 +17,7 @@
     "license": "LGPL-3.0",
     "devDependencies": {
         "@aws-cdk/aws-apigateway": "^0.14.1",
+        "@aws-cdk/aws-iam": "^0.14.1",
         "@aws-cdk/aws-lambda": "^0.14.1",
         "@aws-cdk/cdk": "^0.14.1",
         "@seagull/build": "0.20.0",
@@ -32,6 +33,7 @@
         "@seagull/plugin-items": "0.20.0",
         "@seagull/routes": "0.20.0",
         "instantclick": "^3.1.0-2",
-        "lodash": "^4.17.5"
+        "lodash": "^4.17.5",
+        "serverless-http": "^1.8.0"
     }
 }
