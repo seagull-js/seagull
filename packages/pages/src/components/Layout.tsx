@@ -35,11 +35,10 @@ export class Layout extends React.Component<ILayoutProps> {
           )}
           <script src="/vendor.js" />
           <script
-            dangerouslySetInnerHTML={{
-              __html: this.props.pageBundle || '',
-            }}
+            dangerouslySetInnerHTML={{ __html: this.props.pageBundle || '' }}
           />
           <script>window.Page.default.bootstrap()</script>
+          {this.props.helmet ? this.props.helmet.script.toComponent() : ''}
         </body>
       </html>
     )

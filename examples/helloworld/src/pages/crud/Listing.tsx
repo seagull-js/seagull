@@ -1,5 +1,6 @@
 import { Page } from '@seagull/pages'
 import * as React from 'react'
+import { Helmet } from 'react-helmet'
 import { style } from 'typestyle'
 import { Term } from '../../items'
 
@@ -13,6 +14,10 @@ export default class Listing extends Page {
   html() {
     return (
       <div>
+        <Helmet>
+          <script src="/instantclick.min.js" data-no-instant />
+          <script data-no-instant>InstantClick.init();</script>
+        </Helmet>
         <h1>Glossary</h1>
         <hr />
         <form action="/glossary/create" method="POST">

@@ -32,6 +32,7 @@
         "@seagull/pages": "0.20.0",
         "@seagull/plugin-items": "0.20.0",
         "@seagull/routes": "0.20.0",
+        "instantclick": "^3.1.0-2",
         "lodash": "^4.17.5",
         "serverless-http": "^1.8.0"
     }
