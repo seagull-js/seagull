@@ -4,12 +4,12 @@ import { config } from './config'
 export abstract class Item {
   // get all instances of a given Item subclass
   static async all<T extends Item>(this: { new (...args: any[]): T }) {
-    const name = new this().constructor.name
+    const name = this.name
     const keys = await new S3.ListFiles(config.bucket, name).execute()
     return await Promise.all(
       keys.map(async key => {
         const data = await loadJSONFile(key)
-        return Object.assign(new this(), data) as T
+        return Object.assign(Object.create(this.prototype), data) as T
       })
     )
   }
@@ -19,7 +19,7 @@ export abstract class Item {
     this: { new (...args: any[]): T },
     id: string
   ) {
-    const name = new this().constructor.name
+    const name = this.name
     const key = `${name}/${id}.json`
     return await new S3.DeleteFile(config.bucket, key).execute()
   }
@@ -29,10 +29,10 @@ export abstract class Item {
     this: { new (...args: any[]): T },
     id: string
   ) {
-    const name = new this().constructor.name
+    const name = this.name
     const key = `${name}/${id}.json`
     const data = await loadJSONFile(key)
-    return Object.assign(new this(), data) as T
+    return Object.assign(Object.create(this.prototype), data) as T
   }
 
   // directly create a new object from parameters, save it and then return it
@@ -40,7 +40,7 @@ export abstract class Item {
     this: { new (...args: any[]): T },
     data: Partial<T> & { id: string }
   ) {
-    const instance = Object.assign(new this(), data) as T
+    const instance = Object.assign(Object.create(this.prototype), data) as T
     return instance.save()
   }
 
