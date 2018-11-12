@@ -10,10 +10,10 @@ class AppStack extends cdk.Stack {
     super(parent, id, props)
     const lambdaName = `${pkg.name}-handler`
     const lambdaParams: lambda.FunctionProps = {
-      code: lambda.Code.asset('./dist/assets'),
+      code: lambda.Code.asset('.'),
       description: 'universal route',
       functionName: lambdaName,
-      handler: 'backend/lambda.handler',
+      handler: 'dist/assets/backend/lambda.handler',
       runtime: lambda.Runtime.NodeJS810,
     }
     const fn = new lambda.Function(this, lambdaName, lambdaParams)
@@ -22,7 +22,6 @@ class AppStack extends cdk.Stack {
     apiGateway.root.addMethod('GET', defaultIntegration)
     const wildCard = apiGateway.root.addResource('{any+}')
     wildCard.addMethod('GET', defaultIntegration)
-    // apiGateway.root.addProxy({ defaultIntegration })
     const role = new iam.Role(this, 'MyRole', {
       assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
     })
