@@ -33,7 +33,7 @@ export class Test extends BasicTest {
 
   @test
   async 'can be created directly'() {
-    await Config.put({ id: 'putter' })
+    await Config.put({ id: 'putter', setting: true })
     const cfg = await Config.get('putter')
     cfg.setting.should.be.equal(true)
   }
@@ -62,7 +62,7 @@ export class Test extends BasicTest {
 
   @test
   async 'can get a list of all instances'() {
-    await Config.put({ id: 'something' })
+    await Config.put({ id: 'something', setting: true })
     const list = await Config.all()
     list.should.be.deep.equal([{ id: 'something', setting: true }])
   }
