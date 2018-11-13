@@ -32,7 +32,7 @@ export class Layout extends React.Component<ILayoutProps> {
               }}
             />
           )}
-          <script src="/vendor.js" />
+          <script src="/vendor.js" data-no-instant />
           <script
             dangerouslySetInnerHTML={{ __html: this.props.pageBundle || '' }}
           />
