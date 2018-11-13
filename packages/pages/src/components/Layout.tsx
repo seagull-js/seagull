@@ -1,8 +1,7 @@
 import * as React from 'react'
-import { HelmetData } from 'react-helmet'
 
 export interface ILayoutProps {
-  helmet?: HelmetData
+  helmet?: import('react-helmet').HelmetData
   styles?: string
   data?: any
   children: React.ReactNode
