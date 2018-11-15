@@ -1,7 +1,7 @@
 import { isString } from 'lodash'
 import * as React from 'react'
 import { hydrate } from 'react-dom'
-import Helmet from 'react-helmet'
+import { Helmet } from './helmet'
 
 export type PageType = { new (...args: any[]): Page }
 
@@ -43,6 +43,13 @@ export abstract class Page<P = {}, S = {}> extends React.Component<
     const CurrentPage = (window as any).Page.default
     const data = (window as any).__initial_state__
     hydrate(<CurrentPage data={data} />, document.querySelector('#app'))
+  }
+
+  /**
+   * get the used helmet instance for SSR
+   */
+  static helmetInstance() {
+    return Helmet
   }
 
   /**

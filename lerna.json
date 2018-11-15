@@ -2,7 +2,8 @@
     "packages": [
         "apps/*",
         "examples/*",
-        "packages/*"
+        "packages/*",
+        "old_code/*"
     ],
     "version": "0.0.0"
 }

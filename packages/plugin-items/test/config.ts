@@ -15,12 +15,12 @@ export class Test extends BasicTest {
   async 'name of the bucket is configurable'() {
     const storage = this.mocks[0].storage
     config.bucket.should.be.equal('demo-bucket')
-    Something.put({ id: '1' })
+    await Something.put({ id: '1' })
     storage['demo-bucket'].should.be.deep.equal({
       'Something/1.json': '{"id":"1"}',
     })
     config.bucket = 'another-bucket'
-    Something.put({ id: '1' })
+    await Something.put({ id: '1' })
     storage['another-bucket'].should.be.deep.equal({
       'Something/1.json': '{"id":"1"}',
     })

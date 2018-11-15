@@ -43,7 +43,14 @@ export class Backend implements Command {
     const packageCache = this.dependencyCache
     const paths = [resolve(join(process.cwd(), 'node_modules'))]
     // return { bare: true, cache, ignoreMissing, packageCache, paths }
-    return { cache, ignoreMissing, node: true, packageCache, paths }
+    return {
+      cache,
+      ignoreMissing,
+      node: true,
+      packageCache,
+      paths,
+      standalone: 'default',
+    }
   }
 
   private createBundlerInstance() {

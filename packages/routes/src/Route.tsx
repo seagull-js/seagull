@@ -75,8 +75,10 @@ export abstract class Route {
 
   private renderUMD(pageSource: string, data: any) {
     const pagePath = `${process.cwd()}/dist/assets/pages/${pageSource}.js`
+    const pagePathServer = pagePath.replace('.js', '-server.js')
     const pageBlob = fs.readFileSync(pagePath, 'utf-8')
-    const page = rfs(pageBlob).default as PageType
+    const pageBlobServer = fs.readFileSync(pagePathServer, 'utf-8')
+    const page = rfs(pageBlobServer).default as PageType
     return render(pageBlob, page, data)
   }
 
