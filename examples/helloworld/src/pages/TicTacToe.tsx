@@ -2,99 +2,176 @@ import * as React from 'react'
 import { style } from 'typestyle'
 import { Page } from '@seagull/pages'
 
-export interface State {
+interface TicTacToeState {
+  score: {
+    o: number
+    x: number
+  }
+  currentGameIsFinished: boolean
   currentPlayer: string
-  board: string[]
-  winner: string
+  lastResult: string
+  fields: string[]
 }
 
-const boardStyle = style({
-  border: '2px solid black',
+const boardStyle = {
   display: 'grid',
   gridTemplateColumns: 'repeat(12, 1fr)',
   maxWidth: 300,
-})
+}
 
-const tileStyle = style({
-  alignItems: 'center',
-  border: '1px solid black',
-  display: 'flex',
-  fontSize: 20,
-  gridColumn: 'span 4',
-  height: 100,
-  justifyContent: 'center',
-  minHeight: 100,
-})
+const resetStyle = {
+  backgroundColor: '#ccc',
+  display: 'inline-block',
+  margin: '10px',
+  padding: '10px',
+}
 
 export default class TicTacToe extends Page {
-  state = this.newGame()
+  state = {
+    currentGameIsFinished: false,
+    currentPlayer: 'X',
+    fields: ['', '', '', '', '', '', '', '', ''],
+    lastResult: 'No game played yet.',
+    score: {
+      o: 0,
+      x: 0,
+    },
+  }
 
   html() {
+    const TicTacToeFields = () => this.renderFields()
     return (
-      <div>
-        <h1>Tic Tac Toe</h1>
-        <hr />
-        <p>currentPlayer: {this.state.currentPlayer}</p>
-        {this.state.winner !== '' && <p>Winner: {this.state.winner}</p>}
-        <div className={boardStyle}>
-          {this.state.board.map((field, index) => (
-            <div
-              key={index}
-              className={tileStyle}
-              onClick={() => this.click(index)}
-            >
-              {field}
-            </div>
-          ))}
+      <>
+        <p>Score</p>
+        <p> X: {this.state.score.x}</p>
+        <p> O: {this.state.score.o}</p>
+        <p>Current Player: {this.state.currentPlayer}</p>
+        <p>Last Result: {this.state.lastResult}</p>
+        <div style={resetStyle} onClick={() => this.resetGame()}>
+          Reset
         </div>
+        <TicTacToeFields />
+      </>
+    )
+  }
+
+  resetGame() {
+    this.setState({
+      currentGameIsFinished: false,
+      fields: ['', '', '', '', '', '', '', '', ''],
+    })
+  }
+
+  renderFields(): JSX.Element {
+    return (
+      <div style={boardStyle}>
+        {this.renderField(this.state.fields[0], 0, 0)}
+        {this.renderField(this.state.fields[1], 1, 0)}
+        {this.renderField(this.state.fields[2], 2, 0)}
+        {this.renderField(this.state.fields[3], 0, 1)}
+        {this.renderField(this.state.fields[4], 1, 1)}
+        {this.renderField(this.state.fields[5], 2, 1)}
+        {this.renderField(this.state.fields[6], 0, 2)}
+        {this.renderField(this.state.fields[7], 1, 2)}
+        {this.renderField(this.state.fields[8], 2, 2)}
       </div>
     )
   }
 
-  click = (num: number) => {
-    this.makeMove(num)
-    this.checkVictory()
+  renderField(field: string, ver: number, hor: number) {
+    const style = getFieldStyle(ver, hor)
+    const click = () => this.fieldClick(ver, hor)
+    return (
+      <div style={style} onClick={click}>
+        {field}
+      </div>
+    )
   }
 
-  newGame(startPlayer: string = 'X'): State {
-    const currentPlayer = startPlayer
-    const board = Array(9).fill('')
-    const winner = ''
-    return { board, currentPlayer, winner }
+  fieldClick(ver: number, hor: number) {
+    const fields = this.state.fields
+    const field = fields[3 * hor + ver]
+    if (field === 'X' || field === 'O' || this.state.currentGameIsFinished) {
+      return
+    }
+    fields[3 * hor + ver] = this.state.currentPlayer
+    this.setState({
+      currentPlayer: this.state.currentPlayer === 'X' ? 'O' : 'X',
+      fields,
+    })
+    this.checkForWinner()
   }
 
-  makeMove = (index: number) => {
-    const p = this.state.currentPlayer
-    const b = this.state.board
-    const current = b[index]
-    if (!current) {
-      b[index] = p
-      const nextPlayer = p === 'X' ? 'O' : 'X'
-      this.setState({ board: b, currentPlayer: nextPlayer })
+  checkForWinner() {
+    if (this.state.currentGameIsFinished) {
+      return
+    }
+    const fields = this.state.fields
+    const xs: number[] = []
+    const os: number[] = []
+    fields.forEach((field: string, index: number) =>
+      field === 'O' ? os.push(index) : 'NOOP'
+    )
+    fields.forEach((field: string, index: number) =>
+      field === 'X' ? xs.push(index) : 'NOOP'
+    )
+    if (checkIfPlayerHasWon(xs)) {
+      this.setState({
+        currentGameIsFinished: true,
+        lastResult: 'X won.',
+        score: {
+          o: this.state.score.o,
+          x: this.state.score.x + 1,
+        },
+      })
+    } else if (checkIfPlayerHasWon(os)) {
+      this.setState({
+        currentGameIsFinished: true,
+        lastResult: 'O won.',
+        score: {
+          o: this.state.score.o + 1,
+          x: this.state.score.x,
+        },
+      })
+    } else if (xs.length + os.length === 9) {
+      this.setState({ lastResult: 'Tie' })
     }
   }
+}
 
-  checkVictory = () => {
-    const possibilities = [
-      this.line(0, 1, 2),
-      this.line(3, 4, 5),
-      this.line(6, 7, 8),
-      this.line(0, 3, 6),
-      this.line(1, 4, 7),
-      this.line(2, 5, 8),
-      this.line(0, 4, 8),
-      this.line(2, 4, 6),
-    ]
-    const winner = possibilities.filter(pb => !!pb).length > 0
-    if (winner) {
-      this.setState({ winner: this.state.currentPlayer })
-    }
+const winnigCombinations: number[][] = [
+  [0, 1, 2],
+  [0, 3, 6],
+  [0, 4, 8],
+  [1, 4, 7],
+  [2, 4, 6],
+  [2, 5, 8],
+  [3, 4, 5],
+  [6, 7, 8],
+]
+
+function checkIfPlayerHasWon(playerFields: number[]) {
+  let hasWon = false
+  const found = (n: number) => playerFields.indexOf(n) > -1
+  const checkFields = (c: number[]) => found(c[0]) && found(c[1]) && found(c[2])
+  const checkCombo = (c: number[]) =>
+    checkFields(c) ? (hasWon = true) : 'NOOP'
+  winnigCombinations.forEach(checkCombo)
+  return hasWon
+}
+
+function getFieldStyle(ver: number, hor: number) {
+  return {
+    alignItems: 'center',
+    borderBottom: hor === 2 ? '' : '1px solid',
+    borderLeft: ver === 0 ? '' : '1px solid',
+    borderRight: ver === 2 ? '' : '1px solid',
+    borderTop: hor === 0 ? '' : '1px solid',
+    display: 'flex',
+    fontSize: 20,
+    gridColumn: 'span 4',
+    height: 100,
+    justifyContent: 'center',
+    minHeight: 100,
   }
-
-  checkTie = () => this.state.board.filter(field => !!field).length === 8
-
-  line = (a: number, b: number, c: number) =>
-    !!this.state.board[a] &&
-    this.state.board[a] === this.state.board[b] &&
-    this.state.board[b] === this.state.board[c]
 }
