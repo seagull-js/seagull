@@ -23,7 +23,7 @@ export class Page implements Command {
   /** browserify instance */
   browserifyInstance: any
 
-  /** browserify instance for ssr, without excluding vendor packages*/
+  /** browserify instance for ssr, without excluding vendor packages */
   browserifyInstanceSSR: any
 
   /** which npm packages to ignore */

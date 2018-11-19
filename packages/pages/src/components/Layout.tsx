@@ -1,8 +1,7 @@
 import * as React from 'react'
-import { HelmetData } from 'react-helmet'
 
 export interface ILayoutProps {
-  helmet?: HelmetData
+  helmet?: import('react-helmet').HelmetData
   styles?: string
   data?: any
   children: React.ReactNode
@@ -33,7 +32,7 @@ export class Layout extends React.Component<ILayoutProps> {
               }}
             />
           )}
-          <script src="/vendor.js" />
+          <script src="/vendor.js" data-no-instant />
           <script
             dangerouslySetInnerHTML={{ __html: this.props.pageBundle || '' }}
           />

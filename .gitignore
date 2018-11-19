@@ -10,4 +10,5 @@ npm-debug.log
 
 # junk files
 .DS_Store
+apps
 old_code
