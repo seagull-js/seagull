@@ -26,10 +26,10 @@ export class Test {
   @test
   async 'global mode can be overridden'() {
     const cmd = new CMD()
-    const lastMode = cmd.mode.environment
+    const lastEnv = cmd.mode.environment
     cmd.mode = { ...cmd.mode, environment: 'cloud' }
     cmd.mode.environment.should.be.eq('cloud')
     cmd.mode = new CMD().mode
-    cmd.mode.environment.should.be.be.eq(lastMode)
+    cmd.mode.environment.should.be.be.eq(lastEnv)
   }
 }
