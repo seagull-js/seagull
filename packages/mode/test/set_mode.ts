@@ -1,11 +1,10 @@
-import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
 import { suite, test } from 'mocha-typescript'
-import { SetMode } from '../../src'
-import { Mode } from '../../src/mode/definition'
+import { SetMode } from '../src'
+import { Mode } from '../src/mode'
 
 @suite('Mode::SetMode')
-export class Test extends BasicTest {
+export class Test {
   mocks = []
 
   @test

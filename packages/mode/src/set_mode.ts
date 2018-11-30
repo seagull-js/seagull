@@ -1,10 +1,9 @@
-import { Command } from '../Command'
-import { IMode, Mode } from './definition'
+import { IMode, Mode } from './mode'
 
 /**
- * Command for setting modes globally
+ * Command like class for setting modes globally
  */
-export class SetMode extends Command {
+export class SetMode {
   /**
    * Key to set for [[Mode]]
    */
@@ -29,7 +28,6 @@ export class SetMode extends Command {
    * see the individual property descriptions within this command class
    */
   constructor(key: keyof IMode, value: IMode[typeof key]) {
-    super()
     this.value = value
     this.key = key
   }
