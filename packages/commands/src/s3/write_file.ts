@@ -4,7 +4,7 @@ import { Command } from '../Command'
 /**
  * Command to write File to a specific S3 bucket
  */
-export class WriteFile implements Command {
+export class WriteFile extends Command {
   /**
    * name of the target bucket
    */
@@ -24,6 +24,7 @@ export class WriteFile implements Command {
    * see the individual property descriptions within this command class
    */
   constructor(bucketName: string, filePath: string, content: string) {
+    super()
     this.bucketName = bucketName
     this.filePath = filePath
     this.content = content

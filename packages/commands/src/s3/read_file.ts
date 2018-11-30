@@ -4,7 +4,7 @@ import { Command } from '../Command'
 /**
  * Command to write File to a specific S3 bucket
  */
-export class ReadFile implements Command {
+export class ReadFile extends Command {
   /**
    * name of the target bucket
    */
@@ -19,6 +19,7 @@ export class ReadFile implements Command {
    * see the individual property descriptions within this command class
    */
   constructor(bucketName: string, filePath: string) {
+    super()
     this.bucketName = bucketName
     this.filePath = filePath
   }

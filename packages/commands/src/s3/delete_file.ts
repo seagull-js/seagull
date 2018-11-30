@@ -4,7 +4,7 @@ import { Command } from '../Command'
 /**
  * Command to delete a File from a specific S3 bucket
  */
-export class DeleteFile implements Command {
+export class DeleteFile extends Command {
   /**
    * name of the target bucket
    */
@@ -19,6 +19,7 @@ export class DeleteFile implements Command {
    * see the individual property descriptions within this command class
    */
   constructor(bucketName: string, filePath: string) {
+    super()
     this.bucketName = bucketName
     this.filePath = filePath
   }

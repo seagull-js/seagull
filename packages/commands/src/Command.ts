@@ -1,4 +1,4 @@
-import { Mode } from './mode'
+import { Mode } from './mode/definition'
 /**
  * The Basic interface for implementing the Command-Pattern. Commands are
  * responsible for performing code with side-effects. Benefits over raw

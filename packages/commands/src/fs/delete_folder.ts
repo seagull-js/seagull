@@ -5,7 +5,7 @@ import { Command } from '../Command'
 /**
  * Command to delete a file to the given filepath
  */
-export class DeleteFolder implements Command {
+export class DeleteFolder extends Command {
   /**
    * Absolute Path to the file including file name and extension
    */
@@ -15,6 +15,7 @@ export class DeleteFolder implements Command {
    * see the individual property descriptions within this command class
    */
   constructor(folderPath: string) {
+    super()
     this.folderPath = folderPath
   }
 

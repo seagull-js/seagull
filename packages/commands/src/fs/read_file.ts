@@ -5,7 +5,7 @@ import { Command } from '../Command'
 /**
  * Command to read a file from the given filepath
  */
-export class ReadFile implements Command {
+export class ReadFile extends Command {
   /**
    * Absolute Path to the file including file name and extension
    */
@@ -15,6 +15,7 @@ export class ReadFile implements Command {
    * see the individual property descriptions within this command class
    */
   constructor(filePath: string) {
+    super()
     this.filePath = filePath
   }
 
