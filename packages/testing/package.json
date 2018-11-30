@@ -39,6 +39,7 @@
     "mock-fs": "^4.5.0"
   },
   "dependencies": {
+    "@seagull/mock": "^0.20.0",
     "@seagull/mode": "^0.20.0",
     "aws-sdk-mock": "^1.7.0",
     "lodash": "^4.17.5",

@@ -1,7 +1,7 @@
+import { Mock } from '@seagull/mock'
 import * as AWSMock from 'aws-sdk-mock'
 import * as fs from 'fs'
 import * as path from 'path'
-import { Mock } from './mock'
 
 /**
  * when activated, redirect all calls from the AWS SDK of S3 to the S3 shim

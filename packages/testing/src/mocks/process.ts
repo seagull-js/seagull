@@ -1,5 +1,5 @@
+import { Mock } from '@seagull/mock'
 import * as pmock from 'pmock'
-import { Mock } from './mock'
 
 /**
  * when activated, redirect all calls of node.js' 'process' module to  a

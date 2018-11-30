@@ -1,5 +1,5 @@
+import { Mock } from '@seagull/mock'
 import * as MockFS from 'mock-fs'
-import { Mock } from './mock'
 
 /**
  * when activated, redirect all calls of node.js' 'fs' module to a virtual

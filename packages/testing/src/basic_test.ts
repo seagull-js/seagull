@@ -1,6 +1,6 @@
+import { Mock } from '@seagull/mock'
 import { SetMode } from '@seagull/mode'
 import * as MockImplementations from './mocks'
-import { Mock } from './mocks'
 
 export class BasicTest {
   /**
