@@ -1,59 +1,54 @@
-import { FS } from '@seagull/commands'
-import {
-  bootstrapEnvironment,
-  deployStack,
-  loadToolkitInfo,
-  SDK,
-} from 'aws-cdk'
-import chalk from 'chalk'
+import * as cdk from 'aws-cdk'
 
-import { ProjectApp } from './cdk_stack'
-import { ProfileCheck } from './commands/check_profile'
-import { Options } from './options'
-import { create } from 'handlebars'
+import { ProfileCheck, ProvideAssetFolder } from './commands'
+import { noCredentialsSet, ProjectApp } from './lib'
 
-export async function deploy(appFolder: string, opts: Options) {
-  const credCheck = new ProfileCheck(opts.profile)
-  return credCheck.execute() ? deployApp(appFolder, opts.profile) : noCreds()
+export interface Options {
+  /**
+   * if set, this indicates the aws profile that shall be used for deployment
+   */
+  profile?: string
 }
 
-async function deployApp(appFolder: string, profile?: string) {
-  const pkgJson = require(`${appFolder}/package.json`)
-  const projectName = pkgJson.name
-  const sdk = await new SDK({})
-  const accountID = (await sdk.defaultAccount()) || ''
-  const region = process.env.AWS_REGION || 'eu-central-1'
-  provideAssetFolder(appFolder)
-  const app = new ProjectApp(projectName, accountID, region || '', appFolder)
-  const stack = app.synthesizeStack(projectName)
+export class Deploy {
+  appPath: string
+  opts: Options
+  projectName: string
 
-  const toolkit = await loadToolkitInfo(stack.environment, sdk, 'CDKToolkit')
-  await bootstrapEnvironment(stack.environment, sdk, 'CDKToolkit', undefined)
-  await deployStack({ sdk, stack, toolkitInfo: toolkit })
-}
+  app?: ProjectApp
+  sdk: cdk.SDK
 
-function noCreds() {
-  // tslint:disable-next-line:no-console
-  console.log(
-    chalk.red(`Missing credentials!        
-  Please provide fitting aws credentials. You can refer an existing profile by 
-  'sg deploy --profile <profile>' or by env variables. For further information 
-  consult https://docs.aws.amazon.com/cli/latest/topic/config-vars.html.`)
-  )
-}
+  constructor(appPath: string, opts: Options) {
+    this.appPath = appPath
+    this.opts = opts
+    this.projectName = require(`${this.appPath}/package.json`).name
+    this.sdk = new cdk.SDK({})
+  }
 
-function provideAssetFolder(appFolder: string) {
-  const assetPath = `${appFolder}/dist/assets`
-  const deployFolder = `${appFolder}/.seagull/deploy/dist`
-  const newAssetPath = `${deployFolder}/assets`
-  const serverJsPath = `${newAssetPath}/backend/server.js`
+  async execute() {
+    const credCheck = new ProfileCheck(this.opts.profile)
+    return credCheck.execute() ? this.deployApp() : noCredentialsSet()
+  }
 
-  const folderExists = new FS.Exists(newAssetPath)
-  const createFolder = new FS.CreateFolder(deployFolder)
-  const deleteFolder = new FS.DeleteFolder(newAssetPath)
-  const emptyFolder = () => deleteFolder.execute() && createFolder.execute()
+  async deployApp() {
+    const provideAssetFolder = new ProvideAssetFolder(this.appPath)
+    await provideAssetFolder.execute()
+    await this.createCDKApp()
+    await this.deployCDKApp()
+  }
 
-  folderExists.execute() ? emptyFolder() : createFolder.execute()
-  new FS.CopyFolder(assetPath, newAssetPath).execute()
-  new FS.DeleteFile(serverJsPath).execute()
+  private async createCDKApp() {
+    const account = await this.sdk.defaultAccount()
+    const region = process.env.AWS_REGION || 'eu-central-1'
+    const path = this.appPath
+    this.app = new ProjectApp(this.projectName, { account, path, region })
+  }
+
+  private async deployCDKApp() {
+    const stack = this.app!.synthesizeStack(this.projectName)
+    const env = stack.environment
+    const toolkitInfo = await cdk.loadToolkitInfo(env, this.sdk, 'CDKToolkit')
+    await cdk.bootstrapEnvironment(env, this.sdk, 'CDKToolkit', undefined)
+    await cdk.deployStack({ sdk: this.sdk, stack, toolkitInfo })
+  }
 }

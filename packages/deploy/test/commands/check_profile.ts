@@ -45,8 +45,6 @@ import { ProfileCheck } from '../../src/commands/check_profile'
 export class Test {
   before() {
     delete process.env.AWS_PROFILE
-    delete process.env.AWS_ACCESS_KEY_ID
-    delete process.env.AWS_SECRET_ACCESS_KEY
     aws.config.credentials = null
   }
 
@@ -123,39 +121,6 @@ export class Test {
     creds.accessKeyId.should.be.equal('validAccessKey')
     creds.secretAccessKey.should.be.equal('validSecretAccessKey')
     creds.sessionToken.should.be.equal('validSessionToken')
-  }
-
-  @test
-  async 'test with no profile and key config in env'() {
-    process.env.AWS_ACCESS_KEY_ID = 'validAccessKeyEnv'
-    process.env.AWS_SECRET_ACCESS_KEY = 'validSecretAccessKeyEnv'
-    const profileCheck = new ProfileCheck()
-    const profileCheckResult = profileCheck.execute()
-    const envProfileIsNotSet = process.env.AWS_PROFILE === undefined
-    const credsIsNotChanged: any = aws.config.credentials === null
-    profileCheckResult.should.be.equals(true)
-    envProfileIsNotSet.should.be.equals(true)
-    credsIsNotChanged.should.be.equals(true)
-    const accessKeyId = process.env.AWS_ACCESS_KEY_ID || ''
-    const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY || ''
-    accessKeyId.should.be.equals('validAccessKeyEnv')
-    secretAccessKey.should.be.equals('validSecretAccessKeyEnv')
-  }
-
-  @test
-  async 'test with no profile and buggy key config in env'() {
-    process.env.AWS_ACCESS_KEY_ID = 'validAccessKeyEnv'
-    const profileCheck = new ProfileCheck()
-    const profileCheckResult = profileCheck.execute()
-    const envProfileIsNotSet = process.env.AWS_PROFILE === undefined
-    const credsIsNotChanged: any = aws.config.credentials === null
-    profileCheckResult.should.be.equals(false)
-    envProfileIsNotSet.should.be.equals(true)
-    credsIsNotChanged.should.be.equals(true)
-    const accessKeyId = process.env.AWS_ACCESS_KEY_ID || ''
-    const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY || ''
-    accessKeyId.should.be.equals('validAccessKeyEnv')
-    secretAccessKey.should.be.not.equals('validSecretAccessKeyEnv')
   }
 
   @test

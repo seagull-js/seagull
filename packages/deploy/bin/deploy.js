@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
+const logSuccess = () => console.log('done')
+const logError = (error) => console.log('error', error)
 const {
-  deploy
+  Deploy
 } = require('../dist/src/deploy')
 
 const options = {
-  profile: process.env.AWS_PROFILE,
+  profile: process.env.AWS_PROFILE
 }
-
-deploy(process.cwd(), options)
-  .then(() => console.log('done'))
-  .catch(error => console.log('error', error))
+const deploy = new Deploy(process.cwd(), options)
+deploy.execute().then(logSuccess()).catch(error => logError(error))
