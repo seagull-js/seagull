@@ -10,6 +10,7 @@ import chalk from 'chalk'
 import { ProjectApp } from './cdk_stack'
 import { ProfileCheck } from './commands/check_profile'
 import { Options } from './options'
+import { create } from 'handlebars'
 
 export async function deploy(appFolder: string, opts: Options) {
   const credCheck = new ProfileCheck(opts.profile)
@@ -43,13 +44,16 @@ function noCreds() {
 
 function provideAssetFolder(appFolder: string) {
   const assetPath = `${appFolder}/dist/assets`
-  const deployFolder = `${appFolder}/.seagull/deploy`
+  const deployFolder = `${appFolder}/.seagull/deploy/dist`
   const newAssetPath = `${deployFolder}/assets`
   const serverJsPath = `${newAssetPath}/backend/server.js`
-  const folderExists = new FS.Exists(newAssetPath).execute()
+
+  const folderExists = new FS.Exists(newAssetPath)
   const createFolder = new FS.CreateFolder(deployFolder)
   const deleteFolder = new FS.DeleteFolder(newAssetPath)
-  folderExists ? deleteFolder.execute() : createFolder.execute()
+  const emptyFolder = () => deleteFolder.execute() && createFolder.execute()
+
+  folderExists.execute() ? emptyFolder() : createFolder.execute()
   new FS.CopyFolder(assetPath, newAssetPath).execute()
   new FS.DeleteFile(serverJsPath).execute()
 }

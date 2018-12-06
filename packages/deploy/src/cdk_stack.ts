@@ -26,8 +26,9 @@ class AppStack extends cdk.Stack {
       code: lambda.Code.asset(`${folder}/.seagull/deploy`),
       description: 'universal route',
       functionName: lambdaName,
-      handler: 'assets/backend/lambda.handler',
+      handler: 'dist/assets/backend/lambda.handler',
       runtime: lambda.Runtime.NodeJS810,
+      timeout: 300,
     }
     const fn = new lambda.Function(this, lambdaName, lambdaParams)
 
