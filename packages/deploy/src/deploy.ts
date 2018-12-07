@@ -1,7 +1,9 @@
 import * as cdk from 'aws-cdk'
 
+import { FS } from '@seagull/commands'
+
 import { ProfileCheck, ProvideAssetFolder } from './commands'
-import { noCredentialsSet, ProjectApp } from './lib'
+import { noAssetsFound, noCredentialsSet, ProjectApp } from './lib'
 
 export interface Options {
   /**
@@ -26,8 +28,17 @@ export class Deploy {
   }
 
   async execute() {
-    const credCheck = new ProfileCheck(this.opts.profile)
-    return credCheck.execute() ? this.deployApp() : noCredentialsSet()
+    return await this.checkProfile()
+  }
+
+  async checkProfile() {
+    const credsFound = new ProfileCheck(this.opts.profile).execute()
+    return credsFound ? this.checkAppPath() : noCredentialsSet()
+  }
+
+  async checkAppPath() {
+    const assets = await new FS.Exists(`${this.appPath}/dist/assets`).execute()
+    return assets ? this.deployApp() : noAssetsFound()
   }
 
   async deployApp() {

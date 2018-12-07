@@ -1,4 +1,5 @@
 import { Command, FS } from '@seagull/commands'
+import { cannotRevertAssetFolder } from '../lib'
 
 export class ProvideAssetFolder extends Command {
   private createDistFolder: Command
@@ -33,10 +34,14 @@ export class ProvideAssetFolder extends Command {
   }
 
   async revert() {
-    await this.deleteServerFile.revert()
-    await this.copyAssetFolder.revert()
-    await this.createDistFolder.revert()
-    // tslint:disable-next-line:no-unused-expression
-    this.folderExists && (await this.deleteAssetFolder.revert())
+    cannotRevertAssetFolder()
+    return true
+    /* TODO: When these command below have a sane revert command, use this:
+     * await this.deleteServerFile.revert()
+     * await this.copyAssetFolder.revert()
+     * await this.createDistFolder.revert()
+     * // tslint:disable-next-line:no-unused-expression
+     * this.folderExists && (await this.deleteAssetFolder.revert())
+     **/
   }
 }
