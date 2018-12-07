@@ -26,29 +26,21 @@ export class AsyncFetchingTest extends PageTest {
     ;(window as any).fetch = fetchMock
     let data: any = { someProperty: 'Schinken!' }
     const wrapper = this.mount({ data })
-    wrapper
-      .find('#props-field')
-      .text()
-      .should.contain(JSON.stringify(data))
-    wrapper
-      .find('#data-field')
-      .text()
-      .should.contain(JSON.stringify(data))
+    const propsField = wrapper.find('#props-field')
+    propsField.text().should.contain(JSON.stringify(data))
+    const dataField = wrapper.find('#data-field')
+    dataField.text().should.contain(JSON.stringify(data))
+
     data = { name: 'Halleluja' }
     wrapper.setProps({ data })
-    wrapper
-      .find('#props-field')
-      .text()
-      .should.contain('Halleluja')
-    wrapper
-      .find('#data-field')
-      .text()
-      .should.not.contain('Halleluja')
+    const updatedPropsField = wrapper.find('#props-field')
+    updatedPropsField.text().should.contain('Halleluja')
+    const notUpdatedDataField = wrapper.find('#data-field')
+    notUpdatedDataField.text().should.not.contain('Halleluja')
+
     wrapper.find('button').simulate('click')
     await this.update()
-    wrapper
-      .find('#data-field')
-      .text()
-      .should.be.equal(JSON.stringify(mockData))
+    const updatedDataField = wrapper.find('#data-field')
+    updatedDataField.text().should.be.equal(JSON.stringify(mockData))
   }
 }

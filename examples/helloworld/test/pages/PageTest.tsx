@@ -16,14 +16,9 @@ export abstract class PageTest extends BasicTest {
    * before accessing this.wrapper in case you don't want to have your Page
    * mounted with the default Properties { data: {} } */
   get wrapper() {
-    if (!this.page) {
-      // Required because of mocha warmup phase
-      return {} as ReactWrapper
-    }
-    if (!this.mountedPage) {
-      this.mount()
-    }
-    return this.mountedPage!
+    const getMountedPage = () =>
+      this.mountedPage ? this.mountedPage : this.mount()
+    return this.page ? getMountedPage() : ({} as ReactWrapper)
   }
 
   /** Mounts your Page with custom props. After that you can access it with
@@ -38,7 +33,7 @@ export abstract class PageTest extends BasicTest {
   /** After you mounted the page, call `await this.update()` after triggering
    * (mocked) asynchronous actions inside the page */
   update() {
-    if (!this.mountedPage || !this.mountedPage.children().length) {
+    if (!this.mountedPage) {
       mountFirstError('await this.update()')
     }
     return new Promise(this.resolveAfterUpdate) //issue(this.wrapper!.update)
@@ -50,10 +45,9 @@ export abstract class PageTest extends BasicTest {
   after() {
     this.deactivateMocks()
   }
-  private resolveAfterUpdate = (resolve: ResolveFunction) => {
+  private resolveAfterUpdate = (resolve: ResolveFunction) =>
     setImmediate(() => {
       this.wrapper.update()
       resolve()
     })
-  }
 }

@@ -28,15 +28,11 @@ export class AsyncFetchingTest extends PageTest {
     const networkLayer = new NetworkLayer(mockedAsyncFunction)
     const data: any = { someProperty: 'Schinken!' }
     this.mount({ data, networkLayer })
-    this.wrapper
-      .find('#data-field')
-      .text()
-      .should.contain(JSON.stringify(data))
+    const dataField = this.wrapper.find('#data-field')
+    dataField.text().should.contain(JSON.stringify(data))
     this.wrapper.find('button').simulate('click')
     await this.update()
-    this.wrapper
-      .find('#data-field')
-      .text()
-      .should.contain(JSON.stringify(mockData))
+    const updatedDataField = this.wrapper.find('#data-field')
+    updatedDataField.text().should.contain(JSON.stringify(mockData))
   }
 }
