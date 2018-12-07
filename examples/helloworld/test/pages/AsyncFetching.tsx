@@ -1,9 +1,7 @@
-import { BasicTest } from '../../../../packages/testing/dist/src'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
-import { mount } from 'enzyme'
 import AsyncFetching from '../../src/pages/AsyncFetching'
-import * as React from 'react'
+import { PageTest } from './PageTest'
 
 const mockData = {
   products: [
@@ -17,37 +15,40 @@ const mockData = {
 }
 
 @suite('AsyncFetching')
-export class AsyncFetchingTest extends BasicTest {
+export class AsyncFetchingTest extends PageTest {
+  page = AsyncFetching
   @test
   @timeout(5000)
   async 'can render page with any data'() {
-    const resolutions = {} as any
     const json = () => Promise.resolve(mockData)
     const fetchMock = () => Promise.resolve({ json })
     ;(global as any).fetch = fetchMock
     ;(window as any).fetch = fetchMock
     let data: any = { someProperty: 'Schinken!' }
-    const wrapper = mount(<AsyncFetching data={data} />)
+    const wrapper = this.mount({ data })
+    wrapper
+      .find('#props-field')
+      .text()
+      .should.contain(JSON.stringify(data))
     wrapper
       .find('#data-field')
       .text()
       .should.contain(JSON.stringify(data))
     data = { name: 'Halleluja' }
     wrapper.setProps({ data })
-    wrapper.text().should.contain('Halleluja')
-    wrapper.find('button').simulate('click')
-    resolutions.fetch = true
-    resolutions.json = true
-    await new Promise(resolve => {
-      setTimeout(() => {
-        wrapper.update()
-        resolve()
-      }, 500)
-    })
-
+    wrapper
+      .find('#props-field')
+      .text()
+      .should.contain('Halleluja')
     wrapper
       .find('#data-field')
       .text()
-      .should.not.contain(JSON.stringify(data))
+      .should.not.contain('Halleluja')
+    wrapper.find('button').simulate('click')
+    await this.update()
+    wrapper
+      .find('#data-field')
+      .text()
+      .should.be.equal(JSON.stringify(mockData))
   }
 }

@@ -1,48 +1,47 @@
 import { Page, IPageProps } from '@seagull/pages'
 import { mount, ReactWrapper } from 'enzyme'
-import * as Enzyme from 'enzyme'
 import * as React from 'react'
 import { BasicTest } from '../../../../packages/testing/dist/src'
 
-const issue = (funct: Function) =>
-  new Promise(resolve =>
-    setImmediate(() => {
-      funct()
-      resolve()
-    })
-  )
-
 const mountFirstError = (impossibleAction: string) => {
-  const msg = `You must call this.mount() before you ${impossibleAction}`
+  const msg = `
+  You must call this.mount() before you ${impossibleAction} in your PageTest`
   throw new Error(msg)
 }
+type ResolveFunction = (value?: {} | PromiseLike<{}> | undefined) => void
 export abstract class PageTest extends BasicTest {
   abstract page: typeof Page
-  private mountedWrapper: ReactWrapper = mount(<div />)
-  /** An Enzyme Wrapper representing the mounted Page -
-   * must be mounted by calling this.mount(pageProps) */
+  private mountedPage?: ReactWrapper
+  /** An Enzyme Wrapper representing the mounted Page. Call this.mount(pageProps)
+   * before accessing this.wrapper in case you don't want to have your Page
+   * mounted with the default Properties { data: {} } */
   get wrapper() {
-    if (this.mountedWrapper === undefined) {
-      mountFirstError('access this.wrapper')
+    if (!this.page) {
+      // Required because of mocha warmup phase
+      return {} as ReactWrapper
     }
-    return this.mountedWrapper
+    if (!this.mountedPage) {
+      this.mount()
+    }
+    return this.mountedPage!
   }
 
+  /** Mounts your Page with custom props. After that you can access it with
+   * this.wrapper. The return value is the same as this.wrapper
+   * @param pageProps The initial props you want to mount your page with - { data: {} } by default
+   * @return An Enzyme Wrapper representing the mounted Page. */
   mount = (pageProps: any & IPageProps = { data: {} }) => {
-    console.log(pageProps)
-    console.log(this.mountedWrapper)
-
-    this.mountedWrapper = mount(<this.page {...pageProps} />)
-    console.log(this.mountedWrapper.html())
+    this.mountedPage = mount(<this.page {...pageProps} />)
+    return this.mountedPage
   }
 
-  /** call await this.update() after invoking asynchronous actions
-   * inside the page*/
-  async update() {
-    if (!this.mountedWrapper) {
+  /** After you mounted the page, call `await this.update()` after triggering
+   * (mocked) asynchronous actions inside the page */
+  update() {
+    if (!this.mountedPage || !this.mountedPage.children().length) {
       mountFirstError('await this.update()')
     }
-    return await issue(this.wrapper.update)
+    return new Promise(this.resolveAfterUpdate) //issue(this.wrapper!.update)
   }
 
   before() {
@@ -50,5 +49,11 @@ export abstract class PageTest extends BasicTest {
   }
   after() {
     this.deactivateMocks()
+  }
+  private resolveAfterUpdate = (resolve: ResolveFunction) => {
+    setImmediate(() => {
+      this.wrapper.update()
+      resolve()
+    })
   }
 }

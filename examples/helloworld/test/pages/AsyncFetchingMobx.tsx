@@ -4,7 +4,7 @@ import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as Enzyme from 'enzyme'
 import * as React from 'react'
 import AsyncFetchingMobx from '../../src/pages/AsyncFetchingMobx'
-import { NetworkLayer } from '../../src/pages//store/NetworkLayer'
+import { NetworkLayer } from '../../src/store/NetworkLayer'
 import { PageTest } from './PageTest'
 
 const mockData = {
@@ -24,17 +24,18 @@ export class AsyncFetchingTest extends PageTest {
   @test
   @timeout(5000)
   async 'can render page with any data'() {
-    const fetchMock = () => Promise.resolve(mockData)
+    const mockedAsyncFunction = () => Promise.resolve(mockData)
+    const networkLayer = new NetworkLayer(mockedAsyncFunction)
     const data: any = { someProperty: 'Schinken!' }
-    const networkLayer = new NetworkLayer(fetchMock)
     this.mount({ data, networkLayer })
     this.wrapper
       .find('#data-field')
       .text()
       .should.contain(JSON.stringify(data))
-    this.wrapper!.find('button').simulate('click')
+    this.wrapper.find('button').simulate('click')
     await this.update()
-    this.wrapper!.find('#data-field')
+    this.wrapper
+      .find('#data-field')
       .text()
       .should.contain(JSON.stringify(mockData))
   }

@@ -1,8 +1,8 @@
-import { BasicTest } from '../../../../../packages/testing/dist/src'
+import { BasicTest } from '../../../../packages/testing/dist/src'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
-import { DataStore } from '../../../src/pages/store/DataStore'
-import { NetworkLayer } from '../../../src/pages/store/NetworkLayer'
+import { DataStore } from '../../src/store/DataStore'
+import { NetworkLayer } from '../../src/store/NetworkLayer'
 
 @suite('DataStore')
 export class AsyncFetchingTest extends BasicTest {
