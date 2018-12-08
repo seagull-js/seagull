@@ -1,9 +1,7 @@
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
-import { mount } from 'enzyme'
 import TicTacToe from '../../src/pages/TicTacToe'
-import * as React from 'react'
-import { PageTest } from './PageTest'
+import { PageTest } from '@seagull/pages/src'
 
 @suite('TicTacToe')
 export class TicTacToeTest extends PageTest {

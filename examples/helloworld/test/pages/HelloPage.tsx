@@ -4,13 +4,15 @@ import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import { mount } from 'enzyme'
 import HelloPage from '../../src/pages/HelloPage'
 import * as React from 'react'
+import { PageTest } from '@seagull/pages/src'
 
 @suite('HelloPage')
-export class HelloPageTest extends BasicTest {
+export class HelloPageTest extends PageTest {
+  page = HelloPage
   @test
   'can render page with any name'() {
     const name = 'John Doe'
-    const wrapper = mount(<HelloPage data={{ name }} />)
-    wrapper.text().should.contain(name)
+    this.mount({ data: { name } })
+    this.wrapper.text().should.contain(name)
   }
 }
