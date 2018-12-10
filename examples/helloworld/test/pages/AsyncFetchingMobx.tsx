@@ -20,7 +20,7 @@ const mockData = {
 
 @suite('AsyncFetchingMobx')
 export class AsyncFetchingTest extends PageTest {
-  page = AsyncFetchingMobx
+  Page = AsyncFetchingMobx
   @test
   @timeout(5000)
   async 'can render page with any data'() {
@@ -28,11 +28,11 @@ export class AsyncFetchingTest extends PageTest {
     const networkLayer = new NetworkLayer(mockedAsyncFunction)
     const data: any = { someProperty: 'Schinken!' }
     this.mount({ data, networkLayer })
-    const dataField = this.wrapper.find('#data-field')
+    const dataField = this.page.find('#data-field')
     dataField.text().should.contain(JSON.stringify(data))
-    this.wrapper.find('button').simulate('click')
+    this.page.find('button').simulate('click')
     await this.update()
-    const updatedDataField = this.wrapper.find('#data-field')
+    const updatedDataField = this.page.find('#data-field')
     updatedDataField.text().should.contain(JSON.stringify(mockData))
   }
 }

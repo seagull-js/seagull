@@ -8,11 +8,11 @@ import { PageTest } from '@seagull/pages/src'
 
 @suite('HelloPage')
 export class HelloPageTest extends PageTest {
-  page = HelloPage
+  Page = HelloPage
   @test
   'can render page with any name'() {
     const name = 'John Doe'
     this.mount({ data: { name } })
-    this.wrapper.text().should.contain(name)
+    this.page.text().should.contain(name)
   }
 }

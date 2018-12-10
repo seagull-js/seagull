@@ -16,7 +16,7 @@ const mockData = {
 
 @suite('AsyncFetching')
 export class AsyncFetchingTest extends PageTest {
-  page = AsyncFetching
+  Page = AsyncFetching
   @test
   @timeout(5000)
   async 'can render page with any data'() {
@@ -25,6 +25,7 @@ export class AsyncFetchingTest extends PageTest {
     ;(global as any).fetch = fetchMock
     ;(window as any).fetch = fetchMock
     let data: any = { someProperty: 'Schinken!' }
+
     const wrapper = this.mount({ data })
     const propsField = wrapper.find('#props-field')
     propsField.text().should.contain(JSON.stringify(data))
