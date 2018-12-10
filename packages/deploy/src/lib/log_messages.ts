@@ -18,5 +18,5 @@ export function cannotRevertAssetFolder() {
 
 function log(...messages: string[]) {
   // tslint:disable-next-line:no-console
-  console.log(messages)
+  console.log(...messages)
 }
