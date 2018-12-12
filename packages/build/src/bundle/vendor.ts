@@ -4,7 +4,7 @@ import * as browserifyInc from 'browserify-incremental'
 import { join, resolve } from 'path'
 import * as sts from 'stream-string'
 
-export class Vendor implements Command {
+export class Vendor extends Command {
   /** where to read a file from */
   packages: string[]
 
@@ -21,6 +21,7 @@ export class Vendor implements Command {
   browserifyInstance: any
 
   constructor(packages: string[], dstFile: string, cache?: any) {
+    super()
     this.packages = packages
     this.dstFile = dstFile
     this.dependencyCache = cache || {}

@@ -5,7 +5,7 @@ import { Command } from '../Command'
 /**
  * Command to copy a file from [[folderPathFrom]] to [[folderPathTo]]
  */
-export class CopyFolder implements Command {
+export class CopyFolder extends Command {
   /**
    * Absolute Path to the file source location
    */
@@ -20,6 +20,7 @@ export class CopyFolder implements Command {
    * see the individual property descriptions within this command class
    */
   constructor(from: string, to: string) {
+    super()
     this.folderPathFrom = from
     this.folderPathTo = to
   }

@@ -1,7 +1,7 @@
 import { Command, FS } from '@seagull/commands'
 import * as path from 'path'
 
-export class Express implements Command {
+export class Express extends Command {
   /** where to write a bundle file to */
   dstFile: string
 
@@ -9,6 +9,7 @@ export class Express implements Command {
   appFolder: string
 
   constructor(appFolder: string, dstFile: string) {
+    super()
     this.appFolder = appFolder
     this.dstFile = dstFile
   }

@@ -1,3 +1,4 @@
+import { Mode } from '@seagull/mode'
 /**
  * The Basic interface for implementing the Command-Pattern. Commands are
  * responsible for performing code with side-effects. Benefits over raw
@@ -8,6 +9,11 @@
  * never directly on the [[execute]] or [[revert]] methods.
  */
 export abstract class Command {
+  /**
+   * The mode the command runs in, defaults to the global singleton
+   */
+  mode = Mode
+
   /**
    * put your actual code here to produce a side-effect
    */

@@ -1,3 +1,4 @@
+import { Mode } from '@seagull/mode'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import { BasicTest } from '../src/basic_test'
@@ -16,6 +17,13 @@ class DemoMock {
 
 @suite('BasicTest')
 export class Test extends BasicTest {
+  @test
+  async 'tests should run in pure mode'() {
+    const basicTest = new BasicTest()
+    basicTest.before()
+    Mode.environment.should.be.eq('pure')
+  }
+
   @test
   async 'can be used with mocha-typescript'() {
     this.mocks.should.be.an('array')

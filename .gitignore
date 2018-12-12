@@ -12,6 +12,7 @@ npm-debug.log
 .DS_Store
 apps
 old_code
+/lerna-debug.log
 
 #seagull
 .seagull

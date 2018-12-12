@@ -5,7 +5,7 @@ import { Command } from '../Command'
 /**
  * Command to a files list from disk
  */
-export class ListFiles implements Command {
+export class ListFiles extends Command {
   /**
    * Absolute Path to the folder
    */
@@ -20,6 +20,7 @@ export class ListFiles implements Command {
    * see the individual property descriptions within this command class
    */
   constructor(filePath: string, pattern?: RegExp) {
+    super()
     this.filePath = filePath
     this.pattern = pattern
   }

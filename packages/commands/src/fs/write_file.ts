@@ -4,7 +4,7 @@ import { Command } from '../Command'
 /**
  * Command to write a file to the given filepath
  */
-export class WriteFile implements Command {
+export class WriteFile extends Command {
   /**
    * string content to write into the file
    */
@@ -19,6 +19,7 @@ export class WriteFile implements Command {
    * see the individual property descriptions within this command class
    */
   constructor(filePath: string, content: string) {
+    super()
     this.content = content
     this.filePath = filePath
   }

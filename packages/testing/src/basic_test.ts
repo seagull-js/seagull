@@ -1,5 +1,6 @@
+import { Mock } from '@seagull/mock'
+import { SetMode } from '@seagull/mode'
 import * as MockImplementations from './mocks'
-import { Mock } from './mocks'
 
 export class BasicTest {
   /**
@@ -17,6 +18,7 @@ export class BasicTest {
    * before every test, activate all given mocks
    */
   before() {
+    new SetMode('environment', 'pure').execute()
     this.mocks.forEach(mock => mock.activate())
   }
 

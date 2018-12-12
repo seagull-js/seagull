@@ -4,7 +4,7 @@ import { Command } from '../Command'
 /**
  * Command to list all files in a specific bucket with an optional prefix
  */
-export class ListFiles implements Command {
+export class ListFiles extends Command {
   /**
    * name of the target bucket
    */
@@ -19,6 +19,7 @@ export class ListFiles implements Command {
    * see the individual property descriptions within this command class
    */
   constructor(bucketName: string, filePath?: string) {
+    super()
     this.bucketName = bucketName
     this.filePath = filePath || ''
   }
