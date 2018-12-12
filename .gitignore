@@ -13,3 +13,6 @@ npm-debug.log
 apps
 old_code
 /lerna-debug.log
+
+#seagull
+.seagull
