@@ -8,6 +8,7 @@
         "build": "seagull-build",
         "dev": "seagull-dev",
         "deploy": "seagull-deploy",
+        "diff": "seagull-diff",
         "start": "node dist/assets/backend/server.js",
         "test": "echo \"Error: no test specified\" && exit 0",
         "test:unit": "NODE_ENV=test mocha --opts test/mocha.opts",

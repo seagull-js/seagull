@@ -5,7 +5,8 @@
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
     "bin": {
-        "seagull-deploy": "./bin/deploy.js"
+        "seagull-deploy": "./bin/deploy.js",
+        "seagull-diff": "./bin/diff.js"
     },
     "scripts": {
         "build": "rm -rf dist && tsc",
@@ -39,19 +40,22 @@
         "@seagull/tslint": "0.20.0",
         "@types/lodash": "^4.14.107",
         "@types/mock-require": "^2.0.0",
+        "@types/yaml": "^1.0.1",
         "mock-require": "^3.0.2"
     },
     "dependencies": {
-        "@aws-cdk/aws-apigateway": "^0.18.1",
-        "@aws-cdk/aws-cloudfront": "^0.18.1",
-        "@aws-cdk/aws-iam": "^0.18.1",
-        "@aws-cdk/aws-lambda": "^0.18.1",
-        "@aws-cdk/cdk": "^0.18.1",
+        "@aws-cdk/aws-apigateway": "^0.19.0",
+        "@aws-cdk/aws-cloudfront": "^0.19.0",
+        "@aws-cdk/aws-iam": "^0.19.0",
+        "@aws-cdk/aws-lambda": "^0.19.0",
+        "@aws-cdk/cdk": "^0.19.0",
+        "@aws-cdk/cloudformation-diff": "^0.19.0",
         "@seagull/commands": "0.20.0",
         "aws-cdk": "^0.18.1",
         "aws-sdk": "2.370.0",
         "dotenv": "^6.1.0",
-        "lodash": "^4.17.5"
+        "lodash": "^4.17.5",
+        "yaml": "^1.0.1"
     },
     "peerDependencies": {
         "typescript": "*"
