@@ -1,5 +1,18 @@
-node_modules
+# build artifacts
+.data
+.docz
+.serverless
 dist
+
+# dependencies & NPM stuff
+node_modules
 npm-debug.log
-.vscode
+
+# junk files
 .DS_Store
+apps
+old_code
+/lerna-debug.log
+
+#seagull
+.seagull

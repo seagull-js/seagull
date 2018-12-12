@@ -1,0 +1,15 @@
+{
+  "defaultSeverity": "error",
+  "extends": ["tslint:recommended", "tslint-config-prettier"],
+  "jsRules": {},
+  "rules": {
+    "interface-name": [false],
+    "interface-over-type-literal": [false],
+    "max-classes-per-file": [false, 1, "exclude-class-expressions"],
+    "member-access": [true, "no-public"],
+    "no-console": [true, "log", "error"],
+    "no-misused-new": [false],
+    "quotemark": [true, "single", "jsx-double"]
+  },
+  "rulesDirectory": []
+}

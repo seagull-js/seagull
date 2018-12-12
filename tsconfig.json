@@ -1,21 +1,21 @@
 {
   "compilerOptions": {
     "module": "commonjs",
+    "skipLibCheck": true,
     "target": "es6",
-    "noImplicitAny": false,
     "removeComments": true,
-    "preserveConstEnums": true,
     "sourceMap": true,
-    "outDir": "./dist",
+    "declaration": true,
+    "outDir": "dist",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "declaration": true,
-    "jsx": "react"
+    "lib": ["es5", "es6", "es7", "dom", "dom.iterable"],
+    "jsx": "react",
+    "rootDirs": ["src", "test"],
+    "strict": true
   },
-  "include": [
-      "src/**/*",
-      "test/**/*"
-  ],
-  "lib": [ "es5", "es6", "es7", "dom", "dom.iterable" ],
-  "types": ["node", "react", "react-dom"]
+  "include": ["src/**/*", "test/**/*", "declarations.d.ts"],
+  "exclude": ["dist", "examples", "node_modules"],
+  "types": ["node"],
+  "typeRoots": ["node_modules/@types"]
 }
