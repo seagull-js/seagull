@@ -56,5 +56,9 @@
     "dependencies": {
         "@seagull/mock": "^1.0.1",
         "@seagull/testing": "^1.0.1"
-    }
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "gitHead": "17e3e76bc834c2a7b6f966ce331d2e859138529d"
 }
