@@ -43,6 +43,16 @@ export abstract class Item {
     const instance = Object.assign(Object.create(this.prototype), data) as T
     return instance.save()
   }
+  
+  static async putAll<T extends Item>(
+    this: { new (...args: any[]): T },
+    data: Array<Partial<T> & { id: string }>
+  ) {
+    for (const item of data) {
+      const instance = Object.assign(Object.create(this.prototype), item) as T
+      await instance.save()
+    }
+  }
 
   abstract id: string
 
