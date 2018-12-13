@@ -1,5 +1,6 @@
 import { Mock } from '@seagull/mock'
 import { SetMode } from '@seagull/mode'
+import { Sandbox } from '@seagull/sandbox'
 
 export class BasicTest {
   /**
@@ -14,6 +15,7 @@ export class BasicTest {
   before() {
     new SetMode('environment', 'pure').execute()
     this.mocks.forEach(mock => mock.activate())
+    Sandbox.reset()
   }
 
   /**

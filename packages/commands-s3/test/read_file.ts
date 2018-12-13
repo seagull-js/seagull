@@ -1,4 +1,3 @@
-import { S3 as S3Mock } from '@seagull/mock-s3'
 import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
@@ -6,7 +5,7 @@ import { S3 } from '../src'
 
 @suite('S3::ReadFile')
 export class Test extends BasicTest {
-  mocks = [new S3Mock()]
+  mocks = []
 
   @test
   async 'WriteFile and ReadFile work'() {
@@ -27,6 +26,6 @@ export class Test extends BasicTest {
     const cmd = new S3.ReadFile('mybucket', '/tmp/index.html')
     await cmd.execute()
     const result = await cmd.revert()
-    result.should.be.equal(true)
+    ;(result === undefined).should.be.equal(true)
   }
 }

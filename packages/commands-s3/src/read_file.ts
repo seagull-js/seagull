@@ -1,10 +1,11 @@
 import { Command } from '@seagull/commands'
 import * as AWS from 'aws-sdk'
+import { S3Sandbox } from './s3_sandbox'
 
 /**
  * Command to write File to a specific S3 bucket
  */
-export class ReadFile extends Command {
+export class ReadFile extends Command<string> {
   /**
    * name of the target bucket
    */
@@ -27,17 +28,37 @@ export class ReadFile extends Command {
   /**
    * write a file to the stack's dataBucket on AWS S3
    */
-  async execute() {
+  async executeCloud() {
     const params = { Bucket: this.bucketName, Key: this.filePath }
     const client = new AWS.S3()
     const { Body } = await client.getObject(params).promise()
     return (Body || '').toString()
   }
 
+  async executePure() {
+    S3Sandbox.activate()
+    const result = await this.executeCloud()
+    S3Sandbox.deactivate()
+    return result
+  }
+  async executeEdge() {
+    // todo: use local fs
+    throw new Error('Not Implemented')
+    return undefined as any
+  }
+
   /**
-   * remove a file from the stack's dataBucket on AWS S3
+   * perform the command
+   */
+  async execute() {
+    return this.executeHandler()
+  }
+
+  /**
+   * revert the command
    */
   async revert() {
-    return true
+    return undefined as any
+    // TODO: cache the file and restore it
   }
 }

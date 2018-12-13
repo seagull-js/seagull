@@ -1,10 +1,11 @@
 import { Command } from '@seagull/commands'
 import * as AWS from 'aws-sdk'
+import { S3Sandbox } from './s3_sandbox'
 
 /**
  * Command to list all files in a specific bucket with an optional prefix
  */
-export class ListFiles extends Command {
+export class ListFiles extends Command<string[]> {
   /**
    * name of the target bucket
    */
@@ -14,6 +15,8 @@ export class ListFiles extends Command {
    * Prefix used for filtering the results
    */
   filePath: string
+
+  executeConnected = this.executeCloud
 
   /**
    * see the individual property descriptions within this command class
@@ -27,7 +30,7 @@ export class ListFiles extends Command {
   /**
    * perform the command
    */
-  async execute() {
+  async executeCloud() {
     const params: any = { Bucket: this.bucketName, Prefix: this.filePath }
     const client = new AWS.S3()
     let truncated: boolean = true
@@ -44,10 +47,31 @@ export class ListFiles extends Command {
     return results
   }
 
+  async executePure() {
+    S3Sandbox.activate()
+    const result = await this.executeCloud()
+    S3Sandbox.deactivate()
+    return result
+  }
+
+  async executeEdge() {
+    // todo: use local fs
+    throw new Error('Not Implemented')
+    return undefined as any
+  }
+
   /**
-   * remove a file from the stack's dataBucket on AWS S3
+   * perform the command
+   */
+  async execute() {
+    return this.executeHandler()
+  }
+
+  /**
+   * revert the command
    */
   async revert() {
-    return true
+    return undefined as any
+    // TODO: cache the file and restore it
   }
 }

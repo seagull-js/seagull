@@ -1,7 +1,7 @@
 {
-  "name": "@seagull/testing",
+  "name": "@seagull/sandbox",
   "version": "1.0.4",
-  "description": "Testing Utilities for the Seagull Framework",
+  "description": "Sandbox registry for the seagull framework. Gathering side effects",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
@@ -25,24 +25,14 @@
     "react.js",
     "isomorphic"
   ],
-  "author": "Maximilian Stroh",
+  "author": "Tom Jaster",
   "license": "LGPL-3.0",
   "bugs": {
     "url": "https://github.com/seagull-js/seagull/issues"
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/tslint": "^1.0.2",
-    "@types/lodash": "^4.14.107",
-    "aws-sdk": "*"
-  },
-  "dependencies": {
-    "@seagull/mock": "^1.0.2",
-    "@seagull/mode": "^1.0.2",
-    "@seagull/sandbox": "^1.0.2"
-  },
-  "peerDependencies": {
-    "aws-sdk": "*"
+    "@seagull/tslint": "^1.0.2"
   },
   "nyc": {
     "extension": [

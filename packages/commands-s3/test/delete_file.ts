@@ -1,4 +1,3 @@
-import { S3 as S3Mock } from '@seagull/mock-s3'
 import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
@@ -6,7 +5,7 @@ import { S3 } from '../src'
 
 @suite('S3::DeleteFile')
 export class Test extends BasicTest {
-  mocks = [new S3Mock()]
+  mocks = []
 
   @test
   async 'Written Files can be deleted'() {
