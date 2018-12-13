@@ -1,4 +1,4 @@
-import { S3 } from '@seagull/commands'
+import { S3 } from '@seagull/commands-s3'
 import { config } from './config'
 
 export abstract class Item {

@@ -1,5 +1,5 @@
 {
-  "name": "@seagull/command-s3",
+  "name": "@seagull/commands-s3",
   "version": "1.0.4",
   "description": "S3 commands for the seagull framework",
   "main": "dist/src/index.js",
