@@ -35,15 +35,15 @@
     "@seagull/tslint": "^1.0.2",
     "@types/lodash": "^4.14.107",
     "@types/mock-fs": "^3.6.30",
-    "aws-sdk": "*",
-    "mock-fs": "^4.5.0"
+    "aws-sdk": "*"
   },
   "dependencies": {
     "@seagull/mock": "^1.0.2",
     "@seagull/mode": "^1.0.2",
     "aws-sdk-mock": "^1.7.0",
     "lodash": "^4.17.5",
-    "pmock": "^0.2.3"
+    "pmock": "^0.2.3",
+    "mock-fs": "^4.5.0"
   },
   "peerDependencies": {
     "aws-sdk": "*"

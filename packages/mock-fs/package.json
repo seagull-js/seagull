@@ -1,64 +1,65 @@
 {
-    "name": "@seagull/mock-fs",
-    "version": "1.0.2",
-    "description": "FS Mocking module for the Seagull Framework",
-    "main": "dist/src/index.js",
-    "types": "dist/src/index.d.ts",
-    "scripts": {
-        "build": "rm -rf dist && tsc",
-        "test": "NODE_ENV=test tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
-        "test:watch": "npm run test -- --watch --reporter min",
-        "docs": "rm -rf docs && typedoc --mode modules --ignoreCompilerErrors --excludeExternals --excludePrivate --excludeNotExported --out docs src"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/seagull-js/seagull.git"
-    },
-    "keywords": [
-        "web",
-        "framework",
-        "web framework",
-        "serverless",
-        "cloud",
-        "aws",
-        "react",
-        "react.js",
-        "isomorphic"
+  "name": "@seagull/mock-fs",
+  "version": "1.0.2",
+  "description": "FS Mocking module for the Seagull Framework",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "test": "NODE_ENV=test tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
+    "test:watch": "npm run test -- --watch --reporter min",
+    "docs": "rm -rf docs && typedoc --mode modules --ignoreCompilerErrors --excludeExternals --excludePrivate --excludeNotExported --out docs src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seagull-js/seagull.git"
+  },
+  "keywords": [
+    "web",
+    "framework",
+    "web framework",
+    "serverless",
+    "cloud",
+    "aws",
+    "react",
+    "react.js",
+    "isomorphic"
+  ],
+  "author": "Tom Jaster",
+  "license": "LGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/seagull-js/seagull/issues"
+  },
+  "homepage": "https://github.com/seagull-js/seagull#readme",
+  "devDependencies": {
+    "@seagull/tslint": "^1.0.2"
+  },
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".tsx"
     ],
-    "author": "Tom Jaster",
-    "license": "LGPL-3.0",
-    "bugs": {
-        "url": "https://github.com/seagull-js/seagull/issues"
-    },
-    "homepage": "https://github.com/seagull-js/seagull#readme",
-    "devDependencies": {
-        "@seagull/tslint": "^1.0.2"
-    },
-    "nyc": {
-        "extension": [
-            ".ts",
-            ".tsx"
-        ],
-        "exclude": [
-            "**/*.d.ts",
-            "coverage",
-            "dist",
-            "docs",
-            "node_modules",
-            "test"
-        ],
-        "reporter": [
-            "html",
-            "text",
-            "text-summary"
-        ]
-    },
-    "dependencies": {
-        "@seagull/mock": "^1.0.2",
-        "@seagull/testing": "^1.0.2"
-    },
-    "publishConfig": {
-        "access": "public"
-    },
-    "gitHead": "17e3e76bc834c2a7b6f966ce331d2e859138529d"
+    "exclude": [
+      "**/*.d.ts",
+      "coverage",
+      "dist",
+      "docs",
+      "node_modules",
+      "test"
+    ],
+    "reporter": [
+      "html",
+      "text",
+      "text-summary"
+    ]
+  },
+  "dependencies": {
+    "@seagull/mock": "^1.0.2",
+    "@seagull/testing": "^1.0.2",
+    "mock-fs": "^4.5.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "17e3e76bc834c2a7b6f966ce331d2e859138529d"
 }
