@@ -42,8 +42,7 @@
     "@seagull/mode": "^1.0.2",
     "aws-sdk-mock": "^1.7.0",
     "lodash": "^4.17.5",
-    "mock-fs": "^4.5.0",
-    "pmock": "^0.2.3"
+    "mock-fs": "^4.5.0"
   },
   "peerDependencies": {
     "aws-sdk": "*"

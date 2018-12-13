@@ -1,3 +1,4 @@
+import { Process as ProcessMock } from '@seagull/mock-process'
 import { Page } from '@seagull/pages'
 import 'chai/register-should'
 import * as fs from 'fs'
@@ -46,7 +47,7 @@ const ReactBundle = fs.existsSync(
 
 @suite('Route::Render')
 export class Test extends RouteTest {
-  mocks = [new this.mock.Process({ cwd: '/tmp' }), new this.mock.FS('/tmp')]
+  mocks = [new ProcessMock({ cwd: '/tmp' }), new this.mock.FS('/tmp')]
   route = DemoRouteWithPage
 
   @test
