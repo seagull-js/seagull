@@ -7,7 +7,7 @@ import * as MockFS from 'mock-fs'
  */
 export class FS implements Mock {
   /**
-   * where to proxy read/write events to on disk instead of actual S3
+   * where to proxy read/write events into memory instead of actual FS
    */
   fakeFolderPath: string
 
