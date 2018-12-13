@@ -1,7 +1,7 @@
 {
     "name": "helloworld",
     "private": true,
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "Helloworld example app using the Seagull Framework",
     "main": "index.js",
     "scripts": {
@@ -17,8 +17,8 @@
     "author": "Maximilian Stroh <hisako1337@gmail.com>",
     "license": "LGPL-3.0",
     "devDependencies": {
-        "@seagull/build": "^1.0.2",
-        "@seagull/deploy": "^1.0.2",
+        "@seagull/build": "^1.0.3",
+        "@seagull/deploy": "^1.0.3",
         "@types/lodash": "^4.14.107",
         "@types/node": "^10.11.4",
         "serverless": "^1.32.0",
