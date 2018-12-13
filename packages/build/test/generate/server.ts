@@ -1,4 +1,4 @@
-import { FS } from '@seagull/commands'
+import { FS } from '@seagull/commands-fs'
 import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'

@@ -1,4 +1,4 @@
-import { FS } from '@seagull/commands'
+import { FS } from '@seagull/commands-fs'
 import { S3 } from '@seagull/mock-s3'
 import * as chokidar from 'chokidar'
 import * as path from 'path'

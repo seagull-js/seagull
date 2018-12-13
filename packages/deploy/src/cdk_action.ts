@@ -2,7 +2,7 @@ import * as cdk from 'aws-cdk'
 
 import { SynthesizedStack } from '@aws-cdk/cx-api'
 
-import { FS } from '@seagull/commands'
+import { FS } from '@seagull/commands-fs'
 
 import { ProfileCheck, ProvideAssetFolder } from './commands'
 import * as lib from './lib'

@@ -1,4 +1,5 @@
-import { Command, FS } from '@seagull/commands'
+import { Command } from '@seagull/commands'
+import { FS } from '@seagull/commands-fs'
 import { cannotRevertAssetFolder } from '../lib'
 
 export class ProvideAssetFolder extends Command {

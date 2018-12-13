@@ -1,4 +1,5 @@
-import { Command, FS } from '@seagull/commands'
+import { Command } from '@seagull/commands'
+import { FS } from '@seagull/commands-fs'
 import * as browserify from 'browserify'
 import * as browserifyInc from 'browserify-incremental'
 import { join, resolve } from 'path'

@@ -1,4 +1,5 @@
-import { Command, FS } from '@seagull/commands'
+import { Command } from '@seagull/commands'
+import { FS } from '@seagull/commands-fs'
 
 export class Server extends Command {
   /** where to write a bundle file to */

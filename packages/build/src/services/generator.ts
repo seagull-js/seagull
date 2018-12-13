@@ -1,4 +1,5 @@
-import { FS, Service } from '@seagull/commands'
+import { Service } from '@seagull/commands'
+import { FS } from '@seagull/commands-fs'
 import * as path from 'path'
 import { Generate } from '../generate'
 

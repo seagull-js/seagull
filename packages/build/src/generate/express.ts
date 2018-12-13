@@ -1,4 +1,5 @@
-import { Command, FS } from '@seagull/commands'
+import { Command } from '@seagull/commands'
+import { FS } from '@seagull/commands-fs'
 import * as path from 'path'
 
 export class Express extends Command {

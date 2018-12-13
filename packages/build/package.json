@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "@seagull/commands": "^1.0.4",
+    "@seagull/commands-fs": "^1.0.4",
     "@seagull/mock-s3": "^1.0.4",
     "@seagull/testing": "^1.0.4",
     "browserify": "^16.2.0",

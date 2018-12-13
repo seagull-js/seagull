@@ -1,7 +1,7 @@
 import 'chai/register-should'
 import { skip, suite, test } from 'mocha-typescript'
 
-import { FS } from '@seagull/commands'
+import { FS } from '@seagull/commands-fs'
 import { ProvideAssetFolder } from '../../src/commands'
 
 @suite('Commands')
