@@ -46,21 +46,6 @@ export class Test extends BasicTest {
     mock.deactivate()
   }
 
-  @test
-  async 'can work with synchronized disc data'() {
-    const fsMock = new this.mock.FS('/tmp')
-    fsMock.activate()
-    const mock = new S3('/tmp/.data')
-    mock.activate()
-    await this.writeFileToS3('stuff', '17')
-    const dataFile = fs.readFileSync('/tmp/.data/s3.json', 'utf-8')
-    dataFile.should.be.equal('{"DemoBucket123":{"stuff":"17"}}')
-    mock.deactivate()
-    const restored = new S3('/tmp/.data')
-    restored.storage.should.be.deep.equal({ DemoBucket123: { stuff: '17' } })
-    fsMock.deactivate()
-  }
-
   private async deleteFileFromS3(path: string) {
     const params = { Bucket: 'DemoBucket123', Key: path }
     const client = new AWS.S3()

@@ -33,6 +33,7 @@
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
     "@seagull/tslint": "^1.0.2",
+    "@seagull/mock-fs": "^1.0.2",
     "aws-sdk": "*"
   },
   "nyc": {

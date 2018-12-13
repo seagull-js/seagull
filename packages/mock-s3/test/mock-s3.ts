@@ -1,3 +1,4 @@
+import { FS as FSMock } from '@seagull/mock-fs'
 import { BasicTest } from '@seagull/testing'
 import * as AWS from 'aws-sdk'
 import 'chai/register-should'
@@ -75,7 +76,7 @@ export class Test extends BasicTest {
 
   @test
   async 'can work with synchronized disc data'() {
-    const fsMock = new this.mock.FS('/tmp')
+    const fsMock = new FSMock('/tmp')
     fsMock.activate()
     const mock = new S3('/tmp/.data')
     mock.activate()
