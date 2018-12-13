@@ -43,6 +43,14 @@ export class S3 implements Mock {
   }
 
   /**
+   * resets internal s3 state
+   */
+  reset = () => {
+    this.storage = {}
+    this.loadFromDisk()
+  }
+
+  /**
    * delete a file from the bucket
    */
   deleteObject = (Input: import('aws-sdk').S3.DeleteObjectRequest, cb: any) => {

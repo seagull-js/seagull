@@ -35,4 +35,12 @@ export class Process implements Mock {
   deactivate = () => {
     this.instances.forEach(instance => instance.reset())
   }
+
+  /**
+   * resets but does not deactivate
+   */
+  reset = () => {
+    this.instances.forEach(instance => instance.reset())
+    this.activate()
+  }
 }

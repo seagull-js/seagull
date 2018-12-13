@@ -13,6 +13,10 @@ class DemoMock {
   deactivate() {
     this.activated = false
   }
+
+  reset(): void {
+    return undefined
+  }
 }
 
 @suite('BasicTest')

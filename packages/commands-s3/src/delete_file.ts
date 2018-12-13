@@ -37,6 +37,7 @@ export class DeleteFile extends Command {
    * revert the command
    */
   async revert() {
-    return true // TODO: cache the file and restore it
+    return undefined as any
+    // TODO: cache the file and restore it
   }
 }

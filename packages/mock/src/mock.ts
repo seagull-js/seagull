@@ -12,4 +12,9 @@ export interface Mock {
    * Deactivate the Mock, so subsequent code runs as usual
    */
   deactivate: () => any
+
+  /**
+   * A Mock should be able to resets its internal state to its starting point without deactivating the mock
+   */
+  reset: () => any
 }

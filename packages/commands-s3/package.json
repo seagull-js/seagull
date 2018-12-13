@@ -36,7 +36,8 @@
     "@seagull/tslint": "^1.0.2"
   },
   "dependencies": {
-    "@seagull/commands": "^1.0.4"
+    "@seagull/commands": "^1.0.4",
+    "@seagull/mock-s3": "^1.0.4"
   },
   "nyc": {
     "extension": [

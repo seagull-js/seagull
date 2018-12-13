@@ -31,4 +31,9 @@ export class FS implements Mock {
   deactivate = () => {
     MockFS.restore()
   }
+
+  reset = () => {
+    MockFS.restore()
+    MockFS({ [this.fakeFolderPath]: {} })
+  }
 }

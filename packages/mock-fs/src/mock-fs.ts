@@ -29,6 +29,15 @@ export class FS implements Mock {
    * restore original FS behavior
    */
   deactivate = () => {
+    // TODO: this also deletes the current mocked file system...
     MockFS.restore()
+  }
+
+  /**
+   * resets mocked fs
+   */
+  reset = () => {
+    MockFS.restore()
+    MockFS({ [this.fakeFolderPath]: {} })
   }
 }

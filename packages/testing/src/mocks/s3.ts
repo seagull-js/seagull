@@ -42,6 +42,10 @@ export class S3 implements Mock {
     return this
   }
 
+  reset = () => {
+    this.storage = {}
+  }
+
   /**
    * delete a file from the bucket
    */
