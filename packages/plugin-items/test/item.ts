@@ -74,4 +74,11 @@ export class Test extends BasicTest {
     const list = await Todo.all()
     list.should.be.deep.equal([{ id: '1', text: 'a' }, { id: '2', text: 'b' }])
   }
+
+  @test
+  async 'can put a list of items'() {
+    await Todo.putAll([{id: '1', text: 'a'}, {id: '2', text: 'b'}])
+    const list = await Todo.all()
+    list.should.be.deep.equal([{ id: '1', text: 'a' }, { id: '2', text: 'b' }])
+  }
 }
