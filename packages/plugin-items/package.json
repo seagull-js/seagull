@@ -39,6 +39,7 @@
   "dependencies": {
     "@seagull/commands": "^1.0.4",
     "@seagull/commands-s3": "^1.0.4",
+    "@seagull/mock-s3": "^1.0.4",
     "lodash": "^4.17.5"
   },
   "nyc": {

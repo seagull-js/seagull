@@ -1,3 +1,4 @@
+import { S3 as S3Mock } from '@seagull/mock-s3'
 import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
@@ -21,7 +22,7 @@ class Todo extends Item {
 
 @suite('Item')
 export class Test extends BasicTest {
-  mocks = [new this.mock.S3()]
+  mocks = [new S3Mock()]
 
   @test
   async 'can be created and saved'() {
@@ -77,7 +78,7 @@ export class Test extends BasicTest {
 
   @test
   async 'can put a list of items'() {
-    await Todo.putAll([{id: '1', text: 'a'}, {id: '2', text: 'b'}])
+    await Todo.putAll([{ id: '1', text: 'a' }, { id: '2', text: 'b' }])
     const list = await Todo.all()
     list.should.be.deep.equal([{ id: '1', text: 'a' }, { id: '2', text: 'b' }])
   }

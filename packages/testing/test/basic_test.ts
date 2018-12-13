@@ -31,7 +31,6 @@ export class Test extends BasicTest {
   @test
   async 'can be used with mocha-typescript'() {
     this.mocks.should.be.an('array')
-    this.mock.should.be.an('object')
   }
 
   @test
