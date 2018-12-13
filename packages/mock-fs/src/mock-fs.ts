@@ -19,14 +19,14 @@ export class FS implements Mock {
   }
 
   /**
-   * redirect S3 interactions to local folder
+   * redirect FS interactions to local folder
    */
   activate = () => {
     MockFS({ [this.fakeFolderPath]: {} })
   }
 
   /**
-   * restore original S3 behavior
+   * restore original FS behavior
    */
   deactivate = () => {
     MockFS.restore()
