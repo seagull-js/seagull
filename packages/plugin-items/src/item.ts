@@ -24,6 +24,16 @@ export abstract class Item {
     return await new S3.DeleteFile(config.bucket, key).execute()
   }
 
+  // delete all objects of specified Item from the database
+  static async deleteAll<T extends Item>(this: { new (...args: any[]): T }) {
+    const name = this.name
+    const keys = await new S3.ListFiles(config.bucket, name).execute()
+
+    for (const key of keys) {
+      await new S3.DeleteFile(config.bucket, key).execute()
+    }
+  }
+
   // Fetch an object from the database by id
   static async get<T extends Item>(
     this: { new (...args: any[]): T },
@@ -43,7 +53,7 @@ export abstract class Item {
     const instance = Object.assign(Object.create(this.prototype), data) as T
     return instance.save()
   }
-  
+
   static async putAll<T extends Item>(
     this: { new (...args: any[]): T },
     data: Array<Partial<T> & { id: string }>
