@@ -59,6 +59,19 @@ export class Test extends BasicTest {
   }
 
   @test
+  async 'can all be deleted'() {
+    await Todo.putAll([
+      { id: '1', text: 'a' },
+      { id: '2', text: 'b' },
+      { id: '3', text: 'c' },
+    ])
+    await Todo.deleteAll()
+    const result = await Todo.all()
+    result.should.be.an('array')
+    result.should.have.lengthOf(0)
+  }
+
+  @test
   async 'can get a list of all instances'() {
     await Config.put({ id: 'something', setting: true })
     const list = await Config.all()
