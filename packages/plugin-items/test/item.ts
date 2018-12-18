@@ -79,6 +79,20 @@ export class Test extends BasicTest {
   }
 
   @test
+  async 'can get a list of items by regex pattern'() {
+    await Todo.putAll([
+      { id: 'foo', text: 'foo' },
+      { id: 'bar', text: 'bar' },
+      { id: 'foobar', text: 'foobar' },
+    ])
+    const list = await Todo.query('bar')
+    list.should.be.deep.equal([
+      { id: 'bar', text: 'bar' },
+      { id: 'foobar', text: 'foobar' },
+    ])
+  }
+
+  @test
   async 'can be used with items that have a constructor'() {
     await new Todo('1', 'a').save()
     await Todo.put({ id: '2', text: 'b' })
