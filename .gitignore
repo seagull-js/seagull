@@ -2,6 +2,7 @@
 .data
 .docz
 .serverless
+*.tgz
 dist
 
 # dependencies & NPM stuff
@@ -12,3 +13,7 @@ npm-debug.log
 .DS_Store
 apps
 old_code
+/lerna-debug.log
+
+#seagull
+.seagull

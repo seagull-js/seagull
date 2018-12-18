@@ -1,7 +1,8 @@
-import { Command, FS } from '@seagull/commands'
+import { Command } from '@seagull/commands'
+import { FS } from '@seagull/commands-fs'
 import * as ts from 'typescript'
 
-export class Typescript implements Command {
+export class Typescript extends Command {
   /** where to read a file from */
   srcFile: string
 
@@ -12,6 +13,7 @@ export class Typescript implements Command {
   tsconfig: any
 
   constructor(srcFile: string, dstFile: string, tsconfig?: any) {
+    super()
     this.srcFile = srcFile
     this.dstFile = dstFile
     this.tsconfig = tsconfig || {}

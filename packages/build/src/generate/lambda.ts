@@ -1,10 +1,12 @@
-import { Command, FS } from '@seagull/commands'
+import { Command } from '@seagull/commands'
+import { FS } from '@seagull/commands-fs'
 
-export class Lambda implements Command {
+export class Lambda extends Command {
   /** where to write a bundle file to */
   dstFile: string
 
   constructor(dstFile: string) {
+    super()
     this.dstFile = dstFile
   }
 

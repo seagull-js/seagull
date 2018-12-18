@@ -1,10 +1,11 @@
-import { Command, FS } from '@seagull/commands'
+import { Command } from '@seagull/commands'
+import { FS } from '@seagull/commands-fs'
 import * as browserify from 'browserify'
 import * as browserifyInc from 'browserify-incremental'
 import { join, resolve } from 'path'
 import * as sts from 'stream-string'
 
-export class Page implements Command {
+export class Page extends Command {
   /** where to read a file from */
   srcFile: string
 
@@ -30,6 +31,7 @@ export class Page implements Command {
   excludes: any[]
 
   constructor(srcFile: string, dstFile: string, cache?: any, excludes?: any[]) {
+    super()
     this.srcFile = srcFile
     this.dstFile = dstFile
     this.dstFileSSR = dstFile.replace('.js', '-server.js')

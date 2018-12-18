@@ -1,3 +1,4 @@
+import { S3Sandbox } from '@seagull/commands-s3'
 import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
@@ -9,11 +10,9 @@ class Something extends Item {
 
 @suite('config')
 export class Test extends BasicTest {
-  mocks = [new this.mock.S3()]
-
   @test
   async 'name of the bucket is configurable'() {
-    const storage = this.mocks[0].storage
+    const storage = S3Sandbox.storage
     config.bucket.should.be.equal('demo-bucket')
     await Something.put({ id: '1' })
     storage['demo-bucket'].should.be.deep.equal({
