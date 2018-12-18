@@ -4,7 +4,7 @@ import { SynthesizedStack } from '@aws-cdk/cx-api'
 
 import { FS } from '@seagull/commands'
 
-import { ProfileCheck, ProvideAssetFolder } from './commands'
+import { ProfileCheck } from './commands'
 import * as lib from './lib'
 
 export interface Options {
@@ -45,7 +45,7 @@ export abstract class CDKAction {
     const path = this.appPath
     this.app = new lib.ProjectApp(this.projectName, { account, path, region })
     this.synthStack = this.app.synthesizeStack(this.projectName)
-    this.logicalToPathMap = lib.createLogicalTopPathMap(this.synthStack)
+    this.logicalToPathMap = lib.createLogicalToPathMap(this.synthStack)
   }
 
   private async checkProfile() {
