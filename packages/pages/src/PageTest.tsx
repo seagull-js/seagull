@@ -21,7 +21,7 @@ type ResolveFunction = (value?: {} | PromiseLike<{}> | undefined) => void
  *    this.page is resetted after each test
  *  - if some asynchronous things are going on inside the page, call
  * ```typescript
-   await this.update().
+   await this.update()
  * ```
  *    TODO: (fake timer implementation is missing)
  *    if you need to test some timed events, call await this.update(ms), where
