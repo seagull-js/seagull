@@ -21,39 +21,39 @@ type ResolveFunction = (value?: {} | PromiseLike<{}> | undefined) => void
  *    this.page is resetted after each test
  *  - if some asynchronous things are going on inside the page, call
  * ```typescript
- *    await this.update().
+   await this.update().
  * ```
  *    TODO: (fake timer implementation is missing)
  *    if you need to test some timed events, call await this.update(ms), where
  *    ms is the amount of milliseconds you need to wait before your assertion.
- *
+ 
  * ```typescript
- * import 'chai/register-should'
- * import { skip, slow, suite, test, timeout } from 'mocha-typescript'
- * import * as React from 'react'
- * import { Page, PageTest } from '../src'
- *
- * class DemoPage extends Page {
- *   html() {
- *     return <div>Hello, {this.props.data.name}</div>
- *   }
- * }
- *
- * @suite('DemoPage')
- * export class DemoPageTest extends PageTest {
- *   Page = DemoPage
- *   @test
- *   'can render a DemoPage with custom data'() {
- *      const name = 'John Doe'
- *      this.mount({ data: { name } })
- *      this.page.text().should.contain(name)
- *   }
- *   @test
- *   'can render page with any name'() {
- *     this.page.text().should.be.equal('Hello, ')
- *   }
- * }
- * ```
+ import 'chai/register-should'
+ import { skip, slow, suite, test, timeout } from 'mocha-typescript'
+ import * as React from 'react'
+ import { Page, PageTest } from '../src'
+ 
+ class DemoPage extends Page {
+   html() {
+     return <div>Hello, {this.props.data.name}</div>
+   }
+ }
+ 
+ @suite('DemoPage')
+ export class DemoPageTest extends PageTest {
+   Page = DemoPage
+   @test
+   'can render a DemoPage with custom data'() {
+      const name = 'John Doe'
+      this.mount({ data: { name } })
+      this.page.text().should.contain(name)
+   }
+   @test
+   'can render page with any name'() {
+     this.page.text().should.be.equal('Hello, ')
+   }
+ }
+ ```
  */
 export abstract class PageTest extends BasicTest {
   abstract Page: typeof Page
