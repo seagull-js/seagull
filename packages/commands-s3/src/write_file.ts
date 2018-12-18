@@ -25,8 +25,11 @@ export class WriteFile extends Command<
   content: string
 
   executeConnected = this.executeCloud
-  revertConnected = this.revertCloud
+  executeCloud = this.exec.bind(this, new AWS.S3())
+  executePure = this.exec.bind(this, S3Sandbox as any)
 
+  revertConnected = this.execRevert.bind(this, new AWS.S3())
+  revertPure = this.execRevert.bind(this, S3Sandbox as any)
   /**
    * see the individual property descriptions within this command class
    */
@@ -37,21 +40,6 @@ export class WriteFile extends Command<
     this.content = content
   }
 
-  /**
-   * write a file to the stack's dataBucket on AWS S3
-   */
-  async executeCloud() {
-    const params = this.generateS3Params()
-    const client = new AWS.S3()
-    return await client.putObject(params).promise()
-  }
-
-  async executePure() {
-    S3Sandbox.activate()
-    const result = await this.executeCloud()
-    S3Sandbox.deactivate()
-    return result
-  }
   async executeEdge() {
     // todo: use local fs
     throw new Error('Not Implemented')
@@ -69,27 +57,27 @@ export class WriteFile extends Command<
     return this.revertHandler()
   }
 
-  /**
-   * remove a file from the stack's dataBucket on AWS S3
-   */
-  async revertCloud() {
-    const params = this.generateS3Params()
-    delete params.Body
-    const client = new AWS.S3()
-    return await client.deleteObject(params).promise()
-  }
-
-  async revertPure() {
-    S3Sandbox.activate()
-    const result = await this.revertCloud()
-    S3Sandbox.deactivate()
-    return result
-  }
-
   async revertEdge() {
     // todo: use local fs
     throw new Error('Not Implemented')
     return undefined as any
+  }
+
+  /**
+   * write a file to the stack's dataBucket on AWS S3
+   */
+  private async exec(client: AWS.S3) {
+    const params = this.generateS3Params()
+    return await client.putObject(params).promise()
+  }
+
+  /**
+   * remove a file from the stack's dataBucket on AWS S3
+   */
+  private async execRevert(client: AWS.S3) {
+    const params = this.generateS3Params()
+    delete params.Body
+    return await client.deleteObject(params).promise()
   }
 
   private generateS3Params() {
