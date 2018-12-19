@@ -1,12 +1,11 @@
 {
-    "name": "@seagull/deploy",
+    "name": "@seagull/pipeline",
     "version": "0.20.0",
-    "description": "Code deploying for the Seagull Framework",
+    "description": "Code pipeline for the Seagull Framework",
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
     "bin": {
-        "seagull-deploy": "./bin/deploy.js",
-        "seagull-diff": "./bin/diff.js"
+        "seagull-pipeline": "./bin/pipeline.js"
     },
     "scripts": {
         "build": "rm -rf dist && tsc",
@@ -44,12 +43,10 @@
         "mock-require": "^3.0.2"
     },
     "dependencies": {
-        "@aws-cdk/aws-apigateway": "^0.19.0",
-        "@aws-cdk/aws-cloudfront": "^0.19.0",
-        "@aws-cdk/aws-iam": "^0.19.0",
-        "@aws-cdk/aws-lambda": "^0.19.0",
         "@aws-cdk/cdk": "^0.19.0",
-        "@aws-cdk/cloudformation-diff": "^0.19.0",
+        "@aws-cdk/aws-codebuild": "^0.19.0",
+        "@aws-cdk/aws-codecommit": "^0.19.0",
+        "@aws-cdk/aws-codepipeline": "^0.19.0",
         "@seagull/commands": "0.20.0",
         "aws-cdk": "^0.18.1",
         "aws-sdk": "*",

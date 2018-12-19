@@ -16,3 +16,6 @@ old_code
 
 #seagull
 .seagull
+
+# other stuff
+.env

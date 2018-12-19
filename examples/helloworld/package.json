@@ -9,6 +9,7 @@
         "dev": "seagull-dev",
         "deploy": "seagull-deploy",
         "diff": "seagull-diff",
+        "pipeline": "seagull-pipeline",
         "start": "node dist/assets/backend/server.js",
         "test": "echo \"Error: no test specified\" && exit 0",
         "test:unit": "NODE_ENV=test mocha --opts test/mocha.opts",
@@ -28,6 +29,7 @@
     },
     "dependencies": {
         "@seagull/pages": "0.20.0",
+        "@seagull/pipeline": "0.20.0",
         "@seagull/plugin-items": "0.20.0",
         "@seagull/routes": "0.20.0",
         "instantclick": "^3.1.0-2",
