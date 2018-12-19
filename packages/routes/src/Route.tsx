@@ -92,6 +92,5 @@ export abstract class Route {
 }
 
 export function setExpireHeader(response: Response, cache: number) {
-  console.info('CACHE', cache)
   response.setHeader('maxage', cache * 1000)
 }
