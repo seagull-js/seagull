@@ -2,8 +2,6 @@ import * as cdk from 'aws-cdk'
 
 import { SynthesizedStack } from '@aws-cdk/cx-api'
 
-import { FS } from '@seagull/commands-fs'
-
 import { ProfileCheck } from './commands'
 import * as lib from './lib'
 
@@ -14,7 +12,7 @@ export interface Options {
   profile?: string
 }
 
-export abstract class CDKAction {
+export class DeployPipeline {
   appPath: string
   opts: Options
   projectName: string
@@ -27,25 +25,40 @@ export abstract class CDKAction {
   constructor(appPath: string, opts: Options) {
     this.appPath = appPath
     this.opts = opts
-    this.projectName = require(`${this.appPath}/package.json`).name
+    this.projectName = `${require(`${appPath}/package.json`).name}-pipeline`
     this.sdk = new cdk.SDK({})
     this.logicalToPathMap = {}
     this.synthStack = {} as SynthesizedStack
   }
 
-  abstract async execute(): Promise<any>
-
-  protected async validate() {
-    return (await this.checkProfile()) && (await this.checkAppPath())
+  async execute() {
+    return (await this.validate()) && (await this.deployPipeline())
   }
 
-  protected async createCDKApp() {
+  private async deployPipeline() {
+    await this.createCDKPipeline()
+    await this.deployCDKPipeline()
+  }
+
+  private async deployCDKPipeline() {
+    const env = this.synthStack.environment
+    const toolkitInfo = await cdk.loadToolkitInfo(env, this.sdk, 'CDKToolkit')
+    await cdk.bootstrapEnvironment(env, this.sdk, 'CDKToolkit', undefined)
+    const sdk = this.sdk
+    const stack = this.synthStack
+    await cdk.deployStack({ sdk, stack, toolkitInfo })
+  }
+
+  private async validate() {
+    return await this.checkProfile()
+  }
+
+  private async createCDKPipeline() {
     const account = await this.sdk.defaultAccount()
     const region = process.env.AWS_REGION || 'eu-central-1'
     const path = this.appPath
     this.app = new lib.ProjectApp(this.projectName, { account, path, region })
     this.synthStack = this.app.synthesizeStack(this.projectName)
-    this.logicalToPathMap = lib.createLogicalToPathMap(this.synthStack)
   }
 
   private async checkProfile() {
@@ -53,12 +66,5 @@ export abstract class CDKAction {
     // tslint:disable-next-line:no-unused-expression
     !credsFound && lib.noCredentialsSet()
     return credsFound
-  }
-
-  private async checkAppPath() {
-    const assets = await new FS.Exists(`${this.appPath}/dist/assets`).execute()
-    // tslint:disable-next-line:no-unused-expression
-    !assets && lib.noAssetsFound()
-    return assets
   }
 }
