@@ -54,6 +54,7 @@
     "@seagull/commands-fs": "^1.1.1",
     "aws-cdk": "^0.18.1",
     "aws-sdk": "*",
+    "chalk": "^2.4.1",
     "dotenv": "^6.1.0",
     "lodash": "^4.17.5",
     "yaml": "^1.0.1"
