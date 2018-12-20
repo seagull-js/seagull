@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Page } from '@seagull/pages'
+import { Page } from '@seagull/pages/dist/src/Page'
 
 export default class SecondsLeft extends Page {
   state = { secondsLeft: this.props.data.seconds || 50 }

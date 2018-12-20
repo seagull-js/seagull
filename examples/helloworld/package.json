@@ -26,7 +26,12 @@
     "serverless-prune-plugin": "^1.3.1",
     "typescript": "^3.1.1",
     "jsdom": "^13.0.0",
-    "jsdom-global": "^3.0.2"
+    "jsdom-global": "^3.0.2",
+    "@types/chai": "^4.1.3",
+    "@types/mocha": "^5.2.1",
+    "chai": "^4.1.2",
+    "mocha": "^5.1.1",
+    "mocha-typescript": "^1.1.16"
   },
   "dependencies": {
     "@seagull/pages": "^1.0.2",

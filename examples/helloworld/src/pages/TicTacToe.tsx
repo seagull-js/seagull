@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { style } from 'typestyle'
-import { Page } from '@seagull/pages'
+import { Page } from '@seagull/pages/dist/src/Page'
 
 interface TicTacToeState {
   score: {
