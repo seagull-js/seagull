@@ -76,5 +76,8 @@
             "text-summary"
         ]
     },
-    "gitHead": "2f2098cb8e421957a8c86541462ef341134fccce"
+    "gitHead": "2f2098cb8e421957a8c86541462ef341134fccce",
+    "publishConfig": {
+        "access": "public"
+    }
 }
