@@ -16,7 +16,11 @@ export abstract class Route {
   ) {
     const method = (this as any).method.toLowerCase()
     const path = (this as any).path
-    const fn = (req: Request, res: Response) => new this(req, res).handler(req)
+    const cache = (this as any).cache
+    const fn = (req: Request, res: Response) => {
+      setExpireHeader(res, cache)
+      return new this(req, res).handler(req)
+    }
     const router = app as any
     router[method](path, fn)
   }
@@ -85,4 +89,8 @@ export abstract class Route {
   private renderPage(pageSource: PageType, data: any) {
     return render('', pageSource, data)
   }
+}
+
+export function setExpireHeader(response: Response, cache: number) {
+  response.setHeader('cache-control', `max-age=${cache}`)
 }
