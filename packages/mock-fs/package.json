@@ -1,6 +1,6 @@
 {
   "name": "@seagull/mock-fs",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "FS Mocking module for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -54,8 +54,8 @@
     ]
   },
   "dependencies": {
-    "@seagull/mock": "^1.1.0",
-    "@seagull/testing": "^1.1.0",
+    "@seagull/mock": "^1.1.1",
+    "@seagull/testing": "^1.1.1",
     "mock-fs": "^4.5.0"
   },
   "publishConfig": {
