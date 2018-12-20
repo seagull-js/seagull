@@ -92,5 +92,5 @@ export abstract class Route {
 }
 
 export function setExpireHeader(response: Response, cache: number) {
-  response.setHeader('maxage', cache * 1000)
+  response.setHeader('cache-control', `max-age=${cache}`)
 }

@@ -19,6 +19,7 @@ export class Test extends RouteTest {
   async 'setting cache in routes works'() {
     const { code, data, headers } = await this.invoke('GET', '/', {})
     code.should.be.equal(200)
-    headers.maxage.should.be.equal(300000)
+    console.info('HEAD', headers)
+    headers['cache-control'].should.be.equal('max-age=300')
   }
 }
