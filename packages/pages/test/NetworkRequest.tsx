@@ -1,7 +1,8 @@
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as React from 'react'
-import { Page, PageTest } from '../src'
+import { Page } from '../src'
+import { PageTest } from '../src/test'
 
 const somethingAsynchronous = () =>
   Promise.resolve({ message: 'response is here' })

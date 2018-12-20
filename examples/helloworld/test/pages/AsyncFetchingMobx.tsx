@@ -5,7 +5,7 @@ import * as Enzyme from 'enzyme'
 import * as React from 'react'
 import AsyncFetchingMobx from '../../src/pages/AsyncFetchingMobx'
 import { NetworkLayer } from '../../src/store/NetworkLayer'
-import { PageTest } from '@seagull/pages/src'
+import { PageTest } from '@seagull/pages'
 
 const mockData = {
   products: [

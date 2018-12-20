@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Page, IPageProps } from '@seagull/pages/dist/src/Page'
+import { Page, IPageProps } from '@seagull/pages'
 import { NetworkLayer } from '../store/NetworkLayer'
 import { Fetcher } from '../components/Fetcher'
 import { DataStore } from '../store/DataStore'

@@ -4,7 +4,7 @@ import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import { mount } from 'enzyme'
 import SecondsLeft from '../../src/pages/SecondsLeft'
 import * as React from 'react'
-import { PageTest } from '@seagull/pages/src'
+import { PageTest } from '@seagull/pages'
 
 @suite('SecondsLeft')
 export class SecondsLeftTest extends PageTest {

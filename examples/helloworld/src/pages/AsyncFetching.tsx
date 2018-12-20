@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Page } from '@seagull/pages/dist/src/Page'
+import { Page } from '@seagull/pages'
 
 export default class AsyncFetching extends Page {
   state = { fetchedData: this.props.data as any }
