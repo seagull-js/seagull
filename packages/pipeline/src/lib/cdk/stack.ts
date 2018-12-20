@@ -8,6 +8,7 @@ interface ProjectStackProps extends StackProps {
 }
 
 export class AppStack extends Stack {
+  appPath: string
   pipelineName: string
   pipeline: Pipeline
   source!: GitHubSourceAction
@@ -16,6 +17,7 @@ export class AppStack extends Stack {
     super(parent, pipelineName, props)
     this.pipelineName = pipelineName
     this.pipeline = new Pipeline(this, pipelineName, { pipelineName })
+    this.appPath = props.env.path
     this.addSourceStage()
     this.addBuildStage()
   }
@@ -30,6 +32,7 @@ export class AppStack extends Stack {
     const sourceConfig = { branch, oauthToken, owner, repo, stage }
     // tslint:disable-next-line:no-unused-expression
     this.source = new GitHubSourceAction(this, 'GitHubSource', sourceConfig)
+    console.info('sourceConfig', sourceConfig)
   }
 
   private addBuildStage() {
@@ -80,7 +83,8 @@ export class AppStack extends Stack {
   }
 
   private getOwnerPkgJson() {
-    const pkgJson = require(`${this.path}/package.json`)
+    console.info('path', this.appPath)
+    const pkgJson = require(`${this.appPath}/package.json`)
     const repoUrl = pkgJson && pkgJson.repository && pkgJson.repository.url
     const isGithubUrl = repoUrl && repoUrl.indexOf('github.com') > -1
     return isGithubUrl && getOwnerFromURL(repoUrl)
@@ -95,7 +99,7 @@ export class AppStack extends Stack {
   }
 
   private getRepoByPkgJson() {
-    const pkgJson = require(`${this.path}/package.json`)
+    const pkgJson = require(`${this.appPath}/package.json`)
     const repoUrl = pkgJson && pkgJson.repository && pkgJson.repository.url
     const isGithubUrl = repoUrl && repoUrl.indexOf('github.com') > -1
     const repoUrlRepoName = isGithubUrl && getRepoFromURL(repoUrl)
@@ -124,5 +128,5 @@ function getOwnerFromURL(url: string) {
 
 function getRepoFromURL(url: string) {
   const path = url.substring(url.indexOf('github.com') + 10)
-  return path.slice(path.indexOf('/', 1), path.indexOf('.git'))
+  return path.slice(path.indexOf('/', 1) + 1, path.indexOf('.git'))
 }
