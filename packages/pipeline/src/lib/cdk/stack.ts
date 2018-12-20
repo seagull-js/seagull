@@ -1,6 +1,7 @@
 import * as CB from '@aws-cdk/aws-codebuild'
-import * as CP from '@aws-cdk/aws-codepipeline'
-import { App, Secret, Stack, StackProps } from '@aws-cdk/cdk'
+import { GitHubSourceAction, Pipeline } from '@aws-cdk/aws-codepipeline'
+import { App, Secret, SecretParameter, Stack, StackProps } from '@aws-cdk/cdk'
+import { logNoOwnerFound } from '../log_messages'
 
 interface ProjectStackProps extends StackProps {
   env: { account?: string; path: string; region: string }
@@ -8,13 +9,13 @@ interface ProjectStackProps extends StackProps {
 
 export class AppStack extends Stack {
   pipelineName: string
-  pipeline: CP.Pipeline
-  source!: CP.GitHubSourceAction
+  pipeline: Pipeline
+  source!: GitHubSourceAction
 
   constructor(parent: App, pipelineName: string, props: ProjectStackProps) {
     super(parent, pipelineName, props)
     this.pipelineName = pipelineName
-    this.pipeline = new CP.Pipeline(this, pipelineName, { pipelineName })
+    this.pipeline = new Pipeline(this, pipelineName, { pipelineName })
     this.addSourceStage()
     this.addBuildStage()
   }
@@ -23,14 +24,12 @@ export class AppStack extends Stack {
     const placement = { atIndex: 0 }
     const stage = this.pipeline.addStage('SourceStage', { placement })
     const branch = 'master'
-    const oauthToken = new Secret(process.env.GITHUB_OAUTH)
-    // tslint:disable-next-line:no-console
-    console.log('OAUTH', process.env.GITHUB_OAUTH)
-    const owner = 'AIDACruises'
-    const repo = 'unicorn'
+    const oauthToken = this.getToken()
+    const owner = this.getOwner()
+    const repo = this.getRepo()
     const sourceConfig = { branch, oauthToken, owner, repo, stage }
     // tslint:disable-next-line:no-unused-expression
-    this.source = new CP.GitHubSourceAction(this, 'GitHubSource', sourceConfig)
+    this.source = new GitHubSourceAction(this, 'GitHubSource', sourceConfig)
   }
 
   private addBuildStage() {
@@ -66,4 +65,64 @@ export class AppStack extends Stack {
     // tslint:disable-next-line:no-unused-expression
     new CB.PipelineBuildAction(this, 'CodeBuild', buildProps)
   }
+
+  private getOwner() {
+    return this.getOwnerEnv() || this.getOwnerPkgJson() || this.noOwner()
+  }
+
+  private noOwner() {
+    logNoOwnerFound()
+    return 'noOwner'
+  }
+
+  private getOwnerEnv() {
+    return process.env.GITHUB_OWNER
+  }
+
+  private getOwnerPkgJson() {
+    const pkgJson = require(`${this.path}/package.json`)
+    const repoUrl = pkgJson && pkgJson.repository && pkgJson.repository.url
+    const isGithubUrl = repoUrl && repoUrl.indexOf('github.com') > -1
+    return isGithubUrl && getOwnerFromURL(repoUrl)
+  }
+
+  private getRepo() {
+    return this.getRepoByEnv() || this.getRepoByPkgJson()
+  }
+
+  private getRepoByEnv() {
+    return process.env.GITHUB_REPO
+  }
+
+  private getRepoByPkgJson() {
+    const pkgJson = require(`${this.path}/package.json`)
+    const repoUrl = pkgJson && pkgJson.repository && pkgJson.repository.url
+    const isGithubUrl = repoUrl && repoUrl.indexOf('github.com') > -1
+    const repoUrlRepoName = isGithubUrl && getRepoFromURL(repoUrl)
+    return repoUrlRepoName || pkgJson.name
+  }
+
+  private getToken() {
+    return this.getTokenByEnv() || this.getTokenBySSM()
+  }
+
+  private getTokenByEnv() {
+    return process.env.GITHUB_OAUTH && new Secret(process.env.GITHUB_OAUTH)
+  }
+
+  private getTokenBySSM() {
+    const ssmParameter = process.env.GITHUB_SSM_PARAMETER || 'GitHubOAuthToken'
+    const secretConfig = { ssmParameter }
+    return new SecretParameter(this, 'GithubToken', secretConfig).value
+  }
+}
+
+function getOwnerFromURL(url: string) {
+  const path = url.substring(url.indexOf('github.com') + 10)
+  return path.substring(1, path.indexOf('/', 1))
+}
+
+function getRepoFromURL(url: string) {
+  const path = url.substring(url.indexOf('github.com') + 10)
+  return path.slice(path.indexOf('/', 1), path.indexOf('.git'))
 }
