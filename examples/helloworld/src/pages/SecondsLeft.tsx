@@ -4,14 +4,15 @@ import { Page } from '@seagull/pages'
 export default class SecondsLeft extends Page {
   state = { secondsLeft: this.props.data.seconds || 50 }
   html() {
+    const { secondsLeft } = this.state
+    const positiveNumberMessage = `You have ${secondsLeft} seconds left to see what happens after that.`
+    const below1Message =
+      'AIDAnova has been christened - someone has to turn off the timer by Hand. ' +
+      secondsLeft
+
     return (
       <div id="text-with-seconds">
-        {this.state.secondsLeft > 0
-          ? `You have ${
-              this.state.secondsLeft
-            } seconds left to see what happens after
-        that.`
-          : 'AIDAnova has been christened - someone has to turn off the timer by Hand.'}
+        {secondsLeft > 0 ? positiveNumberMessage : below1Message}
       </div>
     )
   }
