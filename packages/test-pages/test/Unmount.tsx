@@ -1,4 +1,4 @@
-import { Page } from '@seagull/page'
+import { Page } from '@seagull/pages'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as React from 'react'

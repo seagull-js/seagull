@@ -2,12 +2,12 @@
   "name": "@seagull/pages",
   "version": "1.0.2",
   "description": "View Layer implementation in React for the Seagull Framework",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "rm -rf dist && tsc",
-    "test": "NODE_ENV=test tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
-    "test:watch": "npm run test -- --watch --reporter min",
+    "test": "echo nothing to test",
+    "test:watch": "echo nothing to test",
     "docs": "rm -rf docs && typedoc --mode modules --ignoreCompilerErrors --excludeExternals --excludePrivate --excludeNotExported --out docs src"
   },
   "repository": {
@@ -32,8 +32,6 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/testing": "^1.0.4",
-    "@seagull/test-page": "^1.0.0",
     "@seagull/tslint": "^1.0.2",
     "@types/lodash": "^4.14.107",
     "@types/react": "^16.4.18",
