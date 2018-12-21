@@ -27,15 +27,11 @@ export class AsyncFetchingTest extends PageTest {
     let data: any = { someProperty: 'Schinken!' }
 
     const wrapper = this.mount({ data })
-    const propsField = wrapper.find('#props-field')
-    propsField.text().should.contain(JSON.stringify(data))
     const dataField = wrapper.find('#data-field')
     dataField.text().should.contain(JSON.stringify(data))
 
     data = { name: 'Halleluja' }
     wrapper.setProps({ data })
-    const updatedPropsField = wrapper.find('#props-field')
-    updatedPropsField.text().should.contain('Halleluja')
     const notUpdatedDataField = wrapper.find('#data-field')
     notUpdatedDataField.text().should.not.contain('Halleluja')
 
