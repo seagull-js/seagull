@@ -1,7 +1,7 @@
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import TicTacToe from '../../src/pages/TicTacToe'
-import { PageTest } from '@seagull/pages'
+import { PageTest } from '@seagull/test-pages'
 
 @suite('TicTacToe')
 export class TicTacToeTest extends PageTest {

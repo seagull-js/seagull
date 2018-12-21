@@ -16,6 +16,10 @@ export class ReadFile extends Command<string> {
    */
   filePath: string
 
+  executeConnected = this.executeCloud
+  executeCloud = this.exec.bind(this, new AWS.S3())
+  executePure = this.exec.bind(this, S3Sandbox as any)
+
   /**
    * see the individual property descriptions within this command class
    */
@@ -25,22 +29,6 @@ export class ReadFile extends Command<string> {
     this.filePath = filePath
   }
 
-  /**
-   * write a file to the stack's dataBucket on AWS S3
-   */
-  async executeCloud() {
-    const params = { Bucket: this.bucketName, Key: this.filePath }
-    const client = new AWS.S3()
-    const { Body } = await client.getObject(params).promise()
-    return (Body || '').toString()
-  }
-
-  async executePure() {
-    S3Sandbox.activate()
-    const result = await this.executeCloud()
-    S3Sandbox.deactivate()
-    return result
-  }
   async executeEdge() {
     // todo: use local fs
     throw new Error('Not Implemented')
@@ -60,5 +48,14 @@ export class ReadFile extends Command<string> {
   async revert() {
     return undefined as any
     // TODO: cache the file and restore it
+  }
+
+  /**
+   * write a file to the stack's dataBucket on AWS S3
+   */
+  private async exec(client: AWS.S3) {
+    const params = { Bucket: this.bucketName, Key: this.filePath }
+    const { Body } = await client.getObject(params).promise()
+    return (Body || '').toString()
   }
 }

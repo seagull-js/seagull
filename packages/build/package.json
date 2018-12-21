@@ -1,6 +1,6 @@
 {
   "name": "@seagull/build",
-  "version": "1.0.4",
+  "version": "1.1.1",
   "description": "Code building and bundling for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -42,11 +42,11 @@
     "@types/lodash": "^4.14.107"
   },
   "dependencies": {
-    "@seagull/commands": "^1.0.4",
-    "@seagull/commands-fs": "^1.0.4",
-    "@seagull/mock-s3": "^1.0.4",
-    "@seagull/mock-fs": "^1.0.4",
-    "@seagull/testing": "^1.0.4",
+    "@seagull/commands": "^1.1.1",
+    "@seagull/commands-fs": "^1.1.1",
+    "@seagull/mock-fs": "^1.1.1",
+    "@seagull/mock-s3": "^1.1.1",
+    "@seagull/testing": "^1.1.1",
     "browserify": "^16.2.0",
     "browserify-incremental": "^3.1.1",
     "chokidar": "^2.0.3",
@@ -81,5 +81,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "17e3e76bc834c2a7b6f966ce331d2e859138529d"
+  "gitHead": "2f2098cb8e421957a8c86541462ef341134fccce"
 }

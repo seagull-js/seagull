@@ -1,7 +1,7 @@
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import AsyncFetching from '../../src/pages/AsyncFetching'
-import { PageTest } from '@seagull/pages'
+import { PageTest } from '@seagull/test-pages'
 
 const mockData = {
   products: [

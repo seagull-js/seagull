@@ -4,7 +4,7 @@ interface PathMap {
   [id: string]: string
 }
 
-export function createLogicalTopPathMap(stack: SynthesizedStack) {
+export function createLogicalToPathMap(stack: SynthesizedStack) {
   const map: PathMap = {}
   const data = stack.metadata
   const dataKeys = Object.keys(data)
