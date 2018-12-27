@@ -30,13 +30,13 @@ export class AsyncFetchingTest extends PageTest {
     const dataField = wrapper.find('#data-field')
     dataField.text().should.contain(JSON.stringify(data))
 
-    data = { name: 'Halleluja' }
-    wrapper.setProps({ data })
-    const notUpdatedDataField = wrapper.find('#data-field')
-    notUpdatedDataField.text().should.not.contain('Halleluja')
-
+    // data = { name: 'Halleluja' }
+    // wrapper.setProps({ data })
+    // const notUpdatedDataField = wrapper.find('#data-field')
+    // notUpdatedDataField.text().should.not.contain('Halleluja')
     wrapper.find('button').simulate('click')
     await this.update()
+    console.log('updated')
     const updatedDataField = wrapper.find('#data-field')
     updatedDataField.text().should.be.equal(JSON.stringify(mockData))
   }

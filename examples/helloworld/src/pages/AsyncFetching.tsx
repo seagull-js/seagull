@@ -12,11 +12,19 @@ export default class AsyncFetching extends Page {
     )
   }
   onClick = async () => {
+    console.log('fetch...')
     const response = await fetch(
       'https://mdn.github.io/fetch-examples/fetch-json/products.json'
     )
-
+    console.log('extract json...')
     const fetchedData = await response.json()
-    this.setState({ fetchedData })
+    console.log('setState...')
+    this.setState(
+      () => {
+        console.log('state will be set with : ', fetchedData)
+        return { fetchedData }
+      },
+      () => console.log('state set with : ', fetchedData)
+    )
   }
 }

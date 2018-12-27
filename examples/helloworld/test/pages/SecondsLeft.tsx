@@ -9,7 +9,8 @@ import { PageTest } from '@seagull/test-pages'
 @suite('SecondsLeft')
 export class SecondsLeftTest extends PageTest {
   Page = SecondsLeft
-  @test.skip // ToDo: run this test below 1s
+  @timeout(1000)
+  @test
   async 'can render page with initial 15 seconds'() {
     const seconds = 15
     this.mount({ data: { seconds } })

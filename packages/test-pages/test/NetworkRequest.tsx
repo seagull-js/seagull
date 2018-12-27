@@ -26,7 +26,7 @@ export class Test extends PageTest {
     let errorIsThrown = false
     let msg = ''
     try {
-      this.update()
+      await this.update()
     } catch (err) {
       errorIsThrown = true
       msg = err.message
@@ -37,6 +37,7 @@ export class Test extends PageTest {
       'You must call this.mount() before you await this.update() in your PageTest'
     )
   }
+  @timeout(10000)
   @test
   async 'can render a DemoPage with an asynchronous request'() {
     this.page.text().should.not.contain('response is here')

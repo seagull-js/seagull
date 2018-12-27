@@ -2,7 +2,11 @@ import { IPageProps, Page } from '@seagull/pages'
 import { BasicTest } from '@seagull/testing'
 import { mount, ReactWrapper } from 'enzyme'
 import * as React from 'react'
+import { SinonFakeTimers, useFakeTimers } from 'sinon'
+// tslint:disable:no-unused-expression
 
+const clockErrorMessage =
+  'The internal FakeTimer failed to be set up - you probably overrode before()... Stop it! Override beforeEach()!'
 const mountFirstError = (impossibleAction: string) => {
   const msg = `
   You must call this.mount() before you ${impossibleAction} in your PageTest`
@@ -57,10 +61,18 @@ type ResolveFunction = (value?: {} | PromiseLike<{}> | undefined) => void
  */
 export abstract class PageTest extends BasicTest {
   abstract Page: typeof Page
+  clock?: SinonFakeTimers
   private mountedPage?: ReactWrapper
-  afterEach() {
-    this.unmount()
+  before() {
+    this.clock = useFakeTimers()
+    this.beforeEach()
   }
+  after() {
+    this.unmount()
+    this.clock && this.clock.restore()
+    this.afterEach()
+  }
+
   /** An Enzyme Wrapper representing the mounted Page. Call this.mount(pageProps)
    * before accessing this.page in case you don't want to have your Page
    * mounted with the default Properties { data: {} }
@@ -87,16 +99,37 @@ export abstract class PageTest extends BasicTest {
   /** After you mounted the page, call `await this.update()` after triggering
    * (mocked) asynchronous actions inside the page. If you expect timed changes
    */
-  update(ms: number = 0) {
+  async update(ms: number = 0) {
     if (!this.mountedPage) {
       mountFirstError('await this.update()')
     }
-    return new Promise(this.resolveAfterUpdate(ms))
+    if (this.clock === undefined) {
+      throw new Error(clockErrorMessage)
+    }
+    await new Promise(this.tickSomeTime(ms))
+    await new Promise(this.resolveAfterUpdate)
+    this.clock.tick(0)
+    return
   }
 
-  private resolveAfterUpdate = (ms: number) => (resolve: ResolveFunction) =>
+  // tslint:disable:no-empty
+  /** Put everything you want to do before each test into this function by override */
+  protected beforeEach = () => {}
+  /** Put everything you want to do after each test into this function by override */
+  protected afterEach = () => {}
+
+  private tickSomeTime = (ms: number) => (resolve: ResolveFunction) => {
+    console.log('tick ', ms, 'ms')
+    this.clock!.tick(ms)
+    resolve()
+  }
+  private resolveAfterUpdate = (resolve: ResolveFunction) => {
     setTimeout(() => {
       this.page.update()
+      this.clock!.tick(0)
+      console.log('SCHINKEN!!!!!')
       resolve()
-    }, ms)
+    }, 0)
+    this.clock!.tick(0)
+  }
 }
