@@ -10,7 +10,7 @@ export abstract class Service {
    * [[initialize]] method already applied.
    */
   static async create<T extends Service>(
-    this: { new (...args: any): T },
+    this: new (...args: any) => T,
     ...args: any
   ) {
     const instance = new this(...args)

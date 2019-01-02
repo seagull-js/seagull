@@ -3,7 +3,7 @@ import { config } from './config'
 
 export abstract class Item {
   // get all instances of a given Item subclass
-  static async all<T extends Item>(this: { new (...args: any[]): T }) {
+  static async all<T extends Item>(this: new (...args: any[]) => T) {
     const name = this.name
     const keys: string[] = await new S3.ListFiles(config.bucket, name).execute()
     return await Promise.all(
@@ -16,7 +16,7 @@ export abstract class Item {
 
   // delete an existing object from the database
   static async delete<T extends Item>(
-    this: { new (...args: any[]): T },
+    this: new (...args: any[]) => T,
     id: string
   ) {
     const name = this.name
@@ -25,7 +25,7 @@ export abstract class Item {
   }
 
   // delete all objects of specified Item from the database
-  static async deleteAll<T extends Item>(this: { new (...args: any[]): T }) {
+  static async deleteAll<T extends Item>(this: new (...args: any[]) => T) {
     const name = this.name
     const keys = await new S3.ListFiles(config.bucket, name).execute()
 
@@ -36,7 +36,7 @@ export abstract class Item {
 
   // Fetch an object from the database by id
   static async get<T extends Item>(
-    this: { new (...args: any[]): T },
+    this: new (...args: any[]) => T,
     id: string
   ) {
     const name = this.name
@@ -47,7 +47,7 @@ export abstract class Item {
 
   // Fetch an all objects from the database matching the pattern
   static async query<T extends Item>(
-    this: { new (...args: any[]): T },
+    this: new (...args: any[]) => T,
     pattern: string
   ) {
     const matches = []
@@ -71,7 +71,7 @@ export abstract class Item {
 
   // directly create a new object from parameters, save it and then return it
   static async put<T extends Item>(
-    this: { new (...args: any[]): T },
+    this: new (...args: any[]) => T,
     data: Partial<T> & { id: string }
   ) {
     const instance = Object.assign(Object.create(this.prototype), data) as T
@@ -79,7 +79,7 @@ export abstract class Item {
   }
 
   static async putAll<T extends Item>(
-    this: { new (...args: any[]): T },
+    this: new (...args: any[]) => T,
     data: Array<Partial<T> & { id: string }>
   ) {
     for (const item of data) {
