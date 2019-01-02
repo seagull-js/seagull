@@ -1,5 +1,6 @@
 import { FS } from '@seagull/commands-fs'
 import { FS as FSMock } from '@seagull/mock-fs'
+import { Mode } from '@seagull/mode'
 import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
@@ -22,6 +23,7 @@ export class Test extends BasicTest {
     await observer.initialize()
     const jsFile = await new FS.Exists('/tmp/dist/routes/a.js').execute()
     const jsxFile = await new FS.Exists('/tmp/dist/pages/b.js').execute()
+    Mode.environment.should.be.equals('pure')
     jsFile.should.be.equal(true)
     jsxFile.should.be.equal(true)
   }
