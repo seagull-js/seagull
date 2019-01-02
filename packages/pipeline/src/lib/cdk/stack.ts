@@ -54,7 +54,7 @@ export class AppStack extends Stack {
     postBuildCmds.push('echo "Finished testing!"')
 
     postBuildCmds.push('echo "Start deploying!"')
-    postBuildCmds.push('npm run deploy')
+    postBuildCmds.push('NO_PROFILE_CHECK=true;npm run deploy')
     postBuildCmds.push('echo "Finished deploying!"')
 
     const install = { commands: installCmds }
