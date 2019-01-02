@@ -1,4 +1,6 @@
 import { Command } from '@seagull/commands'
+import { S3 as S3Mock } from '@seagull/mock-s3'
+import { Mode } from '@seagull/mode'
 import * as AWS from 'aws-sdk'
 import { S3Sandbox } from './s3_sandbox'
 
@@ -19,6 +21,9 @@ export class ListFiles extends Command<string[]> {
   executeConnected = this.executeCloud
   executeCloud = this.exec.bind(this, new AWS.S3())
   executePure = this.exec.bind(this, S3Sandbox as any)
+  executeEdge = this.exec.bind(this, new AWS.S3())
+
+  mock = new S3Mock()
 
   /**
    * see the individual property descriptions within this command class
@@ -29,16 +34,12 @@ export class ListFiles extends Command<string[]> {
     this.filePath = filePath || ''
   }
 
-  async executeEdge() {
-    // todo: use local fs
-    throw new Error('Not Implemented')
-    return undefined as any
-  }
-
   /**
    * perform the command
    */
   async execute() {
+    //TODO: Maybe rework this?
+    Mode.environment === 'edge' ? this.mock.activate() : this.mock.deactivate()
     return this.executeHandler()
   }
 

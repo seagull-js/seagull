@@ -38,6 +38,7 @@
   "dependencies": {
     "@seagull/commands": "^1.1.1",
     "@seagull/mock-s3": "^1.1.1",
+    "@seagull/mode": "^1.0.2",
     "@seagull/sandbox": "^1.1.1"
   },
   "nyc": {
