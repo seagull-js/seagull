@@ -38,7 +38,7 @@ export class ListFiles extends Command<string[]> {
    * perform the command
    */
   async execute() {
-    //TODO: Maybe rework this?
+    // TODO: Maybe rework this?
     Mode.environment === 'edge' ? this.mock.activate() : this.mock.deactivate()
     return this.executeHandler()
   }
