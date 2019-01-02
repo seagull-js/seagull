@@ -21,7 +21,7 @@ export class ListFiles extends Command<string[]> {
   executeConnected = this.executeCloud
   executeCloud = this.exec.bind(this, new AWS.S3())
   executePure = this.exec.bind(this, S3Sandbox as any)
-  executeEdge = this.exec.bind(this, new AWS.S3())
+  executeEdge = this.executeCloud
 
   mock = new S3Mock()
 
@@ -32,14 +32,14 @@ export class ListFiles extends Command<string[]> {
     super()
     this.bucketName = bucketName
     this.filePath = filePath || ''
+    // TODO: Maybe rework this?
+    Mode.environment === 'edge' ? this.mock.activate() : this.mock.deactivate()
   }
 
   /**
    * perform the command
    */
   async execute() {
-    // TODO: Maybe rework this?
-    Mode.environment === 'edge' ? this.mock.activate() : this.mock.deactivate()
     return this.executeHandler()
   }
 

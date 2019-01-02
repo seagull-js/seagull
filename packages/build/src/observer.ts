@@ -183,8 +183,6 @@ export class Observer {
   // set the mode the dev server runs via MODE; default is 'edge'
   private async setMode() {
     const mode = (process.env.MODE || 'edge') as Environments
-    // tslint:disable-next-line:no-console
-    console.log('MODE', mode)
     const setModeCmd = new SetMode('environment', mode)
     await setModeCmd.execute()
   }
