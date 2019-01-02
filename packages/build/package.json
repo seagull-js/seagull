@@ -46,6 +46,7 @@
     "@seagull/commands-fs": "^1.1.1",
     "@seagull/mock-fs": "^1.1.1",
     "@seagull/mock-s3": "^1.1.1",
+    "@seagull/mode": "^1.0.2",
     "@seagull/testing": "^1.1.1",
     "browserify": "^16.2.0",
     "browserify-incremental": "^3.1.1",

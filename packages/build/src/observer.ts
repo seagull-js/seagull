@@ -1,5 +1,6 @@
 import { FS } from '@seagull/commands-fs'
 import { S3 } from '@seagull/mock-s3'
+import { SetMode } from '@seagull/mode'
 import * as chokidar from 'chokidar'
 import * as path from 'path'
 import * as stoppable from 'stoppable'
@@ -157,6 +158,7 @@ export class Observer {
   private async startAppServer() {
     const entry = path.join(this.srcFolder, 'dist', 'app.js')
     delete require.cache[entry]
+    new SetMode('environment', 'pure').execute()
     const app = require(entry).default
     const port = this.props.port || 8080
     this.server = stoppable(app, 0).listen(port, () => {
