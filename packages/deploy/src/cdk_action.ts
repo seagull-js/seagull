@@ -12,6 +12,10 @@ export interface Options {
    * if set, this indicates the aws profile that shall be used for deployment
    */
   profile?: string
+  /**
+   * if set, the profile check is disabled.
+   */
+  noProfileCheck?: boolean
 }
 
 export abstract class CDKAction {
@@ -36,7 +40,7 @@ export abstract class CDKAction {
   abstract async execute(): Promise<any>
 
   protected async validate() {
-    return (await this.checkProfile()) && (await this.checkAppPath())
+    return (await this.checkOptions()) && (await this.checkAppPath())
   }
 
   protected async createCDKApp() {
@@ -46,6 +50,10 @@ export abstract class CDKAction {
     this.app = new lib.ProjectApp(this.projectName, { account, path, region })
     this.synthStack = this.app.synthesizeStack(this.projectName)
     this.logicalToPathMap = lib.createLogicalToPathMap(this.synthStack)
+  }
+
+  checkOptions() {
+    return this.opts.noProfileCheck ? lib.noCheckProfile() : this.checkProfile()
   }
 
   private async checkProfile() {
