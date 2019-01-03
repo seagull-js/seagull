@@ -61,15 +61,15 @@ type ResolveFunction = (value?: {} | PromiseLike<{}> | undefined) => void
  */
 export abstract class PageTest extends BasicTest {
   abstract Page: typeof Page
-  clock?: SinonFakeTimers
+  // clock?: SinonFakeTimers
   private mountedPage?: ReactWrapper
   before() {
-    this.clock = useFakeTimers()
+    // this.clock = useFakeTimers()
     this.beforeEach()
   }
   after() {
     this.unmount()
-    this.clock && this.clock.restore()
+    // this.clock && this.clock.restore()
     this.afterEach()
   }
 
@@ -103,13 +103,22 @@ export abstract class PageTest extends BasicTest {
     if (!this.mountedPage) {
       mountFirstError('await this.update()')
     }
-    if (this.clock === undefined) {
-      throw new Error(clockErrorMessage)
-    }
-    await new Promise(this.tickSomeTime(ms))
-    await new Promise(this.resolveAfterUpdate)
-    this.clock.tick(0)
-    return
+    // if (this.clock === undefined) {
+    //   throw new Error(clockErrorMessage)
+    // }
+    // console.log('await new Promise(this.tickSomeTime(ms))...')
+    // let i = 0
+    // for (i; i < 1000; i++) {
+    //   await Promise.resolve() //new Promise(this.tickSomeTime(ms))
+    // }
+    // console.log(i)
+    // this.page.update()
+    // console.log('await new Promise(this.resolveAfterUpdate)...')
+    // await new Promise(this.resolveAfterUpdate)
+    // console.log('this.update() end')
+
+    // this.clock.tick(0)
+    return new Promise(this.resolveAfterUpdate)
   }
 
   // tslint:disable:no-empty
@@ -119,17 +128,18 @@ export abstract class PageTest extends BasicTest {
   protected afterEach = () => {}
 
   private tickSomeTime = (ms: number) => (resolve: ResolveFunction) => {
-    console.log('tick ', ms, 'ms')
-    this.clock!.tick(ms)
+    // console.log('tick ', ms, 'ms')
+    // this.clock!.tick(ms)
     resolve()
   }
   private resolveAfterUpdate = (resolve: ResolveFunction) => {
+    console.log('resolveAfterUpdate')
     setTimeout(() => {
       this.page.update()
-      this.clock!.tick(0)
+      // this.clock!.tick(0)
       console.log('SCHINKEN!!!!!')
       resolve()
     }, 0)
-    this.clock!.tick(0)
+    // this.clock!.tick(0)
   }
 }

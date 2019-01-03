@@ -2,7 +2,16 @@ import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import AsyncFetching from '../../src/pages/AsyncFetching'
 import { PageTest } from '@seagull/test-pages'
-
+// const implementation = require('jsdom/lib/jsdom/living/events/EventTarget-impl')
+//   .implementation
+// implementation.prototype._addEventListener =
+//   implementation.prototype.addEventListener
+// // console.log('implementation', implementation)
+// implementation.prototype.addEventListener = function(...args: any[]) {
+//   // console.log('add')
+//   this._addEventListener(args)
+//   // console.log('added')
+// }
 const mockData = {
   products: [
     { Name: 'Cheese', Price: 2.5, Location: 'Refrigerated foods' },
@@ -13,19 +22,17 @@ const mockData = {
     { Name: 'Ground almonds', Price: 3, Location: 'Home baking' },
   ],
 }
-
 @suite('AsyncFetching')
 export class AsyncFetchingTest extends PageTest {
   Page = AsyncFetching
   @test
   @timeout(5000)
   async 'can render page with any data'() {
-    const json = () => Promise.resolve(mockData)
-    const fetchMock = () => Promise.resolve({ json })
+    const json = () => /* Promise.resolve */ mockData
+    const fetchMock = () => /* Promise.resolve */ ({ json })
     ;(global as any).fetch = fetchMock
     ;(window as any).fetch = fetchMock
     let data: any = { someProperty: 'Schinken!' }
-
     const wrapper = this.mount({ data })
     const dataField = wrapper.find('#data-field')
     dataField.text().should.contain(JSON.stringify(data))
@@ -36,6 +43,7 @@ export class AsyncFetchingTest extends PageTest {
     // notUpdatedDataField.text().should.not.contain('Halleluja')
     wrapper.find('button').simulate('click')
     await this.update()
+    // await this.update()
     console.log('updated')
     const updatedDataField = wrapper.find('#data-field')
     updatedDataField.text().should.be.equal(JSON.stringify(mockData))
