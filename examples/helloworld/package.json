@@ -19,7 +19,7 @@
   "devDependencies": {
     "@seagull/build": "^1.1.1",
     "@seagull/deploy": "^1.1.1",
-    "@seagull/test-pages": "^1.0.2",
+    "@seagull/test-pages": "^1.2.0",
     "@types/lodash": "^4.14.107",
     "@types/node": "^10.11.4",
     "jsdom": "^13.0.0",
@@ -30,7 +30,7 @@
     "typescript": "^3.1.1"
   },
   "dependencies": {
-    "@seagull/pages": "^1.0.2",
+    "@seagull/pages": "^1.2.0",
     "@seagull/plugin-items": "^1.1.1",
     "@seagull/routes": "^1.1.1",
     "instantclick": "^3.1.0-2",
