@@ -10,7 +10,7 @@
     "deploy": "seagull-deploy",
     "diff": "seagull-diff",
     "start": "node dist/assets/backend/server.js",
-    "test": "echo \"Error: no test specified\" && exit 0",
+    "test": "npm run test:unit",
     "test:unit": "NODE_ENV=test mocha --opts test/mocha.opts",
     "test:unit:watch": "npm run test:unit -- --watch --reporter min"
   },
@@ -19,6 +19,7 @@
   "devDependencies": {
     "@seagull/build": "^1.2.0",
     "@seagull/deploy": "^1.2.0",
+    "@seagull/test-pages": "^1.2.0",
     "@types/lodash": "^4.14.107",
     "@types/node": "^10.11.4",
     "jsdom": "^13.0.0",
