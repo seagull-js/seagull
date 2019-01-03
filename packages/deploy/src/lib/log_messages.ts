@@ -4,6 +4,7 @@ const noCredMessage = `Missing credentials! Please provide a profile. You can re
 const noAssetsMessage = `Cannot find the directory 'dist/assets' within the folder. Forgot sg build?`
 const noRevertAssetMessage = `Cannot revert asset folder, because it is not implemented yet.`
 const noChangesInDiffMessage = `No changes were to the infrastructure template`
+const noCheckProfileMessage = `Profile check was disabled, this may crash.`
 
 export function noCredentialsSet() {
   log(chalk.red(noCredMessage))
@@ -19,6 +20,10 @@ export function cannotRevertAssetFolder() {
 
 export function noChangesInDiff() {
   log(chalk.green(noChangesInDiffMessage))
+}
+
+export function noCheckProfile() {
+  log(chalk.yellow(noCheckProfileMessage))
 }
 
 function log(...messages: string[]) {

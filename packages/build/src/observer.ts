@@ -1,5 +1,6 @@
 import { FS } from '@seagull/commands-fs'
 import { S3 } from '@seagull/mock-s3'
+import { Environments, SetMode } from '@seagull/mode'
 import * as chokidar from 'chokidar'
 import * as path from 'path'
 import * as stoppable from 'stoppable'
@@ -55,6 +56,7 @@ export class Observer {
    * Can be used standalone for one-off building.
    */
   async initialize() {
+    this.setMode()
     await this.cleaner.initialize()
     await this.cleaner.processAll()
     await this.compiler.initialize()
@@ -157,6 +159,7 @@ export class Observer {
   private async startAppServer() {
     const entry = path.join(this.srcFolder, 'dist', 'app.js')
     delete require.cache[entry]
+    await this.setMode()
     const app = require(entry).default
     const port = this.props.port || 8080
     this.server = stoppable(app, 0).listen(port, () => {
@@ -175,5 +178,12 @@ export class Observer {
     const fragment = path.relative(srcFolder, from).replace(/tsx?$/, 'js')
     const to = path.resolve(path.join(this.srcFolder, 'dist', fragment))
     delete require.cache[to]
+  }
+
+  // set the mode the dev server runs via MODE; default is 'edge'
+  private async setMode() {
+    const mode = (process.env.MODE || 'edge') as Environments
+    const setModeCmd = new SetMode('environment', mode)
+    await setModeCmd.execute()
   }
 }

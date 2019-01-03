@@ -72,25 +72,25 @@ export abstract class Command<
    * Helper which holds the concrete execute implementation you need to call depending on the current mode.
    */
   protected get executeHandler() {
-    const handerLookup = {
+    const handlerLookup = {
       cloud: this.executeCloud,
       connected: this.executeConnected,
       edge: this.executeEdge,
       pure: this.executePure,
     }
-    return handerLookup[this.mode.environment]!.bind(this) as Handler
+    return handlerLookup[this.mode.environment]!.bind(this) as Handler
   }
 
   /**
    * Helper which holds the concrete revert implementation you need to call depending on the current mode.
    */
   protected get revertHandler() {
-    const handerLookup = {
+    const handlerLookup = {
       cloud: this.revertCloud,
       connected: this.revertConnected,
       edge: this.revertEdge,
       pure: this.revertPure,
     }
-    return handerLookup[this.mode.environment]!.bind(this) as Handler
+    return handlerLookup[this.mode.environment]!.bind(this) as Handler
   }
 }

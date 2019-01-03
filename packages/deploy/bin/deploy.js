@@ -7,7 +7,8 @@ const {
 } = require('../dist/src/deploy')
 
 const options = {
-  profile: process.env.AWS_PROFILE
+  profile: process.env.AWS_PROFILE,
+  noProfileCheck: process.env.NO_PROFILE_CHECK
 }
 const deploy = new Deploy(process.cwd(), options)
 deploy.execute().then(logSuccess()).catch(error => logError(error))
