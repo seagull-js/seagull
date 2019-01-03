@@ -49,9 +49,7 @@ export class AppStack extends Stack {
     installCmds.push('npm ci')
     buildCmds.push('npm run build')
     postBuildCmds.push('npm run test')
-    postBuildCmds.push(
-      'export NO_PROFILE_CHECK=true; NO_PROFILE_CHECK=true npm run deploy'
-    )
+    postBuildCmds.push('NO_PROFILE_CHECK=true npm run deploy')
 
     const install = { commands: installCmds }
     const build = { commands: buildCmds }
