@@ -81,14 +81,14 @@ export class Test extends BasicTest {
   @test
   async 'can get a list of items by regex pattern'() {
     await Todo.putAll([
-      { id: 'foo', text: 'foo' },
-      { id: 'bar', text: 'bar' },
-      { id: 'foobar', text: 'foobar' },
+      { id: 'foo', text: 'a' },
+      { id: 'bar', text: 'b' },
+      { id: 'foobar', text: 'c' },
     ])
     const list = await Todo.query('bar')
     list.should.be.deep.equal([
-      { id: 'bar', text: 'bar' },
-      { id: 'foobar', text: 'foobar' },
+      { id: 'bar', text: 'b' },
+      { id: 'foobar', text: 'c' },
     ])
   }
 
