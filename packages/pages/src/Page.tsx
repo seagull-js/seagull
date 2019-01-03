@@ -21,16 +21,16 @@ export interface IPageProps {
  * other things are strictly optional. Example:
  *
  * ```typescript
- * import { MetaData, Page } from '@seagull/framework'
- * import * as React from 'react'
- *
- * export default class GreetPage extends Page {
- *   title: MetaData<GreetPage> = page => `<h1>Greetings, ${this.props.params.name}`
- *   html () {
- *     return <h1>Greetings, {this.props.params.name}</h1>
- *   }
- * }
- * ```
+ import { MetaData, Page } from '@seagull/framework'
+ import * as React from 'react'
+
+ export default class GreetPage extends Page {
+   title: MetaData<GreetPage> = page => `<h1>Greetings, ${this.props.params.name}`
+   html () {
+     return <h1>Greetings, {this.props.params.name}</h1>
+   }
+ }
+ ```
  */
 export abstract class Page<P = {}, S = {}> extends React.Component<
   P & IPageProps,
@@ -61,11 +61,11 @@ export abstract class Page<P = {}, S = {}> extends React.Component<
    * function. Example code:
    *
    * ```typescript
-   * // static:
-   * title = 'my site title'
-   * // dynamic:
-   * title = () => `my site with id: ${this.props.params.id}`
-   * ```
+   // static:
+   title = 'my site title'
+   // dynamic:
+   title = () => `my site with id: ${this.props.params.id}`
+   ```
    */
   title: string | (() => string) = ''
 
@@ -78,11 +78,11 @@ export abstract class Page<P = {}, S = {}> extends React.Component<
    * function. Example code:
    *
    * ```typescript
-   * // static:
-   * description = 'my site description'
-   * // dynamic:
-   * description = () => `my site with id: ${this.props.params.id}`
-   * ```
+   // static:
+   description = 'my site description'
+   // dynamic:
+   description = () => `my site with id: ${this.props.params.id}`
+   ```
    */
   description: string | (() => string) = ''
 
@@ -93,11 +93,11 @@ export abstract class Page<P = {}, S = {}> extends React.Component<
    * function. Example code:
    *
    * ```typescript
-   * // static:
-   * image = '/path/to/image.jpg'
-   * // dynamic:
-   * image = () => `/path/to/{this.props.params.image}.jpg`
-   * ```
+   // static:
+   image = '/path/to/image.jpg'
+   // dynamic:
+   image = () => `/path/to/{this.props.params.image}.jpg`
+   ```
    */
   image: string | (() => string) = ''
 
@@ -107,11 +107,11 @@ export abstract class Page<P = {}, S = {}> extends React.Component<
    * Example code:
    *
    * ```typescript
-   * // static:
-   * robots = 'index,follow'
-   * // dynamic:
-   * robots = () => `index, {this.props.params.follow ? 'follow' : 'nofollow'}.jpg`
-   * ```
+   // static:
+   robots = 'index,follow'
+   // dynamic:
+   robots = () => `index, {this.props.params.follow ? 'follow' : 'nofollow'}.jpg`
+   ```
    */
   robots: string | (() => string) = 'index,follow'
 
@@ -122,11 +122,11 @@ export abstract class Page<P = {}, S = {}> extends React.Component<
    * Example code:
    *
    * ```typescript
-   * // static:
-   * canonical = '/some/path'
-   * // dynamic:
-   * canonical = () => this.props.path
-   * ```
+   // static:
+   canonical = '/some/path'
+   // dynamic:
+   canonical = () => this.props.path
+   ```
    */
   canonical: string | (() => string) = ''
 
