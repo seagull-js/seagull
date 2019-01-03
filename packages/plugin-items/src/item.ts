@@ -45,7 +45,7 @@ export abstract class Item {
     return Object.assign(Object.create(this.prototype), data) as T
   }
 
-  // Fetch an all objects from the database matching the pattern
+  // Fetch all objects from database where ids matching the pattern
   static async query<T extends Item>(
     this: new (...args: any[]) => T,
     pattern: string
