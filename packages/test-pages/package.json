@@ -33,7 +33,6 @@
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
     "@seagull/testing": "^1.0.4",
-    "@seagull/pages": "^1.2.0",
     "@seagull/tslint": "^1.0.2",
     "@types/react": "^16.4.18",
     "@types/enzyme": "^3.1.15",
@@ -44,6 +43,7 @@
     "jsdom-global": "^3.0.2"
   },
   "dependencies": {
+    "@seagull/pages": "^1.2.0",
     "react": "^16.6.0",
     "typestyle": "^1.7.2"
   },

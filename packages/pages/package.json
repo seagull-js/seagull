@@ -1,72 +1,72 @@
 {
-    "name": "@seagull/pages",
-    "version": "1.2.0",
-    "description": "View Layer implementation in React for the Seagull Framework",
-    "main": "dist/src/index.js",
-    "types": "dist/src/index.d.ts",
-    "scripts": {
-        "build": "rm -rf dist && tsc",
-        "test": "NODE_ENV=test tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
-        "test:watch": "npm run test -- --watch --reporter min",
-        "docs": "rm -rf docs && typedoc --mode modules --ignoreCompilerErrors --excludeExternals --excludePrivate --excludeNotExported --out docs src"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/seagull-js/seagull.git"
-    },
-    "keywords": [
-        "web",
-        "framework",
-        "web framework",
-        "serverless",
-        "cloud",
-        "aws",
-        "react",
-        "react.js",
-        "isomorphic"
+  "name": "@seagull/pages",
+  "version": "1.2.0",
+  "description": "View Layer implementation in React for the Seagull Framework",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "test": "echo nothing to test",
+    "test:watch": "npm run test -- --watch --reporter min",
+    "docs": "rm -rf docs && typedoc --mode modules --ignoreCompilerErrors --excludeExternals --excludePrivate --excludeNotExported --out docs src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seagull-js/seagull.git"
+  },
+  "keywords": [
+    "web",
+    "framework",
+    "web framework",
+    "serverless",
+    "cloud",
+    "aws",
+    "react",
+    "react.js",
+    "isomorphic"
+  ],
+  "author": "Maximilian Stroh",
+  "license": "LGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/seagull-js/seagull/issues"
+  },
+  "homepage": "https://github.com/seagull-js/seagull#readme",
+  "devDependencies": {
+    "@seagull/tslint": "^1.2.0",
+    "@types/lodash": "^4.14.107",
+    "@types/react": "^16.4.18",
+    "@types/react-dom": "^16.0.9",
+    "@types/react-helmet": "^5.0.5"
+  },
+  "dependencies": {
+    "csstips": "^0.2.3",
+    "lodash": "^4.17.5",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
+    "react-helmet": "^5.2.0",
+    "typestyle": "^1.7.2"
+  },
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".tsx"
     ],
-    "author": "Maximilian Stroh",
-    "license": "LGPL-3.0",
-    "bugs": {
-        "url": "https://github.com/seagull-js/seagull/issues"
-    },
-    "homepage": "https://github.com/seagull-js/seagull#readme",
-    "devDependencies": {
-        "@seagull/tslint": "^1.2.0",
-        "@types/lodash": "^4.14.107",
-        "@types/react": "^16.4.18",
-        "@types/react-dom": "^16.0.9",
-        "@types/react-helmet": "^5.0.5"
-    },
-    "dependencies": {
-        "csstips": "^0.2.3",
-        "lodash": "^4.17.5",
-        "react": "^16.6.0",
-        "react-dom": "^16.6.0",
-        "react-helmet": "^5.2.0",
-        "typestyle": "^1.7.2"
-    },
-    "nyc": {
-        "extension": [
-            ".ts",
-            ".tsx"
-        ],
-        "exclude": [
-            "**/*.d.ts",
-            "coverage",
-            "dist",
-            "docs",
-            "node_modules",
-            "test"
-        ],
-        "reporter": [
-            "html",
-            "text",
-            "text-summary"
-        ]
-    },
-    "publishConfig": {
-        "access": "public"
-    },
-    "gitHead": "17e3e76bc834c2a7b6f966ce331d2e859138529d"
+    "exclude": [
+      "**/*.d.ts",
+      "coverage",
+      "dist",
+      "docs",
+      "node_modules",
+      "test"
+    ],
+    "reporter": [
+      "html",
+      "text",
+      "text-summary"
+    ]
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "17e3e76bc834c2a7b6f966ce331d2e859138529d"
 }
