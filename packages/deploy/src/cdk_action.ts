@@ -53,7 +53,13 @@ export abstract class CDKAction {
   }
 
   checkOptions() {
-    return this.opts.noProfileCheck ? lib.noCheckProfile() : this.checkProfile()
+    const noProfileCheck = this.opts.noProfileCheck
+    return noProfileCheck ? this.noProfileCheck() : this.checkProfile()
+  }
+
+  noProfileCheck() {
+    lib.noCheckProfile()
+    return true
   }
 
   private async checkProfile() {
