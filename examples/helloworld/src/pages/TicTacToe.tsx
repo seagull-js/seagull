@@ -41,7 +41,7 @@ export default class TicTacToe extends Page {
   html() {
     const TicTacToeFields = () => this.renderFields()
     return (
-      <>
+      <div>
         <p>Score</p>
         <p> X: {this.state.score.x}</p>
         <p> O: {this.state.score.o}</p>
@@ -51,7 +51,7 @@ export default class TicTacToe extends Page {
           Reset
         </div>
         <TicTacToeFields />
-      </>
+      </div>
     )
   }
 
@@ -64,7 +64,7 @@ export default class TicTacToe extends Page {
 
   renderFields(): JSX.Element {
     return (
-      <div style={boardStyle}>
+      <div id="grid" style={boardStyle}>
         {this.renderField(this.state.fields[0], 0, 0)}
         {this.renderField(this.state.fields[1], 1, 0)}
         {this.renderField(this.state.fields[2], 2, 0)}
