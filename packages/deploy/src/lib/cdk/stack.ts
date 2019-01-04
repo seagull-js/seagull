@@ -8,14 +8,14 @@ import { App, Stack, StackProps } from '@aws-cdk/cdk'
 import { getApiGatewayDomain, getApiGatewayPath } from '..'
 
 interface ProjectStackProps extends StackProps {
-  accountId: string
+  s3Name: string
   env: { account?: string; path: string; region: string }
 }
 
 export class AppStack extends Stack {
   private appName: string
   private folder: string
-  private accountId: string
+  private s3Name: string
 
   private defaultIntegration?: LambdaIntegration
   private apiGateway?: RestApi
@@ -27,7 +27,7 @@ export class AppStack extends Stack {
   constructor(parent: App, name: string, props: ProjectStackProps) {
     super(parent, name, props)
     this.appName = name
-    this.accountId = props.accountId
+    this.s3Name = props.s3Name
     this.folder = props.env.path
     this.addLambda()
     this.addS3()
@@ -37,8 +37,7 @@ export class AppStack extends Stack {
   }
 
   private addS3() {
-    const bucketName = `${this.accountId}-${this.appName}-items`
-    const s3Props = { bucketName }
+    const s3Props = { bucketName: this.s3Name }
     const bucket = new S3.Bucket(this, `${this.appName}-item-bucket`, s3Props)
     bucket.grantReadWrite(this.role)
   }
@@ -83,6 +82,7 @@ export class AppStack extends Stack {
     actions.push('logs:PutLogEvents')
     actions.push('lambda:InvokeFunction')
     actions.push('lambda:InvokeAsync')
+    actions.push('s3:*')
 
     const role = new Role(this, name, roleParams)
     const policyStatement = new PolicyStatement()

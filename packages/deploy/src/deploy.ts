@@ -1,7 +1,6 @@
 import * as cdk from 'aws-cdk'
 
 import { CDKAction, Options } from './cdk_action'
-import { ProvideAssetFolder } from './commands'
 
 export class Deploy extends CDKAction {
   constructor(appPath: string, opts: Options) {
@@ -13,8 +12,7 @@ export class Deploy extends CDKAction {
   }
 
   private async deployApp() {
-    const provideAssetFolder = new ProvideAssetFolder(this.appPath)
-    await provideAssetFolder.execute()
+    await this.provideAssetFolder()
     await this.createCDKApp()
     await this.deployCDKApp()
   }

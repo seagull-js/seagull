@@ -11,18 +11,25 @@ export class ProvideAssetFolder extends Command {
 
   private folderExists: boolean
 
-  constructor(appPath: string) {
+  private s3BucketName: string
+  private lambdaPath: string
+
+  constructor(appPath: string, s3BucketName: string) {
     super()
     const assetPath = `${appPath}/dist/assets`
     const deployPath = `${appPath}/.seagull/deploy/dist`
     const newAssetPath = `${deployPath}/assets`
     const serverJsPath = `${newAssetPath}/backend/server.js`
+    this.lambdaPath = `${newAssetPath}/backend/lambda.js`
+
     this.createDistFolder = new FS.CreateFolder(deployPath)
     this.checkAssetFolder = new FS.Exists(newAssetPath)
     this.deleteAssetFolder = new FS.DeleteFolder(newAssetPath)
     this.copyAssetFolder = new FS.CopyFolder(assetPath, newAssetPath)
     this.deleteServerFile = new FS.DeleteFile(serverJsPath)
     this.folderExists = false
+
+    this.s3BucketName = s3BucketName
   }
 
   async execute() {
@@ -32,6 +39,7 @@ export class ProvideAssetFolder extends Command {
     await this.createDistFolder.execute()
     await this.copyAssetFolder.execute()
     await this.deleteServerFile.execute()
+    await this.replaceS3BucketName()
   }
 
   async revert() {
@@ -44,5 +52,11 @@ export class ProvideAssetFolder extends Command {
      * // tslint:disable-next-line:no-unused-expression
      * this.folderExists && (await this.deleteAssetFolder.revert())
      **/
+  }
+
+  private async replaceS3BucketName() {
+    const lambda = await new FS.ReadFile(this.lambdaPath).execute()
+    const lambdaBucketName = lambda.replace('demo-bucket', this.s3BucketName)
+    await new FS.WriteFile(this.lambdaPath, lambdaBucketName).execute()
   }
 }
