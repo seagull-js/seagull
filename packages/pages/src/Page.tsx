@@ -1,6 +1,7 @@
 import { isString } from 'lodash'
 import * as React from 'react'
 import { hydrate } from 'react-dom'
+import { getStyles } from 'typestyle'
 import { Helmet } from './helmet'
 
 export type PageType = { new (...args: any[]): Page }
@@ -138,16 +139,25 @@ export abstract class Page<P = {}, S = {}> extends React.Component<
   abstract html(): JSX.Element
 
   /**
+   * This method returns the styles of the typestyle library by default. It can be overwritten if another css source will be used.
+   */
+  getStyles(): string {
+    return getStyles()
+  }
+
+  /**
    * DO NOT IMPLEMENT THIS IN YOUR CODE. Use the [[html]] method instead.
    */
   render() {
-    const HTML = this.html.bind(this)
+    const html = this.html.bind(this)
+    const rendered = html()
 
     const prop = (p: any): string => (isString(p) ? p : p.bind(this)())
     const title = prop(this.title) || this.constructor.name
     const description = prop(this.description) || ''
     const image = prop(this.image) || ''
     const link = prop(this.canonical) || ''
+    const styles = this.getStyles()
     return (
       <>
         <Helmet>
@@ -181,8 +191,9 @@ export abstract class Page<P = {}, S = {}> extends React.Component<
           <meta name="og:url" content={link} />
           <meta name="twitter:url" content={link} />
           <link rel="canonical" href={link} />
+          {styles && <style id="styles-target">{styles}</style>}
         </Helmet>
-        <HTML />
+        {rendered}
       </>
     )
   }

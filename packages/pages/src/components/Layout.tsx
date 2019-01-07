@@ -2,7 +2,6 @@ import * as React from 'react'
 
 export interface ILayoutProps {
   helmet?: import('react-helmet').HelmetData
-  styles?: string
   data?: any
   children: React.ReactNode
   pageBundle?: string
@@ -16,9 +15,7 @@ export class Layout extends React.Component<ILayoutProps> {
           {this.props.helmet ? this.props.helmet.meta.toComponent() : ''}
           {this.props.helmet ? this.props.helmet.title.toComponent() : ''}
           {this.props.helmet ? this.props.helmet.link.toComponent() : ''}
-          {this.props.styles && (
-            <style id="styles-target">{this.props.styles || ''}</style>
-          )}
+          {this.props.helmet ? this.props.helmet.style.toComponent() : ''}
         </head>
         <body>
           <div id="app">{this.props.children}</div>
