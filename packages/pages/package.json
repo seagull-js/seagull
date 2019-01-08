@@ -32,7 +32,6 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/routes": "^1.4.0",
     "@seagull/tslint": "^1.4.0",
     "@types/lodash": "^4.14.107",
     "@types/react": "^16.4.18",
