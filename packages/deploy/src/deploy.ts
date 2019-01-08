@@ -15,6 +15,7 @@ export class Deploy extends CDKAction {
     await this.provideAssetFolder()
     await this.createCDKApp()
     await this.deployCDKApp()
+    return true
   }
 
   private async deployCDKApp() {
@@ -23,5 +24,6 @@ export class Deploy extends CDKAction {
     await cdk.bootstrapEnvironment(env, this.sdk, 'CDKToolkit', undefined)
     const stack = this.synthStack
     await cdk.deployStack({ sdk: this.sdk, stack, toolkitInfo })
+    return true
   }
 }

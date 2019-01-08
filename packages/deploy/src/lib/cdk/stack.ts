@@ -29,10 +29,10 @@ export class AppStack extends Stack {
     this.appName = name
     this.s3Name = props.s3Name
     this.folder = props.env.path
+    this.addIAMRole()
     this.addLambda()
     this.addS3()
     this.addApiGateway()
-    this.addIAMRole()
     this.addCloudfront()
   }
 
@@ -44,13 +44,16 @@ export class AppStack extends Stack {
 
   private addLambda() {
     const name = `${this.appName}-lambda`
-    const code = Code.asset(`${this.folder}/.seagull/deploy`)
-    const description = 'universal route'
-    const functionName = `${name}-handler`
-    const handler = 'dist/assets/backend/lambda.handler'
-    const runtime = Runtime.NodeJS810
-    const timeout = 300
-    const conf = { code, description, functionName, handler, runtime, timeout }
+    const conf = {
+      code: Code.asset(`${this.folder}/.seagull/deploy`),
+      description: 'universal route',
+      functionName: `${name}-handler`,
+      handler: 'dist/assets/backend/lambda.handler',
+      memorySize: 3008,
+      role: this.role,
+      runtime: Runtime.NodeJS810,
+      timeout: 300,
+    }
 
     const lambdaFunction = new LambdaFunction(this, name, conf)
     this.defaultIntegration = new LambdaIntegration(lambdaFunction)

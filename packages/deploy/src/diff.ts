@@ -22,6 +22,7 @@ export class Diff extends CDKAction {
     const currTemplate = await this.readCurrentTemplate()
     this.diff = cfnDiff.diffTemplate(currTemplate, this.synthStack.template)
     await this.printDiff()
+    return true
   }
 
   private async readCurrentTemplate() {
@@ -38,5 +39,6 @@ export class Diff extends CDKAction {
 
   private async printChanges() {
     cfnDiff.formatDifferences(process.stdout, this.diff, this.logicalToPathMap)
+    return true
   }
 }
