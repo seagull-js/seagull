@@ -5,6 +5,7 @@ export interface ILayoutProps {
   data?: any
   children: React.ReactNode
   pageBundle?: string
+  styles?: string
 }
 
 export class Layout extends React.Component<ILayoutProps> {
@@ -16,6 +17,9 @@ export class Layout extends React.Component<ILayoutProps> {
           {this.props.helmet ? this.props.helmet.title.toComponent() : ''}
           {this.props.helmet ? this.props.helmet.link.toComponent() : ''}
           {this.props.helmet ? this.props.helmet.style.toComponent() : ''}
+          {this.props.styles && (
+            <style id="styles-target">{this.props.styles || ''}</style>
+          )}
         </head>
         <body>
           <div id="app">{this.props.children}</div>
