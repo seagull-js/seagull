@@ -23,7 +23,8 @@ export abstract class CDKAction {
   appPath: string
   opts: Options
   projectName: string
-  s3Name?: string
+  region: string
+  s3Name: string
 
   app?: lib.ProjectApp
   synthStack: SynthesizedStack
@@ -34,6 +35,8 @@ export abstract class CDKAction {
     this.appPath = appPath
     this.opts = opts
     this.projectName = require(`${this.appPath}/package.json`).name
+    this.s3Name = ''
+    this.region = process.env.AWS_REGION || 'eu-central-1'
     this.sdk = new cdk.SDK({})
     this.logicalToPathMap = {}
     this.synthStack = {} as SynthesizedStack
@@ -46,11 +49,12 @@ export abstract class CDKAction {
   }
 
   protected async createCDKApp() {
-    const account = await this.sdk.defaultAccount()
-    const path = this.appPath
-    const region = process.env.AWS_REGION || 'eu-central-1'
-    const s3Name = this.s3Name || ''
-    const appProps = { account, s3Name, path, region }
+    const appProps = {
+      account: await this.sdk.defaultAccount(),
+      path: this.appPath,
+      region: this.region,
+      s3Name: this.s3Name,
+    }
     this.app = new lib.ProjectApp(this.projectName, appProps)
     this.synthStack = this.app.synthesizeStack(this.projectName)
     this.logicalToPathMap = lib.createLogicalToPathMap(this.synthStack)
@@ -58,7 +62,7 @@ export abstract class CDKAction {
 
   protected async provideAssetFolder() {
     await this.setS3Name()
-    const createFolder = new ProvideAssetFolder(this.appPath, this.s3Name || '')
+    const createFolder = new ProvideAssetFolder(this.appPath, this.s3Name)
     await createFolder.execute()
   }
 
@@ -88,7 +92,7 @@ export abstract class CDKAction {
 
   private async setS3Name() {
     const accountId = await this.getAccountId()
-    this.s3Name = `${accountId}-${this.projectName}-items`
+    this.s3Name = `${this.region}-${accountId}-${this.projectName}-items`
   }
 
   private async getAccountId() {
