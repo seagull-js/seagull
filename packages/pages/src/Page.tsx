@@ -47,6 +47,13 @@ export abstract class Page<P = {}, S = {}> extends React.Component<
   }
 
   /**
+   * This method returns the styles of the typestyle library by default. It can be overwritten if another css source will be used.
+   */
+  static getStyles(): string {
+    return getStyles()
+  }
+
+  /**
    * get the used helmet instance for SSR
    */
   static helmetInstance() {
@@ -139,13 +146,6 @@ export abstract class Page<P = {}, S = {}> extends React.Component<
   abstract html(): JSX.Element
 
   /**
-   * This method returns the styles of the typestyle library by default. It can be overwritten if another css source will be used.
-   */
-  getStyles(): string {
-    return getStyles()
-  }
-
-  /**
    * DO NOT IMPLEMENT THIS IN YOUR CODE. Use the [[html]] method instead.
    */
   render() {
@@ -157,7 +157,6 @@ export abstract class Page<P = {}, S = {}> extends React.Component<
     const description = prop(this.description) || ''
     const image = prop(this.image) || ''
     const link = prop(this.canonical) || ''
-    const styles = this.getStyles()
     return (
       <>
         <Helmet>
@@ -191,7 +190,6 @@ export abstract class Page<P = {}, S = {}> extends React.Component<
           <meta name="og:url" content={link} />
           <meta name="twitter:url" content={link} />
           <link rel="canonical" href={link} />
-          {styles && <style id="styles-target">{styles}</style>}
         </Helmet>
         {rendered}
       </>
