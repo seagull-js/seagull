@@ -1,6 +1,7 @@
 import { Command } from '@seagull/commands'
 import * as fs from 'fs'
 import * as path from 'path'
+import { FSSandbox } from './fs_sandbox'
 
 /**
  * Command to delete a file to the given filepath
@@ -11,6 +12,10 @@ export class DeleteFolder extends Command {
    */
   folderPath: string
 
+  executeCloud = this.exec.bind(this, fs)
+  executePure = this.exec.bind(this, FSSandbox.fs as any)
+  executeConnected = this.executeCloud
+  executeEdge = this.executeCloud
   /**
    * see the individual property descriptions within this command class
    */
@@ -23,7 +28,7 @@ export class DeleteFolder extends Command {
    * delete the target folder with all files in it recursively
    */
   async execute() {
-    return rimraf(this.folderPath)
+    return this.executeHandler()
   }
 
   /**
@@ -32,6 +37,10 @@ export class DeleteFolder extends Command {
   async revert() {
     return true // TODO: cache the deleted content somehow
   }
+
+  private async exec(fsModule: typeof fs) {
+    return rimraf(fsModule, this.folderPath)
+  }
 }
 
 /**
@@ -39,16 +48,16 @@ export class DeleteFolder extends Command {
  * @param {string} folderPath
  * @see https://stackoverflow.com/a/42505874/3027390
  */
-function rimraf(folderPath: string) {
-  if (fs.existsSync(folderPath)) {
-    fs.readdirSync(folderPath).forEach(entry => {
+function rimraf(fsModule: typeof fs, folderPath: string) {
+  if (fsModule.existsSync(folderPath)) {
+    fsModule.readdirSync(folderPath).forEach(entry => {
       const entryPath = path.join(folderPath, entry)
-      if (fs.lstatSync(entryPath).isDirectory()) {
-        rimraf(entryPath)
+      if (fsModule.lstatSync(entryPath).isDirectory()) {
+        rimraf(fsModule, entryPath)
       } else {
-        fs.unlinkSync(entryPath)
+        fsModule.unlinkSync(entryPath)
       }
     })
-    fs.rmdirSync(folderPath)
+    fsModule.rmdirSync(folderPath)
   }
 }

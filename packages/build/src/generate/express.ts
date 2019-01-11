@@ -1,5 +1,5 @@
 import { Command } from '@seagull/commands'
-import { FS } from '@seagull/commands-fs'
+import { FS, FSSandbox } from '@seagull/commands-fs'
 import * as path from 'path'
 
 export class Express extends Command {
@@ -17,7 +17,8 @@ export class Express extends Command {
 
   async execute() {
     const srcFolder = path.join(this.appFolder, 'src', 'routes')
-    const routeFiles = await new FS.ListFiles(srcFolder, /tsx?$/).execute()
+    const routeFiles = await new FS.ListFiles(srcFolder).execute()
+
     const routes = routeFiles.map(f => this.getRelativeRouteName(f))
     const content = [this.header(), this.body(routes), this.footer()].join('\n')
     await new FS.WriteFile(this.dstFile, content).execute()

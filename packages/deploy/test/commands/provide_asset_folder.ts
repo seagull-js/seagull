@@ -1,12 +1,12 @@
+import { FS } from '@seagull/commands-fs'
+import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
 import { skip, suite, test } from 'mocha-typescript'
-
-import { FS } from '@seagull/commands-fs'
 import { ProvideAssetFolder } from '../../src/commands'
 
 @suite('Commands')
-export class Test {
-  tmpDir = './tmp_for_folder_test'
+export class Test extends BasicTest {
+  tmpDir = '/tmp/tmp_for_folder_test'
   seagullPath = `${this.tmpDir}/.seagull`
   backendInSgPath = `${this.tmpDir}/.seagull/deploy/dist/assets/backend`
   filePathToTestRemoval = `${this.backendInSgPath}/remove.js`
@@ -14,6 +14,7 @@ export class Test {
   lambdaInSgPath = `${this.backendInSgPath}/lambda.js`
 
   async before() {
+    await BasicTest.prototype.before.bind(this)()
     await this.removeTmpDir()
     await new FS.CreateFolder(this.tmpDir).execute()
     await this.createDistAssetDir()
@@ -32,6 +33,7 @@ export class Test {
   }
 
   async after() {
+    await BasicTest.prototype.after.bind(this)()
     await this.removeTmpDir()
   }
 

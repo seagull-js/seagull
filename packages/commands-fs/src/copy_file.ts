@@ -1,7 +1,6 @@
 import { Command } from '@seagull/commands'
 import * as fs from 'fs'
-import { noop } from 'lodash'
-
+import { FSSandbox } from './fs_sandbox'
 /**
  * Command to copy a file from [[filePathFrom]] to [[filePathTo]]
  */
@@ -16,6 +15,16 @@ export class CopyFile extends Command {
    */
   filePathTo: string
 
+  executeCloud = this.exec.bind(this, fs)
+  executePure = this.exec.bind(this, FSSandbox.fs as any)
+  executeConnected = this.executeCloud
+  executeEdge = this.executeCloud
+
+  revertCloud = this.rev.bind(this, fs)
+  revertPure = this.rev.bind(this, FSSandbox.fs as any)
+  revertConnected = this.revertCloud
+  revertEdge = this.revertCloud
+
   /**
    * see the individual property descriptions within this command class
    */
@@ -29,13 +38,21 @@ export class CopyFile extends Command {
    * copy a file from [[filePathFrom]] to [[filePathTo]]
    */
   async execute() {
-    return fs.copyFileSync(this.filePathFrom, this.filePathTo)
+    return this.executeHandler()
   }
 
   /**
    * remove a file from [[filePathTo]]
    */
   async revert() {
-    return fs.unlinkSync(this.filePathTo)
+    return this.revertHandler()
+  }
+
+  private async exec(fsModule: typeof fs) {
+    return fsModule.copyFileSync(this.filePathFrom, this.filePathTo)
+  }
+
+  private async rev(fsModule: typeof fs) {
+    return fsModule.unlinkSync(this.filePathTo)
   }
 }

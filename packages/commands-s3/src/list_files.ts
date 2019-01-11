@@ -18,9 +18,9 @@ export class ListFiles extends Command<string[]> {
    */
   filePath: string
 
-  executeConnected = this.executeCloud
   executeCloud = this.exec.bind(this, new AWS.S3())
   executePure = this.exec.bind(this, S3Sandbox as any)
+  executeConnected = this.executeCloud
   executeEdge = this.executeCloud
 
   mock = new S3Mock()
