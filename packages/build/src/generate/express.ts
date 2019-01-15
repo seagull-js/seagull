@@ -17,7 +17,7 @@ export class Express extends Command {
 
   async execute() {
     const srcFolder = path.join(this.appFolder, 'src', 'routes')
-    const routeFiles = await new FS.ListFiles(srcFolder).execute()
+    const routeFiles = await new FS.ListFiles(srcFolder, /tsx?$/).execute()
 
     const routes = routeFiles.map(f => this.getRelativeRouteName(f))
     const content = [this.header(), this.body(routes), this.footer()].join('\n')
