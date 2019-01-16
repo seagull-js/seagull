@@ -3,7 +3,7 @@ import { BasicTest } from '@seagull/testing'
 import * as AWS from 'aws-sdk'
 import 'chai/register-should'
 import * as fs from 'fs'
-import { skip, slow, suite, test, timeout } from 'mocha-typescript'
+import { suite, test } from 'mocha-typescript'
 import { S3 } from '../src'
 
 @suite('Mocks::S3')
@@ -76,8 +76,6 @@ export class Test extends BasicTest {
 
   @test
   async 'can work with synchronized disc data'() {
-    const fsMock = new FSMock('/tmp')
-    fsMock.activate()
     const mock = new S3('/tmp/.data')
     mock.activate()
     await this.writeFileToS3('stuff', '17')
@@ -86,7 +84,6 @@ export class Test extends BasicTest {
     mock.deactivate()
     const restored = new S3('/tmp/.data')
     restored.storage.should.be.deep.equal({ DemoBucket123: { stuff: '17' } })
-    fsMock.deactivate()
   }
 
   private async deleteFileFromS3(path: string) {

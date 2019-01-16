@@ -23,7 +23,7 @@
     "@seagull/pipeline": "^1.4.0",
     "@seagull/test-pages": "^1.5.0",
     "@types/lodash": "^4.14.107",
-    "@types/node": "^10.11.4",
+    "@types/node": "^8.10",
     "jsdom": "^13.0.0",
     "jsdom-global": "^3.0.2",
     "serverless": "^1.32.0",

@@ -5,6 +5,7 @@
 export interface Mock {
   /**
    * Activate the Mock, so subsequent code runs against a fake implementation. Should only be used if patching imports/requires is unavoidable. Use the mock or a sandbox directly with dependency injection if possible.
+   * Beware not to call activate on multiple mocks of the same type.
    */
   activate: () => any
 

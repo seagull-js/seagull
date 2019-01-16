@@ -26,9 +26,9 @@ export class WriteFile extends Command<
    */
   content: string
 
-  executeConnected = this.executeCloud
   executeCloud = this.exec.bind(this, new AWS.S3())
   executePure = this.exec.bind(this, S3Sandbox as any)
+  executeConnected = this.executeCloud
   executeEdge = this.executeCloud
 
   revertConnected = this.execRevert.bind(this, new AWS.S3())

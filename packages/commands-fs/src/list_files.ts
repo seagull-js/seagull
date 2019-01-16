@@ -1,6 +1,7 @@
 import { Command } from '@seagull/commands'
 import * as fs from 'fs'
 import { flatten } from 'lodash'
+import { FSSandbox } from './fs_sandbox'
 
 /**
  * Command to a files list from disk
@@ -10,6 +11,11 @@ export class ListFiles extends Command {
    * Absolute Path to the folder
    */
   filePath: string
+
+  executeCloud = this.exec.bind(this, fs)
+  executePure = this.exec.bind(this, FSSandbox.fs as any)
+  executeConnected = this.executeCloud
+  executeEdge = this.executeCloud
 
   /**
    * Optional patern to filter the result list
@@ -28,10 +34,8 @@ export class ListFiles extends Command {
   /**
    * read a file list for usage later on other commands
    */
-  async execute() {
-    const exists = fs.existsSync(this.filePath)
-    const list = exists ? this.listFiles(this.filePath) : []
-    return this.pattern ? list.filter(f => this.pattern!.test(f)) : list
+  async execute(): Promise<string[]> {
+    return this.executeHandler()
   }
 
   /**
@@ -41,13 +45,19 @@ export class ListFiles extends Command {
     return true
   }
 
-  listFiles(cwd: string): string[] {
-    if (fs.lstatSync(cwd).isFile()) {
+  listFiles(fsModule: typeof fs, cwd: string): string[] {
+    if (fsModule.lstatSync(cwd).isFile()) {
       return [cwd]
     } else {
-      const names = fs.readdirSync(cwd)
-      const list = names.map(f => this.listFiles(`${cwd}/${f}`))
+      const names = fsModule.readdirSync(cwd)
+      const list = names.map(f => this.listFiles(fsModule, `${cwd}/${f}`))
       return flatten(list)
     }
+  }
+
+  private async exec(fsModule: typeof fs) {
+    const exists = fsModule.existsSync(this.filePath)
+    const list = exists ? this.listFiles(fsModule, this.filePath) : []
+    return this.pattern ? list.filter(f => this.pattern!.test(f)) : list
   }
 }

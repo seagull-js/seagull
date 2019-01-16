@@ -1,14 +1,12 @@
-import { FS as FSMock } from '@seagull/mock-fs'
 import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
-import * as fs from 'fs'
-import { skip, slow, suite, test, timeout } from 'mocha-typescript'
+import { suite, test } from 'mocha-typescript'
 import { FS } from '../src'
+import { FSSandbox } from '../src/fs_sandbox'
+const fs = FSSandbox.fs
 
 @suite('FS::Exists')
 export class Test extends BasicTest {
-  mocks = [new FSMock('/tmp')]
-
   @test
   async 'does return false if no file is found'() {
     const exists = await new FS.Exists('/tmp/index.html').execute()
@@ -17,7 +15,7 @@ export class Test extends BasicTest {
 
   @test
   async 'does return true if a file is found'() {
-    fs.writeFileSync('/tmp/index.html', '', 'utf-8')
+    fs.writeFileSync('/tmp/index.html', '')
     const exists = await new FS.Exists('/tmp/index.html').execute()
     exists.should.be.equal(true)
   }

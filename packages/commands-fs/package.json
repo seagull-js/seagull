@@ -37,7 +37,8 @@
   },
   "dependencies": {
     "@seagull/commands": "^1.4.0",
-    "@seagull/mock-fs": "^1.4.0"
+    "@seagull/mock-fs": "^1.4.0",
+    "@seagull/sandbox": "^1.1.1"
   },
   "nyc": {
     "extension": [

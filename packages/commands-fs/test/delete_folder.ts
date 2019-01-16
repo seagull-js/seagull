@@ -1,20 +1,18 @@
-import { FS as FSMock } from '@seagull/mock-fs'
 import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
-import * as fs from 'fs'
-import { skip, slow, suite, test, timeout } from 'mocha-typescript'
+import { suite, test } from 'mocha-typescript'
 import { FS } from '../src'
+import { FSSandbox } from '../src/fs_sandbox'
+const fs = FSSandbox.fs
 
 @suite('FS::DeleteFolder')
 export class Test extends BasicTest {
-  mocks = [new FSMock('/tmp')]
-
   @test
   async 'does execute'() {
     fs.mkdirSync('/tmp/dir')
-    fs.writeFileSync('/tmp/dir/index.html', '', 'utf-8')
+    fs.writeFileSync('/tmp/dir/index.html', '')
     fs.mkdirSync('/tmp/dir/dir')
-    fs.writeFileSync('/tmp/dir/dir/index.html', '', 'utf-8')
+    fs.writeFileSync('/tmp/dir/dir/index.html', '')
     const cmd = new FS.DeleteFolder('/tmp/dir')
     await cmd.execute()
     const list = await new FS.ListFiles('/tmp').execute()
