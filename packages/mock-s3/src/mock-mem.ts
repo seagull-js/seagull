@@ -58,7 +58,7 @@ export class S3MockMem implements Mock {
    */
   getObject = (Input: import('aws-sdk').S3.GetObjectRequest, cb: any) => {
     this.ensureBucket(Input.Bucket)
-    const Body = JSON.parse(this.storage[Input.Bucket][Input.Key])
+    const Body = this.storage[Input.Bucket][Input.Key]
     const result: import('aws-sdk').S3.GetObjectOutput = { Body }
     return this.result(cb, result)
   }
@@ -84,8 +84,7 @@ export class S3MockMem implements Mock {
    */
   putObject = (Input: import('aws-sdk').S3.PutObjectRequest, cb: any) => {
     this.ensureBucket(Input.Bucket)
-    const content = JSON.stringify(Input.Body)
-    this.storage[Input.Bucket][Input.Key] = content
+    this.storage[Input.Bucket][Input.Key] = Input.Body
     const result: import('aws-sdk').S3.PutObjectOutput = {}
     return this.result(cb, result)
   }

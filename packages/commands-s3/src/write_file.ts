@@ -1,5 +1,5 @@
 import { Command } from '@seagull/commands'
-import { S3 as S3Mock } from '@seagull/mock-s3'
+import { S3MockFS } from '@seagull/mock-s3'
 import { Mode } from '@seagull/mode'
 import * as AWS from 'aws-sdk'
 import { PromiseResult } from 'aws-sdk/lib/request'
@@ -29,12 +29,10 @@ export class WriteFile extends Command<
   executeCloud = this.exec.bind(this, new AWS.S3())
   executePure = this.exec.bind(this, S3Sandbox as any)
   executeConnected = this.executeCloud
-  executeEdge = this.exec.bind(this, S3Sandbox as any)
+  executeEdge = this.exec.bind(this, new S3MockFS('/tmp/.data') as any)
 
   revertConnected = this.execRevert.bind(this, new AWS.S3())
   revertPure = this.execRevert.bind(this, S3Sandbox as any)
-
-  mock = new S3Mock()
 
   /**
    * see the individual property descriptions within this command class

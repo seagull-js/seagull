@@ -1,5 +1,5 @@
 import { FS } from '@seagull/commands-fs'
-import { S3 } from '@seagull/mock-s3'
+import { S3MockFS, S3MockMem } from '@seagull/mock-s3'
 import { Environments, SetMode } from '@seagull/mode'
 import * as chokidar from 'chokidar'
 import * as path from 'path'
@@ -39,16 +39,6 @@ export class Observer {
     this.compiler = new Compiler(this.srcFolder)
     this.generator = new Generator(this.srcFolder)
     this.bundler = new Bundler(this.srcFolder, this.props.vendor)
-    this.shim()
-  }
-
-  /**
-   * enable redirection of used AWS resources for local development flow
-   */
-  shim() {
-    const folder = this.props.dataPath
-    const dataPath = folder ? path.join(this.srcFolder, folder) : undefined
-    new S3(dataPath).activate()
   }
 
   /**
