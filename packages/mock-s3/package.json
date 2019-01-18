@@ -58,6 +58,7 @@
   "dependencies": {
     "@seagull/mock": "^1.4.0",
     "@seagull/testing": "^1.4.0",
+    "@seagull/libraries": "^1.4.0",
     "aws-sdk-mock": "^1.7.0"
   },
   "publishConfig": {

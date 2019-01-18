@@ -29,7 +29,7 @@ export class WriteFile extends Command<
   executeCloud = this.exec.bind(this, new AWS.S3())
   executePure = this.exec.bind(this, S3Sandbox as any)
   executeConnected = this.executeCloud
-  executeEdge = this.executeCloud
+  executeEdge = this.exec.bind(this, S3Sandbox as any)
 
   revertConnected = this.execRevert.bind(this, new AWS.S3())
   revertPure = this.execRevert.bind(this, S3Sandbox as any)
@@ -44,8 +44,6 @@ export class WriteFile extends Command<
     this.bucketName = bucketName
     this.filePath = filePath
     this.content = content
-    // TODO: Maybe rework this?
-    Mode.environment === 'edge' ? this.mock.activate() : this.mock.deactivate()
   }
 
   /**

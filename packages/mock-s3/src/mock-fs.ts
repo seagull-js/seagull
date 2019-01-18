@@ -1,7 +1,8 @@
+import { createFolderRecursive } from '@seagull/libraries'
 import { Mock } from '@seagull/mock'
 import * as AWSMock from 'aws-sdk-mock'
 import * as fs from 'fs'
-import * as path from 'path'
+import * as pathModule from 'path'
 
 type RequestObjectMock<T> = {
   promise(): Promise<T>
@@ -11,20 +12,14 @@ type RequestObjectMock<T> = {
  * when activated, redirect all calls from the AWS SDK of S3 to the S3 shim
  * implementation, which operates on a local folder instead.
  */
-export class S3 implements Mock {
-  /**
-   * this is the place where calls to s3 buckets will be redirected to
-   */
-  storage: { [Bucket: string]: { [Key: string]: any } } = {}
-
+export class S3MockFS implements Mock {
   /**
    * When true, save/load the state of storage to local disk
    */
-  localFolder: string | undefined
+  localFolder: string
 
-  constructor(localFolder?: string) {
+  constructor(localFolder: string) {
     this.localFolder = localFolder
-    this.loadFromDisk()
   }
 
   /**
@@ -50,8 +45,7 @@ export class S3 implements Mock {
    * resets internal s3 state
    */
   reset = () => {
-    this.storage = {}
-    this.loadFromDisk()
+    this.deleteFolderRecursive(this.localFolder)
   }
 
   /**
@@ -59,8 +53,7 @@ export class S3 implements Mock {
    */
   deleteObject = (Input: import('aws-sdk').S3.DeleteObjectRequest, cb: any) => {
     this.ensureBucket(Input.Bucket)
-    delete this.storage[Input.Bucket][Input.Key]
-    this.synchronizeToDisk()
+    fs.unlinkSync(this.getEncodedPath(Input))
     const result = {} as import('aws-sdk').S3.DeleteObjectOutput
     return this.result(cb, result)
   }
@@ -70,7 +63,8 @@ export class S3 implements Mock {
    */
   getObject = (Input: import('aws-sdk').S3.GetObjectRequest, cb: any) => {
     this.ensureBucket(Input.Bucket)
-    const Body = this.storage[Input.Bucket][Input.Key]
+    const data = fs.readFileSync(this.getEncodedPath(Input), 'utf-8')
+    const Body = JSON.parse(data)
     const result: import('aws-sdk').S3.GetObjectOutput = { Body }
     return this.result(cb, result)
   }
@@ -84,7 +78,8 @@ export class S3 implements Mock {
   ) => {
     this.ensureBucket(Input.Bucket)
     const prefix = Input.Prefix || ''
-    const keys = Object.keys(this.storage[Input.Bucket])
+    const dir = pathModule.join(this.localFolder, Input.Bucket)
+    const keys = fs.readdirSync(dir).map(decodeURIComponent)
     const list = prefix ? keys.filter(key => key.startsWith(prefix)) : keys
     const Contents = list.map(key => ({ Key: key }))
     const result: import('aws-sdk').S3.ListObjectsV2Output = { Contents }
@@ -96,8 +91,8 @@ export class S3 implements Mock {
    */
   putObject = (Input: import('aws-sdk').S3.PutObjectRequest, cb: any) => {
     this.ensureBucket(Input.Bucket)
-    this.storage[Input.Bucket][Input.Key] = Input.Body
-    this.synchronizeToDisk()
+    const content = JSON.stringify(Input.Body)
+    fs.writeFileSync(this.getEncodedPath(Input), content, 'utf-8')
     const result: import('aws-sdk').S3.PutObjectOutput = {}
     return this.result(cb, result)
   }
@@ -120,27 +115,25 @@ export class S3 implements Mock {
 
   // little helper to ensure that the "bucket" key exists in [[storage]]
   private ensureBucket = (name: string) => {
-    this.storage[name] = this.storage[name] || {}
+    const dir = pathModule.join(this.localFolder, name)
+    return !fs.existsSync(dir) && createFolderRecursive(dir)
   }
 
-  private loadFromDisk() {
-    if (this.localFolder) {
-      const filePath = path.join(this.localFolder, 's3.json')
-      if (fs.existsSync(filePath)) {
-        const data = fs.readFileSync(filePath, 'utf-8')
-        this.storage = JSON.parse(data)
-      }
-    }
+  private getEncodedPath({ Key, Bucket }: { Key: string; Bucket: string }) {
+    return pathModule.join(this.localFolder, Bucket, encodeURIComponent(Key))
   }
 
-  private synchronizeToDisk() {
-    if (this.localFolder) {
-      if (!fs.existsSync(this.localFolder)) {
-        fs.mkdirSync(this.localFolder)
-      }
-      const filePath = path.join(this.localFolder, 's3.json')
-      const fileContent = JSON.stringify(this.storage)
-      fs.writeFileSync(filePath, fileContent, 'utf-8')
+  private deleteFolderRecursive(path: string) {
+    if (fs.existsSync(path)) {
+      fs.readdirSync(path).forEach((file, index) => {
+        const curPath = path + '/' + file
+        if (fs.lstatSync(curPath).isDirectory()) {
+          this.deleteFolderRecursive(curPath)
+        } else {
+          fs.unlinkSync(curPath)
+        }
+      })
+      fs.rmdirSync(path)
     }
   }
 }

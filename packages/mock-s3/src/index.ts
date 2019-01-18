@@ -1,1 +1,2 @@
-export * from './mock-s3'
+export * from './mock-mem'
+export * from './mock-fs'
