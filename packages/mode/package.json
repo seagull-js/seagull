@@ -1,6 +1,6 @@
 {
     "name": "@seagull/mode",
-    "version": "1.4.0",
+    "version": "1.6.1",
     "description": "Definitions of different run modes for the Seagull Framework",
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
@@ -32,7 +32,7 @@
     },
     "homepage": "https://github.com/seagull-js/seagull#readme",
     "devDependencies": {
-        "@seagull/tslint": "^1.4.0"
+        "@seagull/tslint": "^1.6.1"
     },
     "nyc": {
         "extension": [
