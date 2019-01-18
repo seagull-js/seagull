@@ -1,6 +1,6 @@
 {
   "name": "@seagull/testing",
-  "version": "1.6.0",
+  "version": "1.4.0",
   "description": "Testing Utilities for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -37,7 +37,7 @@
     "aws-sdk": "*"
   },
   "dependencies": {
-    "@seagull/mock": "^1.6.0",
+    "@seagull/mock": "^1.4.0",
     "@seagull/mode": "^1.4.0",
     "@seagull/sandbox": "^1.4.0"
   },

@@ -1,6 +1,6 @@
 {
   "name": "@seagull/pages",
-  "version": "1.6.0",
+  "version": "1.5.0",
   "description": "View Layer implementation in React for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
