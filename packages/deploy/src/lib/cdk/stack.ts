@@ -1,9 +1,15 @@
-import { LambdaIntegration, RestApi } from '@aws-cdk/aws-apigateway'
+import {
+  CfnApiKey,
+  CfnUsagePlan,
+  CfnUsagePlanKey,
+  LambdaIntegration,
+  RestApi,
+} from '@aws-cdk/aws-apigateway'
 import * as CF from '@aws-cdk/aws-cloudfront'
 import { PolicyStatement, Role, ServicePrincipal } from '@aws-cdk/aws-iam'
 import { Code, Function as LambdaFunction, Runtime } from '@aws-cdk/aws-lambda'
 import * as S3 from '@aws-cdk/aws-s3'
-import { App, Stack, StackProps } from '@aws-cdk/cdk'
+import { App, Stack, StackProps, Token } from '@aws-cdk/cdk'
 
 import { getApiGatewayDomain, getApiGatewayPath } from '..'
 
@@ -64,13 +70,45 @@ export class AppStack extends Stack {
     const conf = { binaryMediaTypes: ['*/*'] }
     this.apiGateway = new RestApi(this, name, conf)
 
+    const apiKeyConfig = {
+      description: 'api key for general api route',
+      enabled: true,
+      generateDistinctId: true,
+      name: `${name}-api-key`,
+      stageKeys: [
+        { restApiId: new Token(this.apiGateway.restApiId), stageName: 'prod' },
+      ],
+    }
+    const usagePlanConfig = {
+      apiStages: [
+        { apiId: new Token(this.apiGateway.restApiId), stage: 'prod' },
+      ],
+      description: 'universal plan to secure the api gateway',
+      usagePlanName: 'universal plan',
+    }
+    const apiKey = new CfnApiKey(this, 'lambdaApiKey', apiKeyConfig)
+    const usagePlan = new CfnUsagePlan(this, 'usagePlan', usagePlanConfig)
+    const usageKeyConfig = {
+      keyId: new Token(apiKey.apiKeyId),
+      keyType: 'API_KEY',
+      usagePlanId: new Token(usagePlan.usagePlanId),
+    }
+    // tslint:disable-next-line:no-unused-expression
+    new CfnUsagePlanKey(this, 'usageKey', usageKeyConfig)
+
     const proxy = this.apiGateway.root.addResource('{any+}')
-    this.apiGateway.root.addMethod('GET', this.defaultIntegration)
-    this.apiGateway.root.addMethod('POST', this.defaultIntegration)
-    this.apiGateway.root.addMethod('DELETE', this.defaultIntegration)
-    proxy.addMethod('GET', this.defaultIntegration)
-    proxy.addMethod('POST', this.defaultIntegration)
-    proxy.addMethod('DELETE', this.defaultIntegration)
+    this.apiGateway.root.addMethod('GET', this.defaultIntegration, {
+      apiKeyRequired: true,
+    })
+    this.apiGateway.root.addMethod('POST', this.defaultIntegration, {
+      apiKeyRequired: true,
+    })
+    this.apiGateway.root.addMethod('DELETE', this.defaultIntegration, {
+      apiKeyRequired: true,
+    })
+    proxy.addMethod('GET', this.defaultIntegration, { apiKeyRequired: true })
+    proxy.addMethod('POST', this.defaultIntegration, { apiKeyRequired: true })
+    proxy.addMethod('DELETE', this.defaultIntegration, { apiKeyRequired: true })
     this.apiGatewayDomain = getApiGatewayDomain(this.apiGateway.url)
     this.apiGatewayOriginPath = getApiGatewayPath(this.apiGateway.url)
   }
