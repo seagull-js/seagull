@@ -1,5 +1,5 @@
 import { Command } from '@seagull/commands'
-import { S3 as S3Mock } from '@seagull/mock-s3'
+import { S3MockFS } from '@seagull/mock-s3'
 import { Mode } from '@seagull/mode'
 import * as AWS from 'aws-sdk'
 import { S3 } from 'aws-sdk'
@@ -25,9 +25,7 @@ export class DeleteFile extends Command<
   executeCloud = this.exec.bind(this, new AWS.S3())
   executePure = this.exec.bind(this, S3Sandbox as any)
   executeConnected = this.executeCloud
-  executeEdge = this.executeCloud
-
-  mock = new S3Mock()
+  executeEdge = this.exec.bind(this, new S3MockFS('/tmp/.data') as any)
 
   /**
    * see the individual property descriptions within this command class
@@ -36,8 +34,6 @@ export class DeleteFile extends Command<
     super()
     this.bucketName = bucketName
     this.filePath = filePath
-    // TODO: Maybe rework this?
-    Mode.environment === 'edge' ? this.mock.activate() : this.mock.deactivate()
   }
 
   /**
