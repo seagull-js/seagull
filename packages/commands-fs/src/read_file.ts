@@ -1,6 +1,6 @@
 import { Command } from '@seagull/commands'
 import * as fs from 'fs'
-import { noop } from 'lodash'
+import { FSSandbox } from './fs_sandbox'
 
 /**
  * Command to read a file from the given filepath
@@ -10,6 +10,11 @@ export class ReadFile extends Command {
    * Absolute Path to the file including file name and extension
    */
   filePath: string
+
+  executeCloud = this.exec.bind(this, fs)
+  executePure = this.exec.bind(this, FSSandbox.fs as any)
+  executeConnected = this.executeCloud
+  executeEdge = this.executeCloud
 
   /**
    * see the individual property descriptions within this command class
@@ -23,8 +28,7 @@ export class ReadFile extends Command {
    * write a file to the stack's dataBucket on AWS S3
    */
   async execute() {
-    const exists = fs.existsSync(this.filePath)
-    return exists ? fs.readFileSync(this.filePath, 'utf-8') : ''
+    return this.executeHandler()
   }
 
   /**
@@ -32,5 +36,10 @@ export class ReadFile extends Command {
    */
   async revert() {
     return true
+  }
+
+  private async exec(fsModule: typeof fs) {
+    const exists = fsModule.existsSync(this.filePath)
+    return exists ? fsModule.readFileSync(this.filePath, 'utf-8') : ''
   }
 }

@@ -1,3 +1,4 @@
+import { S3Sandbox } from '@seagull/commands-s3'
 import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'

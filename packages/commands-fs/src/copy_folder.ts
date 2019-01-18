@@ -1,6 +1,7 @@
 import { Command } from '@seagull/commands'
 import * as fs from 'fs'
 import * as path from 'path'
+import { FSSandbox } from './fs_sandbox'
 
 /**
  * Command to copy a file from [[folderPathFrom]] to [[folderPathTo]]
@@ -16,6 +17,16 @@ export class CopyFolder extends Command {
    */
   folderPathTo: string
 
+  executeCloud = this.exec.bind(this, fs)
+  executePure = this.exec.bind(this, FSSandbox.fs as any)
+  executeConnected = this.executeCloud
+  executeEdge = this.executeCloud
+
+  revertCloud = this.rev.bind(this, fs)
+  revertPure = this.rev.bind(this, FSSandbox.fs as any)
+  revertConnected = this.revertCloud
+  revertEdge = this.revertCloud
+
   /**
    * see the individual property descriptions within this command class
    */
@@ -29,26 +40,34 @@ export class CopyFolder extends Command {
    * copy a file from [[folderPathFrom]] to [[folderPathTo]]
    */
   async execute() {
-    copyDir(this.folderPathFrom, this.folderPathTo)
+    return this.executeHandler()
   }
 
   /**
    * remove a file from [[folderPathTo]]
    */
   async revert() {
-    return fs.unlinkSync(this.folderPathTo)
+    return this.revertHandler()
+  }
+
+  private async exec(fsModule: typeof fs) {
+    copyDir(fsModule, this.folderPathFrom, this.folderPathTo)
+  }
+
+  private async rev(fsModule: typeof fs) {
+    return fsModule.unlinkSync(this.folderPathTo)
   }
 }
 
-function copyDir(from: string, to: string) {
-  fs.mkdirSync(to)
-  for (const entry of fs.readdirSync(from)) {
+function copyDir(fsModule: typeof fs, from: string, to: string) {
+  fsModule.mkdirSync(to)
+  for (const entry of fsModule.readdirSync(from)) {
     const srcPath = path.join(from, entry)
     const destPath = path.join(to, entry)
-    if (fs.lstatSync(srcPath).isDirectory()) {
-      copyDir(srcPath, destPath)
+    if (fsModule.lstatSync(srcPath).isDirectory()) {
+      copyDir(fsModule, srcPath, destPath)
     } else {
-      fs.copyFileSync(srcPath, destPath)
+      fsModule.copyFileSync(srcPath, destPath)
     }
   }
 }

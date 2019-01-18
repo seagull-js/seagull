@@ -1,5 +1,4 @@
 import { FS } from '@seagull/commands-fs'
-import { FS as FSMock } from '@seagull/mock-fs'
 import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
@@ -7,8 +6,6 @@ import { Generate } from '../../src'
 
 @suite('Generate::Express')
 export class Test extends BasicTest {
-  mocks = [new FSMock('/tmp')]
-
   @test
   async 'can write an express.js boilerplate file'() {
     await new Generate.Express('/tmp', '/tmp/app.js').execute()

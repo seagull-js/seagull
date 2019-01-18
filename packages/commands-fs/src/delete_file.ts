@@ -1,5 +1,6 @@
 import { Command } from '@seagull/commands'
 import * as fs from 'fs'
+import { FSSandbox } from './fs_sandbox'
 
 /**
  * Command to delete a file to the given filepath
@@ -9,6 +10,16 @@ export class DeleteFile extends Command {
    * Absolute Path to the file including file name and extension
    */
   filePath: string
+
+  executeCloud = this.exec.bind(this, fs)
+  executePure = this.exec.bind(this, FSSandbox.fs as any)
+  executeConnected = this.executeCloud
+  executeEdge = this.executeCloud
+
+  revertCloud = this.rev.bind(this, fs)
+  revertPure = this.rev.bind(this, FSSandbox.fs as any)
+  revertConnected = this.revertCloud
+  revertEdge = this.revertCloud
 
   /**
    * internal memory to hold the content of the file in case a revert is needed
@@ -29,14 +40,22 @@ export class DeleteFile extends Command {
    * cases until the command object is garbage collected.
    */
   async execute() {
-    this.cache = fs.readFileSync(this.filePath, 'utf-8')
-    return fs.unlinkSync(this.filePath)
+    return this.executeHandler()
   }
 
   /**
    * restore the deleted file from cache
    */
   async revert() {
-    return fs.writeFileSync(this.filePath, this.cache, 'utf-8')
+    return this.revertHandler()
+  }
+
+  private async exec(fsModule: typeof fs) {
+    this.cache = fsModule.readFileSync(this.filePath, 'utf-8')
+    return fsModule.unlinkSync(this.filePath)
+  }
+
+  private async rev(fsModule: typeof fs) {
+    return fsModule.writeFileSync(this.filePath, this.cache, 'utf-8')
   }
 }

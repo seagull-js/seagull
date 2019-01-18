@@ -1,8 +1,7 @@
+import { FS } from '@seagull/commands-fs'
 import { Process as ProcessMock } from '@seagull/mock-process'
-import { FS as FSMock } from '@seagull/mock-fs'
 import { Page } from '@seagull/pages'
 import 'chai/register-should'
-import * as fs from 'fs'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as path from 'path'
 import * as React from 'react'
@@ -30,25 +29,27 @@ class DemoRouteWithPath extends Route {
   }
 }
 
-const ReactBundle = fs.existsSync(
-  `${process.cwd()}/node_modules/react/umd/react.development.js`
-)
-  ? fs.readFileSync(
-      `${process.cwd()}/node_modules/react/umd/react.development.js`,
-      'utf-8'
-    )
-  : fs.readFileSync(
-      path.join(
+const getReactBundle = async () => {
+  const existCmd = new FS.Exists(
+    `${process.cwd()}/node_modules/react/umd/react.development.js`
+  )
+  existCmd.mode = { ...existCmd.mode, environment: 'edge' }
+  const exist: boolean = await existCmd.execute()
+
+  const reactBundlePath = exist
+    ? `${process.cwd()}/node_modules/react/umd/react.development.js`
+    : path.join(
         process.cwd(),
         '../../',
         'node_modules/react/umd/react.development.js'
-      ),
-      'utf-8'
-    )
+      )
+  const fileContent = await new FS.ReadFile(reactBundlePath).execute()
+  return fileContent
+}
 
 @suite('Route::Render')
 export class Test extends RouteTest {
-  mocks = [new ProcessMock({ cwd: '/tmp' }), new FSMock('/tmp')]
+  mocks = [new ProcessMock({ cwd: '/tmp' })]
   route = DemoRouteWithPage
 
   @test
@@ -65,11 +66,9 @@ export class Test extends RouteTest {
     // prepare file
     const pagePath = `${process.cwd()}/dist/assets/pages/DemoPage.js`
     const pageContent = `module.exports.default = () => this.React.createElement('div', null, 'hello')`
-    const fileContent = `${ReactBundle};\n${pageContent}`
-    fs.mkdirSync('/tmp/dist')
-    fs.mkdirSync('/tmp/dist/assets')
-    fs.mkdirSync('/tmp/dist/assets/pages')
-    fs.writeFileSync(pagePath, fileContent, 'utf-8')
+    const fileContent = `${await getReactBundle()};\n${pageContent}`
+    await new FS.CreateFolder('/tmp/dist/assets/pages').execute()
+    await new FS.WriteFile(pagePath, fileContent).execute()
 
     // execute route handler
     this.route = DemoRouteWithPath

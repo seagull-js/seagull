@@ -16,12 +16,12 @@ export class Test extends BasicTest {
     config.bucket.should.be.equal('demo-bucket')
     await Something.put({ id: '1' })
     storage['demo-bucket'].should.be.deep.equal({
-      'Something/1.json': '{"id":"1"}',
+      'Something/1.json': JSON.stringify({ id: '1' }),
     })
     config.bucket = 'another-bucket'
     await Something.put({ id: '1' })
     storage['another-bucket'].should.be.deep.equal({
-      'Something/1.json': '{"id":"1"}',
+      'Something/1.json': JSON.stringify({ id: '1' }),
     })
   }
 }
