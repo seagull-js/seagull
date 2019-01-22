@@ -10,6 +10,7 @@ const options = {
   mode: process.env.DEPLOY_MODE || 'prod',
   noProfileCheck: process.env.NO_PROFILE_CHECK || false,
   profile: process.env.AWS_PROFILE,
+  region: process.env.AWS_REGION || 'eu-central-1',
 }
 
 const logSuccess = () => console.log('done')

@@ -32,13 +32,16 @@ export interface Options {
    * if set, this indicates the aws profile that shall be used for deployment
    */
   profile?: string
+  /**
+   * the region the stack should be deployed to
+   */
+  region: string
 }
 
 export abstract class CDKAction {
   appPath: string
   opts: Options
   projectName: string
-  region: string
   s3Name: string
 
   app?: lib.ProjectApp
@@ -51,7 +54,6 @@ export abstract class CDKAction {
     this.opts = opts
     this.projectName = this.getProjectName()
     this.s3Name = ''
-    this.region = process.env.AWS_REGION || 'eu-central-1'
     this.sdk = new cdk.SDK({})
     this.logicalToPathMap = {}
     this.synthStack = {} as SynthesizedStack
@@ -68,7 +70,7 @@ export abstract class CDKAction {
       account: await this.sdk.defaultAccount(),
       deployS3: this.opts.mode === 'prod' || this.opts.branchName === 'master',
       path: this.appPath,
-      region: this.region,
+      region: this.opts.region,
       s3Name: this.s3Name,
     }
     this.app = new lib.ProjectApp(this.projectName, appProps)
@@ -107,7 +109,7 @@ export abstract class CDKAction {
 
   private async setS3Name() {
     const accountId = await this.getAccountId()
-    const region = this.region
+    const region = this.opts.region
     const projectName = this.projectName
     const suffix = this.opts.mode === 'prod' ? '' : '-test'
     this.s3Name = `${region}-${accountId}-${projectName}-items${suffix}`

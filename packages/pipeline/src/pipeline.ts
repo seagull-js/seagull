@@ -29,6 +29,10 @@ export interface Options {
    * if set, this indicates the aws profile that shall be used for deployment
    */
   profile?: string
+  /**
+   * the region the stack should be deployed to
+   */
+  region: string
 }
 
 export class DeployPipeline {
@@ -74,7 +78,7 @@ export class DeployPipeline {
 
   private async createCDKPipeline() {
     const account = await this.sdk.defaultAccount()
-    const region = process.env.AWS_REGION || 'eu-central-1'
+    const region = this.opts.region
     const path = this.appPath
     const branchName = this.opts.branchName
     const mode = this.opts.mode
