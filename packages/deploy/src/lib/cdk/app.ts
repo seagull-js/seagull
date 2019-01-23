@@ -3,16 +3,20 @@ import { AppStack } from '.'
 
 interface ProjectProps {
   account?: string
+  deployS3: boolean
   s3Name: string
   region: string
   path: string
 }
 
 export class ProjectApp extends App {
+  stack: AppStack
+
   constructor(name: string, projectProps: ProjectProps) {
     super()
-    const { account, s3Name, region, path } = projectProps
+    const { account, deployS3, s3Name, region, path } = projectProps
+    const stackProps = { s3Name, env: { account, path, region }, deployS3 }
     // tslint:disable-next-line:no-unused-expression
-    new AppStack(this, name, { s3Name, env: { account, path, region } })
+    this.stack = new AppStack(this, name, stackProps)
   }
 }

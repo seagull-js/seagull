@@ -9,8 +9,11 @@ const {
 require('dotenv').config()
 
 const options = {
+  branchName: process.env.BRANCH_NAME || 'master',
+  mode: process.env.DEPLOY_MODE || 'prod',
+  noProfileCheck: process.env.NO_PROFILE_CHECK || false,
   profile: process.env.AWS_PROFILE,
-  noProfileCheck: process.env.NO_PROFILE_CHECK
+  region: process.env.AWS_REGION || 'eu-central-1',
 }
 const deploy = new Deploy(process.cwd(), options)
 deploy.execute()

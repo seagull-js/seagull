@@ -40,5 +40,9 @@
     "mobx": "^4",
     "mobx-react": "^5.4.3",
     "serverless-http": "^1.8.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AIDACruises/unicorn.git"
   }
 }

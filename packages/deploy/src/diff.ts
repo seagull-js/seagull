@@ -3,7 +3,7 @@ import * as yaml from 'yaml'
 import * as cfnDiff from '@aws-cdk/cloudformation-diff'
 
 import { CDKAction, Options } from './cdk_action'
-import { noChangesInDiff } from './lib'
+import { createLogicalToPathMap, noChangesInDiff } from './lib'
 
 export class Diff extends CDKAction {
   private diff: cfnDiff.TemplateDiff
@@ -20,6 +20,7 @@ export class Diff extends CDKAction {
   private async diffApp() {
     await this.createCDKApp()
     const currTemplate = await this.readCurrentTemplate()
+    this.logicalToPathMap = createLogicalToPathMap(this.synthStack)
     this.diff = cfnDiff.diffTemplate(currTemplate, this.synthStack.template)
     await this.printDiff()
     return true
