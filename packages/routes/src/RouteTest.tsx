@@ -8,7 +8,7 @@ export abstract class RouteTest extends BasicTest {
   abstract route: typeof Route
 
   async invoke(method: HttpMethod = 'GET', path = '/', params: any = {}) {
-    const request = httpMocks.createRequest({ method, url: path, params })
+    const request = httpMocks.createRequest({ method, url: path, ...params })
     const response = httpMocks.createResponse()
     setExpireHeader(response, this.route.cache)
     const instance = new (this as any).route(request, response)
