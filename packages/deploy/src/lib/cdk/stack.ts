@@ -8,6 +8,7 @@ import { App, Stack, StackProps } from '@aws-cdk/cdk'
 import { getApiGatewayDomain, getApiGatewayPath } from '..'
 
 interface ProjectStackProps extends StackProps {
+  deployS3: boolean
   s3Name: string
   env: { account?: string; path: string; region: string }
 }
@@ -31,7 +32,8 @@ export class AppStack extends Stack {
     this.folder = props.env.path
     this.addIAMRole()
     this.addLambda()
-    this.addS3()
+    // tslint:disable-next-line:no-unused-expression
+    props.deployS3 && this.addS3()
     this.addApiGateway()
     this.addCloudfront()
   }

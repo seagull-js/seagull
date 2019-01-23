@@ -5,11 +5,15 @@ import { App, Secret, SecretParameter, Stack, StackProps } from '@aws-cdk/cdk'
 import { logNoOwnerFound } from '../log_messages'
 
 interface ProjectStackProps extends StackProps {
+  branchName: string
   env: { account?: string; path: string; region: string }
+  mode: string
 }
 
 export class AppStack extends Stack {
   appPath: string
+  branchName: string
+  mode: string
   pipelineName: string
   pipeline: Pipeline
   role?: Role
@@ -17,6 +21,8 @@ export class AppStack extends Stack {
 
   constructor(parent: App, pipelineName: string, props: ProjectStackProps) {
     super(parent, pipelineName, props)
+    this.branchName = props.branchName
+    this.mode = props.mode
     this.pipelineName = pipelineName
     this.pipeline = new Pipeline(this, pipelineName, { pipelineName })
     this.appPath = props.env.path
@@ -28,7 +34,7 @@ export class AppStack extends Stack {
   private addSourceStage() {
     const placement = { atIndex: 0 }
     const stage = this.pipeline.addStage('SourceStage', { placement })
-    const branch = 'master'
+    const branch = this.branchName
     const oauthToken = this.getToken()
     const owner = this.getOwner()
     const repo = this.getRepo()
@@ -49,7 +55,8 @@ export class AppStack extends Stack {
     installCmds.push('npm ci')
     buildCmds.push('npm run build')
     postBuildCmds.push('npm run test')
-    postBuildCmds.push('NO_PROFILE_CHECK=true npm run deploy')
+    const deployEnv = `BRANCH_NAME=${this.branchName} DEPLOY_MODE=${this.mode}`
+    postBuildCmds.push(`${deployEnv} NO_PROFILE_CHECK=true npm run deploy`)
 
     const install = { commands: installCmds }
     const build = { commands: buildCmds }

@@ -10,20 +10,38 @@ import * as lib from './lib'
 
 export interface Options {
   /**
+   * the branch name that will be deployed to indicate the project name for
+   * the stack. Only needed for teast mode
+   * @default master
+   */
+  branchName: string
+  /**
+   * indicates whether this deployment is run in test modus or production mode
+   * production modus ensures the existence of an items s3 bucket, in test
+   * mode multiple deployments use the same items bucket
+   * @enum test|prod
+   * @default prod
+   */
+  mode: 'test' | 'prod'
+  /**
+   * if set, the profile check is disabled.
+   * @default false
+   */
+  noProfileCheck: boolean
+  /**
    * if set, this indicates the aws profile that shall be used for deployment
    */
   profile?: string
   /**
-   * if set, the profile check is disabled.
+   * the region the stack should be deployed to
    */
-  noProfileCheck?: boolean
+  region: string
 }
 
 export abstract class CDKAction {
   appPath: string
   opts: Options
   projectName: string
-  region: string
   s3Name: string
 
   app?: lib.ProjectApp
@@ -34,9 +52,8 @@ export abstract class CDKAction {
   constructor(appPath: string, opts: Options) {
     this.appPath = appPath
     this.opts = opts
-    this.projectName = require(`${this.appPath}/package.json`).name
+    this.projectName = this.getProjectName()
     this.s3Name = ''
-    this.region = process.env.AWS_REGION || 'eu-central-1'
     this.sdk = new cdk.SDK({})
     this.logicalToPathMap = {}
     this.synthStack = {} as SynthesizedStack
@@ -51,13 +68,13 @@ export abstract class CDKAction {
   protected async createCDKApp() {
     const appProps = {
       account: await this.sdk.defaultAccount(),
+      deployS3: this.opts.mode === 'prod' || this.opts.branchName === 'master',
       path: this.appPath,
-      region: this.region,
+      region: this.opts.region,
       s3Name: this.s3Name,
     }
     this.app = new lib.ProjectApp(this.projectName, appProps)
     this.synthStack = this.app.synthesizeStack(this.projectName)
-    this.logicalToPathMap = lib.createLogicalToPathMap(this.synthStack)
   }
 
   protected async provideAssetFolder() {
@@ -92,10 +109,19 @@ export abstract class CDKAction {
 
   private async setS3Name() {
     const accountId = await this.getAccountId()
-    this.s3Name = `${this.region}-${accountId}-${this.projectName}-items`
+    const region = this.opts.region
+    const projectName = this.projectName
+    const suffix = this.opts.mode === 'prod' ? '' : '-test'
+    this.s3Name = `${region}-${accountId}-${projectName}-items${suffix}`
   }
 
   private async getAccountId() {
     return (await new aws.STS().getCallerIdentity().promise()).Account || ''
+  }
+
+  private getProjectName(): string {
+    const branchName = this.opts.branchName
+    const pkgName = require(`${this.appPath}/package.json`).name
+    return this.opts.mode === 'prod' ? pkgName : `${pkgName}-${branchName}`
   }
 }
