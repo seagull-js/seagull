@@ -32,14 +32,9 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-<<<<<<< HEAD
     "@seagull/mock-fs": "^1.6.1",
     "memfs":"^2.14.2",
     "@seagull/tslint": "^1.6.1",
-=======
-    "@seagull/mock-fs": "^1.7.0",
-    "@seagull/tslint": "^1.7.0",
->>>>>>> cb6d61295e76ae8323f065bc3d99b1dc4f9191be
     "aws-sdk": "*"
   },
   "nyc": {
