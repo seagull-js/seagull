@@ -33,6 +33,7 @@
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
     "@seagull/mock-fs": "^1.6.1",
+    "memfs":"^2.14.2",
     "@seagull/tslint": "^1.6.1",
     "aws-sdk": "*"
   },
