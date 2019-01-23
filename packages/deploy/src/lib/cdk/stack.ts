@@ -103,7 +103,8 @@ export class AppStack extends Stack {
     const behaviors = [{ allowedMethods, isDefaultBehavior: true }]
     const customOriginSource = { domainName: this.apiGatewayDomain }
     const originConfigs = [{ behaviors, customOriginSource, originPath }]
-    const conf = { defaultRootObject: '', originConfigs }
+    const comment = this.appName
+    const conf = { comment, defaultRootObject: '', originConfigs }
     // tslint:disable-next-line:no-unused-expression
     new CF.CloudFrontWebDistribution(this, name, conf)
   }
