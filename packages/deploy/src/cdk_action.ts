@@ -110,9 +110,11 @@ export abstract class CDKAction {
   private async setS3Name() {
     const accountId = await this.getAccountId()
     const region = this.opts.region
+    const isProd = this.opts.mode === 'prod'
     const projectName = this.projectName
-    const suffix = this.opts.mode === 'prod' ? '' : '-test'
-    this.s3Name = `${region}-${accountId}-${projectName}-items${suffix}`
+    const pkgName = this.pkgName
+    const project = isProd ? `${projectName}-items` : `${pkgName}-items-test`
+    this.s3Name = `${region}-${accountId}-${project}`
   }
 
   private async getAccountId() {
@@ -121,7 +123,11 @@ export abstract class CDKAction {
 
   private getProjectName(): string {
     const branchName = this.opts.branchName
-    const pkgName = require(`${this.appPath}/package.json`).name
+    const pkgName = this.pkgName
     return this.opts.mode === 'prod' ? pkgName : `${pkgName}-${branchName}`
+  }
+
+  private get pkgName() {
+    return require(`${this.appPath}/package.json`).name
   }
 }
