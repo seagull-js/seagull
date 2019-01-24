@@ -10,6 +10,7 @@ import { getApiGatewayDomain, getApiGatewayPath } from '..'
 interface ProjectStackProps extends StackProps {
   deployS3: boolean
   s3Name: string
+  aliasConfiguration?: CF.AliasConfiguration
   env: { account?: string; path: string; region: string }
 }
 
@@ -17,7 +18,7 @@ export class AppStack extends Stack {
   private appName: string
   private folder: string
   private s3Name: string
-
+  private aliasConfiguration?: CF.AliasConfiguration
   private defaultIntegration?: LambdaIntegration
   private apiGateway?: RestApi
   private role?: Role
@@ -29,6 +30,7 @@ export class AppStack extends Stack {
     super(parent, name, props)
     this.appName = name
     this.s3Name = props.s3Name
+    this.aliasConfiguration = props.aliasConfiguration
     this.folder = props.env.path
     this.addIAMRole()
     this.addLambda()
@@ -95,6 +97,13 @@ export class AppStack extends Stack {
     role.addToPolicy(policyStatement.addAllResources().addActions(...actions))
     this.role = role
   }
+  // private addCertificate(){
+  //   const name = `${this.name}Certificate`
+  //   const props: CM.CertificateProps = {domainName: ''}
+  //   CM
+  //   // tslint:disable-next-line:no-unused-expression
+  //   new CM.Certificate(this,name, {domainName: ''})
+  // }
 
   private addCloudfront() {
     const name = `${this.name}CFD`
@@ -103,8 +112,15 @@ export class AppStack extends Stack {
     const behaviors = [{ allowedMethods, isDefaultBehavior: true }]
     const customOriginSource = { domainName: this.apiGatewayDomain }
     const originConfigs = [{ behaviors, customOriginSource, originPath }]
-    const conf = { defaultRootObject: '', originConfigs }
+    const aliasConfiguration = this.aliasConfiguration
+    const conf = { aliasConfiguration, defaultRootObject: '', originConfigs }
     // tslint:disable-next-line:no-unused-expression
     new CF.CloudFrontWebDistribution(this, name, conf)
   }
+
+  // private getAliasConf() {
+  //   const names = this.aliasUrls
+  //   const acmCertRef = this.acmCertRef
+  //   return acmCertRef && names ? { acmCertRef, names } : undefined
+  // }
 }

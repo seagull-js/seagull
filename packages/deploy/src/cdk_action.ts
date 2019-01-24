@@ -5,10 +5,16 @@ import { SynthesizedStack } from '@aws-cdk/cx-api'
 
 import { FS } from '@seagull/commands-fs'
 
+import { AliasConfiguration } from '@aws-cdk/aws-cloudfront'
 import { ProfileCheck, ProvideAssetFolder } from './commands'
 import * as lib from './lib'
 
 export interface Options {
+  /**
+   * contains at least alias URLs (names) and ACM Certificate Ref (e.g.
+   * acmCertRef: 'arn:aws:...')
+   */
+  aliasConfiguration?: AliasConfiguration
   /**
    * the branch name that will be deployed to indicate the project name for
    * the stack. Only needed for teast mode
@@ -39,6 +45,7 @@ export interface Options {
 }
 
 export abstract class CDKAction {
+  aliasConfiguration?: AliasConfiguration
   appPath: string
   opts: Options
   projectName: string
@@ -50,6 +57,7 @@ export abstract class CDKAction {
   sdk: cdk.SDK
 
   constructor(appPath: string, opts: Options) {
+    this.aliasConfiguration = opts.aliasConfiguration
     this.appPath = appPath
     this.opts = opts
     this.projectName = this.getProjectName()
@@ -68,6 +76,7 @@ export abstract class CDKAction {
   protected async createCDKApp() {
     const appProps = {
       account: await this.sdk.defaultAccount(),
+      aliasConfiguration: this.aliasConfiguration,
       deployS3: this.opts.mode === 'prod' || this.opts.branchName === 'master',
       path: this.appPath,
       region: this.opts.region,
