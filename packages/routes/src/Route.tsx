@@ -5,35 +5,19 @@ import { isString } from 'lodash'
 import * as React from 'react'
 import * as rfs from 'require-from-string'
 
-export abstract class Route {
-  static cache: number = 0
-  static method: string
-  static path: string
-
-  static async register<T extends Route>(
-    this: { new (...args: any[]): T },
-    app: Express
-  ) {
-    const method = (this as any).method.toLowerCase()
-    const path = (this as any).path
-    const cache = (this as any).cache
-    const fn = (req: Request, res: Response) => {
-      setExpireHeader(res, cache)
-      return new this(req, res).handler(req)
-    }
-    const router = app as any
-    router[method](path, fn)
-  }
-
-  protected request: Request
-  protected response: Response
+export class RouteContext {
+  request: Request
+  response: Response
 
   constructor(request: Request, response: Response) {
     this.request = request
     this.response = response
   }
 
-  abstract async handler(req: Request): Promise<void>
+  text(this: RouteContext, data: string) {
+    this.response.type('txt')
+    this.response.send(data)
+  }
 
   error(message: string = 'internal server error') {
     this.response.status(500)
@@ -71,12 +55,6 @@ export abstract class Route {
     this.response.send(html)
   }
 
-  // send response as plain text
-  text(data: string) {
-    this.response.type('txt')
-    this.response.send(data)
-  }
-
   private renderUMD(pageSource: string, data: any) {
     const pagePath = `${process.cwd()}/dist/assets/pages/${pageSource}.js`
     const pagePathServer = pagePath.replace('.js', '-server.js')
@@ -88,6 +66,25 @@ export abstract class Route {
 
   private renderPage(pageSource: PageType, data: any) {
     return render('', pageSource, data)
+  }
+}
+
+export abstract class Route {
+  static key?: string
+  static cache: number = 0
+  static method: string
+  static path: string
+
+  static handler: (this: RouteContext) => Promise<void>
+
+  static async register(app: Express & { [key: string]: any }) {
+    const method = this.method.toLowerCase()
+    app[method](this.path, this.handle)
+  }
+
+  static async handle(request: Request, response: Response) {
+    const ctx = new RouteContext(request, response)
+    return this.handler.bind(ctx)()
   }
 }
 

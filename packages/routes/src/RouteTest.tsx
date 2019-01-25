@@ -10,9 +10,7 @@ export abstract class RouteTest extends BasicTest {
   async invoke(method: HttpMethod = 'GET', path = '/', params: any = {}) {
     const request = httpMocks.createRequest({ method, url: path, params })
     const response = httpMocks.createResponse()
-    setExpireHeader(response, this.route.cache)
-    const instance = new (this as any).route(request, response)
-    await instance.handler(request)
+    await this.route.handle(request, response)
     const data = response._getData()
     const code = response.statusCode
     const headers = response._getHeaders()

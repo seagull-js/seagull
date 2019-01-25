@@ -5,7 +5,7 @@ import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as path from 'path'
 import * as React from 'react'
-import { Route, RouteTest } from '../src'
+import { Route, RouteTest, RouteContext } from '../src'
 
 class DemoPage extends Page {
   html() {
@@ -16,7 +16,7 @@ class DemoPage extends Page {
 class DemoRouteWithPage extends Route {
   static method = 'GET'
   static path = '/'
-  async handler() {
+  static async handler(this: RouteContext) {
     return this.render(DemoPage, {})
   }
 }
@@ -24,7 +24,7 @@ class DemoRouteWithPage extends Route {
 class DemoRouteWithPath extends Route {
   static method = 'GET'
   static path = '/'
-  async handler() {
+  static async handler(this: RouteContext) {
     return this.render('DemoPage', {})
   }
 }
