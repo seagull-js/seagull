@@ -1,6 +1,6 @@
 {
   "name": "@seagull/deploy",
-  "version": "1.7.1",
+  "version": "1.8.0",
   "description": "Code deploying for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
