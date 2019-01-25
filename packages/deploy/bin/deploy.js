@@ -9,10 +9,11 @@ const acmCertRef = process.env.ACM_CERT_REF
 const names = process.env.ALIAS_URLS
   ? process.env.ALIAS_URLS.split(',')
   : undefined
-const aliasses = acmCertRef && names ? { acmCertRef, names } : undefined
+const seagullConfigs = require(`${this.appPath}/package.json`).seagull
+const domainNames = seagullConfigs ? seagullConfigs.domainNames : undefined
 const options = {
-  aliasConfiguration: aliasses,
   branchName: process.env.BRANCH_NAME || 'master',
+  domainNames,
   mode: process.env.DEPLOY_MODE || 'prod',
   noProfileCheck: process.env.NO_PROFILE_CHECK || false,
   profile: process.env.AWS_PROFILE,
