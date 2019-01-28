@@ -16,5 +16,5 @@ export type IMode = {
  * Module based singleton containing the configured truth of modes
  */
 export const Mode: Readonly<IMode> = {
-  environment: 'edge' as Environments,
+  environment: (process.env.MODE as Environments) || ('edge' as Environments),
 }
