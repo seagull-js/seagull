@@ -8,13 +8,13 @@ import { FS } from '@seagull/commands-fs'
 import { AliasConfiguration } from '@aws-cdk/aws-cloudfront'
 import { ProfileCheck, ProvideAssetFolder } from './commands'
 import * as lib from './lib'
+import { getExistingCert, makeAliasConfig } from './lib/cdk/certificates'
 
 export interface Options {
   /**
-   * contains at least alias URLs (names) and ACM Certificate Ref (e.g.
-   * acmCertRef: 'arn:aws:...')
+   * under which alias the cloudfront url is available
    */
-  aliasConfiguration?: AliasConfiguration
+  domains?: string[]
   /**
    * the branch name that will be deployed to indicate the project name for
    * the stack. Only needed for teast mode
@@ -57,7 +57,6 @@ export abstract class CDKAction {
   sdk: cdk.SDK
 
   constructor(appPath: string, opts: Options) {
-    this.aliasConfiguration = opts.aliasConfiguration
     this.appPath = appPath
     this.opts = opts
     this.projectName = this.getProjectName()
@@ -74,9 +73,10 @@ export abstract class CDKAction {
   }
 
   protected async createCDKApp() {
+    const { region, domains } = this.opts
     const appProps = {
       account: await this.sdk.defaultAccount(),
-      aliasConfiguration: this.aliasConfiguration,
+      aliasConfiguration: await makeAliasConfig(region, domains),
       deployS3: this.opts.mode === 'prod' || this.opts.branchName === 'master',
       path: this.appPath,
       region: this.opts.region,
@@ -85,7 +85,6 @@ export abstract class CDKAction {
     this.app = new lib.ProjectApp(this.projectName, appProps)
     this.synthStack = this.app.synthesizeStack(this.projectName)
   }
-
   protected async provideAssetFolder() {
     await this.setS3Name()
     const createFolder = new ProvideAssetFolder(this.appPath, this.s3Name)

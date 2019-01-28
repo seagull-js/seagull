@@ -14,14 +14,14 @@ export class Test extends BasicTest {
     console.log(certs)
     certs.should.not.be.equal(undefined)
     certs.length.should.be.greaterThan(0)
-    const domainNames = await new GetCertificateDomains(
+    const domains = await new GetCertificateDomains(
       region,
       certs[0].CertificateArn!
     ).execute()
     // tslint:disable-next-line:no-console
-    console.log(domainNames)
-    domainNames.length.should.be.greaterThan(0)
-    domainNames[0].should.be.a('string')
-    domainNames[0].length.should.be.greaterThan(0)
+    console.log(domains)
+    domains.length.should.be.greaterThan(0)
+    domains[0].should.be.a('string')
+    domains[0].length.should.be.greaterThan(0)
   }
 }

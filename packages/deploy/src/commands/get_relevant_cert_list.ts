@@ -1,7 +1,7 @@
 import { Command } from '@seagull/commands'
 import { SharedIniFileCredentials } from 'aws-sdk'
 import * as ACM from 'aws-sdk/clients/acm'
-export class GetRelevantCertificates extends Command {
+export class GetRelevantCertList extends Command {
   private acm: ACM
 
   constructor(region: string) {
@@ -12,12 +12,12 @@ export class GetRelevantCertificates extends Command {
     this.acm = new ACM({ credentials, region })
   }
   async execute() {
-    return await this.getCerts()
+    return await this.getCertList()
   }
   async revert() {
     return true
   }
-  async getCerts() {
+  async getCertList() {
     const params = { CertificateStatuses: ['ISSUED'] }
     try {
       const response = await this.acm.listCertificates(params).promise()

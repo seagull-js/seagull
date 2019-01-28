@@ -1,16 +1,17 @@
 import { LambdaIntegration, RestApi } from '@aws-cdk/aws-apigateway'
+import * as CM from '@aws-cdk/aws-certificatemanager'
 import * as CF from '@aws-cdk/aws-cloudfront'
+import { AliasConfiguration } from '@aws-cdk/aws-cloudfront'
 import { PolicyStatement, Role, ServicePrincipal } from '@aws-cdk/aws-iam'
 import { Code, Function as LambdaFunction, Runtime } from '@aws-cdk/aws-lambda'
 import * as S3 from '@aws-cdk/aws-s3'
 import { App, Stack, StackProps } from '@aws-cdk/cdk'
-
 import { getApiGatewayDomain, getApiGatewayPath } from '..'
 
 interface ProjectStackProps extends StackProps {
   deployS3: boolean
   s3Name: string
-  aliasConfiguration?: CF.AliasConfiguration
+  aliasConfiguration?: AliasConfiguration
   env: { account?: string; path: string; region: string }
 }
 
@@ -18,7 +19,7 @@ export class AppStack extends Stack {
   private appName: string
   private folder: string
   private s3Name: string
-  private aliasConfiguration?: CF.AliasConfiguration
+  private aliasConfiguration?: AliasConfiguration
   private defaultIntegration?: LambdaIntegration
   private apiGateway?: RestApi
   private role?: Role
@@ -97,14 +98,6 @@ export class AppStack extends Stack {
     role.addToPolicy(policyStatement.addAllResources().addActions(...actions))
     this.role = role
   }
-  // private addCertificate(){
-  //   const name = `${this.name}Certificate`
-  //   const props: CM.CertificateProps = {domainName: ''}
-  //   CM
-  //   // tslint:disable-next-line:no-unused-expression
-  //   new CM.Certificate(this,name, {domainName: ''})
-  // }
-
   private addCloudfront() {
     const name = `${this.name}CFD`
     const originPath = this.apiGatewayOriginPath
@@ -117,10 +110,4 @@ export class AppStack extends Stack {
     // tslint:disable-next-line:no-unused-expression
     new CF.CloudFrontWebDistribution(this, name, conf)
   }
-
-  // private getAliasConf() {
-  //   const names = this.aliasUrls
-  //   const acmCertRef = this.acmCertRef
-  //   return acmCertRef && names ? { acmCertRef, names } : undefined
-  // }
 }

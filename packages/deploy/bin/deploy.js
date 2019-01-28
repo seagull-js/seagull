@@ -5,15 +5,11 @@ const logError = error => console.log('error', error)
 const { Deploy } = require('../dist/src/deploy')
 
 require('dotenv').config()
-const acmCertRef = process.env.ACM_CERT_REF
-const names = process.env.ALIAS_URLS
-  ? process.env.ALIAS_URLS.split(',')
-  : undefined
 const seagullConfigs = require(`${this.appPath}/package.json`).seagull
-const domainNames = seagullConfigs ? seagullConfigs.domainNames : undefined
+const domains = seagullConfigs ? seagullConfigs.domains : undefined
 const options = {
   branchName: process.env.BRANCH_NAME || 'master',
-  domainNames,
+  domains: this.branchName === 'master' ? domains : undefined,
   mode: process.env.DEPLOY_MODE || 'prod',
   noProfileCheck: process.env.NO_PROFILE_CHECK || false,
   profile: process.env.AWS_PROFILE,
