@@ -29,7 +29,7 @@ export abstract class Route {
   // registers the route with an express app
   static async register(app: Express & { [key: string]: any }) {
     const method = this.method.toLowerCase()
-    app[method](this.path, this.handle)
+    app[method](this.path, this.handle.bind(this))
   }
 
   private static pipeline = [
