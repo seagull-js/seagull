@@ -5,35 +5,19 @@ import { isString } from 'lodash'
 import * as React from 'react'
 import * as rfs from 'require-from-string'
 
-export abstract class Route {
-  static cache: number = 0
-  static method: string
-  static path: string
-
-  static async register<T extends Route>(
-    this: { new (...args: any[]): T },
-    app: Express
-  ) {
-    const method = (this as any).method.toLowerCase()
-    const path = (this as any).path
-    const cache = (this as any).cache
-    const fn = (req: Request, res: Response) => {
-      setExpireHeader(res, cache)
-      return new this(req, res).handler(req)
-    }
-    const router = app as any
-    router[method](path, fn)
-  }
-
-  protected request: Request
-  protected response: Response
+export class RouteContext {
+  request: Request
+  response: Response
 
   constructor(request: Request, response: Response) {
     this.request = request
     this.response = response
   }
 
-  abstract async handler(req: Request): Promise<void>
+  text(this: RouteContext, data: string) {
+    this.response.type('txt')
+    this.response.send(data)
+  }
 
   error(message: string = 'internal server error') {
     this.response.status(500)
@@ -71,12 +55,6 @@ export abstract class Route {
     this.response.send(html)
   }
 
-  // send response as plain text
-  text(data: string) {
-    this.response.type('txt')
-    this.response.send(data)
-  }
-
   private renderUMD(pageSource: string, data: any) {
     const pagePath = `${process.cwd()}/dist/assets/pages/${pageSource}.js`
     const pagePathServer = pagePath.replace('.js', '-server.js')
@@ -91,6 +69,49 @@ export abstract class Route {
   }
 }
 
-export function setExpireHeader(response: Response, cache: number) {
-  response.setHeader('cache-control', `max-age=${cache}`)
+type Middleware = (ctx: RouteContext) => boolean | void
+
+export abstract class Route {
+  static key?: string
+  static cache: number = 0
+  static method: string
+  static path: string
+
+  static handler: (this: RouteContext) => Promise<void>
+
+  static async register(app: Express & { [key: string]: any }) {
+    const method = this.method.toLowerCase()
+    app[method](this.path, this.handle)
+  }
+
+  private static pipeline = [
+    Route.setExpireHeader,
+    Route.authRequest,
+    Route.processRequest,
+  ]
+
+  private static async handle(req: Request, res: Response) {
+    const ctx = new RouteContext(req, res)
+    this.pipeline.reduce(this.applyMiddleware.bind(this, ctx), false)
+  }
+
+  private static setExpireHeader(ctx: RouteContext) {
+    ctx.response.setHeader('cache-control', `max-age=${this.cache}`)
+  }
+  private static authRequest(ctx: RouteContext) {
+    const isAuthed = ctx.request.header('Authorization') === this.key
+    return isAuthed ? isAuthed : (ctx.error('Unauthed'), false)
+  }
+
+  private static processRequest(ctx: RouteContext) {
+    this.handler.bind(ctx)()
+  }
+
+  private static applyMiddleware(
+    ctx: RouteContext,
+    abort: boolean | void,
+    pipelineItem: Middleware
+  ) {
+    return abort ? abort : pipelineItem(ctx)
+  }
 }

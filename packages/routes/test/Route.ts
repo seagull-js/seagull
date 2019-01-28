@@ -1,13 +1,13 @@
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as httpMocks from 'node-mocks-http'
-import { Route } from '../src'
+import { Route, RouteContext } from '../src'
 
 class DemoRoute extends Route {
   static method = 'GET'
   static path = '/'
-  async handler() {
-    return this.text('demo route')
+  static async handler(this: RouteContext) {
+    this.text('demo route')
   }
 }
 
@@ -19,8 +19,7 @@ export class Test {
   async 'can be instantiated and executed'() {
     const request = httpMocks.createRequest({ method: 'GET', url: '/' })
     const response = httpMocks.createResponse()
-    const route = new DemoRoute(request, response)
-    await route.handler()
+    await DemoRoute.handle(request, response)
     response._getData().should.be.equal('demo route')
     response.statusCode.should.be.equal(200)
   }
