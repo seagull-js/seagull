@@ -88,6 +88,29 @@ export abstract class Item {
     }
   }
 
+  static async filter<T extends Item>(
+    this: new (...args: any[]) => T,
+    filterObject: any
+  ) {
+    const name = this.name
+    const keys: string[] = await new S3.ListFiles(config.bucket, name).execute()
+    const promises = keys.map(async key => {
+      let match = false
+      const data = await loadJSONFile(key)
+
+      for (const filterKey of Object.keys(filterObject)) {
+        if (!data.hasOwnProperty(filterKey)) {
+          return false
+        }
+        match = filterObject[filterKey] === data[filterKey]
+      }
+      return match && (Object.assign(Object.create(this.prototype), data) as T)
+    })
+
+    const result = await Promise.all(promises)
+    return result.filter(item => item)
+  }
+
   abstract id: string
 
   async save() {
