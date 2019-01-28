@@ -69,6 +69,8 @@ export class RouteContext {
   }
 }
 
+type Middleware = (ctx: RouteContext) => boolean | void
+
 export abstract class Route {
   static key?: string
   static cache: number = 0
@@ -82,12 +84,34 @@ export abstract class Route {
     app[method](this.path, this.handle)
   }
 
-  static async handle(request: Request, response: Response) {
-    const ctx = new RouteContext(request, response)
-    return this.handler.bind(ctx)()
-  }
-}
+  private static pipeline = [
+    Route.setExpireHeader,
+    Route.authRequest,
+    Route.processRequest,
+  ]
 
-export function setExpireHeader(response: Response, cache: number) {
-  response.setHeader('cache-control', `max-age=${cache}`)
+  private static async handle(req: Request, res: Response) {
+    const ctx = new RouteContext(req, res)
+    this.pipeline.reduce(this.applyMiddleware.bind(this, ctx), false)
+  }
+
+  private static setExpireHeader(ctx: RouteContext) {
+    ctx.response.setHeader('cache-control', `max-age=${this.cache}`)
+  }
+  private static authRequest(ctx: RouteContext) {
+    const isAuthed = ctx.request.header('Authorization') === this.key
+    return isAuthed ? isAuthed : (ctx.error('Unauthed'), false)
+  }
+
+  private static processRequest(ctx: RouteContext) {
+    this.handler.bind(ctx)()
+  }
+
+  private static applyMiddleware(
+    ctx: RouteContext,
+    abort: boolean | void,
+    pipelineItem: Middleware
+  ) {
+    return abort ? abort : pipelineItem(ctx)
+  }
 }
