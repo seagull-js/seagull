@@ -1,6 +1,6 @@
 import { BasicTest } from '@seagull/testing'
 import * as httpMocks from 'node-mocks-http'
-import { Route, setExpireHeader } from './Route'
+import { Route } from './Route'
 
 export type HttpMethod = 'GET' | 'POST'
 

@@ -5,7 +5,7 @@ import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as path from 'path'
 import * as React from 'react'
-import { Route, RouteTest, RouteContext } from '../src'
+import { Route, RouteContext, RouteTest } from '../src'
 
 class DemoPage extends Page {
   html() {
