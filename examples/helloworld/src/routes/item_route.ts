@@ -1,5 +1,5 @@
 import { Item } from '@seagull/plugin-items'
-import { Route } from '@seagull/routes'
+import { Route, RouteContext } from '@seagull/routes'
 
 class Todo extends Item {
   id: string
@@ -13,7 +13,7 @@ class Todo extends Item {
 export default class ItemRoute extends Route {
   static method = 'get'
   static path = '/items'
-  async handler() {
+  static async handler(this: RouteContext) {
     await Todo.put({ id: 'first!' })
     const list = await Todo.all()
     this.html('items: ' + JSON.stringify(list))

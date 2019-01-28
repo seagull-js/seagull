@@ -112,7 +112,9 @@ export class AppStack extends Stack {
     const name = `${this.name}CFD`
     const originPath = this.apiGatewayOriginPath
     const allowedMethods = CF.CloudFrontAllowedMethods.ALL
-    const behaviors = [{ allowedMethods, isDefaultBehavior: true }]
+    const forwardedValues = { headers: ['authorization'], queryString: true }
+    const isDefaultBehavior = true
+    const behaviors = [{ allowedMethods, forwardedValues, isDefaultBehavior }]
     const customOriginSource = { domainName: this.apiGatewayDomain }
     const originConfigs = [{ behaviors, customOriginSource, originPath }]
     const comment = this.appName

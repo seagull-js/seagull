@@ -1,9 +1,9 @@
-import { Route } from '@seagull/routes'
+import { Route, RouteContext } from '@seagull/routes'
 
 export default class TicTacToe extends Route {
   static method = 'get'
   static path = '/seconds-left'
-  async handler() {
+  static async handler(this: RouteContext) {
     this.render('SecondsLeft', {
       seconds: 15,
     })

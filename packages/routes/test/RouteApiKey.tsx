@@ -3,6 +3,7 @@ import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import { Route, RouteContext, RouteTest } from '../src'
 
 class DemoRoute extends Route {
+  static apiKey = '2135t'
   static method = 'GET'
   static path = '/'
   static cache = 300
@@ -17,9 +18,24 @@ export class Test extends RouteTest {
   route = DemoRoute
 
   @test
-  async 'setting cache in routes works'() {
+  async 'no token does not work'() {
     const { code, data, headers } = await this.invoke('GET', '/', {})
+    code.should.be.equal(500)
+  }
+
+  @test
+  async 'token authing works'() {
+    const { code, data, headers } = await this.invoke('GET', '/', {
+      headers: { Authorization: 'Token 2135t' },
+    })
     code.should.be.equal(200)
-    headers['cache-control'].should.be.equal('max-age=300')
+  }
+
+  @test
+  async 'token authing with wrong token does not work'() {
+    const { code, data, headers } = await this.invoke('GET', '/', {
+      headers: { Authorization: 'Token 3135t' },
+    })
+    code.should.be.equal(500)
   }
 }
