@@ -19,4 +19,3 @@ This package deploys a bundle that was handed over via cdk.
   - [ ] Diff
   - [ ] Pipeline
 - [ ] Split CDK Ressources in files
-- [ ] move deploy to deploy-aws
