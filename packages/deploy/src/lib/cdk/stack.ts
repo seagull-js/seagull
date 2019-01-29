@@ -2,6 +2,7 @@ import { LambdaIntegration, RestApi } from '@aws-cdk/aws-apigateway'
 import * as CF from '@aws-cdk/aws-cloudfront'
 import { PolicyStatement, Role, ServicePrincipal } from '@aws-cdk/aws-iam'
 import { Code, Function as LambdaFunction, Runtime } from '@aws-cdk/aws-lambda'
+import { LogGroup } from '@aws-cdk/aws-logs'
 import * as S3 from '@aws-cdk/aws-s3'
 import { App, Stack, StackProps } from '@aws-cdk/cdk'
 
@@ -32,10 +33,20 @@ export class AppStack extends Stack {
     this.folder = props.env.path
     this.addIAMRole()
     this.addLambda()
+    this.addLogGroup()
     // tslint:disable-next-line:no-unused-expression
     props.deployS3 && this.addS3()
     this.addApiGateway()
     this.addCloudfront()
+  }
+
+  private addLogGroup() {
+    const name = `${this.appName}-log-group`
+    const logGroupName = `/aws/lambda/${this.appName}-lambda-handler`
+    const retentionDays = Infinity
+    const props = { logGroupName, retentionDays }
+    // tslint:disable-next-line:no-unused-expression
+    new LogGroup(this, name, props)
   }
 
   private addS3() {
@@ -49,6 +60,7 @@ export class AppStack extends Stack {
     const conf = {
       code: Code.asset(`${this.folder}/.seagull/deploy`),
       description: 'universal route',
+      environment: { MODE: 'cloud' },
       functionName: `${name}-handler`,
       handler: 'dist/assets/backend/lambda.handler',
       memorySize: 3008,
@@ -100,10 +112,13 @@ export class AppStack extends Stack {
     const name = `${this.name}CFD`
     const originPath = this.apiGatewayOriginPath
     const allowedMethods = CF.CloudFrontAllowedMethods.ALL
-    const behaviors = [{ allowedMethods, isDefaultBehavior: true }]
+    const forwardedValues = { headers: ['authorization'], queryString: true }
+    const isDefaultBehavior = true
+    const behaviors = [{ allowedMethods, forwardedValues, isDefaultBehavior }]
     const customOriginSource = { domainName: this.apiGatewayDomain }
     const originConfigs = [{ behaviors, customOriginSource, originPath }]
-    const conf = { defaultRootObject: '', originConfigs }
+    const comment = this.appName
+    const conf = { comment, defaultRootObject: '', originConfigs }
     // tslint:disable-next-line:no-unused-expression
     new CF.CloudFrontWebDistribution(this, name, conf)
   }

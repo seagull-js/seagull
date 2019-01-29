@@ -12,11 +12,13 @@ class Config extends Item {
 class Todo extends Item {
   id: string
   text: string
+  user: string | undefined
 
-  constructor(id: string, text: string) {
+  constructor(id: string, text: string, user?: string) {
     super()
     this.id = id
     this.text = text
+    this.user = user
   }
 }
 
@@ -91,6 +93,24 @@ export class Test extends BasicTest {
       { id: 'bar', text: 'b' },
       { id: 'foobar', text: 'c' },
     ])
+  }
+
+  @test
+  async 'can get a list of items by filter object'() {
+    await Todo.putAll([
+      { id: 'foo', text: 'a', user: 'x' },
+      { id: 'bar', text: 'a', user: 'y' },
+      { id: 'foobar', text: 'c', user: 'x' },
+      { id: 'foobarbar', text: 'a', user: 'y' },
+    ])
+    const list = await Todo.filter({ text: 'a', user: 'y' })
+    list.should.be.deep.equal([
+      { id: 'bar', text: 'a', user: 'y' },
+      { id: 'foobarbar', text: 'a', user: 'y' },
+    ])
+
+    const list2 = await Todo.filter({ bla: 'a', user: 'y' })
+    list2.should.be.deep.equal([])
   }
 
   @test

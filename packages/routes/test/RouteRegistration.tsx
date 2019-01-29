@@ -1,15 +1,14 @@
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
-import { Route, RouteTest } from '../src'
+import { Route, RouteContext, RouteTest } from '../src'
 
 class DemoRoute extends Route {
   static method = 'GET'
   static path = '/'
-  async handler() {
+  static async handler(this: RouteContext) {
     return this.text('demo route')
   }
 }
-
 @suite('Route::Registration')
 export class Test extends RouteTest {
   route = DemoRoute
