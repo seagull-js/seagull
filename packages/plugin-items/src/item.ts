@@ -108,7 +108,7 @@ export abstract class Item {
     })
 
     const result = await Promise.all(promises)
-    return result.filter(item => item)
+    return result.filter(item => item) as T[]
   }
 
   abstract id: string
