@@ -63,7 +63,7 @@ export class AppStack extends Stack {
       environment: { MODE: 'cloud' },
       functionName: `${name}-handler`,
       handler: 'dist/assets/backend/lambda.handler',
-      memorySize: 3008,
+      memorySize: 1536,
       role: this.role,
       runtime: Runtime.NodeJS810,
       timeout: 300,
