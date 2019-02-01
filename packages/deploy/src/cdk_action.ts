@@ -45,7 +45,6 @@ export interface Options {
 }
 
 export abstract class CDKAction {
-  aliasConfiguration?: AliasConfiguration
   appPath: string
   opts: Options
   projectName: string
@@ -73,10 +72,9 @@ export abstract class CDKAction {
   }
 
   protected async createCDKApp() {
-    const { region, domains } = this.opts
     const appProps = {
       account: await this.sdk.defaultAccount(),
-      aliasConfiguration: await makeAliasConfig(region, domains),
+      aliasConfiguration: await makeAliasConfig(this.opts.domains),
       deployS3: this.opts.mode === 'prod' || this.opts.branchName === 'master',
       path: this.appPath,
       region: this.opts.region,

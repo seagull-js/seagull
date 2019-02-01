@@ -1,7 +1,6 @@
 import * as CM from '@aws-cdk/aws-certificatemanager'
 import { Construct } from '@aws-cdk/cdk'
 import * as ACM from 'aws-sdk/clients/acm'
-import { difference, find } from 'lodash'
 import { GetCertificateDomains, GetRelevantCertList } from '../../commands'
 
 export const addNewCert = (
@@ -15,28 +14,31 @@ export const addNewCert = (
   const props: CM.CertificateProps = { domainName, subjectAlternativeNames }
   return new CM.Certificate(stack, `${name}Certificate`, props).certificateArn
 }
-
-export const makeAliasConfig = async (region: string, domains?: string[]) => {
+const noCertFound = `No Certificate found, that matches all domains. Make sure 
+ to request a Certificate via ACM & confirm the Mail! Cannot deploy stack.`
+const throwCertError = () => {
+  throw new Error(noCertFound)
+}
+export const makeAliasConfig = async (domains?: string[]) => {
   const names = domains
   if (!names || !names.length) {
     return undefined
   }
-  const acmCertRef = await getExistingCert(region, names)
-  return acmCertRef ? { acmCertRef, names } : undefined
+  const acmCertRef = await getExistingCert(names)
+  return acmCertRef ? { acmCertRef, names } : throwCertError()
 }
 
 // TODO: react to wildcards like *.aida.de
-export const getExistingCert = async (region: string, domains: string[]) => {
-  const certSummaries = await new GetRelevantCertList(region).execute()
-  const domainListRequests = certSummaries.map(makeDomainListRequest(region))
+export const getExistingCert = async (domains: string[]) => {
+  const certSummaries = await new GetRelevantCertList().execute()
+  const domainListRequests = certSummaries.map(makeDomainListRequest())
   const domainLists = await Promise.all(domainListRequests)
   const certIndex = domainLists.findIndex(matchesDomains(domains))
   return certIndex < 0 ? undefined : certSummaries[certIndex].CertificateArn
 }
 
-const makeDomainListRequest = (region: string) => (
-  summary: ACM.CertificateSummary
-) => new GetCertificateDomains(region, summary.CertificateArn!).execute()
+const makeDomainListRequest = () => (summary: ACM.CertificateSummary) =>
+  new GetCertificateDomains(summary.CertificateArn!).execute()
 
 export const matchesDomains = (domains: string[]) => (
   domainSchemata: string[]

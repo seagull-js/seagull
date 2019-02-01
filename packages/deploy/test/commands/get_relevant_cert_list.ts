@@ -6,9 +6,9 @@ import { GetRelevantCertList } from '../../src/commands'
 @suite('GetRelevantCertList')
 export class Test extends BasicTest {
   @timeout(10000)
-  @test
+  @test.skip
   async 'can list certificates'() {
-    const certs = await new GetRelevantCertList('eu-central-1').execute()
+    const certs = await new GetRelevantCertList().execute()
     // tslint:disable-next-line:no-console
     console.log(certs)
     certs.should.not.be.equal(undefined)

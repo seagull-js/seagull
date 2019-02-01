@@ -4,12 +4,12 @@ import * as ACM from 'aws-sdk/clients/acm'
 export class GetRelevantCertList extends Command {
   private acm: ACM
 
-  constructor(region: string) {
+  constructor() {
     super()
     const credentials = new SharedIniFileCredentials({
       profile: process.env.AWS_PROFILE,
     })
-    this.acm = new ACM({ credentials, region })
+    this.acm = new ACM({ credentials, region: 'us-east-1' })
   }
   async execute() {
     return await this.getCertList()

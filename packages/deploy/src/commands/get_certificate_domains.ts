@@ -4,12 +4,12 @@ import * as ACM from 'aws-sdk/clients/acm'
 export class GetCertificateDomains extends Command {
   private acm: ACM
   private arn: string
-  constructor(region: string, arn: string) {
+  constructor(arn: string) {
     super()
     const credentials = new SharedIniFileCredentials({
       profile: process.env.AWS_PROFILE,
     })
-    this.acm = new ACM({ credentials, region })
+    this.acm = new ACM({ credentials, region: 'us-east-1' })
     this.arn = arn
   }
   async execute() {
