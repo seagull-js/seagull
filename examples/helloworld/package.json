@@ -46,8 +46,6 @@
     "url": "git+https://github.com/AIDACruises/unicorn.git"
   },
   "seagull": {
-    "domains": [
-      "myprettyface.cruise-api.aida.de"
-    ]
+    "domains": []
   }
 }

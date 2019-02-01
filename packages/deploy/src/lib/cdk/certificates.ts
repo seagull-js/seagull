@@ -8,8 +8,8 @@ export const addNewCert = (
   name: string,
   domains: string[]
 ) => {
-  const domainName = domains![0]
-  const altNames = domains!.slice(1)
+  const domainName = domains[0]
+  const altNames = domains.slice(1)
   const subjectAlternativeNames = altNames.length ? altNames : undefined
   const props: CM.CertificateProps = { domainName, subjectAlternativeNames }
   return new CM.Certificate(stack, `${name}Certificate`, props).certificateArn
@@ -28,7 +28,6 @@ export const makeAliasConfig = async (domains?: string[]) => {
   return acmCertRef ? { acmCertRef, names } : throwCertError()
 }
 
-// TODO: react to wildcards like *.aida.de
 export const getExistingCert = async (domains: string[]) => {
   const certSummaries = await new GetRelevantCertList().execute()
   const domainListRequests = certSummaries.map(makeDomainListRequest())

@@ -57,15 +57,15 @@ export class Test extends BasicTest {
   }
   @test.skip
   async 'getExistingCert works as expected'() {
-    const noCert = await getExistingCert(['autobahn.aida.de'])
+    const noCert = await getExistingCert(['myuglyface.seagull.de'])
     expect(noCert).to.be.equal(undefined)
-    const validCert = await getExistingCert(['myprettyface.cruise-api.aida.de'])
+    const validCert = await getExistingCert(['myprettyface.seagull.de'])
     validCert!.should.be.a('string')
     validCert!.length.should.be.greaterThan(0)
   }
   @test.skip
   async 'makeAliasConfig works as expected'() {
-    const domains = ['myprettyface.cruise-api.aida.de']
+    const domains = ['myprettyface.seagull.de']
     const aliasConf = await makeAliasConfig(domains)
     expect(aliasConf).to.haveOwnProperty('acmCertRef')
     expect(aliasConf!.acmCertRef.length).to.be.greaterThan(0)
