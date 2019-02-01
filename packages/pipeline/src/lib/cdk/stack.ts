@@ -140,6 +140,7 @@ export class AppStack extends Stack {
     actions.push('s3:*')
     actions.push('apigateway:*')
     actions.push('lambda:*')
+    actions.push('logs:*')
 
     const role = new Role(this, name, roleParams)
     const policyStatement = new PolicyStatement()

@@ -2,22 +2,12 @@ import { FS as FSMock } from '@seagull/mock-fs'
 import { BasicTest } from '@seagull/testing'
 import * as AWS from 'aws-sdk'
 import 'chai/register-should'
-import * as fs from 'fs'
+import { Volume } from 'memfs'
 import { suite, test } from 'mocha-typescript'
 import { S3MockFS } from '../src'
 
 @suite('Mocks::S3::FS')
 export class Test extends BasicTest {
-  async before() {
-    await BasicTest.prototype.before.bind(this)()
-    fs.mkdirSync('/tmp/.data')
-  }
-
-  async after() {
-    await BasicTest.prototype.after.bind(this)()
-    this.deleteFolderRecursive('/tmp/.data')
-  }
-
   @test.skip()
   async 'S3 reading does not work without mock'() {
     const result: any = { response: null, error: null }
@@ -44,7 +34,8 @@ export class Test extends BasicTest {
 
   @test
   async 'can be enabled and disabled'() {
-    const mock = new S3MockFS('/tmp/.data')
+    const fs = new Volume() as any
+    const mock = new S3MockFS('/tmp/.data', fs)
     mock.activate()
     await this.writeFileToS3('stuff.txt', 'lorem ipsum')
     const { Body } = await this.readFileFromS3('stuff.txt')
@@ -60,7 +51,8 @@ export class Test extends BasicTest {
 
   @test
   async 'can be resetted'() {
-    const mock = new S3MockFS('/tmp/.data')
+    const fs = new Volume() as any
+    const mock = new S3MockFS('/tmp/.data', fs)
     mock.activate()
     await this.writeFileToS3('stuff.txt', 'lorem ipsum')
     const { Body } = await this.readFileFromS3('stuff.txt')
@@ -72,7 +64,8 @@ export class Test extends BasicTest {
   }
   @test
   async 'preserves state for activate/deactivate'() {
-    const mock = new S3MockFS('/tmp/.data')
+    const fs = new Volume() as any
+    const mock = new S3MockFS('/tmp/.data', fs)
     mock.activate()
     await this.writeFileToS3('stuff.txt', 'lorem ipsum')
     const { Body } = await this.readFileFromS3('stuff.txt')
@@ -106,19 +99,5 @@ export class Test extends BasicTest {
     const params = { Body: content, Bucket: 'DemoBucket123', Key: path }
     const client = new AWS.S3()
     return await client.putObject(params).promise()
-  }
-
-  private deleteFolderRecursive(path: string) {
-    if (fs.existsSync(path)) {
-      fs.readdirSync(path).forEach((file, index) => {
-        const curPath = path + '/' + file
-        if (fs.lstatSync(curPath).isDirectory()) {
-          this.deleteFolderRecursive(curPath)
-        } else {
-          fs.unlinkSync(curPath)
-        }
-      })
-      fs.rmdirSync(path)
-    }
   }
 }

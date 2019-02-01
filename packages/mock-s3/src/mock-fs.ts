@@ -17,9 +17,11 @@ export class S3MockFS implements Mock {
    * When true, save/load the state of storage to local disk
    */
   localFolder: string
+  private fsModule: typeof fs
 
-  constructor(localFolder: string) {
+  constructor(localFolder: string, fsModule = fs) {
     this.localFolder = localFolder
+    this.fsModule = fsModule
   }
 
   /**
@@ -53,7 +55,7 @@ export class S3MockFS implements Mock {
    */
   deleteObject = (Input: import('aws-sdk').S3.DeleteObjectRequest, cb: any) => {
     this.ensureBucket(Input.Bucket)
-    fs.unlinkSync(this.getEncodedPath(Input))
+    this.fsModule.unlinkSync(this.getEncodedPath(Input))
     const result = {} as import('aws-sdk').S3.DeleteObjectOutput
     return this.result(cb, result)
   }
@@ -63,7 +65,7 @@ export class S3MockFS implements Mock {
    */
   getObject = (Input: import('aws-sdk').S3.GetObjectRequest, cb: any) => {
     this.ensureBucket(Input.Bucket)
-    const data = fs.readFileSync(this.getEncodedPath(Input), 'utf-8')
+    const data = this.fsModule.readFileSync(this.getEncodedPath(Input), 'utf-8')
     const Body = JSON.parse(data)
     const result: import('aws-sdk').S3.GetObjectOutput = { Body }
     return this.result(cb, result)
@@ -79,7 +81,7 @@ export class S3MockFS implements Mock {
     this.ensureBucket(Input.Bucket)
     const prefix = Input.Prefix || ''
     const dir = pathModule.join(this.localFolder, Input.Bucket)
-    const keys = fs.readdirSync(dir).map(decodeURIComponent)
+    const keys = this.fsModule.readdirSync(dir).map(decodeURIComponent)
     const list = prefix ? keys.filter(key => key.startsWith(prefix)) : keys
     const Contents = list.map(key => ({ Key: key }))
     const result: import('aws-sdk').S3.ListObjectsV2Output = { Contents }
@@ -92,7 +94,7 @@ export class S3MockFS implements Mock {
   putObject = (Input: import('aws-sdk').S3.PutObjectRequest, cb: any) => {
     this.ensureBucket(Input.Bucket)
     const content = JSON.stringify(Input.Body)
-    fs.writeFileSync(this.getEncodedPath(Input), content, 'utf-8')
+    this.fsModule.writeFileSync(this.getEncodedPath(Input), content, 'utf-8')
     const result: import('aws-sdk').S3.PutObjectOutput = {}
     return this.result(cb, result)
   }
@@ -116,7 +118,8 @@ export class S3MockFS implements Mock {
   // little helper to ensure that the "bucket" key exists in [[storage]]
   private ensureBucket = (name: string) => {
     const dir = pathModule.join(this.localFolder, name)
-    return !fs.existsSync(dir) && createFolderRecursive(dir)
+    const dirExists = this.fsModule.existsSync(dir)
+    return !dirExists && createFolderRecursive(dir, this.fsModule)
   }
 
   private getEncodedPath({ Key, Bucket }: { Key: string; Bucket: string }) {
@@ -124,16 +127,16 @@ export class S3MockFS implements Mock {
   }
 
   private deleteFolderRecursive(path: string) {
-    if (fs.existsSync(path)) {
-      fs.readdirSync(path).forEach((file, index) => {
+    if (this.fsModule.existsSync(path)) {
+      this.fsModule.readdirSync(path).forEach((file, index) => {
         const curPath = path + '/' + file
-        if (fs.lstatSync(curPath).isDirectory()) {
+        if (this.fsModule.lstatSync(curPath).isDirectory()) {
           this.deleteFolderRecursive(curPath)
         } else {
-          fs.unlinkSync(curPath)
+          this.fsModule.unlinkSync(curPath)
         }
       })
-      fs.rmdirSync(path)
+      this.fsModule.rmdirSync(path)
     }
   }
 }
