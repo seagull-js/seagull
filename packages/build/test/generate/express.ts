@@ -19,6 +19,6 @@ export class Test extends BasicTest {
     await new Generate.Express('/tmp', '/tmp/app.js').execute()
     const result = await new FS.ReadFile('/tmp/app.js').execute()
     result.should.be.a('string').that.is.not.equal('')
-    result.should.contain('require("./routes/demo").default.register(app);')
+    result.should.contain('require("./routes/demo").default')
   }
 }

@@ -34,6 +34,7 @@ export class Express extends Command {
       'Object.defineProperty(exports, "__esModule", { value: true });',
       'const express = require("express");',
       `const morgan = require('morgan');`,
+      `const routes = require('@seagull/routes');`,
       'const bodyParser = require("body-parser");',
       'const app = express();',
       `app.use(morgan('combined'));`,
@@ -48,7 +49,11 @@ export class Express extends Command {
       .map(
         r => `
       try {
-        require("./routes${r}").default.register(app);
+        const route = require("./routes${r}").default;
+        if(!routes.routeIsValid(route)){
+          throw new Error('Route not valid')
+        }
+        route.register(app);
       } catch (error) {
         console.log('error loading route:', '${r}', error);
       }`
