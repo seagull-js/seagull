@@ -1,63 +1,35 @@
 import { Route } from './Route'
 
+type SegmentTest = (a?: string) => boolean
+const isUndefined = (a?: string) => a === undefined
+const isEmpty = (a?: string) => a === ''
+const isConstant = (a?: string) => !!a && a[0] !== ':' && a[0] !== '*'
+const isPathParam = (a?: string) => !!a && a[0] === ':'
+const isWildcard = (a?: string) => !!a && a[0] === '*'
+
 const sortPathSegment = (a?: string, b?: string) => {
-  if (a === undefined && b === undefined) {
-    return 0
-  }
-  if (a === undefined) {
-    return -1
-  }
-  if (b === undefined) {
-    return 1
-  }
-  if (a === '' && b === '') {
-    return 0
-  }
+  const precedenceList: SegmentTest[] = [
+    isUndefined,
+    isEmpty,
+    isConstant,
+    isPathParam,
+    isWildcard,
+  ]
 
-  if (a[0] === ':' && b[0] === ':') {
-    return 0
-  }
-  if (a[0] === '*' && b[0] === '*') {
-    return 0
-  }
-
-  if (a === '') {
-    return -1
-  }
-  if (b === '') {
-    return 1
-  }
-  if (a[0] !== ':' && a[0] !== '*' && b[0] !== ':' && b[0] !== '*') {
-    return 0
-  }
-  if (a[0] !== ':' && a[0] !== '*') {
-    return -1
-  }
-  if (b[0] !== ':' && b[0] !== '*') {
-    return 1
-  }
-  if (a[0] === ':') {
-    return -1
-  }
-  if (b[0] === ':') {
-    return 1
-  }
-  if (a === '*') {
-    return -1
-  }
-  if (b === '*') {
-    return 1
-  }
-  return 0
+  const priorityA = precedenceList.map(test => test(a)).indexOf(true)
+  const priorityB = precedenceList.map(test => test(b)).indexOf(true)
+  return priorityA === priorityB ? 0 : priorityA < priorityB ? -1 : 1
 }
+
 export const sortByPrecedence = (routes: Array<typeof Route>) => {
   const r = routes.sort((a, b) => {
-    const aa = a.path.split('/').reverse()
-    const bb = b.path.split('/').reverse()
+    const segmentsA = a.path.split('/')
+    const segmentsB = b.path.split('/')
+
     let result = 0
     while (result === 0) {
-      const cA = aa.pop()
-      const cB = bb.pop()
+      const cA = segmentsA.shift()
+      const cB = segmentsB.shift()
       result = sortPathSegment(cA, cB)
       if (cA === undefined && cB === undefined) {
         break

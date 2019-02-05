@@ -43,6 +43,12 @@ export class Test {
   }
 
   @test
+  async 'path can end with * but inside a constant'() {
+    pathIsValid('/aa*').should.be.false
+    pathIsValid('/aa/*').should.be.true
+  }
+
+  @test
   async 'path cannot have ?+()'() {
     pathIsValid('/hey?/a').should.be.false
     pathIsValid('/hey+/a').should.be.false

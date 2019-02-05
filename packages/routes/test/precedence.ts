@@ -39,6 +39,15 @@ export class Test {
     const sortedRoutes = sortByPrecedence(routes.map(fakeRoute))
     sortedRoutes.map(toPath).should.be.deep.eq(expectedRoutes)
   }
+
+  // not a valid path therefore skipped as this is expected to fail
+  @test.skip
+  async '/aa precedes /aa*'() {
+    const routes = ['/aa*', '/aa']
+    const expectedRoutes = ['/aa', '/aa*']
+    const sortedRoutes = sortByPrecedence(routes.map(fakeRoute))
+    sortedRoutes.map(toPath).should.be.deep.eq(expectedRoutes)
+  }
   @test
   async 'sorts complex routing right'() {
     const routes = [
