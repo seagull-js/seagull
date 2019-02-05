@@ -1,4 +1,4 @@
-import { App, Secret, Stack, StackProps } from '@aws-cdk/cdk'
+import { App, Secret, SecretParameter, Stack, StackProps } from '@aws-cdk/cdk'
 
 import { LambdaIntegration, RestApi } from '@aws-cdk/aws-apigateway'
 import * as CF from '@aws-cdk/aws-cloudfront'
@@ -76,7 +76,7 @@ export class SeagullStack extends Stack {
   }
 
   addCloudfront(cfdName: string, apiGateway: RestApi) {
-    const name = `${this.id}${cfdName}`
+    const name = `${this.id}-${cfdName}`
     const domainName = getApiGatewayDomain(apiGateway.url)
     const originPath = getApiGatewayPath(apiGateway.url)
     const allowedMethods = CF.CloudFrontAllowedMethods.ALL
@@ -90,38 +90,49 @@ export class SeagullStack extends Stack {
   }
 
   addPipeline(pipelineName: string) {
+    const name = `${this.id}-${pipelineName}`
     return new Pipeline(this, pipelineName, { pipelineName })
   }
 
-  addSourceStage(name: string, pipelineConf: PipelineConfig, gitData: GitData) {
-    const { atIndex, pipeline } = pipelineConf
-    const sourceConfig = {
-      branch: gitData.branch,
-      oauthToken: gitData.oauthToken,
-      owner: gitData.owner,
-      repo: gitData.repo,
-      stage: pipeline.addStage(`${name}Stage`, { placement: { atIndex } }),
+  addSourceStage(name: string, sourceConfig: SourceConfig) {
+    const stageName = `${this.id}-stage-${name}`
+    const sourceName = `${this.id}-github-${name}`
+    const { atIndex, pipeline } = sourceConfig.pipelineConfig
+    const stageConfig = {
+      branch: sourceConfig.gitData.branch,
+      oauthToken: sourceConfig.secret,
+      owner: sourceConfig.gitData.owner,
+      repo: sourceConfig.gitData.repo,
+      stage: pipeline.addStage(stageName, { placement: { atIndex } }),
     }
-    return new GitHubSourceAction(this, `${name}GitHubSource`, sourceConfig)
+    return new GitHubSourceAction(this, sourceName, stageConfig)
   }
 
-  addBuildStage(name: string, pipelineConf: PipelineConfig, cmds: BuildConfig) {
-    const placement = { atIndex: pipelineConf.atIndex }
+  addBuildStage(name: string, buildConfig: BuildConfig) {
+    const stageName = `${this.id}-stage-${name}`
+    const buildName = `${this.id}-code-${name}`
+    const placement = { atIndex: buildConfig.pipelineConfig.atIndex }
     const buildImage = CB.LinuxBuildImage.UBUNTU_14_04_NODEJS_8_11_0
     const phases = {
-      build: { commands: cmds.build },
-      install: { commands: cmds.install },
-      post_build: { commands: cmds.postBuild },
+      build: { commands: buildConfig.build },
+      install: { commands: buildConfig.install },
+      post_build: { commands: buildConfig.postBuild },
     }
     const projectConfig = {
       buildSpec: { phases, version: '0.2' },
       environment: { buildImage },
-      role: cmds.role,
+      role: buildConfig.role,
     }
     const project = new CB.PipelineProject(this, 'BuildProject', projectConfig)
-    const stage = pipelineConf.pipeline.addStage(`${name}Stage`, { placement })
+    const pipeline = buildConfig.pipelineConfig.pipeline
+    const stage = pipeline.addStage(stageName, { placement })
     const buildProps = { project, stage }
-    return new CB.PipelineBuildAction(this, `${name}CodeBuild`, buildProps)
+    return new CB.PipelineBuildAction(this, buildName, buildProps)
+  }
+
+  addSecretParameter(name: string, ssmParameter: string) {
+    const secretConfig = { ssmParameter }
+    return new SecretParameter(this, name, secretConfig)
   }
 }
 
@@ -130,16 +141,22 @@ interface PipelineConfig {
   pipeline: Pipeline
 }
 
+interface SourceConfig {
+  pipelineConfig: PipelineConfig
+  gitData: GitData
+  secret: Secret
+}
+
 interface BuildConfig {
   build: string[]
   install: string[]
   postBuild: string[]
   role: IAM.Role
+  pipelineConfig: PipelineConfig
 }
 
 interface GitData {
   branch: string
   owner: string
   repo: string
-  oauthToken: Secret
 }

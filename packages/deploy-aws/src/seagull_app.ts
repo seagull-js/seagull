@@ -11,36 +11,37 @@ import { SeagullStack } from './seagull_stack'
 
 interface OperationsProps {
   addAssets?: boolean
-  appPath: string
+  appPath?: string
   itemsBucket?: string
   projectName: string
-  stackEnv?: StackProps
+  stack?: SeagullStack
+  stackProps?: StackProps
 }
 
-export class Operations {
+export class SeagullApp extends App {
   stack: SeagullStack
 
   private addAssets: boolean
-  private app: App
-  private appPath: string
+  private appPath?: string
   private itemsBucket?: string
   private projectName: string
 
   constructor(props: OperationsProps) {
-    this.addAssets = props.addAssets === true
-    this.app = new App()
-    this.appPath = props.appPath
-    this.itemsBucket = props.itemsBucket
-    this.projectName = props.projectName
-    this.stack = new SeagullStack(this.app, props.projectName, props.stackEnv)
+    super()
+    const { addAssets, appPath, itemsBucket, projectName, stackProps } = props
+    this.addAssets = addAssets === true
+    this.appPath = appPath
+    this.itemsBucket = itemsBucket
+    this.projectName = projectName
+    this.stack = props.stack || new SeagullStack(this, projectName, stackProps)
   }
 
   async deployStack() {
+    const path = this.appPath
     // tslint:disable-next-line:no-unused-expression
-    this.addAssets && (await this.addResources())
-    // TODO: add provideAssetFolder
+    this.addAssets && path && (await addResources(path, this.itemsBucket))
     const sdk = new cdk.SDK({})
-    const synthStack = this.app.synthesizeStack(this.projectName)
+    const synthStack = this.synthesizeStack(this.projectName)
     const env = synthStack.environment
     const toolkitInfo = await cdk.loadToolkitInfo(env, sdk, 'CDKToolkit')
     await cdk.bootstrapEnvironment(env, sdk, 'CDKToolkit', undefined)
@@ -49,7 +50,7 @@ export class Operations {
 
   async diffStack() {
     const sdk = new cdk.SDK({})
-    const synthStack = this.app.synthesizeStack(this.projectName)
+    const synthStack = this.synthesizeStack(this.projectName)
     const cfn = await sdk.cloudFormation(synthStack.environment, 0)
     const templateData = { StackName: synthStack.name }
     const template = await cfn.getTemplate(templateData).promise()
@@ -61,19 +62,19 @@ export class Operations {
     diff.isEmpty && lib.noChangesInDiff()
     cfnDiff.formatDifferences(process.stdout, diff, logicalToPathMap)
   }
+}
 
-  private async addResources() {
-    const provideAssetFolder = new ProvideAssetFolder(this.appPath)
-    await provideAssetFolder.execute()
-    const replaceItemBucketName = this.itemsBucket !== undefined
-    return replaceItemBucketName && (await this.replaceS3BucketName())
-  }
+async function addResources(appPath: string, itemsBucket?: string) {
+  const provideAssetFolder = new ProvideAssetFolder(appPath)
+  await provideAssetFolder.execute()
+  // tslint:disable-next-line:no-unused-expression
+  itemsBucket && (await replaceS3BucketName(appPath, itemsBucket))
+}
 
-  private async replaceS3BucketName() {
-    const lambdaPath = `.seagull/deploy/dist/assets/backend/lambda.js`
-    const lambdaFile = `${this.appPath}/${lambdaPath}`
-    const lambda = await new FS.ReadFile(lambdaFile).execute()
-    const lambdaWithBucketName = lambda.replace('demo-bucket', this.itemsBucket)
-    await new FS.WriteFile(lambdaFile, lambdaWithBucketName).execute()
-  }
+async function replaceS3BucketName(appPath: string, itemsBucket: string) {
+  const lambdaPath = `.seagull/deploy/dist/assets/backend/lambda.js`
+  const lambdaFile = `${appPath}/${lambdaPath}`
+  const lambda = await new FS.ReadFile(lambdaFile).execute()
+  const lambdaWithBucketName = lambda.replace('demo-bucket', itemsBucket)
+  await new FS.WriteFile(lambdaFile, lambdaWithBucketName).execute()
 }

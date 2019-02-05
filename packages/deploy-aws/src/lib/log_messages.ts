@@ -5,6 +5,22 @@ const noAssetsMessage = `Cannot find the directory 'dist/assets' within the fold
 const noRevertAssetMessage = `Cannot revert asset folder, because it is not implemented yet.`
 const noChangesInDiffMessage = `No changes were to the infrastructure template`
 const noCheckProfileMessage = `Profile check was disabled, this may crash.`
+const noS3DeplyomentMessage = `No S3 bucket will be deployed`
+const noOwnerMessage = `Could not retrieve the owner name of the github repo. Please add a github.com repo to your package.json or write the owner to GITHUB_OWNER`
+const noRepoMessage = `Could not retrieve the repository name, will go on with the name in package.json`
+const noGitRepo = `Could not retrieve repository name, which is essential for the pipeline! Add it in your package.json or via GITHUB_REPO in env.`
+
+export function logNoOwnerFound() {
+  log(chalk.red(noOwnerMessage))
+}
+
+export function logNoGitRepoFound() {
+  log(chalk.red(noGitRepo))
+}
+
+export function logRepoFound() {
+  log(chalk.yellow(noRepoMessage))
+}
 
 export function noCredentialsSet() {
   log(chalk.red(noCredMessage))
@@ -24,6 +40,10 @@ export function noChangesInDiff() {
 
 export function noCheckProfile() {
   log(chalk.yellow(noCheckProfileMessage))
+}
+
+export function noS3Deploy() {
+  log(chalk.yellow(noS3DeplyomentMessage))
 }
 
 function log(...messages: string[]) {
