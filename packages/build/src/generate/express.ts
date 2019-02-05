@@ -47,11 +47,11 @@ export class Express extends Command {
     return routes
       .map(
         r => `
-      try {
-        require("./routes${r}").default.register(app);
-      } catch (error) {
-        console.log('error loading route:', '${r}', error);
-      }`
+try {
+  require("./routes${r}").default.register(app);
+} catch (error) {
+  console.log('error loading route:', '${r}', error);
+}`
       )
       .join('\n')
   }
