@@ -5,14 +5,13 @@ const pairsFromArrays = <T>(a: T[], b: T[]) => {
   return Array.from(longerArray, (_, i) => [a[i], b[i]])
 }
 
-type SegmentTest = (a?: string) => boolean
 const isUndefined = (a?: string) => a === undefined
 const isEmpty = (a?: string) => a === ''
 const isConstant = (a?: string) => !!a && a[0] !== ':' && a[0] !== '*'
 const isPathParam = (a?: string) => !!a && a[0] === ':'
 const isWildcard = (a?: string) => !!a && a[0] === '*'
 
-const pathPrecedence: SegmentTest[] = [
+const pathPrecedence = [
   isUndefined,
   isEmpty,
   isConstant,
