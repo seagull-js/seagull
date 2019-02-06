@@ -13,3 +13,12 @@
 
 A modern web framework combining a serverless backend with multipage react
 frontends written in/for typescript.
+
+# Getting started
+
+A quick introduction of the minimal setup you need to get everthing up & running.
+
+```
+$ npm run bootstrap   # Installing all dependencies and linking any cross-dependencies
+$ npm run test        # Execute the test suite
+```
