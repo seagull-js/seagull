@@ -25,7 +25,7 @@ const precedenceForSegment = (a?: string, b?: string) => {
   return priorityA === priorityB ? 0 : priorityA < priorityB ? -1 : 1
 }
 
-const routeSort = (a: typeof Route, b: typeof Route) => {
+export const routeSort = (a: typeof Route, b: typeof Route) => {
   const segmentPairs = pairsFromArrays(a.path.split('/'), b.path.split('/'))
   const precedences = segmentPairs.map(pair => precedenceForSegment(...pair))
   return precedences.find(p => p !== 0) || 0
