@@ -22,7 +22,7 @@ export class Page extends Command {
   dependencyCache: any
 
   /** browserify instance */
-  browserifyInstance: any
+  browserifyInstance!: browserify.BrowserifyObject
 
   /** browserify instance for ssr, without excluding vendor packages */
   browserifyInstanceSSR: any
@@ -69,6 +69,7 @@ export class Page extends Command {
     this.excludes.forEach(x => bfy.external(x))
     this.excludes.forEach(x => bfy.ignore(x))
     this.browserifyInstance = browserifyInc(bfy)
+    this.addBabelTransform(this.browserifyInstance)
     // this.browserifyInstance.on('time', (time: any) =>
     //   // tslint:disable-next-line:no-console
     //   console.log('[Bundler]', `bundled frontend in ${time}ms`)
@@ -82,5 +83,13 @@ export class Page extends Command {
     //   // tslint:disable-next-line:no-console
     //   console.log('[Bundler]', `bundled frontend in ${time}ms`)
     // )
+  }
+
+  private addBabelTransform(bfy: browserify.BrowserifyObject) {
+    const browsers = ['last 2 versions', 'safari >= 7', 'ie >= 11']
+    const presetEnvOptions = { targets: { browsers }, useBuiltIns: 'entry' }
+    const presets = [['@babel/preset-env', presetEnvOptions]]
+    const babelifyOptions = { global: true, presets }
+    bfy.transform('babelify', babelifyOptions)
   }
 }
