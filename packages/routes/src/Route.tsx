@@ -14,7 +14,14 @@ export abstract class Route {
   static cache: number = 0
   // http method
   static method: string
-  // express path definition for route
+  /**
+   * Path at which the route can be called.
+   * Must start with /.
+   * Must only use * wildcards at the end
+   * Pathparams may start with :
+   * e.g.:
+   * - /this/is/a/:pathParam/path/with/a/wildcard/*
+   */
   static path: string
 
   // implement your route here
