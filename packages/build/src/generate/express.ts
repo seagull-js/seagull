@@ -61,10 +61,7 @@ export class Express extends Command {
   }
 
   private body(routes: string[]) {
-    return `
-      const routes = [
-        ${routes.map(r => `requireRoute("${r}"),`)}
-      ].filter(v=>!!v).sort(SGRoutes.routeSort);`
+    return `const routes = [${routes.map(r => `requireRoute("${r}"),`)}].filter(v=>!!v).sort(SGRoutes.routeSort);`
   }
 
   private footer() {
