@@ -3,6 +3,7 @@
 const { Observer } = require('../dist/src/observer')
 
 const options = {
+  port: process.env.PORT || 8080,
   dataPath: '.data',
   vendor: ['react', 'react-dom', 'react-helmet', 'lodash', 'typestyle'],
 }
