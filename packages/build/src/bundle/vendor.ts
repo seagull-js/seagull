@@ -4,6 +4,7 @@ import * as browserify from 'browserify'
 import * as browserifyInc from 'browserify-incremental'
 import { join, resolve } from 'path'
 import * as sts from 'stream-string'
+import { addBabelTransform } from './transforms'
 
 export class Vendor extends Command {
   /** where to read a file from */
@@ -50,6 +51,7 @@ export class Vendor extends Command {
   private createBundlerInstance() {
     const bfy = browserify(this.createBundlerOpts())
     this.browserifyInstance = browserifyInc(bfy)
+    addBabelTransform(this.browserifyInstance)
     this.browserifyInstance.require(this.packages)
     // this.browserifyInstance.on('time', (time: any) =>
     //   // tslint:disable-next-line:no-console
