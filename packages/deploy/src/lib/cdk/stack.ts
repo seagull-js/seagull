@@ -33,14 +33,15 @@ export class AppStack extends Stack {
     this.folder = props.env.path
     this.addIAMRole()
     this.addLambda()
-    this.addLogGroup()
+    this.addLambdaLogGroup()
+    this.addDataLogGroup()
     // tslint:disable-next-line:no-unused-expression
     props.deployS3 && this.addS3()
     this.addApiGateway()
     this.addCloudfront()
   }
 
-  private addLogGroup() {
+  private addLambdaLogGroup() {
     const name = `${this.appName}-log-group`
     const logGroupName = `/aws/lambda/${this.appName}-lambda-handler`
     const retentionDays = Infinity
@@ -49,6 +50,17 @@ export class AppStack extends Stack {
     new LogGroup(this, name, props)
   }
 
+  // hardcoded log group for general data logging
+  private addDataLogGroup() {
+    const name = `${this.appName}-data-log-group`
+    const logGroupName = `/${this.appName}/data-log`
+    const retentionDays = Infinity
+    const props = { logGroupName, retentionDays }
+    // tslint:disable-next-line:no-unused-expression
+    new LogGroup(this, name, props)
+  }
+
+  // hardcoded s3 bucket for items plugin
   private addS3() {
     const s3Props = { bucketName: this.s3Name }
     const bucket = new S3.Bucket(this, `${this.appName}-item-bucket`, s3Props)
