@@ -91,72 +91,61 @@ export class SeagullStack extends Stack {
 
   addPipeline(pipelineName: string) {
     const name = `${this.id}-${pipelineName}`
-    return new Pipeline(this, pipelineName, { pipelineName })
+    return new Pipeline(this, name, { pipelineName })
   }
 
-  addSourceStage(name: string, sourceConfig: SourceConfig) {
+  addSourceStage(name: string, config: SourceStageConfig) {
     const stageName = `${this.id}-stage-${name}`
     const sourceName = `${this.id}-github-${name}`
-    const { atIndex, pipeline } = sourceConfig.pipelineConfig
-    const stageConfig = {
-      branch: sourceConfig.gitData.branch,
-      oauthToken: sourceConfig.secret,
-      owner: sourceConfig.gitData.owner,
-      repo: sourceConfig.gitData.repo,
-      stage: pipeline.addStage(stageName, { placement: { atIndex } }),
-    }
+    const { atIndex, branch, owner, pipeline, repo, oauthToken } = config
+    const stage = pipeline.addStage(stageName, { placement: { atIndex } })
+    const stageConfig = { branch, oauthToken, owner, repo, stage }
     return new GitHubSourceAction(this, sourceName, stageConfig)
   }
 
-  addBuildStage(name: string, buildConfig: BuildConfig) {
+  addBuildStage(name: string, buildConfig: BuildStageConfig) {
     const stageName = `${this.id}-stage-${name}`
     const buildName = `${this.id}-code-${name}`
-    const placement = { atIndex: buildConfig.pipelineConfig.atIndex }
+    const projectName = `${this.id}-project-${name}`
+    const { atIndex, build, install, pipeline, postBuild, role } = buildConfig
     const buildImage = CB.LinuxBuildImage.UBUNTU_14_04_NODEJS_8_11_0
     const phases = {
-      build: { commands: buildConfig.build },
-      install: { commands: buildConfig.install },
-      post_build: { commands: buildConfig.postBuild },
+      build: { commands: build },
+      install: { commands: install },
+      post_build: { commands: postBuild },
     }
     const projectConfig = {
       buildSpec: { phases, version: '0.2' },
       environment: { buildImage },
-      role: buildConfig.role,
+      role,
     }
-    const project = new CB.PipelineProject(this, 'BuildProject', projectConfig)
-    const pipeline = buildConfig.pipelineConfig.pipeline
-    const stage = pipeline.addStage(stageName, { placement })
-    const buildProps = { project, stage }
-    return new CB.PipelineBuildAction(this, buildName, buildProps)
+    const project = new CB.PipelineProject(this, projectName, projectConfig)
+    const stage = pipeline.addStage(stageName, { placement: { atIndex } })
+    const stageConfig = { project, stage }
+    return new CB.PipelineBuildAction(this, buildName, stageConfig)
   }
 
-  addSecretParameter(name: string, ssmParameter: string) {
+  addSecretParam(name: string, ssmParameter: string) {
     const secretConfig = { ssmParameter }
     return new SecretParameter(this, name, secretConfig)
   }
 }
 
-interface PipelineConfig {
+interface StageConfig {
   atIndex: number
   pipeline: Pipeline
 }
 
-interface SourceConfig {
-  pipelineConfig: PipelineConfig
-  gitData: GitData
-  secret: Secret
-}
-
-interface BuildConfig {
+interface BuildStageConfig extends StageConfig {
   build: string[]
   install: string[]
   postBuild: string[]
   role: IAM.Role
-  pipelineConfig: PipelineConfig
 }
 
-interface GitData {
+interface SourceStageConfig extends StageConfig {
   branch: string
   owner: string
   repo: string
+  oauthToken: Secret
 }

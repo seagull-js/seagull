@@ -1,107 +1,117 @@
-import { Secret } from '@aws-cdk/cdk'
+import { SDK } from 'aws-cdk'
 import { STS } from 'aws-sdk'
 
 import * as lib from '../lib'
 import { SeagullApp } from '../seagull_app'
 
-interface SeagullProjectProps {
-  account: string
+interface SeagullPipelineProps {
   appPath: string
   branch: string
-  git?: lib.GitProps
   mode: string
+  owner?: string
   region: string
+  repository?: string
+  ssmParameter?: string
+  githubToken?: string
 }
 
 export class SeagullPipeline {
-  account: string
   appPath: string
   branch: string
-  git?: lib.GitProps
+  owner?: string
   mode: string
   region: string
+  repository?: string
+  ssmParameter?: string
+  githubToken?: string
+  actions: string[]
+  install: string[]
+  build: string[]
+  postBuild: string[]
 
-  constructor(props: SeagullProjectProps) {
-    this.account = props.account
+  constructor(props: SeagullPipelineProps) {
     this.appPath = props.appPath
     this.branch = props.branch
-    this.git = props.git
     this.mode = props.mode
+    this.owner = props.owner
     this.region = props.region
+    this.repository = props.repository
+    this.ssmParameter = props.ssmParameter
+    this.githubToken = props.githubToken
+    this.actions = [
+      'cloudformation:*',
+      'cloudfront:*',
+      'iam:*',
+      's3:*',
+      'apigateway:*',
+      'lambda:*',
+      'logs:*',
+    ]
+    this.install = ['npm i -g npm', 'npm ci']
+    this.build = ['npm run build']
+    this.postBuild = [
+      'npm run test',
+      `BRANCH_NAME=${this.branch} DEPLOY_MODE=${this.mode} npm run deploy`,
+    ]
   }
 
   async createPipeline() {
     // preparations for deployment
     const suffix = this.mode === 'test' ? `${this.branch}-test` : ''
     const pkgJson = require(`${this.appPath}/package.json`)
-    const name = `${pkgJson.name}${suffix}`
-    const gitData = lib.getGitData(this.branch, pkgJson, this.git)
+    const name = `${pkgJson.name}${suffix}-pipeline`
+    const sdk = new SDK({})
+    const account = await sdk.defaultAccount()
     const accountId = (await new STS().getCallerIdentity().promise()).Account
     const bucketProps = { accountId, project: name, region: this.region }
     const itemBucketName = lib.getItemsBucketName(bucketProps)
     const addAssets = false
     const itemsBucket = itemBucketName
     const projectName = name
-    const stackProps = { env: { account: this.account, region: this.region } }
-    const props = { addAssets, itemsBucket, projectName, stackProps }
-    const actions = []
-    actions.push('cloudformation:*')
-    actions.push('cloudfront:*')
-    actions.push('iam:*')
-    actions.push('s3:*')
-    actions.push('apigateway:*')
-    actions.push('lambda:*')
-    actions.push('logs:*')
-
-    const install = []
-    install.push('npm i -g npm')
-    install.push('npm ci')
-
-    const build = []
-    build.push('npm run build')
-
-    const postBuild = []
-    postBuild.push('npm run test')
-    const deployEnv = `BRANCH_NAME=${this.branch} DEPLOY_MODE=${this.mode}`
-    postBuild.push(`${deployEnv} NO_PROFILE_CHECK=true npm run deploy`)
+    const stackProps = { env: { account, region: this.region } }
+    const props = { addAssets, itemsBucket, projectName, sdk, stackProps }
+    const actions = this.actions
 
     // construct the stack and the app
-    const app = new SeagullApp(props)
+    const pipelineApp = new SeagullApp(props)
+    const stack = pipelineApp.stack
     const principal = 'codebuild.amazonaws.com'
-    const role = app.stack.addIAMRole('role-pipeline', principal, actions)
-    const pipeline = app.stack.addPipeline('pipeline')
-    const sourceConfig = {
-      gitData,
-      pipelineConfig: { pipeline, atIndex: 0 },
-      secret: getSecret(app, this.git),
+    const role = stack.addIAMRole('role-pipeline', principal, actions)
+    const pipeline = stack.addPipeline('pipeline')
+    const ssmStr = this.ssmParameter
+    const secretP = ssmStr ? stack.addSecretParam('github', ssmStr) : undefined
+    const gitDataProps = {
+      branch: this.branch,
+      owner: this.owner,
+      pkg: pkgJson,
+      repo: this.repository,
+      secretParameter: secretP,
+      token: this.githubToken,
     }
+    const gitData = lib.getGitData(gitDataProps)
+    const sourceConfig = {
+      atIndex: 0,
+      branch: gitData.branch,
+      oauthToken: gitData.secret,
+      owner: gitData.owner,
+      pipeline,
+      repo: gitData.repo,
+    }
+    stack.addSourceStage('source', sourceConfig)
     const buildConfig = {
-      build,
-      install,
-      pipelineConfig: { pipeline, atIndex: 1 },
-      postBuild,
+      atIndex: 1,
+      build: this.build,
+      install: this.install,
+      pipeline,
+      postBuild: this.postBuild,
       role,
     }
-    app.stack.addSourceStage('source', sourceConfig)
-    app.stack.addBuildStage('build', buildConfig)
-    return app
+    stack.addBuildStage('build', buildConfig)
+    return pipelineApp
   }
 
-  async deploy() {
-    const app = await this.createPipeline()
-    await app.deployStack()
+  async deployPipeline() {
+    const pipeline = await this.createPipeline()
+    await pipeline.deployStack()
   }
-}
-
-function getSecret(app: SeagullApp, git?: lib.GitProps) {
-  return getAuthTokenDirect(git) || getSecretParameter(app, git).value
-}
-
-function getSecretParameter(app: SeagullApp, git?: lib.GitProps) {
-  const ssmParameter = git && git.ssmParameter
-  return app.stack.addSecretParameter('GithubToken', ssmParameter || '')
-}
-
-function getAuthTokenDirect(git?: lib.GitProps) {
-  return git && git.token && new Secret(git.token)
 }

@@ -22,7 +22,8 @@ export class Deploy extends CDKAction {
     const env = this.synthStack.environment
     const toolkitInfo = await cdk.loadToolkitInfo(env, this.sdk, 'CDKToolkit')
     await cdk.bootstrapEnvironment(env, this.sdk, 'CDKToolkit', undefined)
-    const stack = this.synthStack
+    const stack = this.synthStack // tslint:disable-next-line:no-console
+    console.log('Synth stack', stack)
     await cdk.deployStack({ sdk: this.sdk, stack, toolkitInfo })
     return true
   }

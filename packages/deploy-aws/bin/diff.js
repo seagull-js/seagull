@@ -3,20 +3,17 @@
 const logSuccess = () => console.log('done')
 const logError = (error) => console.log('error', error)
 const {
-  Diff
-} = require('../dist/src')
-
+  SeagullProject
+} = require('../dist/src/templates/seagull_project')
 
 require('dotenv').config()
 
 const options = {
-  branchName: process.env.BRANCH_NAME || 'master',
+  appPath: process.cwd(),
+  branch: process.env.BRANCH_NAME || 'master',
   mode: process.env.DEPLOY_MODE || 'prod',
-  noProfileCheck: process.env.NO_PROFILE_CHECK || false,
-  profile: process.env.AWS_PROFILE,
-  region: process.env.AWS_REGION || 'eu-central-1',
+  profile: process.env.AWS_PROFILE || 'default',
+  region: process.env.AWS_REGION || 'eu-central-1'
 }
-const diff = new Diff(process.cwd(), options)
-diff.execute()
-  .then(logSuccess())
-  .catch(error => logError(error))
+const project = new SeagullProject(options)
+project.diffProject().then(logSuccess()).catch(error => logError(error))

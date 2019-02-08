@@ -1,10 +1,10 @@
 import { FS } from '@seagull/commands-fs'
 import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
-import { skip, suite, test } from 'mocha-typescript'
-import { ProvideAssetFolder } from '../../src/commands'
+import { suite, test } from 'mocha-typescript'
+import { ProvideAssetFolder } from '../src'
 
-@suite('Commands')
+@suite('ProvideAssetFolder')
 export class Test extends BasicTest {
   tmpDir = '/tmp/tmp_for_folder_test'
   seagullPath = `${this.tmpDir}/.seagull`
@@ -40,7 +40,7 @@ export class Test extends BasicTest {
   @test
   async 'check whether asset folder is provided'() {
     const sgFolderExists = new FS.Exists(this.seagullPath)
-    const provideFolder = new ProvideAssetFolder(this.tmpDir, 'no-demo-bucket')
+    const provideFolder = new ProvideAssetFolder(this.tmpDir)
     const lambdaFileExists = new FS.Exists(this.lambdaInSgPath)
     const serverFileExists = new FS.Exists(this.serverInSgPath)
 
@@ -59,7 +59,7 @@ export class Test extends BasicTest {
   @test
   async 'check whether asset folder is provided, when there already is one'() {
     const sgFolderExists = new FS.Exists(this.seagullPath)
-    const provideFolder = new ProvideAssetFolder(this.tmpDir, 'no-demo-bucket')
+    const provideFolder = new ProvideAssetFolder(this.tmpDir)
     const fileRemoveExists = new FS.Exists(this.filePathToTestRemoval)
     const writeRemove = new FS.WriteFile(this.filePathToTestRemoval, 'Remove')
     const lambdaFileExists = new FS.Exists(this.lambdaInSgPath)
@@ -84,7 +84,7 @@ export class Test extends BasicTest {
   @test
   async 'check whether revert works'() {
     const sgFolderExists = new FS.Exists(this.seagullPath)
-    const provideFolder = new ProvideAssetFolder(this.tmpDir, 'no-demo-bucket')
+    const provideFolder = new ProvideAssetFolder(this.tmpDir)
     // const lambdaFileExists = new FS.Exists(this.lambdaInSgPath)
     // const serverFileExists = new FS.Exists(this.serverInSgPath)
 

@@ -19,8 +19,7 @@
   "license": "LGPL-3.0",
   "devDependencies": {
     "@seagull/build": "^2.0.0",
-    "@seagull/deploy": "^2.0.0",
-    "@seagull/pipeline": "^2.0.0",
+    "@seagull/deploy-aws": "^2.0.0",
     "@seagull/test-pages": "^2.0.0",
     "@types/lodash": "^4.14.107",
     "@types/node": "^8.10",

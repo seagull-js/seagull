@@ -1,26 +1,45 @@
-import { logNoGitRepoFound, logNoOwnerFound } from './log_messages'
+import { Secret, SecretParameter } from '@aws-cdk/cdk'
 
-export interface GitProps {
+import * as log from './log_messages'
+
+interface GitDataProps {
+  branch: string
   owner?: string
-  repository?: string
+  pkg?: any
+  repo?: string
+  secretParameter?: SecretParameter
   token?: string
-  ssmParameter?: string
 }
 
-export function getGitData(branch: string, pkg?: any, git?: GitProps) {
+export function getGitData(props: GitDataProps) {
   return {
-    branch,
-    owner: getOwner(pkg, git),
-    repo: getRepo(pkg, git),
+    branch: props.branch,
+    owner: getOwner(props),
+    repo: getRepo(props),
+    secret: getSecret(props),
   }
 }
 
-function getOwner(pkg?: any, git?: GitProps) {
-  return (git && git.owner) || getOwnerPkgJson(pkg) || noOwner()
+function getSecret(props: GitDataProps) {
+  const secretParam = props.secretParameter && props.secretParameter.value
+  return getTokenDirect(props) || secretParam || noToken()
+}
+
+function noToken() {
+  log.logNoGithubTokenFound()
+  return new Secret('noToken')
+}
+
+function getTokenDirect(props: GitDataProps) {
+  return props.token && new Secret(props.token)
+}
+
+function getOwner(props: GitDataProps) {
+  return props.owner || (props.pkg && getOwnerPkgJson(props.pkg)) || noOwner()
 }
 
 function getOwnerPkgJson(pkg: any) {
-  const repoUrl = pkg && pkg.repository && pkg.repository.url
+  const repoUrl = pkg.repository && pkg.repository.url
   const isGithubUrl = repoUrl && repoUrl.indexOf('github.com') > -1
   return isGithubUrl && getOwnerFromURL(repoUrl)
 }
@@ -31,23 +50,23 @@ function getOwnerFromURL(url: string) {
 }
 
 function noOwner() {
-  logNoOwnerFound()
+  log.logNoOwnerFound()
   return 'noOwner'
 }
 
-function getRepo(pkg?: any, git?: GitProps) {
-  return (git && git.repository) || (pkg && getRepoPkgJson(pkg)) || noRepo()
+function getRepo(props: GitDataProps) {
+  return props.repo || (props.pkg && getRepoPkgJson(props.pkg)) || noRepo()
 }
 
 function getRepoPkgJson(pkg: any) {
-  const repoUrl = pkg && pkg.repository && pkg.repository.url
+  const repoUrl = pkg.repository && pkg.repository.url
   const isGithubUrl = repoUrl && repoUrl.indexOf('github.com') > -1
   const repoUrlRepoName = isGithubUrl && getRepoFromURL(repoUrl)
   return repoUrlRepoName || pkg.name
 }
 
 function noRepo() {
-  logNoGitRepoFound()
+  log.logNoGitRepoFound()
   return `noRepo`
 }
 

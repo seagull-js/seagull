@@ -9,6 +9,7 @@ const noS3DeplyomentMessage = `No S3 bucket will be deployed`
 const noOwnerMessage = `Could not retrieve the owner name of the github repo. Please add a github.com repo to your package.json or write the owner to GITHUB_OWNER`
 const noRepoMessage = `Could not retrieve the repository name, will go on with the name in package.json`
 const noGitRepo = `Could not retrieve repository name, which is essential for the pipeline! Add it in your package.json or via GITHUB_REPO in env.`
+const noGithubToken = `Could not retrieve github token. Will not be able to retrieve code base from there`
 
 export function logNoOwnerFound() {
   log(chalk.red(noOwnerMessage))
@@ -16,6 +17,10 @@ export function logNoOwnerFound() {
 
 export function logNoGitRepoFound() {
   log(chalk.red(noGitRepo))
+}
+
+export function logNoGithubTokenFound() {
+  log(chalk.red(noGithubToken))
 }
 
 export function logRepoFound() {

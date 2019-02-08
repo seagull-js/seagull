@@ -6,7 +6,8 @@
   "types": "dist/src/index.d.ts",
   "bin": {
     "seagull-deploy": "./bin/deploy.js",
-    "seagull-diff": "./bin/diff.js"
+    "seagull-diff": "./bin/diff.js",
+    "seagull-pipeline": "./bin/pipeline.js"
   },
   "scripts": {
     "build": "rm -rf dist && tsc",

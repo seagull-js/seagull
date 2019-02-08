@@ -1,35 +1,40 @@
+import { SDK } from 'aws-cdk'
 import { STS } from 'aws-sdk'
 
 import * as lib from '../lib'
 import { SeagullApp } from '../seagull_app'
+import { setCredsByProfile } from '../set_aws_credentials'
 
 interface SeagullProjectProps {
-  account: string
   appPath: string
   branch: string
   mode: string
+  profile: string
   region: string
 }
 
 export class SeagullProject {
-  account: string
   appPath: string
   branch: string
   mode: string
+  profile: string
   region: string
 
   constructor(props: SeagullProjectProps) {
-    this.account = props.account
     this.appPath = props.appPath
     this.branch = props.branch
     this.mode = props.mode
+    this.profile = props.profile
     this.region = props.region
   }
 
   async createSeagullApp() {
+    await this.validate()
     // preparations for deployment
     const suffix = this.mode === 'test' ? `${this.branch}-test` : ''
     const name = `${require(`${this.appPath}/package.json`).name}${suffix}`
+    const sdk = new SDK({})
+    const account = await sdk.defaultAccount()
     const accountId = (await new STS().getCallerIdentity().promise()).Account
     const bucketProps = { accountId, project: name, region: this.region }
     const itemBucketName = lib.getItemsBucketName(bucketProps)
@@ -45,7 +50,7 @@ export class SeagullProject {
     const appPath = this.appPath
     const itemsBucket = itemBucketName
     const projectName = name
-    const stackProps = { env: { account: this.account, region: this.region } }
+    const stackProps = { env: { account, region: this.region } }
     const props = { addAssets, appPath, itemsBucket, projectName, stackProps }
 
     // construct the stack and the app
@@ -59,13 +64,21 @@ export class SeagullProject {
     return app
   }
 
-  async deploy() {
+  async deployProject() {
     const app = await this.createSeagullApp()
     await app.deployStack()
   }
 
-  async diff() {
+  async diffProject() {
     const app = await this.createSeagullApp()
     await app.diffStack()
+  }
+
+  async validate() {
+    const hasValidProfile = setCredsByProfile(this.profile)
+    const throwError = () => {
+      throw new Error('Validation Error!')
+    }
+    return !hasValidProfile ? throwError() : ''
   }
 }
