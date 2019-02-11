@@ -4,6 +4,7 @@ import * as browserify from 'browserify'
 import * as browserifyInc from 'browserify-incremental'
 import { join, resolve } from 'path'
 import * as sts from 'stream-string'
+import { addBabelTransform } from './transforms'
 
 export class Page extends Command {
   /** where to read a file from */
@@ -22,7 +23,7 @@ export class Page extends Command {
   dependencyCache: any
 
   /** browserify instance */
-  browserifyInstance: any
+  browserifyInstance!: browserify.BrowserifyObject
 
   /** browserify instance for ssr, without excluding vendor packages */
   browserifyInstanceSSR: any
@@ -69,6 +70,7 @@ export class Page extends Command {
     this.excludes.forEach(x => bfy.external(x))
     this.excludes.forEach(x => bfy.ignore(x))
     this.browserifyInstance = browserifyInc(bfy)
+    addBabelTransform(this.browserifyInstance)
     // this.browserifyInstance.on('time', (time: any) =>
     //   // tslint:disable-next-line:no-console
     //   console.log('[Bundler]', `bundled frontend in ${time}ms`)
