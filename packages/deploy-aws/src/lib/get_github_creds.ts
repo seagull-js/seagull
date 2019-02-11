@@ -26,7 +26,7 @@ function getSecret(props: GitDataProps) {
 }
 
 function noToken() {
-  log.logNoGithubTokenFound()
+  log.noGithubTokenFound()
   return new Secret('noToken')
 }
 
@@ -50,7 +50,7 @@ function getOwnerFromURL(url: string) {
 }
 
 function noOwner() {
-  log.logNoOwnerFound()
+  log.noOwnerFound()
   return 'noOwner'
 }
 
@@ -66,7 +66,7 @@ function getRepoPkgJson(pkg: any) {
 }
 
 function noRepo() {
-  log.logNoGitRepoFound()
+  log.noGitRepoFound()
   return `noRepo`
 }
 

@@ -22,8 +22,6 @@ export class Test extends BasicTest {
   }
   @test
   async 'can set the profile'() {
-    // tslint:disable-next-line:no-console
-    console.log(process.env.AWS_SHARED_CREDENTIALS_FILE)
     const options = {
       filename: process.env.AWS_SHARED_CREDENTIALS_FILE,
       profile: 'default',
@@ -31,13 +29,24 @@ export class Test extends BasicTest {
     config.credentials = new SharedIniFileCredentials(options)
     config.credentials.accessKeyId.should.be.equals('12345678')
     config.credentials.secretAccessKey.should.be.equals('98765453421')
-    setCredsByProfile('invalid-profile-name')
-    config.credentials.accessKeyId.should.be.equals('12345678')
-    config.credentials.secretAccessKey.should.be.equals('98765453421')
     setCredsByProfile('test-user')
     config.credentials.accessKeyId.should.be.equals('abcdefg')
     config.credentials.secretAccessKey.should.be.equals('klmnopq')
     setCredsByProfile('default')
+    config.credentials.accessKeyId.should.be.equals('12345678')
+    config.credentials.secretAccessKey.should.be.equals('98765453421')
+  }
+
+  @test
+  async 'cannot set invalid profile'() {
+    const options = {
+      filename: process.env.AWS_SHARED_CREDENTIALS_FILE,
+      profile: 'default',
+    }
+    config.credentials = new SharedIniFileCredentials(options)
+    config.credentials.accessKeyId.should.be.equals('12345678')
+    config.credentials.secretAccessKey.should.be.equals('98765453421')
+    setCredsByProfile('invalid-profile')
     config.credentials.accessKeyId.should.be.equals('12345678')
     config.credentials.secretAccessKey.should.be.equals('98765453421')
   }

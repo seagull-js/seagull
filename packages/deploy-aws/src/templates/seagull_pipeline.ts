@@ -7,12 +7,12 @@ import { SeagullApp } from '../seagull_app'
 interface SeagullPipelineProps {
   appPath: string
   branch: string
+  githubToken?: string
   mode: string
   owner?: string
   region: string
   repository?: string
   ssmParameter?: string
-  githubToken?: string
 }
 
 export class SeagullPipeline {
@@ -62,14 +62,9 @@ export class SeagullPipeline {
     const name = `${pkgJson.name}${suffix}-pipeline`
     const sdk = new SDK({})
     const account = await sdk.defaultAccount()
-    const accountId = (await new STS().getCallerIdentity().promise()).Account
-    const bucketProps = { accountId, project: name, region: this.region }
-    const itemBucketName = lib.getItemsBucketName(bucketProps)
-    const addAssets = false
-    const itemsBucket = itemBucketName
     const projectName = name
     const stackProps = { env: { account, region: this.region } }
-    const props = { addAssets, itemsBucket, projectName, sdk, stackProps }
+    const props = { projectName, sdk, stackProps }
     const actions = this.actions
 
     // construct the stack and the app

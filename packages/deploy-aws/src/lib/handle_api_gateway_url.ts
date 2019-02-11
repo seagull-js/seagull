@@ -1,6 +1,7 @@
 export function getApiGatewayDomain(url: string): string {
-  const noProtocolUrl = url.substring(url.indexOf('://') + 3)
-  return noProtocolUrl.substring(0, noProtocolUrl.indexOf('/'))
+  const urlhasProt = url.indexOf('://') > -1
+  const noProt = urlhasProt ? url.substring(url.indexOf('://') + 3) : url
+  return noProt.substring(0, noProt.indexOf('/'))
 }
 
 export function getApiGatewayPath(url: string): string {

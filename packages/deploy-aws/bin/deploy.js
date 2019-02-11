@@ -9,9 +9,11 @@ const {
 require('dotenv').config()
 
 const options = {
+  accountId: process.env.AWS_ACCOUNT_ID,
   appPath: process.cwd(),
   branch: process.env.BRANCH_NAME || 'master',
   mode: process.env.DEPLOY_MODE || 'prod',
+  noValidation: process.env.NO_VALIDATION === 'true' || false,
   profile: process.env.AWS_PROFILE || 'default',
   region: process.env.AWS_REGION || 'eu-central-1'
 }
