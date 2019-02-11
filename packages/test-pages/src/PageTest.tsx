@@ -1,13 +1,8 @@
 import { IPageProps, Page } from '@seagull/pages'
 import { BasicTest } from '@seagull/testing'
-
-import 'jsdom-global/register'
-
 import { mount, ReactWrapper } from 'enzyme'
-import { configure } from 'enzyme'
-import * as Adapter from 'enzyme-adapter-react-16'
 import * as React from 'react'
-configure({ adapter: new Adapter() })
+import './setupTests'
 
 const mountFirstError = (impossibleAction: string) => {
   const msg = `
