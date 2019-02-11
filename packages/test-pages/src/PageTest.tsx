@@ -2,6 +2,7 @@ import { IPageProps, Page } from '@seagull/pages'
 import { BasicTest } from '@seagull/testing'
 import { mount, ReactWrapper } from 'enzyme'
 import * as React from 'react'
+import './setupTests'
 
 const mountFirstError = (impossibleAction: string) => {
   const msg = `
