@@ -1,6 +1,6 @@
 {
   "name": "@seagull/deploy",
-  "version": "2.0.0",
+  "version": "2.1.2",
   "description": "Code deploying for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -45,8 +45,8 @@
   },
   "dependencies": {
     "@aws-cdk/aws-apigateway": "^0.21.0",
-    "@aws-cdk/aws-cloudfront": "^0.21.0",
     "@aws-cdk/aws-certificatemanager": "^0.21.0",
+    "@aws-cdk/aws-cloudfront": "^0.21.0",
     "@aws-cdk/aws-iam": "^0.21.0",
     "@aws-cdk/aws-lambda": "^0.21.0",
     "@aws-cdk/aws-logs": "^0.21.0",
