@@ -7,6 +7,7 @@ import { e2e } from '../src/e2e'
 export class Test {
   @test
   async 'can render a DemoPage with custom data'() {
-    await e2e()
+    // tslint:disable-next-line:no-unused-expression
+    ;(await e2e()).should.be.true
   }
 }
