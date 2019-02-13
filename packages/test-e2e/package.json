@@ -1,0 +1,70 @@
+{
+  "name": "@seagull/test-e2e",
+  "version": "2.1.2",
+  "description": "A e2e test runner using cucumber and zombie",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "test": "NODE_ENV=test tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
+    "test:watch": "npm run test -- --watch --reporter min",
+    "docs": "rm -rf docs && typedoc --mode modules --ignoreCompilerErrors --excludeExternals --excludePrivate --excludeNotExported --out docs src"
+  },
+  "bin": {
+    "seagull-e2e": "./bin/e2e.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seagull-js/seagull.git"
+  },
+  "keywords": [
+    "web",
+    "framework",
+    "web framework",
+    "serverless",
+    "cloud",
+    "aws",
+    "react",
+    "react.js",
+    "isomorphic"
+  ],
+  "author": "Tom Jaster",
+  "license": "LGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/seagull-js/seagull/issues"
+  },
+  "homepage": "https://github.com/seagull-js/seagull#readme",
+  "devDependencies": {
+    "@seagull/tslint": "^2.0.0"
+  },
+  "dependencies": {
+    "@types/cucumber": "^4.0.4",
+    "@types/stream-buffers": "^3.0.2",
+    "cucumber": "^5.1.0",
+    "stream-buffers": "^3.0.2",
+    "zombie": "^6.1.4"
+  },
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "exclude": [
+      "**/*.d.ts",
+      "coverage",
+      "dist",
+      "docs",
+      "node_modules",
+      "test"
+    ],
+    "reporter": [
+      "html",
+      "text",
+      "text-summary"
+    ]
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "17e3e76bc834c2a7b6f966ce331d2e859138529d"
+}

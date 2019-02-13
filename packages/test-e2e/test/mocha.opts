@@ -1,0 +1,6 @@
+--require jsdom-global/register
+--require ts-node/register
+--require source-map-support/register
+--watch-extensions ts,tsx
+--recursive
+test/**/*.ts*
