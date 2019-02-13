@@ -7,7 +7,7 @@ import { e2e } from '../src/e2e'
 export class Test {
   
   @test
-  @timeout(5000)
+  @timeout(10000)
   async 'cli picks ups scenarios and executes steps'() {
     const stdout = new stream.WritableStreamBuffer()
     // tslint:disable-next-line:no-unused-expression
