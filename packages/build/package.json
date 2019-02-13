@@ -1,6 +1,6 @@
 {
   "name": "@seagull/build",
-  "version": "2.2.1",
+  "version": "2.2.3",
   "description": "Code building and bundling for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -44,7 +44,6 @@
   "dependencies": {
     "@babel/core": "^7.2.2",
     "@babel/polyfill": "^7.2.5",
-    "core-js": "^2.6.4",
     "@babel/preset-env": "^7.3.1",
     "@seagull/commands": "^2.0.0",
     "@seagull/commands-fs": "^2.0.0",
@@ -57,6 +56,7 @@
     "browserify": "^16.2.0",
     "browserify-incremental": "^3.1.1",
     "chokidar": "^2.0.3",
+    "core-js": "^2.6.4",
     "lodash": "^4.17.5",
     "morgan": "^1.9.1",
     "stoppable": "1.0.5",
