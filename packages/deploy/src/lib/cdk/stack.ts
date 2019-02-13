@@ -1,16 +1,18 @@
 import { LambdaIntegration, RestApi } from '@aws-cdk/aws-apigateway'
+import * as CM from '@aws-cdk/aws-certificatemanager'
 import * as CF from '@aws-cdk/aws-cloudfront'
+import { AliasConfiguration } from '@aws-cdk/aws-cloudfront'
 import { PolicyStatement, Role, ServicePrincipal } from '@aws-cdk/aws-iam'
 import { Code, Function as LambdaFunction, Runtime } from '@aws-cdk/aws-lambda'
 import { LogGroup } from '@aws-cdk/aws-logs'
 import * as S3 from '@aws-cdk/aws-s3'
 import { App, Stack, StackProps } from '@aws-cdk/cdk'
-
 import { getApiGatewayDomain, getApiGatewayPath } from '..'
 
 interface ProjectStackProps extends StackProps {
   deployS3: boolean
   s3Name: string
+  aliasConfiguration?: AliasConfiguration
   env: { account?: string; path: string; region: string }
 }
 
@@ -18,7 +20,7 @@ export class AppStack extends Stack {
   private appName: string
   private folder: string
   private s3Name: string
-
+  private aliasConfiguration?: AliasConfiguration
   private defaultIntegration?: LambdaIntegration
   private apiGateway?: RestApi
   private role?: Role
@@ -30,6 +32,7 @@ export class AppStack extends Stack {
     super(parent, name, props)
     this.appName = name
     this.s3Name = props.s3Name
+    this.aliasConfiguration = props.aliasConfiguration
     this.folder = props.env.path
     this.addIAMRole()
     this.addLambda()
@@ -107,7 +110,6 @@ export class AppStack extends Stack {
     role.addToPolicy(policyStatement.addAllResources().addActions(...actions))
     this.role = role
   }
-
   private addCloudfront() {
     const name = `${this.name}CFD`
     const originPath = this.apiGatewayOriginPath
@@ -117,8 +119,14 @@ export class AppStack extends Stack {
     const behaviors = [{ allowedMethods, forwardedValues, isDefaultBehavior }]
     const customOriginSource = { domainName: this.apiGatewayDomain }
     const originConfigs = [{ behaviors, customOriginSource, originPath }]
+    const aliasConfiguration = this.aliasConfiguration
     const comment = this.appName
-    const conf = { comment, defaultRootObject: '', originConfigs }
+    const conf = {
+      aliasConfiguration,
+      comment,
+      defaultRootObject: '',
+      originConfigs,
+    }
     // tslint:disable-next-line:no-unused-expression
     new CF.CloudFrontWebDistribution(this, name, conf)
   }

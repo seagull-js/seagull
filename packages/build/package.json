@@ -1,6 +1,6 @@
 {
   "name": "@seagull/build",
-  "version": "2.1.0",
+  "version": "2.1.2",
   "description": "Code building and bundling for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
