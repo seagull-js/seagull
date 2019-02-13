@@ -13,11 +13,13 @@
     "start": "node dist/assets/backend/server.js",
     "test": "npm run test:unit",
     "test:unit": "NODE_ENV=test mocha --opts test/mocha.opts",
-    "test:unit:watch": "npm run test:unit -- --watch --reporter min"
+    "test:unit:watch": "npm run test:unit -- --watch --reporter min",
+    "test:e2e": "seagull-e2e"
   },
   "author": "Maximilian Stroh <hisako1337@gmail.com>",
   "license": "LGPL-3.0",
   "devDependencies": {
+    "@seagull/test-e2e": "^2.1.0",
     "@seagull/build": "^2.1.0",
     "@seagull/deploy": "^2.0.0",
     "@seagull/pipeline": "^2.0.0",

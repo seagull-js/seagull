@@ -5,7 +5,7 @@ import { setWorldConstructor, World } from 'cucumber'
 class ZombieWorld implements World {
   browser!: any
   constructor() {
-    this.browser = new zombie({ runScripts: false })
+    this.browser = new zombie()
   }
 }
 setWorldConstructor(ZombieWorld)
