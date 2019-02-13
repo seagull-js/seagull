@@ -5,7 +5,9 @@ import * as stream from 'stream-buffers'
 import { e2e } from '../src/e2e'
 @suite('TestE2E::Simple e2e test')
 export class Test {
+  
   @test
+  @timeout(5000)
   async 'cli picks ups scenarios and executes steps'() {
     const stdout = new stream.WritableStreamBuffer()
     // tslint:disable-next-line:no-unused-expression
