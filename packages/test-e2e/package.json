@@ -39,7 +39,9 @@
   },
   "dependencies": {
     "@types/cucumber": "^4.0.4",
+    "@types/stream-buffers": "^3.0.2",
     "cucumber": "^5.1.0",
+    "stream-buffers": "^3.0.2",
     "zombie": "^6.1.4"
   },
   "nyc": {
