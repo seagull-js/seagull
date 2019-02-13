@@ -19,7 +19,7 @@
   "author": "Maximilian Stroh <hisako1337@gmail.com>",
   "license": "LGPL-3.0",
   "devDependencies": {
-    "@seagull/test-e2e": "^2.1.0",
+    "@seagull/test-e2e": "^2.1.2",
     "@seagull/build": "^2.1.0",
     "@seagull/deploy": "^2.0.0",
     "@seagull/pipeline": "^2.0.0",
