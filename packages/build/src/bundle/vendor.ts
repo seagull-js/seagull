@@ -50,8 +50,8 @@ export class Vendor extends Command {
 
   private createBundlerInstance() {
     const bfy = browserify(this.createBundlerOpts())
+    addBabelTransform(bfy)
     this.browserifyInstance = browserifyInc(bfy)
-    addBabelTransform(this.browserifyInstance)
     this.browserifyInstance.require(this.packages)
     // this.browserifyInstance.on('time', (time: any) =>
     //   // tslint:disable-next-line:no-console

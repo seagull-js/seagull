@@ -69,8 +69,8 @@ export class Page extends Command {
     const bfy = browserify(this.srcFile, this.createBundlerOpts())
     this.excludes.forEach(x => bfy.external(x))
     this.excludes.forEach(x => bfy.ignore(x))
+    addBabelTransform(bfy)
     this.browserifyInstance = browserifyInc(bfy)
-    addBabelTransform(this.browserifyInstance)
     // this.browserifyInstance.on('time', (time: any) =>
     //   // tslint:disable-next-line:no-console
     //   console.log('[Bundler]', `bundled frontend in ${time}ms`)
