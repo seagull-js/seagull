@@ -1,6 +1,7 @@
 import { App, Secret, SecretParameter, Stack, StackProps } from '@aws-cdk/cdk'
 
 import { LambdaIntegration, RestApi } from '@aws-cdk/aws-apigateway'
+import * as CM from '@aws-cdk/aws-certificatemanager'
 import * as CF from '@aws-cdk/aws-cloudfront'
 import * as CB from '@aws-cdk/aws-codebuild'
 import { GitHubSourceAction, Pipeline } from '@aws-cdk/aws-codepipeline'
@@ -75,17 +76,21 @@ export class SeagullStack extends Stack {
     return role
   }
 
-  addCloudfront(cfdName: string, apiGateway: RestApi) {
+  addCloudfront(cfdName: string, props: CloudfrontProps) {
     const name = `${this.id}-${cfdName}`
-    const domainName = getApiGatewayDomain(apiGateway.url)
-    const originPath = getApiGatewayPath(apiGateway.url)
+    const domainName = getApiGatewayDomain(props.apiGateway.url)
+    const originPath = getApiGatewayPath(props.apiGateway.url)
     const allowedMethods = CF.CloudFrontAllowedMethods.ALL
     const forwardedValues = { headers: ['authorization'], queryString: true }
     const isDefaultBehavior = true
     const behaviors = [{ allowedMethods, forwardedValues, isDefaultBehavior }]
     const customOriginSource = { domainName }
-    const originConfigs = [{ behaviors, customOriginSource, originPath }]
-    const conf = { comment: this.id, defaultRootObject: '', originConfigs }
+    const conf = {
+      aliasConfiguration: props.aliasConfig,
+      comment: this.id,
+      defaultRootObject: '',
+      originConfigs: [{ behaviors, customOriginSource, originPath }],
+    }
     return new CF.CloudFrontWebDistribution(this, name, conf)
   }
 
@@ -129,6 +134,14 @@ export class SeagullStack extends Stack {
     const secretConfig = { ssmParameter }
     return new SecretParameter(this, name, secretConfig)
   }
+
+  addNewCert(name: string, domains: string[]) {
+    const domainName = domains[0]
+    const altNames = domains.slice(1)
+    const subjectAlternativeNames = altNames.length > 0 ? altNames : undefined
+    const props: CM.CertificateProps = { domainName, subjectAlternativeNames }
+    return new CM.Certificate(this, `${this.id}-${name}`, props)
+  }
 }
 
 interface StageConfig {
@@ -148,4 +161,9 @@ interface SourceStageConfig extends StageConfig {
   owner: string
   repo: string
   oauthToken: Secret
+}
+
+interface CloudfrontProps {
+  apiGateway: RestApi
+  aliasConfig?: CF.AliasConfiguration
 }
