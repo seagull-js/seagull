@@ -60,7 +60,7 @@ export class Express extends Command {
         return route
       }
       catch (error) {
-        console.log('error loading route:', r, error);
+        console.log('error loading route:','./${absPath(routePath)}', error);
       }
     })(),
     `
