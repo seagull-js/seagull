@@ -61,7 +61,7 @@ export class RouteContext {
   }
 
   private renderUMD(pageSource: string, data: any) {
-    const pagePath = `${process.cwd()}/dist/assets/pages/${pageSource}.js`
+    const pagePath = `../dist/assets/pages/${pageSource}.js`
     const pagePathServer = pagePath.replace('.js', '-server.js')
     const pageBlob = fs.readFileSync(pagePath, 'utf-8')
     const pageBlobServer = fs.readFileSync(pagePathServer, 'utf-8')
