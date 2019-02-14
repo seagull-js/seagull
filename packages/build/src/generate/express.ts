@@ -51,19 +51,19 @@ export class Express extends Command {
   private body(routes: string[]) {
     const absPath = (r: string) => path.join('./routes', r)
     const requireRoute = (routePath: string) => `
-    (() => {
-      try { 
-        const route = require("./${absPath(routePath)}").default;
-        if(!SGRoutes.routeIsValid(route)){
-          throw new Error('Route not valid')
+      (() => {
+        try { 
+          const route = require("./${absPath(routePath)}").default;
+          if(!SGRoutes.routeIsValid(route)){
+            throw new Error('Route not valid')
+          }
+          return route
         }
-        return route
-      }
-      catch (error) {
-        console.log('error loading route:','./${absPath(routePath)}', error);
-      }
-    })(),
-    `
+        catch (error) {
+          console.log('error loading route:','./${absPath(routePath)}', error);
+        }
+      })(),
+      `
     const requiredRoutes = routes.map(requireRoute)
     return `const routes = [${requiredRoutes}].filter(v=>!!v).sort(SGRoutes.routeSort);`
   }
