@@ -45,25 +45,27 @@ export class Express extends Command {
         try { route.register(app) }
         catch(error) { console.log('error registering route:', route, error) }
       }`,
-      `const requireRoute = (r) => {
-        try { 
-          const route = require("./routes/"+r).default;
-          if(!SGRoutes.routeIsValid(route)){
-            throw new Error('Route not valid')
-          }
-          return route
-        }
-        catch (error) {
-          console.log('error loading route:', r, error);
-        }
-      }`,
     ].join('\n')
   }
 
   private body(routes: string[]) {
-    return `const routes = [${routes.map(
-      r => `requireRoute("${r}"),\n`
-    )}].filter(v=>!!v).sort(SGRoutes.routeSort);`
+    const absPath = (r: string) => path.join('./routes', r)
+    const requireRoute = (routePath: string) => `
+    (() => {
+      try { 
+        if(!SGRoutes.routeIsValid(route)){
+          const route = require("./${absPath(routePath)}").default;
+          throw new Error('Route not valid')
+        }
+        return route
+      }
+      catch (error) {
+        console.log('error loading route:', r, error);
+      }
+    })(),
+    `
+    const requiredRoutes = routes.map(requireRoute)
+    return `const routes = [${requiredRoutes}].filter(v=>!!v).sort(SGRoutes.routeSort);`
   }
 
   private footer() {
