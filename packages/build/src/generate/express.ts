@@ -40,7 +40,7 @@ export class Express extends Command {
       `app.use(morgan('combined'));`,
       'app.use(bodyParser.urlencoded({ extended: true }));',
       'app.use(bodyParser.json());',
-      'app.use(express.static(`${process.cwd()}/dist/assets/static`));',
+      `app.use(express.static('${this.appFolder}/dist/assets/static'));`,
       `const registerRoute = (route) => {
         try { route.register(app) }
         catch(error) { console.log('error registering route:', route, error) }
@@ -61,7 +61,9 @@ export class Express extends Command {
   }
 
   private body(routes: string[]) {
-    return `const routes = [${routes.map(r => `requireRoute("${r}"),`)}].filter(v=>!!v).sort(SGRoutes.routeSort);`
+    return `const routes = [${routes.map(
+      r => `requireRoute("${r}"),`
+    )}].filter(v=>!!v).sort(SGRoutes.routeSort);`
   }
 
   private footer() {
