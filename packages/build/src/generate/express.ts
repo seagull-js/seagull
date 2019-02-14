@@ -53,8 +53,8 @@ export class Express extends Command {
     const requireRoute = (routePath: string) => `
     (() => {
       try { 
+        const route = require("./${absPath(routePath)}").default;
         if(!SGRoutes.routeIsValid(route)){
-          const route = require("./${absPath(routePath)}").default;
           throw new Error('Route not valid')
         }
         return route
