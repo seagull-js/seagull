@@ -1,18 +1,17 @@
 {
-  "name": "@seagull/build",
-  "version": "2.2.10",
-  "description": "Code building and bundling for the Seagull Framework",
+  "name": "@seagull/test-e2e",
+  "version": "2.2.0",
+  "description": "A e2e test runner using cucumber and zombie",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
-  "bin": {
-    "seagull-build": "./bin/build.js",
-    "seagull-dev": "./bin/server.js"
-  },
   "scripts": {
     "build": "rm -rf dist && tsc",
     "test": "NODE_ENV=test tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
     "test:watch": "npm run test -- --watch --reporter min",
     "docs": "rm -rf docs && typedoc --mode modules --ignoreCompilerErrors --excludeExternals --excludePrivate --excludeNotExported --out docs src"
+  },
+  "bin": {
+    "seagull-e2e": "./bin/e2e.js"
   },
   "repository": {
     "type": "git",
@@ -29,42 +28,21 @@
     "react.js",
     "isomorphic"
   ],
-  "author": "Maximilian Stroh",
+  "author": "Tom Jaster",
   "license": "LGPL-3.0",
   "bugs": {
     "url": "https://github.com/seagull-js/seagull/issues"
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/tslint": "^2.0.0",
-    "@types/browserify": "^12.0.36",
-    "@types/chokidar": "^1.7.5",
-    "@types/lodash": "^4.14.107"
+    "@seagull/tslint": "^2.0.0"
   },
   "dependencies": {
-    "@babel/core": "^7.2.2",
-    "@babel/polyfill": "^7.2.5",
-    "@babel/preset-env": "^7.3.1",
-    "@seagull/commands": "^2.0.0",
-    "@seagull/commands-fs": "^2.0.0",
-    "@seagull/commands-s3": "^2.0.0",
-    "@seagull/mock-fs": "^2.0.0",
-    "@seagull/mock-s3": "^2.0.0",
-    "@seagull/mode": "^2.0.0",
-    "@seagull/testing": "^2.0.0",
-    "babelify": "^10.0.0",
-    "browserify": "^16.2.0",
-    "browserify-incremental": "^3.1.1",
-    "chokidar": "^2.0.3",
-    "core-js": "^2.6.4",
-    "lodash": "^4.17.5",
-    "morgan": "^1.9.1",
-    "stoppable": "1.0.5",
-    "stream-string": "^2.0.1",
-    "uglify-es": "^3.3.9"
-  },
-  "peerDependencies": {
-    "typescript": "*"
+    "@types/cucumber": "^4.0.4",
+    "@types/stream-buffers": "^3.0.2",
+    "cucumber": "^5.1.0",
+    "stream-buffers": "^3.0.2",
+    "zombie": "^6.1.4"
   },
   "nyc": {
     "extension": [
@@ -88,5 +66,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "2f2098cb8e421957a8c86541462ef341134fccce"
+  "gitHead": "17e3e76bc834c2a7b6f966ce331d2e859138529d"
 }
