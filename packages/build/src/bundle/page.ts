@@ -19,8 +19,14 @@ export class Page extends Command {
   /** source code cache object */
   codeCache = {}
 
+  /** source code cache object */
+  codeCacheSSR = {}
+
   /** dependency cache object */
   dependencyCache: any
+
+  /** dependency cache object */
+  dependencyCacheSSR: any
 
   /** browserify instance */
   browserifyInstance!: browserify.BrowserifyObject
@@ -56,21 +62,21 @@ export class Page extends Command {
     await new FS.DeleteFile(this.dstFile).execute()
   }
 
-  private createBundlerOpts(): browserify.Options {
+  private createBundlerOpts(ssr: boolean): browserify.Options {
     const ignoreMissing = false
-    const cache = this.codeCache
-    const packageCache = this.dependencyCache
+    const cache = ssr ? this.codeCacheSSR : this.codeCache
+    const packageCache = ssr ? this.dependencyCacheSSR : this.dependencyCache
     const standalone = 'Page'
     const paths = [resolve(join(process.cwd(), 'node_modules'))]
     return { cache, ignoreMissing, packageCache, paths, standalone }
   }
 
   private createBundlerInstance() {
-    const bfy = browserify(this.srcFile, this.createBundlerOpts())
+    const bfy = browserify(this.srcFile, this.createBundlerOpts(false))
     this.excludes.forEach(x => bfy.external(x))
     this.excludes.forEach(x => bfy.ignore(x))
+    addBabelTransform(bfy)
     this.browserifyInstance = browserifyInc(bfy)
-    addBabelTransform(this.browserifyInstance)
     // this.browserifyInstance.on('time', (time: any) =>
     //   // tslint:disable-next-line:no-console
     //   console.log('[Bundler]', `bundled frontend in ${time}ms`)
@@ -78,7 +84,7 @@ export class Page extends Command {
   }
 
   private createBundlerInstanceForSSR() {
-    const bfy = browserify(this.srcFile, this.createBundlerOpts())
+    const bfy = browserify(this.srcFile, this.createBundlerOpts(true))
     this.browserifyInstanceSSR = browserifyInc(bfy)
     // this.browserifyInstance.on('time', (time: any) =>
     //   // tslint:disable-next-line:no-console

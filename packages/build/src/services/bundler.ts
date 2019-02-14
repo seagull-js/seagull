@@ -9,11 +9,6 @@ export class Bundler extends Service {
    */
   appFolder: string
 
-  /**
-   * external module cache for browserify-incremental
-   */
-  pkgCache: any = {}
-
   vendor: string[] = [
     'react',
     'react-dom',
@@ -45,13 +40,13 @@ export class Bundler extends Service {
     const relative = path.relative(srcFolder, sourcePath.replace(/tsx?$/, 'js'))
     const from = path.join(this.appFolder, 'dist', 'pages', relative)
     const to = path.join(this.appFolder, 'dist', 'assets', 'pages', relative)
-    const command = new Bundle.Page(from, to, this.pkgCache, this.vendor)
+    const command = new Bundle.Page(from, to, null, this.vendor)
     this.register(sourcePath, command)
   }
 
   private registerVendorBundling(name: string = 'vendor.js') {
     const to = path.join(this.appFolder, 'dist/assets/static/vendor.js')
-    this.register(name, new Bundle.Vendor(this.vendor, to, this.pkgCache))
+    this.register(name, new Bundle.Vendor(this.vendor, to))
   }
 
   private registerBackendBundling(server = 'backend.js', lambda = 'lambda.js') {
