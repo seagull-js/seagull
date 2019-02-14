@@ -1,7 +1,7 @@
 {
   "name": "helloworld",
   "private": true,
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Helloworld example app using the Seagull Framework",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "@seagull/deploy": "^2.0.0",
     "@seagull/pipeline": "^2.0.0",
     "@seagull/test-e2e": "^2.2.0",
-    "@seagull/test-pages": "^2.2.2",
+    "@seagull/test-pages": "^2.2.5",
     "@types/lodash": "^4.14.107",
     "@types/node": "^8.10",
     "jsdom": "^13.0.0",
