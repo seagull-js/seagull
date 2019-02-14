@@ -1,0 +1,70 @@
+{
+  "name": "@seagull/mock-cloudwatchlogs",
+  "version": "2.0.0",
+  "description": "AWS CloudWatchLogs Mocking module for the Seagull Framework",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "test": "NODE_ENV=test tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
+    "test:watch": "npm run test -- --watch --reporter min",
+    "docs": "rm -rf docs && typedoc --mode modules --ignoreCompilerErrors --excludeExternals --excludePrivate --excludeNotExported --out docs src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seagull-js/seagull.git"
+  },
+  "keywords": [
+    "web",
+    "framework",
+    "web framework",
+    "serverless",
+    "cloud",
+    "aws",
+    "react",
+    "react.js",
+    "isomorphic"
+  ],
+  "author": "Maik Manthey",
+  "license": "LGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/seagull-js/seagull/issues"
+  },
+  "homepage": "https://github.com/seagull-js/seagull#readme",
+  "devDependencies": {
+    "@seagull/mock-fs": "^2.0.0",
+    "@seagull/tslint": "^2.0.0",
+    "aws-sdk": "*",
+    "memfs": "^2.14.2"
+  },
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "exclude": [
+      "**/*.d.ts",
+      "coverage",
+      "dist",
+      "docs",
+      "node_modules",
+      "test"
+    ],
+    "reporter": [
+      "html",
+      "text",
+      "text-summary"
+    ]
+  },
+  "dependencies": {
+    "@seagull/libraries": "^2.0.0",
+    "@seagull/mock": "^2.0.0",
+    "@seagull/testing": "^2.0.0",
+    "aws-sdk-mock": "^1.7.0",
+    "moment": "^2.24.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "2f2098cb8e421957a8c86541462ef341134fccce"
+}
