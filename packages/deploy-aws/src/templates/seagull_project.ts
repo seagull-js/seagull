@@ -13,7 +13,6 @@ interface SeagullProjectProps {
   appPath: string
   branch: string
   mode: string
-  noValidation: boolean
   profile: string
   region: string
 }
@@ -23,7 +22,6 @@ export class SeagullProject {
   appPath: string
   branch: string
   mode: string
-  noValidation: boolean
   pkgJson: any
   profile: string
   region: string
@@ -33,7 +31,6 @@ export class SeagullProject {
     this.appPath = props.appPath
     this.branch = props.branch
     this.mode = props.mode
-    this.noValidation = props.noValidation
     this.profile = props.profile
     this.region = props.region
     this.pkgJson = require(`${this.appPath}/package.json`)
@@ -41,12 +38,12 @@ export class SeagullProject {
 
   async createSeagullApp() {
     // preparations for deployment
-    const suffix = this.mode === 'test' ? `${this.branch}-test` : ''
+    const suffix = this.mode !== 'prod' ? `${this.branch}-${this.mode}` : ''
     const name = `${this.pkgJson.name}${suffix}`
     const sdk = new SDK({})
     const account = await sdk.defaultAccount()
     const itemBucketName = await this.getBucketName()
-    const s3DeployNeeded = this.mode === 'true' || this.branch === 'master'
+    const s3DeployNeeded = this.mode === 'prod' || this.branch === 'master'
     const actions: string[] = [
       'sts:AssumeRole',
       'logs:CreateLogStream',
@@ -80,8 +77,7 @@ export class SeagullProject {
   }
 
   async deployProject() {
-    // tslint:disable-next-line:no-unused-expression
-    this.noValidation ? lib.noValidation() : await this.validate()
+    this.validate()
     const app = await this.createSeagullApp()
     await app.deployStack()
   }
@@ -91,7 +87,8 @@ export class SeagullProject {
     await app.diffStack()
   }
 
-  async validate() {
+  validate() {
+    this.validate()
     const hasValidProfile = setCredsByProfile(this.profile)
     if (!hasValidProfile) {
       throw new Error('Validation Error!')
@@ -103,7 +100,7 @@ export class SeagullProject {
     const accountId = await getAccountId(this.accountId)
     const prefix = `${this.region}-${accountId}-`
     const bucketName = `${require(`${this.appPath}/package.json`).name}-items`
-    const suffix = `${this.mode === 'test' ? '-test' : ''}`
+    const suffix = `${this.mode !== 'prod' ? `-${this.mode}` : ''}`
     return `${prefix}${bucketName}${suffix}`
   }
 }

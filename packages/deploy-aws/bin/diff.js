@@ -9,6 +9,7 @@ const {
 require('dotenv').config()
 
 const options = {
+  accountId: process.env.AWS_ACCOUNT_ID,
   appPath: process.cwd(),
   branch: process.env.BRANCH_NAME || 'master',
   mode: process.env.DEPLOY_MODE || 'prod',

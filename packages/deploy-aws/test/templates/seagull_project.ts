@@ -31,7 +31,6 @@ export class Test extends BasicTest {
       branch: 'master',
       githubToken: 'Token123',
       mode: 'prod',
-      noValidation: false,
       owner: 'me',
       profile: 'default',
       region: 'eu-central-1',

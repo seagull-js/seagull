@@ -4,7 +4,6 @@ const noCredMessage = `Missing credentials! Please provide a profile. You can re
 const noAssetsMessage = `Cannot find the directory 'dist/assets' within the folder. Forgot sg build?`
 const noRevertAssetMessage = `Cannot revert asset folder, because it is not implemented yet.`
 const noChangesInDiffMessage = `No changes were to the infrastructure template`
-const noValidationMessage = `Validation was disabled, will see if it works`
 const noS3DeplyomentMessage = `No S3 bucket will be deployed`
 const noOwnerMessage = `Could not retrieve the owner name of the github repo. Please add a github.com repo to your package.json or write the owner to GITHUB_OWNER`
 const noRepoMessage = `Could not retrieve the repository name, will go on with the name in package.json`
@@ -41,10 +40,6 @@ export function cannotRevertAssetFolder() {
 
 export function noChangesInDiff() {
   log(chalk.green(noChangesInDiffMessage))
-}
-
-export function noValidation() {
-  log(chalk.yellow(noValidationMessage))
 }
 
 export function noS3Deploy() {
