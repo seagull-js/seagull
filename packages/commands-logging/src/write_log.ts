@@ -8,7 +8,6 @@ import {
   Timestamp,
 } from 'aws-sdk/clients/cloudwatchlogs'
 import { PromiseResult } from 'aws-sdk/lib/request'
-import * as _ from 'lodash'
 import * as moment from 'moment'
 import { CWLSandbox } from './logging_sandbox'
 
@@ -38,12 +37,7 @@ export class WriteLog extends Command<
 
   constructor(params: WriteLogRequest) {
     super()
-    const events = _.map(params.logs, param => {
-      return {
-        message: JSON.stringify(param.message),
-        timestamp: param.timestamp || moment().unix(),
-      }
-    })
+    const events = params.logs.map(mapLogToEvent)
     this.params = {
       logEvents: events,
       logGroupName: cwdf(),
@@ -61,5 +55,12 @@ export class WriteLog extends Command<
 
   private async exec(client: AWS.CloudWatchLogs) {
     return await client.putLogEvents(this.params).promise()
+  }
+}
+
+function mapLogToEvent(log: Log) {
+  return {
+    message: JSON.stringify(log.message),
+    timestamp: log.timestamp || moment().unix(),
   }
 }
