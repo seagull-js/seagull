@@ -16,7 +16,7 @@ old_code
 /lerna-debug.log
 
 #seagull
-examples/**/.seagull/*
+examples/helloworld/.seagull
 
 
 # other stuff
