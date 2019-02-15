@@ -9,10 +9,12 @@ import * as rfs from 'require-from-string'
  * Provides functionality to everything you might want to do in context of a request.
  */
 export class RouteContext {
+  cwd: string
   request: Request
   response: Response
 
-  constructor(request: Request, response: Response) {
+  constructor(request: Request, response: Response, cwd: string) {
+    this.cwd = cwd
     this.request = request
     this.response = response
   }
@@ -60,8 +62,8 @@ export class RouteContext {
     this.response.send(html)
   }
 
-  private renderUMD(pageSource: string, data: any) {
-    const pagePath = `../dist/assets/pages/${pageSource}.js`
+  private renderUMD = (pageSource: string, data: any) => {
+    const pagePath = `${this.cwd}/dist/assets/pages/${pageSource}.js`
     const pagePathServer = pagePath.replace('.js', '-server.js')
     const pageBlob = fs.readFileSync(pagePath, 'utf-8')
     const pageBlobServer = fs.readFileSync(pagePathServer, 'utf-8')

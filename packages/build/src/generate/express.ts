@@ -48,6 +48,7 @@ export class Express extends Command {
       `const requireRoute = (r) => {
         try { 
           const route = require("./routes/"+r).default;
+          route.cwd = "${this.appFolder}"
           if(!SGRoutes.routeIsValid(route)){
             throw new Error('Route not valid')
           }

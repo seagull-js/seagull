@@ -12,6 +12,8 @@ export abstract class Route {
   static apiKey?: string
   // cache in seconds
   static cache: number = 0
+  // cwd
+  static cwd: string = process.cwd()
   // http method
   static method: string
   /**
@@ -29,7 +31,7 @@ export abstract class Route {
 
   // helper for express to call this route; applies middleware
   static async handle(req: Request, res: Response) {
-    const ctx = new RouteContext(req, res)
+    const ctx = new RouteContext(req, res, this.cwd)
     this.pipeline.reduce(this.applyMiddleware.bind(this, ctx), false)
   }
 
