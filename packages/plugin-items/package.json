@@ -1,6 +1,6 @@
 {
   "name": "@seagull/plugin-items",
-  "version": "2.0.2",
+  "version": "2.3.0",
   "description": "Lightweight Key-Value-Store for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@seagull/commands": "^2.0.0",
-    "@seagull/commands-s3": "^2.0.0",
+    "@seagull/commands-s3": "^2.3.0",
     "lodash": "^4.17.5"
   },
   "nyc": {

@@ -1,7 +1,7 @@
 {
-  "name": "@seagull/mock-s3",
+  "name": "@seagull/commands-logging",
   "version": "2.3.0",
-  "description": "AWS S3 Mocking module for the Seagull Framework",
+  "description": "Logging commands for the seagull framework based on AWS CloudWatchLogs",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
@@ -25,17 +25,24 @@
     "react.js",
     "isomorphic"
   ],
-  "author": "Tom Jaster",
+  "author": "Maik Manthey",
   "license": "LGPL-3.0",
   "bugs": {
     "url": "https://github.com/seagull-js/seagull/issues"
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/mock-fs": "^2.0.0",
-    "@seagull/tslint": "^2.0.0",
-    "aws-sdk": "*",
-    "memfs": "^2.14.2"
+    "@seagull/testing": "^2.0.0",
+    "@seagull/tslint": "^2.0.0"
+  },
+  "dependencies": {
+    "@seagull/commands": "^2.0.0",
+    "@seagull/libraries": "^2.3.0",
+    "@seagull/mock-cloudwatchlogs": "^2.3.0",
+    "@seagull/mock-s3": "^2.3.0",
+    "@seagull/mode": "^2.0.0",
+    "@seagull/sandbox": "^2.0.0",
+    "moment": "^2.24.0"
   },
   "nyc": {
     "extension": [
@@ -55,12 +62,6 @@
       "text",
       "text-summary"
     ]
-  },
-  "dependencies": {
-    "@seagull/libraries": "^2.3.0",
-    "@seagull/mock": "^2.0.0",
-    "@seagull/testing": "^2.0.0",
-    "aws-sdk-mock": "^1.7.0"
   },
   "publishConfig": {
     "access": "public"
