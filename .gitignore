@@ -16,8 +16,8 @@ old_code
 /lerna-debug.log
 
 #seagull
-.seagull/*
-!test_data/**/*
+examples/**/.seagull/*
+
 
 # other stuff
 .env
