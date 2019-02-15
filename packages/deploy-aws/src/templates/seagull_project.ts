@@ -88,7 +88,6 @@ export class SeagullProject {
   }
 
   validate() {
-    this.validate()
     const hasValidProfile = setCredsByProfile(this.profile)
     if (!hasValidProfile) {
       throw new Error('Validation Error!')

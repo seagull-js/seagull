@@ -26,8 +26,8 @@ export class SeagullApp extends App {
     const sdk = new cdk.SDK({})
     const synthStack = this.synthesizeStack(this.projectName)
     const env = synthStack.environment
-    const toolkitInfo = await cdk.loadToolkitInfo(env, sdk, 'CDKToolkit')
     await cdk.bootstrapEnvironment(env, sdk, 'CDKToolkit', undefined)
+    const toolkitInfo = await cdk.loadToolkitInfo(env, sdk, 'CDKToolkit')
     await cdk.deployStack({ sdk, stack: synthStack, toolkitInfo })
   }
 
