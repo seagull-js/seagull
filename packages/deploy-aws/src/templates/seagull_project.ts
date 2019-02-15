@@ -24,6 +24,7 @@ export class SeagullProject {
   branch: string
   mode: string
   noValidation: boolean
+  pkgJson: any
   profile: string
   region: string
 
@@ -35,46 +36,46 @@ export class SeagullProject {
     this.noValidation = props.noValidation
     this.profile = props.profile
     this.region = props.region
+    this.pkgJson = require(`${this.appPath}/package.json`)
   }
 
   async createSeagullApp() {
     // preparations for deployment
     const suffix = this.mode === 'test' ? `${this.branch}-test` : ''
-    const pkgJson = require(`${this.appPath}/package.json`)
-    const name = `${pkgJson.name}${suffix}`
+    const name = `${this.pkgJson.name}${suffix}`
     const sdk = new SDK({})
     const account = await sdk.defaultAccount()
-    const accountId = getAccountId(this.accountId)
-    const itemBucketName = `${this.region}-${accountId}-${name}-items`
+    const itemBucketName = await this.getBucketName()
     const s3DeployNeeded = this.mode === 'true' || this.branch === 'master'
-    const actions: string[] = []
-    actions.push('sts:AssumeRole')
-    actions.push('logs:CreateLogStream')
-    actions.push('logs:PutLogEvents')
-    actions.push('lambda:InvokeFunction')
-    actions.push('lambda:InvokeAsync')
-    actions.push('s3:*')
-    const addAssets = true
-    const appPath = this.appPath
-    const itemsBucket = itemBucketName
-    const projectName = name
-    const stackProps = { env: { account, region: this.region } }
-    const props = { addAssets, appPath, itemsBucket, projectName, stackProps }
+    const actions: string[] = [
+      'sts:AssumeRole',
+      'logs:CreateLogStream',
+      'logs:PutLogEvents',
+      'lambda:InvokeFunction',
+      'lambda:InvokeAsync',
+      's3:*',
+    ]
+    const aliasConfig = await checkForAliasConfig(this.pkgJson)
+    const appProps = {
+      addAssets: true,
+      appPath: this.appPath,
+      itemsBucket: itemBucketName,
+      projectName: name,
+      stackProps: { env: { account, region: this.region } },
+    }
 
-    const domains: string[] = pkgJson.seagull && pkgJson.seagull.domains
     // create the asset folder
-    await addResources(this.appPath, itemsBucket)
+    await addResources(this.appPath, itemBucketName)
 
     // construct the stack and the app
-    const app = new SeagullApp(props)
+    const app = new SeagullApp(appProps)
     const role = app.stack.addIAMRole('role', 'lambda.amazonaws.com', actions)
     const lambda = app.stack.addUniversalLambda('lambda', this.appPath, role)
     const apiGateway = app.stack.addUniversalApiGateway('api-gateway', lambda)
-    const needAliases = domains && domains.length > 0
-    const aliasConfig = needAliases ? await getAliasConfig(domains) : undefined
     app.stack.addCloudfront('cloudfront', { apiGateway, aliasConfig })
     s3DeployNeeded ? app.stack.addS3(itemBucketName, role) : lib.noS3Deploy()
-
+    app.stack.addLogGroup(`/aws/lambda/${name}-lambda-handler`)
+    app.stack.addLogGroup(`/${name}/data-log`)
     return app
   }
 
@@ -97,6 +98,19 @@ export class SeagullProject {
     }
     return
   }
+
+  async getBucketName() {
+    const accountId = await getAccountId(this.accountId)
+    const prefix = `${this.region}-${accountId}-`
+    const bucketName = `${require(`${this.appPath}/package.json`).name}-items`
+    const suffix = `${this.mode === 'test' ? '-test' : ''}`
+    return `${prefix}${bucketName}${suffix}`
+  }
+}
+async function checkForAliasConfig(pkgJson: any) {
+  const domains: string[] = pkgJson.seagull && pkgJson.seagull.domains
+  const needAliases = domains && domains.length > 0
+  return needAliases ? await getAliasConfig(domains) : undefined
 }
 
 async function getAliasConfig(domains: string[]) {
