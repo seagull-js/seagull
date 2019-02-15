@@ -20,8 +20,7 @@
   "license": "LGPL-3.0",
   "devDependencies": {
     "@seagull/build": "^2.3.0",
-    "@seagull/deploy": "^2.3.0",
-    "@seagull/pipeline": "^2.0.0",
+    "@seagull/deploy-aws": "^2.3.0",
     "@seagull/test-e2e": "^2.2.0",
     "@seagull/test-pages": "^2.2.5",
     "@types/lodash": "^4.14.107",
@@ -46,5 +45,8 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AIDACruises/unicorn.git"
+  },
+  "seagull": {
+    "domains": []
   }
 }
