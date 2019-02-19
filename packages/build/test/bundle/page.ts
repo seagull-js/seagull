@@ -15,6 +15,7 @@ export class Test extends BasicTest {
   }
 
   @test
+  @timeout(6000)
   async 'can transform a js file into "Page" UMD bundle'() {
     await new SetMode('environment', 'edge').execute()
     const writeTestFile = new FS.WriteFile(
