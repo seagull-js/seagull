@@ -114,6 +114,7 @@ export class AppStack extends Stack {
     actions.push('logs:PutLogEvents')
     actions.push('lambda:InvokeFunction')
     actions.push('lambda:InvokeAsync')
+    actions.push('ses:SendEmail')
     actions.push('s3:*')
 
     const role = new Role(this, name, roleParams)
