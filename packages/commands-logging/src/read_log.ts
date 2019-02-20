@@ -26,7 +26,10 @@ export class ReadLog extends Command<
   PromiseResult<GetLogEventsResponse, AWS.AWSError>
 > {
   params: GetLogEventsRequest
-  CWL = new AWS.CloudWatchLogs({ region: process.env.AWS_REGION })
+  CWL = new AWS.CloudWatchLogs({
+    credentials: AWS.config.credentials,
+    region: 'eu-central-1',
+  })
 
   executeCloud = this.exec.bind(this, this.CWL)
   executePure = this.exec.bind(this, CWLSandbox as any)
