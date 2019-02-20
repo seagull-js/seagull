@@ -8,12 +8,12 @@ export class BasicTest {
    * instances, use `this.mock` as shortcut to aa list of all implementations
    */
   mocks: Mock[] = []
-
+  setPure = new SetMode('environment', 'pure')
   /**
    * before every test, activate all given mocks
    */
   before() {
-    new SetMode('environment', 'pure').execute()
+    this.setPure.execute()
     this.mocks.forEach(mock => mock.activate())
     Sandbox.reset()
   }
@@ -23,5 +23,6 @@ export class BasicTest {
    */
   after() {
     this.mocks.reverse().forEach(mock => mock.deactivate())
+    this.setPure.revert()
   }
 }
