@@ -13,7 +13,7 @@ export class Test extends BasicTest {
       logStreamName: 'readLog',
       logs: [
         { message: 'Foo' },
-        { message: { a: 'A', b: 'B', c: 'C' } },
+        { message: { a: 'A', b: 'B' } },
         { message: 1000, timestamp: 1550145764 },
       ],
     }
