@@ -1,7 +1,7 @@
 import { Express, Request, Response } from 'express'
 import { RouteContext } from './RouteContext'
 
-type Middleware = (ctx: RouteContext) => boolean | void
+type Middleware = (ctx: RouteContext) => Promise<boolean | void>
 
 /**
  * Defines a seagull route. Set the properties to your desired values and implement static async handler.
@@ -30,28 +30,35 @@ export abstract class Route {
   // helper for express to call this route; applies middleware
   static async handle(req: Request, res: Response) {
     const ctx = new RouteContext(req, res)
-    this.pipeline.reduce(this.applyMiddleware.bind(this, ctx), false)
+    try {
+      await this.pipeline.reduce(
+        this.applyMiddleware.bind(this, ctx),
+        Promise.resolve(false)
+      )
+    } catch (err) {
+      console.error('unexpected handler error', err)
+    }
   }
 
   // registers the route with an express app
-  static async register(app: Express & { [key: string]: any }) {
+  static register(app: Express & { [key: string]: any }) {
     const method = this.method.toLowerCase()
     app[method](this.path, this.handle.bind(this))
   }
 
-  private static pipeline = [
+  private static pipeline: Middleware[] = [
     Route.setExpireHeader,
     Route.authRequest,
     Route.processRequest,
   ]
 
   // applies cache header
-  private static setExpireHeader(ctx: RouteContext) {
+  private static async setExpireHeader(ctx: RouteContext) {
     ctx.response.setHeader('cache-control', `max-age=${this.cache}`)
   }
 
   // checks apiKey
-  private static authRequest(ctx: RouteContext) {
+  private static async authRequest(ctx: RouteContext) {
     const requiredHeader = this.apiKey && `Token ${this.apiKey}`
     const authHeader = ctx.request.header('Authorization')
     const isAuthed = !requiredHeader || authHeader === requiredHeader
@@ -59,15 +66,18 @@ export abstract class Route {
   }
 
   // handles a request
-  private static processRequest(ctx: RouteContext) {
-    this.handler.bind(ctx)()
+  private static async processRequest(ctx: RouteContext) {
+    return this.handler.bind(ctx)()
   }
 
-  private static applyMiddleware(
+  private static async applyMiddleware(
     ctx: RouteContext,
-    abort: boolean | void,
+    abort: Promise<boolean | void>,
     pipelineItem: Middleware
   ) {
-    return abort ? abort : pipelineItem.bind(this)(ctx)
+    if (await abort) {
+      return abort
+    }
+    return pipelineItem.bind(this)(ctx)
   }
 }
