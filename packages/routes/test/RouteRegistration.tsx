@@ -41,7 +41,11 @@ export class Test extends RouteTest {
 
     const request = httpMocks.createRequest({ method: 'GET', url: '/api' })
     const response = httpMocks.createResponse()
-    router.handle(request, response, undefined)
+
+    router.handle(request, response)
+    await new Promise((resolve, _) => {
+      setTimeout(() => resolve(), 200)
+    })
     response._getData().should.be.equal('demo route2')
   }
 }
