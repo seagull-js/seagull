@@ -1,6 +1,6 @@
 import 'chai/register-should'
 import * as express from 'express'
-import { skip, slow, suite, test, timeout } from 'mocha-typescript'
+import { suite, test } from 'mocha-typescript'
 import * as httpMocks from 'node-mocks-http'
 import { Route, RouteContext, RouteTest } from '../src'
 
