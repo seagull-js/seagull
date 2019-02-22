@@ -1,7 +1,7 @@
 {
   "name": "helloworld",
   "private": true,
-  "version": "2.4.0",
+  "version": "2.4.7",
   "description": "Helloworld example app using the Seagull Framework",
   "main": "index.js",
   "scripts": {
@@ -19,10 +19,10 @@
   "author": "Maximilian Stroh <hisako1337@gmail.com>",
   "license": "LGPL-3.0",
   "devDependencies": {
-    "@seagull/build": "^2.4.0",
-    "@seagull/deploy-aws": "^2.4.0",
+    "@seagull/build": "^2.4.7",
+    "@seagull/deploy-aws": "^2.4.7",
     "@seagull/test-e2e": "^2.2.0",
-    "@seagull/test-pages": "^2.4.0",
+    "@seagull/test-pages": "^2.4.7",
     "@types/lodash": "^4.14.107",
     "@types/node": "^8.10",
     "jsdom": "^13.0.0",
@@ -34,8 +34,8 @@
   },
   "dependencies": {
     "@seagull/pages": "^2.2.2",
-    "@seagull/plugin-items": "^2.4.0",
-    "@seagull/routes": "^2.4.0",
+    "@seagull/plugin-items": "^2.4.7",
+    "@seagull/routes": "^2.4.7",
     "instantclick": "^3.1.0-2",
     "lodash": "^4.17.5",
     "mobx": "^4",

@@ -1,5 +1,5 @@
 import { Command } from '@seagull/commands'
-import { getCurrentWorkingDirectoryFolder as cwdf } from '@seagull/libraries'
+import { getAppName } from '@seagull/libraries'
 import { CWLMockFS } from '@seagull/mock-cloudwatchlogs'
 import * as AWS from 'aws-sdk'
 import {
@@ -26,7 +26,10 @@ export class ReadLog extends Command<
   PromiseResult<GetLogEventsResponse, AWS.AWSError>
 > {
   params: GetLogEventsRequest
-  CWL = new AWS.CloudWatchLogs({ region: process.env.AWS_REGION })
+  CWL = new AWS.CloudWatchLogs({
+    credentials: AWS.config.credentials,
+    region: 'eu-central-1',
+  })
 
   executeCloud = this.exec.bind(this, this.CWL)
   executePure = this.exec.bind(this, CWLSandbox as any)
@@ -35,7 +38,7 @@ export class ReadLog extends Command<
 
   constructor(params: GetLogsRequest) {
     super()
-    const groupName = { logGroupName: params.logGroupName || cwdf() }
+    const groupName = { logGroupName: params.logGroupName || getAppName() }
     this.params = { ...params, ...groupName }
   }
 

@@ -1,6 +1,6 @@
 import { Mode } from '@seagull/mode'
 import 'chai/register-should'
-import { skip, slow, suite, test, timeout } from 'mocha-typescript'
+import { suite, test } from 'mocha-typescript'
 import { BasicTest } from '../src/basic_test'
 
 class DemoMock {

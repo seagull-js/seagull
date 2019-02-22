@@ -1,5 +1,5 @@
 import { Command } from '@seagull/commands'
-import { getCurrentWorkingDirectoryFolder as cwdf } from '@seagull/libraries'
+import { getAppName } from '@seagull/libraries'
 import { CWLMockFS } from '@seagull/mock-cloudwatchlogs'
 import * as AWS from 'aws-sdk'
 import {
@@ -28,7 +28,10 @@ export class WriteLog extends Command<
   PromiseResult<PutLogEventsResponse, AWS.AWSError>
 > {
   params: PutLogEventsRequest
-  CWL = new AWS.CloudWatchLogs({ region: process.env.AWS_REGION })
+  CWL = new AWS.CloudWatchLogs({
+    credentials: AWS.config.credentials,
+    region: 'eu-central-1',
+  })
 
   executeCloud = this.exec.bind(this, this.CWL)
   executePure = this.exec.bind(this, CWLSandbox as any)
@@ -40,7 +43,7 @@ export class WriteLog extends Command<
     const events = params.logs.map(mapLogToEvent)
     this.params = {
       logEvents: events,
-      logGroupName: cwdf(),
+      logGroupName: getAppName(),
       logStreamName: params.logStreamName,
     }
   }
