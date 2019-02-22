@@ -1,5 +1,5 @@
 import { Command } from '@seagull/commands'
-import { getCurrentWorkingDirectoryFolder as cwdf } from '@seagull/libraries'
+import { getAppName } from '@seagull/libraries'
 import { CWLMockFS } from '@seagull/mock-cloudwatchlogs'
 import * as AWS from 'aws-sdk'
 import {
@@ -43,7 +43,7 @@ export class WriteLog extends Command<
     const events = params.logs.map(mapLogToEvent)
     this.params = {
       logEvents: events,
-      logGroupName: cwdf(),
+      logGroupName: getAppName(),
       logStreamName: params.logStreamName,
     }
   }

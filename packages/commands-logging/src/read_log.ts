@@ -1,5 +1,5 @@
 import { Command } from '@seagull/commands'
-import { getCurrentWorkingDirectoryFolder as cwdf } from '@seagull/libraries'
+import { getAppName } from '@seagull/libraries'
 import { CWLMockFS } from '@seagull/mock-cloudwatchlogs'
 import * as AWS from 'aws-sdk'
 import {
@@ -38,7 +38,7 @@ export class ReadLog extends Command<
 
   constructor(params: GetLogsRequest) {
     super()
-    const groupName = { logGroupName: params.logGroupName || cwdf() }
+    const groupName = { logGroupName: params.logGroupName || getAppName() }
     this.params = { ...params, ...groupName }
   }
 
