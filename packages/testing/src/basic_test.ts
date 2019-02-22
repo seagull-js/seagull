@@ -23,6 +23,5 @@ export class BasicTest {
    */
   after() {
     this.mocks.reverse().forEach(mock => mock.deactivate())
-    this.setPure.revert()
   }
 }
