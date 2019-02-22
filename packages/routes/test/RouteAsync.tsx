@@ -1,4 +1,4 @@
-import 'chai/register-should'
+import { expect } from 'chai'
 import { suite, test } from 'mocha-typescript'
 import { Route, RouteContext, RouteTest } from '../src'
 
@@ -22,7 +22,7 @@ export class Test extends RouteTest {
     const { code, data } = await this.invoke('GET', '/123456', {
       params: { id: 123456 },
     })
-    code.should.be.equal(200)
-    data.should.be.equal('done')
+    expect(code).to.be.equal(200)
+    expect(data).to.be.equal('done')
   }
 }
