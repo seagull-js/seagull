@@ -50,7 +50,7 @@ export class SeagullProject {
       'logs:PutLogEvents',
       'lambda:InvokeFunction',
       'lambda:InvokeAsync',
-      'ses:SendEmail',
+      'ses:*',
       's3:*',
     ]
     const aliasConfig = await checkForAliasConfig(this.pkgJson)
