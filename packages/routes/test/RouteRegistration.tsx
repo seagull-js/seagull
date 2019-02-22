@@ -43,9 +43,7 @@ export class Test extends RouteTest {
     const response = httpMocks.createResponse()
 
     router.handle(request, response)
-    await new Promise((resolve, _) => {
-      setTimeout(() => resolve(), 200)
-    })
+    await new Promise(resolve => setTimeout(resolve, 0)) // TODO: find a less dirty way to wait for async execution
     response._getData().should.be.equal('demo route2')
   }
 }
