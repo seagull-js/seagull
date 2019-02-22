@@ -1,7 +1,7 @@
 {
   "name": "helloworld",
   "private": true,
-  "version": "2.4.7",
+  "version": "2.4.8",
   "description": "Helloworld example app using the Seagull Framework",
   "main": "index.js",
   "scripts": {
@@ -20,7 +20,7 @@
   "license": "LGPL-3.0",
   "devDependencies": {
     "@seagull/build": "^2.4.7",
-    "@seagull/deploy-aws": "^2.4.7",
+    "@seagull/deploy-aws": "^2.4.8",
     "@seagull/test-e2e": "^2.2.0",
     "@seagull/test-pages": "^2.4.7",
     "@types/lodash": "^4.14.107",
