@@ -1,6 +1,6 @@
 import 'chai/register-should'
 import * as express from 'express'
-import { skip, slow, suite, test, timeout } from 'mocha-typescript'
+import { suite, test } from 'mocha-typescript'
 import * as httpMocks from 'node-mocks-http'
 import { Route, RouteContext, RouteTest } from '../src'
 
@@ -41,7 +41,9 @@ export class Test extends RouteTest {
 
     const request = httpMocks.createRequest({ method: 'GET', url: '/api' })
     const response = httpMocks.createResponse()
-    router.handle(request, response, undefined)
+
+    router.handle(request, response)
+    await new Promise(resolve => setTimeout(resolve, 0)) // TODO: find a less dirty way to wait for async execution
     response._getData().should.be.equal('demo route2')
   }
 }
