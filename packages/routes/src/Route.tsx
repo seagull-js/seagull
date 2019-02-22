@@ -30,14 +30,10 @@ export abstract class Route {
   // helper for express to call this route; applies middleware
   static async handle(req: Request, res: Response) {
     const ctx = new RouteContext(req, res)
-    try {
-      await this.pipeline.reduce(
-        this.applyMiddleware.bind(this, ctx),
-        Promise.resolve(false)
-      )
-    } catch (err) {
-      console.error('unexpected handler error', err)
-    }
+    await this.pipeline.reduce(
+      this.applyMiddleware.bind(this, ctx),
+      Promise.resolve(false)
+    )
   }
 
   // registers the route with an express app
