@@ -96,7 +96,7 @@ export class SeagullStack extends Stack {
 
   addPipeline(pipelineName: string) {
     const name = `${this.id}-${pipelineName}`
-    return new Pipeline(this, name, { pipelineName })
+    return new Pipeline(this, name, { pipelineName: name })
   }
 
   addSourceStage(name: string, config: SourceStageConfig) {

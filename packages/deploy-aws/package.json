@@ -46,6 +46,8 @@
   },
   "dependencies": {
     "@aws-cdk/aws-apigateway": "^0.21.0",
+    "@aws-cdk/aws-codebuild": "^0.21.0",
+    "@aws-cdk/aws-codepipeline": "^0.21.0",
     "@aws-cdk/aws-cloudfront": "^0.21.0",
     "@aws-cdk/aws-iam": "^0.21.0",
     "@aws-cdk/aws-lambda": "^0.21.0",
