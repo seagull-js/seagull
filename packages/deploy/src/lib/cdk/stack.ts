@@ -75,7 +75,7 @@ export class AppStack extends Stack {
     const conf = {
       code: Code.asset(`${this.folder}/.seagull/deploy`),
       description: 'universal route',
-      environment: { MODE: 'cloud' },
+      environment: { MODE: 'cloud', APP: this.appName },
       functionName: `${name}-handler`,
       handler: 'dist/assets/backend/lambda.handler',
       memorySize: 1536,
