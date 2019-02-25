@@ -6,8 +6,8 @@ export function createFolderRecursive(folderPath: string, fsModule = fs) {
   segments.reduce(creator, '/')
 }
 
-export function getAppName() {
-  return process.env.APP
+export function getAppName(): string {
+  return process.env.APP || ''
 }
 
 const createFolderInPath = (
