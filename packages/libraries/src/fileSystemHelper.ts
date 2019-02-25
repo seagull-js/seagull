@@ -7,7 +7,19 @@ export function createFolderRecursive(folderPath: string, fsModule = fs) {
 }
 
 export function getAppName() {
-  return require(`${process.cwd()}/package.json`).name
+  const packageFile = require(`${process.cwd()}/package.json`)
+
+  if (packageFile) {
+    return packageFile.name
+  }
+
+  const appName = process.env.APP
+
+  if (appName) {
+    return appName
+  } else {
+    throw new Error('NO APP NAME GIVEN')
+  }
 }
 
 const createFolderInPath = (

@@ -1,6 +1,6 @@
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
-import { Library, memoize } from '../src'
+import { getAppName, Library, memoize } from '../src'
 
 class TestLib extends Library {
   static double(num: number) {
@@ -27,5 +27,11 @@ export class Test {
     const firstObject = TestLib.generate()
     const secondObject = TestLib.generate()
     firstObject.should.be.deep.equal(secondObject)
+  }
+
+  @test
+  async 'can get app name'() {
+    const appName = getAppName()
+    appName.should.be.equal('@seagull/libraries')
   }
 }
