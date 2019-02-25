@@ -142,6 +142,15 @@ export class SeagullStack extends Stack {
     const props: CM.CertificateProps = { domainName, subjectAlternativeNames }
     return new CM.Certificate(this, `${this.id}-${name}`, props)
   }
+
+  importS3(bucketName: string, role?: IAM.IPrincipal) {
+    const name = `${this.id}-${bucketName}`
+    const bucketArn = `arn:aws:s3:::${bucketName}`
+    const bucket = S3.Bucket.import(this, name, { bucketArn })
+    // tslint:disable-next-line:no-unused-expression
+    role && bucket.grantReadWrite(role)
+    return bucket
+  }
 }
 
 interface StageConfig {
