@@ -7,7 +7,7 @@ interface GitDataProps {
   owner?: string
   pkg?: any
   repo?: string
-  secretParameter?: SecretParameter
+  secretParameter?: Secret
   token?: string
 }
 
@@ -21,8 +21,7 @@ export function getGitData(props: GitDataProps) {
 }
 
 function getSecret(props: GitDataProps) {
-  const secretParam = props.secretParameter && props.secretParameter.value
-  return getTokenDirect(props) || secretParam || noToken()
+  return getTokenDirect(props) || props.secretParameter || noToken()
 }
 
 function noToken() {

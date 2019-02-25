@@ -20,6 +20,7 @@ export class Test extends BasicTest {
       githubToken: 'Token123',
       mode: 'prod',
       owner: 'me',
+      profile: 'default',
       region: 'eu-central-1',
       repository: 'test-repo',
     }
