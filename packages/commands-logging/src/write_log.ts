@@ -21,6 +21,8 @@ interface WriteLogRequest {
   logs: Log[]
 }
 
+let sequenceToken: string | undefined
+
 /**
  * Command to write log object to cloudwatch
  */
@@ -45,6 +47,7 @@ export class WriteLog extends Command<
       logEvents: events,
       logGroupName: getAppName(),
       logStreamName: params.logStreamName,
+      sequenceToken,
     }
   }
 
@@ -57,7 +60,10 @@ export class WriteLog extends Command<
   }
 
   private async exec(client: AWS.CloudWatchLogs) {
-    return await client.putLogEvents(this.params).promise()
+    const result = await client.putLogEvents(this.params).promise()
+    sequenceToken = result.nextSequenceToken
+
+    return result
   }
 }
 
