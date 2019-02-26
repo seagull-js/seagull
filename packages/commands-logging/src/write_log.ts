@@ -43,6 +43,7 @@ export class WriteLog extends Command<
   constructor(params: WriteLogRequest) {
     super()
     const events = params.logs.map(mapLogToEvent)
+    console.info('used sequenceToken', sequenceToken)
     this.params = {
       logEvents: events,
       logGroupName: getAppName(),
@@ -60,9 +61,10 @@ export class WriteLog extends Command<
   }
 
   private async exec(client: AWS.CloudWatchLogs) {
+    console.info('this.params', this.params)
     const result = await client.putLogEvents(this.params).promise()
     sequenceToken = result.nextSequenceToken
-
+    console.info('returned sequenceToken', sequenceToken)
     return result
   }
 }
