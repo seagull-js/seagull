@@ -92,10 +92,8 @@ export class SeagullProject {
 
   validate() {
     const hasValidProfile = setCredsByProfile(this.profile)
-    if (!hasValidProfile) {
-      throw new Error('Validation Error!')
-    }
-    return
+    // tslint:disable-next-line:no-unused-expression
+    !hasValidProfile && lib.noCredentialsSet()
   }
 
   async getBucketName() {
