@@ -63,9 +63,10 @@ export class SeagullPipeline {
   async createPipeline() {
     setCredsByProfile(this.profile)
     // preparations for deployment
-    const suffix = this.mode === 'test' ? `${this.branch}-test` : ''
+    const isTest = this.mode === 'test'
+    const suffix = `${isTest ? `-${this.branch}-test` : ''}-pipeline`
     const pkgJson = require(`${this.appPath}/package.json`)
-    const name = `${pkgJson.name}${suffix}-pipeline`
+    const name = `${pkgJson.name}${suffix}`
     const sdk = new SDK({})
     const account = await sdk.defaultAccount()
     const projectName = name
