@@ -76,8 +76,8 @@ export class CWLMockFS implements Mock {
     return this.result(cb, result)
   }
 
-  createLogStream(params: CreateLogStreamRequest) {
-    return true
+  createLogStream(params: CreateLogStreamRequest, cb: any) {
+    return this.result(cb, null)
   }
 
   /**
