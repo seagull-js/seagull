@@ -1,6 +1,6 @@
 {
   "name": "@seagull/test-pages",
-  "version": "2.4.0",
+  "version": "2.4.11",
   "description": "A basic test class for the View Layer implementation of the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@seagull/pages": "^2.2.2",
-    "@seagull/testing": "^2.4.0",
+    "@seagull/testing": "^2.4.11",
     "@types/enzyme": "^3.1.15",
     "@types/enzyme-adapter-react-16": "1.0.3",
     "@types/react": "^16.8.2",

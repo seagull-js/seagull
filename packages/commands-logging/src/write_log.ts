@@ -1,5 +1,5 @@
 import { Command } from '@seagull/commands'
-import { getCurrentWorkingDirectoryFolder as cwdf } from '@seagull/libraries'
+import { getAppName } from '@seagull/libraries'
 import { CWLMockFS } from '@seagull/mock-cloudwatchlogs'
 import * as AWS from 'aws-sdk'
 import {
@@ -21,6 +21,8 @@ interface WriteLogRequest {
   logs: Log[]
 }
 
+let sequenceToken: string | undefined
+
 /**
  * Command to write log object to cloudwatch
  */
@@ -41,10 +43,12 @@ export class WriteLog extends Command<
   constructor(params: WriteLogRequest) {
     super()
     const events = params.logs.map(mapLogToEvent)
+    console.info('used sequenceToken', sequenceToken)
     this.params = {
       logEvents: events,
-      logGroupName: cwdf(),
-      logStreamName: params.logStreamName,
+      logGroupName: getAppName(),
+      logStreamName: createStreamName(params.logStreamName),
+      sequenceToken,
     }
   }
 
@@ -57,7 +61,17 @@ export class WriteLog extends Command<
   }
 
   private async exec(client: AWS.CloudWatchLogs) {
-    return await client.putLogEvents(this.params).promise()
+    await client
+      .createLogStream({
+        logGroupName: this.params.logGroupName,
+        logStreamName: this.params.logGroupName,
+      })
+      .promise()
+    console.info('this.params', this.params)
+    const result = await client.putLogEvents(this.params).promise()
+    sequenceToken = result.nextSequenceToken
+    console.info('returned sequenceToken', sequenceToken)
+    return result
   }
 }
 
@@ -66,4 +80,12 @@ function mapLogToEvent(log: Log) {
     message: JSON.stringify(log.message),
     timestamp: log.timestamp || moment().unix(),
   }
+}
+
+function createStreamName(customName: string) {
+  const hash = Math.random()
+    .toString(36)
+    .substring(7)
+  const time = moment.utc()
+  return `${time.format()}-${customName}-${hash}`.replace(/(\*)|(:)/g, '-')
 }

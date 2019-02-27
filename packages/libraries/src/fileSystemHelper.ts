@@ -6,13 +6,23 @@ export function createFolderRecursive(folderPath: string, fsModule = fs) {
   segments.reduce(creator, '/')
 }
 
-export function getCurrentWorkingDirectoryFolder() {
-  return (
-    (process
-      .cwd()
-      .split('/')
-      .pop() as string) || 'unknown'
-  )
+export function getAppName() {
+  try {
+    const packageFile = require(`${process.cwd()}/package.json`)
+    if (packageFile) {
+      return packageFile.name
+    }
+  } catch (e) {
+    // no file found
+  }
+
+  const appName = process.env.APP
+
+  if (appName) {
+    return appName
+  } else {
+    throw new Error('NO APP NAME GIVEN')
+  }
 }
 
 const createFolderInPath = (

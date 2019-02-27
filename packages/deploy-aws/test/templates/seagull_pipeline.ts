@@ -3,7 +3,7 @@ import 'chai/register-should'
 import { suite, test } from 'mocha-typescript'
 import { SeagullPipeline } from '../../src'
 
-@suite('SeagullApp')
+@suite('SeagullPipeline')
 export class Test extends BasicTest {
   async before() {
     await BasicTest.prototype.before.bind(this)()
@@ -20,6 +20,7 @@ export class Test extends BasicTest {
       githubToken: 'Token123',
       mode: 'prod',
       owner: 'me',
+      profile: 'default',
       region: 'eu-central-1',
       repository: 'test-repo',
     }

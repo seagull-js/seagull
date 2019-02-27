@@ -38,19 +38,18 @@ export class SeagullProject {
 
   async createSeagullApp() {
     // preparations for deployment
-    const suffix = this.mode !== 'prod' ? `${this.branch}-${this.mode}` : ''
+    const suffix = this.mode === 'test' ? `-${this.branch}-${this.mode}` : ''
     const name = `${this.pkgJson.name}${suffix}`
     const sdk = new SDK({})
     const account = await sdk.defaultAccount()
     const itemBucketName = await this.getBucketName()
-    const s3DeployNeeded = this.mode === 'prod' || this.branch === 'master'
     const actions: string[] = [
       'sts:AssumeRole',
       'logs:CreateLogStream',
       'logs:PutLogEvents',
       'lambda:InvokeFunction',
       'lambda:InvokeAsync',
-      'ses:SendEmail',
+      'ses:*',
       's3:*',
     ]
     const aliasConfig = await checkForAliasConfig(this.pkgJson)
@@ -71,7 +70,10 @@ export class SeagullProject {
     const lambda = app.stack.addUniversalLambda('lambda', this.appPath, role)
     const apiGateway = app.stack.addUniversalApiGateway('api-gateway', lambda)
     app.stack.addCloudfront('cloudfront', { apiGateway, aliasConfig })
-    s3DeployNeeded ? app.stack.addS3(itemBucketName, role) : lib.noS3Deploy()
+    const s3DeploymentNeeded = this.mode === 'prod' || this.branch === 'master'
+    const importS3 = () => app.stack.importS3(itemBucketName, role)
+    const addS3 = () => app.stack.addS3(itemBucketName, role)
+    s3DeploymentNeeded ? addS3() : importS3()
     app.stack.addLogGroup(`/aws/lambda/${name}-lambda-handler`)
     app.stack.addLogGroup(`/${name}/data-log`)
     return app
@@ -90,10 +92,8 @@ export class SeagullProject {
 
   validate() {
     const hasValidProfile = setCredsByProfile(this.profile)
-    if (!hasValidProfile) {
-      throw new Error('Validation Error!')
-    }
-    return
+    // tslint:disable-next-line:no-unused-expression
+    !hasValidProfile && lib.noCredentialsSet()
   }
 
   async getBucketName() {
@@ -104,6 +104,7 @@ export class SeagullProject {
     return `${prefix}${bucketName}${suffix}`
   }
 }
+
 async function checkForAliasConfig(pkgJson: any) {
   const domains: string[] = pkgJson.seagull && pkgJson.seagull.domains
   const needAliases = domains && domains.length > 0

@@ -96,7 +96,7 @@ export class SeagullStack extends Stack {
 
   addPipeline(pipelineName: string) {
     const name = `${this.id}-${pipelineName}`
-    return new Pipeline(this, name, { pipelineName })
+    return new Pipeline(this, name, { pipelineName: name })
   }
 
   addSourceStage(name: string, config: SourceStageConfig) {
@@ -141,6 +141,15 @@ export class SeagullStack extends Stack {
     const subjectAlternativeNames = altNames.length > 0 ? altNames : undefined
     const props: CM.CertificateProps = { domainName, subjectAlternativeNames }
     return new CM.Certificate(this, `${this.id}-${name}`, props)
+  }
+
+  importS3(bucketName: string, role?: IAM.IPrincipal) {
+    const name = `${this.id}-${bucketName}`
+    const bucketArn = `arn:aws:s3:::${bucketName}`
+    const bucket = S3.Bucket.import(this, name, { bucketArn })
+    // tslint:disable-next-line:no-unused-expression
+    role && bucket.grantReadWrite(role)
+    return bucket
   }
 }
 

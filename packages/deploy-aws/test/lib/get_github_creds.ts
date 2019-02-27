@@ -23,7 +23,7 @@ export class Test extends BasicTest {
     const packageName = 'test-pkg'
     const pkgRepoName = 'pkg-repo-name'
     const pkgRepoOwner = 'pkg-owner-name'
-    const secretParam = { value: new Secret('123456') } as SecretParameter
+    const secretParam = new Secret('123456')
     const oauthToken = 'yaq12wsxcde3'
     const props = {
       branch: branchName,
@@ -53,7 +53,7 @@ export class Test extends BasicTest {
     const packageName = 'test-pkg'
     const pkgRepoName = 'pkg-repo-name'
     const pkgRepoOwner = 'pkg-owner-name'
-    const secretParam = { value: new Secret('123456') } as SecretParameter
+    const secretParam = new Secret('123456')
     const props = {
       branch: branchName,
       pkg: {
@@ -70,7 +70,7 @@ export class Test extends BasicTest {
     gitData.branch.should.be.equals(branchName)
     gitData.owner.should.be.equals(pkgRepoOwner)
     gitData.repo.should.be.equals(pkgRepoName)
-    gitData.secret.resolve().should.be.equals(secretParam.value.resolve())
+    gitData.secret.resolve().should.be.equals(secretParam.resolve())
   }
 
   @test
@@ -78,7 +78,7 @@ export class Test extends BasicTest {
     const branchName = 'test-branch'
     const directOwner = 'me'
     const packageName = 'test-pkg'
-    const secretParam = { value: new Secret('123456') } as SecretParameter
+    const secretParam = new Secret('123456')
     const oauthToken = 'yaq12wsxcde3'
     const props = {
       branch: branchName,

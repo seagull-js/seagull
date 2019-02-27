@@ -75,7 +75,7 @@ export class AppStack extends Stack {
     const conf = {
       code: Code.asset(`${this.folder}/.seagull/deploy`),
       description: 'universal route',
-      environment: { MODE: 'cloud' },
+      environment: { MODE: 'cloud', APP: this.appName },
       functionName: `${name}-handler`,
       handler: 'dist/assets/backend/lambda.handler',
       memorySize: 1536,
@@ -114,7 +114,7 @@ export class AppStack extends Stack {
     actions.push('logs:PutLogEvents')
     actions.push('lambda:InvokeFunction')
     actions.push('lambda:InvokeAsync')
-    actions.push('ses:SendEmail')
+    actions.push('ses:*')
     actions.push('s3:*')
 
     const role = new Role(this, name, roleParams)

@@ -6,7 +6,7 @@ import { FS } from '@seagull/commands-fs'
 
 import { SeagullProject } from '../../src'
 
-@suite('SeagullApp')
+@suite('SeagullProject')
 export class Test extends BasicTest {
   appPath = `${process.cwd()}/test_data`
   async before() {
@@ -36,8 +36,8 @@ export class Test extends BasicTest {
       region: 'eu-central-1',
       repository: 'test-repo',
     }
-    const pipeline = await new SeagullProject(props).createSeagullApp()
-    const synthStack = pipeline.synthesizeStack('helloworld')
+    const project = await new SeagullProject(props).createSeagullApp()
+    const synthStack = project.synthesizeStack('helloworld')
     Object.keys(synthStack.template.Resources).length.should.be.above(1)
   }
 }

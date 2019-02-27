@@ -1,6 +1,6 @@
 {
   "name": "@seagull/mock-process",
-  "version": "2.4.0",
+  "version": "2.4.11",
   "description": "Process Mocking module for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -55,7 +55,7 @@
   },
   "dependencies": {
     "@seagull/mock": "^2.0.0",
-    "@seagull/testing": "^2.4.0",
+    "@seagull/testing": "^2.4.11",
     "pmock": "^0.2.3"
   },
   "publishConfig": {
