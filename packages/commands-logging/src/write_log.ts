@@ -64,7 +64,7 @@ export class WriteLog extends Command<
     await client
       .createLogStream({
         logGroupName: this.params.logGroupName,
-        logStreamName: this.params.logGroupName,
+        logStreamName: this.params.logStreamName,
       })
       .promise()
     console.info('this.params', this.params)
