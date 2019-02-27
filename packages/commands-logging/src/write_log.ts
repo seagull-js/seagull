@@ -61,10 +61,12 @@ export class WriteLog extends Command<
   }
 
   private async exec(client: AWS.CloudWatchLogs) {
-    await client.createLogStream({
-      logGroupName: this.params.logGroupName,
-      logStreamName: this.params.logGroupName,
-    })
+    await client
+      .createLogStream({
+        logGroupName: this.params.logGroupName,
+        logStreamName: this.params.logGroupName,
+      })
+      .promise()
     console.info('this.params', this.params)
     const result = await client.putLogEvents(this.params).promise()
     sequenceToken = result.nextSequenceToken
