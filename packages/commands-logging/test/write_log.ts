@@ -1,13 +1,13 @@
 import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
-import { suite, test } from 'mocha-typescript'
+import { skip, suite, test } from 'mocha-typescript'
 import { CloudWatchLogs } from '../src'
 
 @suite('commands-logging::WriteLog')
 export class Test extends BasicTest {
   mocks = []
 
-  @test
+  @skip
   async 'revert method should be a no-op'() {
     const params = {
       logStreamName: 'readLog',
