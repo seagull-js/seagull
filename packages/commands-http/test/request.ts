@@ -1,8 +1,8 @@
 import { BasicTest } from '@seagull/testing'
+import { expect } from 'chai'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import { Http, RequestConfig } from '../../src/commands-http'
-import { expect } from 'chai'
 
 @suite('Http::Request')
 export class Test extends BasicTest {
@@ -11,14 +11,14 @@ export class Test extends BasicTest {
 
   @test
   async 'can query url'() {
-    const config: RequestConfig = {
-      url: this.url,
+    const config: RequestConfig = {      
       init: {
         headers: {
           Accept: 'application/vnd.sdmx.data+json;version=1.0.0-wd',
         },
         timeout: 30000,
       },
+      url: this.url,
     }
     // expect error
     try {
@@ -31,13 +31,13 @@ export class Test extends BasicTest {
   @test
   async 'can fetch/has seed fixture'() {
     const config: RequestConfig = {
-      url: this.url,
       init: {
         headers: {
           Accept: 'application/vnd.sdmx.data+json;version=1.0.0-wd',
         },
         timeout: 30000,
       },
+      url: this.url
     }
     Http.fetchPureSeed = true // careful, global state!
     const response = await new Http.Request<any>(config).execute()

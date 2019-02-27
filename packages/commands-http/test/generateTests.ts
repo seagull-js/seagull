@@ -1,9 +1,9 @@
+import { Command } from '@seagull/commands'
 import { BasicTest } from '@seagull/testing'
 import { expect } from 'chai'
 import * as _ from 'lodash'
 import { suite, test } from 'mocha-typescript'
 import { Request } from '../../src/commands-http/request'
-import { Command } from '@seagull/commands'
 
 export interface TestSuiteDefinition<T> {
   name: string

@@ -4,17 +4,13 @@ import { outputJsonSync, pathExistsSync, readJsonSync } from 'fs-extra'
 import { RequestInit } from 'node-fetch'
 import { join } from 'path'
 import { SeedLocalConfig } from './seedLocalConfig'
-require('ts-node')
+
+import miregal = require('ts-node')
 
 /**
  * Seed storage for managing seed fixtures.
  */
 export default class SeedStorage<T> {
-  /**
-   * Creates a new seed storage for managing seed fixtures.
-   * @param uri Fixture uri
-   */
-  constructor(public uri: string) {}
 
   /**
    * Date the fixture has been created (in case a fixture exists).
@@ -35,20 +31,8 @@ export default class SeedStorage<T> {
     return config
   }
 
-  /**
-   * Get fixture.
-   * @param uri Fixture uri
-   */
-  get(): T {
-    return pathExistsSync(this.path) ? readJsonSync(this.path) : undefined
-  }
-
-  /**
-   * Set fixture.
-   * @param value Fixture value (response/file content)
-   */
-  set(value: T | string) {
-    return outputJsonSync(this.path, value)
+  private get path() {
+    return join('seed', this.uri)
   }
 
   /**
@@ -68,9 +52,26 @@ export default class SeedStorage<T> {
       .update(key)
       .digest('hex')
   }
+  /**
+   * Creates a new seed storage for managing seed fixtures.
+   * @param uri Fixture uri
+   */
+  constructor(public uri: string) {}
 
-  private get path() {
-    return join('seed', this.uri)
+  /**
+   * Get fixture.
+   * @param uri Fixture uri
+   */
+  get(): T {
+    return pathExistsSync(this.path) ? readJsonSync(this.path) : undefined
+  }
+
+  /**
+   * Set fixture.
+   * @param value Fixture value (response/file content)
+   */
+  set(value: T | string) {
+    return outputJsonSync(this.path, value)
   }
 
   private getConfigRecursive(

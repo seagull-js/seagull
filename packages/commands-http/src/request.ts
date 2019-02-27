@@ -1,7 +1,7 @@
 import { Command } from '@seagull/commands'
 import fetch, { Response as FetchResponse } from 'node-fetch'
-import SeedStorage from './seedStorage'
 import { Http, RequestConfig } from './index'
+import SeedStorage from './seedStorage'
 
 /**
  * Http request command.
@@ -46,8 +46,8 @@ export class Request<T> extends Command<T> {
     const seed = this.seed.get() as T
     if (seed) {
       const addDays = (date: Date, days?: number) => {
-        if (typeof days !== 'number') return undefined
-        var result = new Date(date)
+        if (typeof days !== 'number') { return undefined }
+        const result = new Date(date)
         result.setDate(result.getDate() + days)
         return result
       }
