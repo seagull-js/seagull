@@ -38,7 +38,7 @@ export class SeagullProject {
 
   async createSeagullApp() {
     // preparations for deployment
-    const suffix = this.mode !== 'prod' ? `${this.branch}-${this.mode}` : ''
+    const suffix = this.mode === 'test' ? `-${this.branch}-${this.mode}` : ''
     const name = `${this.pkgJson.name}${suffix}`
     const sdk = new SDK({})
     const account = await sdk.defaultAccount()
