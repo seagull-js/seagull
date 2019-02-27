@@ -85,5 +85,5 @@ function createStreamName(customName: string) {
     .toString(36)
     .substring(7)
   const time = moment.utc()
-  return `${time.format()}-${customName}-${hash}`
+  return `${time.format()}-${customName}-${hash}`.replace(/(\*)|(:)/g, '-')
 }
