@@ -7,6 +7,7 @@ type PutLogResponse = AWS.CloudWatchLogs.PutLogEventsResponse
 type GetLogRequest = AWS.CloudWatchLogs.GetLogEventsRequest
 type GetLogResponse = AWS.CloudWatchLogs.GetLogEventsResponse
 type LogEvents = AWS.CloudWatchLogs.InputLogEvents
+type CreateLogStreamRequest = AWS.CloudWatchLogs.CreateLogStreamRequest
 
 /**
  * when activated, redirect all calls from the AWS SDK of S3 to the S3 shim
@@ -26,6 +27,7 @@ export class CWLMockMem implements Mock {
   activate = () => {
     AWSMock.mock('CloudWatchLogs', 'putLogEvents', this.putLogEvents)
     AWSMock.mock('CloudWatchLogs', 'getLogEvents', this.getLogEvents)
+    AWSMock.mock('CloudWatchLogs', 'createLogStream', this.createLogStream)
     return this
   }
 
@@ -56,6 +58,10 @@ export class CWLMockMem implements Mock {
     const events = this.storage[Input.logGroupName][Input.logStreamName]
     const result: GetLogResponse = { events: events || [] }
     return this.result(cb, result)
+  }
+
+  createLogStream(params: CreateLogStreamRequest) {
+    return true
   }
 
   /**

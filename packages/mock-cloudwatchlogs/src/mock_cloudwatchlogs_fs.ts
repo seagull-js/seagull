@@ -8,6 +8,7 @@ type PutLogRequest = AWS.CloudWatchLogs.PutLogEventsRequest
 type PutLogResponse = AWS.CloudWatchLogs.PutLogEventsResponse
 type GetLogRequest = AWS.CloudWatchLogs.GetLogEventsRequest
 type GetLogResponse = AWS.CloudWatchLogs.GetLogEventsResponse
+type CreateLogStreamRequest = AWS.CloudWatchLogs.CreateLogStreamRequest
 
 /**
  * when activated, redirect all calls from the AWS SDK of CloudWatchLogs to the CloudWatchLogs mock
@@ -31,6 +32,7 @@ export class CWLMockFS implements Mock {
   activate = () => {
     AWSMock.mock('CloudWatchLogs', 'putLogEvents', this.putLogEvents)
     AWSMock.mock('CloudWatchLogs', 'getLogEvents', this.getLogEvents)
+    AWSMock.mock('CloudWatchLogs', 'createLogStream', this.createLogStream)
     return this
   }
 
@@ -72,6 +74,10 @@ export class CWLMockFS implements Mock {
 
     result.events = events
     return this.result(cb, result)
+  }
+
+  createLogStream(params: CreateLogStreamRequest) {
+    return true
   }
 
   /**
