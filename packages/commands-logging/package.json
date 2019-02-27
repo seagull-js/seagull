@@ -1,6 +1,6 @@
 {
   "name": "@seagull/commands-logging",
-  "version": "2.7.5",
+  "version": "2.7.6",
   "description": "Logging commands for the seagull framework based on AWS CloudWatchLogs",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
