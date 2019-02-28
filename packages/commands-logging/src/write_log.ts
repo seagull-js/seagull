@@ -80,7 +80,7 @@ export class WriteLog extends Command<
 function mapLogToEvent(log: Log) {
   return {
     message: JSON.stringify(log.message),
-    timestamp: log.timestamp || moment().unix(),
+    timestamp: log.timestamp || moment().unix() * 1000,
   }
 }
 
