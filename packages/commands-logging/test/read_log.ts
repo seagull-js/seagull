@@ -22,7 +22,7 @@ export class Test extends BasicTest {
       logStreamName: writeCommand.params.logStreamName,
     })
     await readCommand.execute()
-    const original = readCommand.transformToOriginal()
+    const original = readCommand.getOriginalLog()
     original.should.be.deep.equal(logs)
   }
 
@@ -37,7 +37,7 @@ export class Test extends BasicTest {
       logStreamName: writeCommand.params.logStreamName,
     })
     await readCommand.execute()
-    const original = readCommand.transformToOriginal()
+    const original = readCommand.getOriginalLog()
     original.should.be.equals(log)
   }
 

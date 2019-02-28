@@ -51,7 +51,7 @@ export class ReadLog extends Command<
     return undefined as any
   }
 
-  transformToOriginal(): any {
+  getOriginalLog(): any {
     if (this.result) {
       const events = this.result.events!
       const original = events.map(event => {
