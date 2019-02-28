@@ -8,9 +8,9 @@ export type PublicProperties<T extends new (...args: any) => any> =
     NonFunctionProperties<InstanceType<T>>
 
 // prettier-ignore
-export type Constructor<C extends {new (...args: any[]) => InstanceType<C>}> =
-                             {new (...args: any[]) => InstanceType<C>, [key in C]:C[key]}
+export type Constructor<C extends new (...args: any[]) => InstanceType<C>> =
+                                  new (...args: any[]) => InstanceType<C>
 
 // prettier-ignore
 export type SubclassConstructor<C extends Constructor<C>, T> =
-                             {new (...args: any[])} => InstanceType<C> & T
+  new (...args: any[]) => InstanceType<C> & T
