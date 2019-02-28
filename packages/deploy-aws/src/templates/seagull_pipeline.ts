@@ -64,7 +64,7 @@ export class SeagullPipeline {
     setCredsByProfile(this.profile)
     // preparations for deployment
     const isTest = this.mode === 'test'
-    const suffix = `${isTest ? `-${this.branch}-test` : ''}-pipeline`
+    const suffix = `${isTest ? `-${this.branch}-test` : ''}-ci`
     const pkgJson = require(`${this.appPath}/package.json`)
     const name = `${pkgJson.name}${suffix}`
     const sdk = new SDK({})
@@ -78,7 +78,7 @@ export class SeagullPipeline {
     const pipelineApp = new SeagullApp(props)
     const stack = pipelineApp.stack
     const principal = 'codebuild.amazonaws.com'
-    const role = stack.addIAMRole('role-pipeline', principal, actions)
+    const role = stack.addIAMRole('role', principal, actions)
     const pipeline = stack.addPipeline('pipeline')
     const ssmSecret = this.ssmParam ? getSSMSecret(this.ssmParam) : undefined
     const gitDataProps = {
