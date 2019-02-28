@@ -28,6 +28,7 @@ export class Test extends BasicTest {
     returnedLogs.events![0].timestamp!.should.be.a('number')
   }
 
+  @test
   async 'revert method should be a no-op'() {
     const logs = [
       { bar: 'Foo' },
