@@ -14,12 +14,11 @@ import { CWLSandbox } from './logging_sandbox'
 let sequenceToken: string | undefined
 
 type LogLevel = 'info' | 'debug' | 'warn' | 'error'
-type Message = string | object | number | any[]
 
 /**
  * Command to write log object to cloudwatch
  */
-export class WriteLog extends Command<
+export class WriteLogs extends Command<
   PromiseResult<PutLogEventsResponse, AWS.AWSError>
 > {
   params: PutLogEventsRequest
@@ -33,9 +32,9 @@ export class WriteLog extends Command<
   executeConnected = this.executeCloud
   executeEdge = this.exec.bind(this, new CWLMockFS('/tmp/.data') as any)
 
-  constructor(logStreamName: string, log: Message, logLevel?: LogLevel) {
+  constructor(logStreamName: string, logs: any[], logLevel?: LogLevel) {
     super()
-    const events = mapLogToEvent(log, logLevel)
+    const events = mapLogToEvents(logs, logLevel)
     this.params = {
       logEvents: events,
       logGroupName: getAppName(),
@@ -67,14 +66,14 @@ export class WriteLog extends Command<
   }
 }
 
-function mapLogToEvent(log: Message, logLevel?: LogLevel): InputLogEvents {
+function mapLogToEvents(logs: any[], logLevel?: LogLevel): InputLogEvents {
   const level = logLevel || 'info'
-  return [
-    {
-      message: `[${level}] ${JSON.stringify(log)}`,
+  return logs.map(logItem => {
+    return {
+      message: `[${level}] ${JSON.stringify(logItem)}`,
       timestamp: moment().unix() * 1000,
-    },
-  ]
+    }
+  })
 }
 
 function createStreamName(customName: string) {
@@ -82,5 +81,5 @@ function createStreamName(customName: string) {
     .toString(36)
     .substring(7)
   const time = moment.utc()
-  return `${time.format()}-${customName}-${hash}`.replace(/(\*)|(:)/g, '-')
+  return `${customName}-${time.format()}-${hash}`.replace(/(\*)|(:)/g, '-')
 }
