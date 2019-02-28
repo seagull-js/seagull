@@ -25,7 +25,7 @@ export class Test extends BasicTest {
       repository: 'test-repo',
     }
     const pipeline = await new SeagullPipeline(props).createPipeline()
-    const synthStack = pipeline.synthesizeStack('helloworld-pipeline')
+    const synthStack = pipeline.synthesizeStack('helloworld-ci')
     Object.keys(synthStack.template.Resources).length.should.be.equals(8)
   }
 }
