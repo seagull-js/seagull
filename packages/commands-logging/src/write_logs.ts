@@ -11,8 +11,6 @@ import { PromiseResult } from 'aws-sdk/lib/request'
 import * as moment from 'moment'
 import { CWLSandbox } from './logging_sandbox'
 
-let sequenceToken: string | undefined
-
 type LogLevel = 'info' | 'debug' | 'warn' | 'error'
 
 /**
@@ -39,7 +37,6 @@ export class WriteLogs extends Command<
       logEvents: events,
       logGroupName: getAppName(),
       logStreamName: createStreamName(logStreamName),
-      sequenceToken,
     }
   }
 
@@ -60,7 +57,7 @@ export class WriteLogs extends Command<
       .promise()
 
     const result = await client.putLogEvents(this.params).promise()
-    sequenceToken = result.nextSequenceToken
+    console.info('putLogEvents', result)
 
     return result
   }
