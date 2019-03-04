@@ -2,6 +2,7 @@ import { Request } from './request'
 
 export { SeedLocalConfig } from './seedLocalConfig'
 export { RequestConfig } from './requestConfig'
+export { Request } from './request'
 
 export const Http = {
   Request,
