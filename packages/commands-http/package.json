@@ -25,7 +25,7 @@
     "react.js",
     "isomorphic"
   ],
-  "author": "Tom Jaster",
+  "author": "Christian Pätzold",
   "license": "LGPL-3.0",
   "bugs": {
     "url": "https://github.com/seagull-js/seagull/issues"
@@ -38,9 +38,7 @@
   },
   "dependencies": {
     "@seagull/commands": "^2.4.0",
-    "@seagull/mock-s3": "^2.4.0",
     "@seagull/mode": "^2.0.0",
-    "@seagull/sandbox": "^2.0.0",
     "node-fetch": "^2.3.0"
   },
   "nyc": {
