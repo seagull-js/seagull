@@ -1,5 +1,8 @@
 import { Request } from './request'
+
+export { SeedLocalConfig } from './seedLocalConfig'
 export { RequestConfig } from './requestConfig'
+
 export const Http = {
   Request,
   fetchPureSeed: false,
