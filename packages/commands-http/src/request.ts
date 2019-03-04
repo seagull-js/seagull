@@ -56,6 +56,7 @@ export class Request<T> extends Command<T> {
       const isExpired =
         expireDate && expireDate.getTime() <= new Date().getTime()
       if (!isExpired) {
+        console.info('seed found')
         return seed
       }
     }

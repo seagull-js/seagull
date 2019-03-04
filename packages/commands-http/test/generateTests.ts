@@ -3,7 +3,7 @@ import { BasicTest } from '@seagull/testing'
 import { expect } from 'chai'
 import * as _ from 'lodash'
 import { suite, test } from 'mocha-typescript'
-import { Request } from '../../src/commands-http/request'
+import { Request } from '../src/request'
 
 export interface TestSuiteDefinition<T> {
   name: string
