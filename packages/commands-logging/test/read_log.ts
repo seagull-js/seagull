@@ -1,38 +1,49 @@
 import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
 import { skip, suite, test } from 'mocha-typescript'
-import { CloudWatchLogs } from '../src'
+import { ReadLog, WriteLog, WriteLogs } from '../src'
 
 @suite('commands-logging::ReadLog')
 export class Test extends BasicTest {
   mocks = []
 
-  // TODO: implement describeLogStreams() to get the unique logStreamName for reading
-  @skip
-  async 'WriteLog and ReadLog work'() {
-    const params = {
-      logStreamName: 'readLog',
-      logs: [
-        { message: 'Foo' },
-        { message: { a: 'A', b: 'B' } },
-        { message: 1000, timestamp: 1550145764 },
-      ],
-    }
-    const result = await new CloudWatchLogs.WriteLog(params).execute()
-    console.info('result', result)
-    const logs = await new CloudWatchLogs.ReadLog({
-      logStreamName: 'readLog',
-    }).execute()
+  @test
+  async 'can transform multiple logs to original'() {
+    const logs = [
+      { bar: 'Foo' },
+      'TEST TEST',
+      [23, 'Hello World', null, { foo: 'bar' }],
+    ]
 
-    logs.events!.should.be.an('array').and.lengthOf(3)
-    for (const log of logs.events!) {
-      log.message!.should.be.a('string').and.length.above(1)
-    }
+    const writeCommand = new WriteLogs('writeLogs', logs)
+    await writeCommand.execute()
+
+    const readCommand = new ReadLog({
+      logStreamName: writeCommand.params.logStreamName,
+    })
+    await readCommand.execute()
+    const original = readCommand.getOriginalLog()
+    original.should.be.deep.equal(logs)
+  }
+
+  @test
+  async 'can transform a single log to original'() {
+    const log = 'Hello World'
+
+    const writeCommand = new WriteLog('writeLog', log)
+    await writeCommand.execute()
+
+    const readCommand = new ReadLog({
+      logStreamName: writeCommand.params.logStreamName,
+    })
+    await readCommand.execute()
+    const original = readCommand.getOriginalLog()
+    original.should.be.equals(log)
   }
 
   @test
   async 'ReadLog returns empty array if logStream does not exist'() {
-    const logs = await new CloudWatchLogs.ReadLog({
+    const logs = await new ReadLog({
       logStreamName: 'doesNotExist',
     }).execute()
 
@@ -41,7 +52,7 @@ export class Test extends BasicTest {
 
   @test
   async 'revert method should be a no-op'() {
-    const command = new CloudWatchLogs.ReadLog({
+    const command = new ReadLog({
       logStreamName: 'readLog',
     })
 

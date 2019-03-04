@@ -26,6 +26,7 @@ export class ReadLog extends Command<
   PromiseResult<GetLogEventsResponse, AWS.AWSError>
 > {
   params: GetLogEventsRequest
+  result?: GetLogEventsResponse
   CWL = new AWS.CloudWatchLogs({
     credentials: AWS.config.credentials,
     region: 'eu-central-1',
@@ -50,7 +51,24 @@ export class ReadLog extends Command<
     return undefined as any
   }
 
+  getOriginalLog(): any {
+    if (this.result) {
+      const events = this.result.events!
+      const original = events.map(event => {
+        const arr = event.message!.split(' ')
+        arr.shift()
+        return JSON.parse(arr.join(' '))
+      })
+
+      return original.length === 1 ? original[0] : original
+    } else {
+      throw new Error('execute ReadLog first before transform the result')
+    }
+  }
+
   private async exec(client: AWS.CloudWatchLogs) {
-    return await client.getLogEvents(this.params).promise()
+    const result = await client.getLogEvents(this.params).promise()
+    this.result = result
+    return result
   }
 }

@@ -1,21 +1,21 @@
 import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
 import { skip, suite, test } from 'mocha-typescript'
-import { ReadLog, WriteLog } from '../src'
+import { ReadLog, WriteLogs } from '../src'
 
-@suite('commands-logging::WriteLog')
+@suite('commands-logging::WriteLogs')
 export class Test extends BasicTest {
   mocks = []
 
   @test
-  async 'can write and read one log'() {
+  async 'can write and read multiple logs'() {
     const logs = [
       { bar: 'Foo' },
       'TEST TEST',
       [23, 'Hello World', null, { foo: 'bar' }],
     ]
 
-    const command = new WriteLog('readLog', logs, 'error')
+    const command = new WriteLogs('readLog', logs, 'error')
 
     await command.execute()
 
@@ -23,7 +23,7 @@ export class Test extends BasicTest {
       logStreamName: command.params.logStreamName,
     }).execute()
 
-    returnedLogs.events!.should.be.an('array').with.lengthOf(1)
+    returnedLogs.events!.should.be.an('array').with.lengthOf(3)
     returnedLogs.events![0].message!.should.be.a('string')
     returnedLogs.events![0].timestamp!.should.be.a('number')
   }
@@ -36,7 +36,7 @@ export class Test extends BasicTest {
       [23, 'Hello World', null, { foo: 'bar' }],
     ]
 
-    const command = new WriteLog('readLog', logs, 'error')
+    const command = new WriteLogs('readLog', logs, 'error')
     const result = await command.revert()
     ;(result === undefined).should.be.equal(true)
   }

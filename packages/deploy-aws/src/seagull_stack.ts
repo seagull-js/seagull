@@ -40,7 +40,7 @@ export class SeagullStack extends Stack {
     const conf = {
       code: Code.asset(`${folder}/.seagull/deploy`),
       description: 'universal route',
-      environment: { MODE: 'cloud' },
+      environment: { MODE: 'cloud', APP: this.id },
       functionName: `${name}-handler`,
       handler: 'dist/assets/backend/lambda.handler',
       memorySize: 1536,
