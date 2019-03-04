@@ -24,6 +24,8 @@ class RouteParams extends RouteRequestProps {
   // tslint:disable-next-line:variable-name
   private _numProp: number = 3
   private xyz = 'xyz'
+
+  // test that functions do not conflict with .create
   iamafkt() {
     return this.xyz
   }
