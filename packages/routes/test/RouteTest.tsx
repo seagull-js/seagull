@@ -1,3 +1,4 @@
+import { expect } from 'chai'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import { Route, RouteContext, RouteTest } from '../src'
@@ -19,5 +20,11 @@ export class Test extends RouteTest {
     const { code, data } = await this.invoke('GET', '/', {})
     code.should.be.equal(200)
     data.should.be.equal('demo route')
+  }
+  @test
+  async 'mocked context results can be asserted'() {
+    const ctx = await this.invokeMocked('GET', '/', {})
+    expect(ctx.called).to.be.equal('text')
+    expect(ctx.text.data).to.be.equal('demo route')
   }
 }

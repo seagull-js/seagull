@@ -1,5 +1,6 @@
 import { Express, Request, Response } from 'express'
 import { RouteContext } from './RouteContext'
+import { RouteContextMock } from './RouteContextMock'
 
 type Middleware = (ctx: RouteContext) => Promise<boolean | void>
 
@@ -28,8 +29,14 @@ export abstract class Route {
   static handler: (this: RouteContext) => Promise<void>
 
   // helper for express to call this route; applies middleware
-  static async handle(req: Request, res: Response) {
-    const ctx = new RouteContext(req, res)
+  static async handle(ctx: RouteContext): Promise<void>
+  static async handle(req: Request, res: Response): Promise<void>
+  static async handle(
+    req: RouteContext | Request,
+    res?: Response
+  ): Promise<void> {
+    const ctx = 'request' in req ? req : new RouteContext(req, res!)
+
     await this.pipeline.reduce(
       this.applyMiddleware.bind(this, ctx),
       Promise.resolve(false)
@@ -71,6 +78,7 @@ export abstract class Route {
     abort: Promise<boolean | void>,
     pipelineItem: Middleware
   ) {
+    // TODO: ctx.response has intel about whether the responses "end" event got emitted. Maybe use that instead for abortion
     if (await abort) {
       return abort
     }
