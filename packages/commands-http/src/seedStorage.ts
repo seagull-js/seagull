@@ -5,13 +5,13 @@ import { RequestInit } from 'node-fetch'
 import { join } from 'path'
 import { SeedLocalConfig } from './seedLocalConfig'
 
-import miregal = require('ts-node')
+// tslint:disable-next-line:no-var-requires
+require('ts-node')
 
 /**
  * Seed storage for managing seed fixtures.
  */
 export default class SeedStorage<T> {
-
   /**
    * Date the fixture has been created (in case a fixture exists).
    * @param uri Fixture uri
@@ -52,6 +52,7 @@ export default class SeedStorage<T> {
       .update(key)
       .digest('hex')
   }
+
   /**
    * Creates a new seed storage for managing seed fixtures.
    * @param uri Fixture uri
@@ -76,15 +77,17 @@ export default class SeedStorage<T> {
 
   private getConfigRecursive(
     config: SeedLocalConfig<T>,
-    path: string,
+    path: string
   ): SeedLocalConfig<T> {
     if (pathExistsSync(path)) {
-      config = Object.assign(config, require('../../' + path).default)
+      // node_modules/@seagull/commands-http/dist/src
+      const seedFolder = `${__dirname}/${'../'.repeat(5)}`
+      config = Object.assign(config, require(seedFolder + path).default)
     }
     if (path.indexOf('/') > -1) {
       return this.getConfigRecursive(
         config,
-        path.substring(0, path.lastIndexOf('/')) + '.ts',
+        path.substring(0, path.lastIndexOf('/')) + '.ts'
       )
     } else {
       return config
