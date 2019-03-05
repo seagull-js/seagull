@@ -10,6 +10,8 @@ export interface RequestException {
   status: number
 }
 
+export const fetchPureSeed = false
+
 /**
  * Http request command.
  */
