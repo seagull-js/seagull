@@ -74,4 +74,6 @@ export class Test extends BasicTest {
     expect(response.args).to.have.ownProperty('foo1')
     expect(response.args).to.have.ownProperty('foo2')
   }
+
+  // TODO: test encoding functionality
 }

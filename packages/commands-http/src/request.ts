@@ -42,7 +42,7 @@ export class Request<T> extends Command<T> {
       case 'xml':
         throw new Error('not implemented')
       case 'text':
-        body = (await response.text()) as any
+        body = (await response.textConverted()) as any
       case 'base64':
         body = (await response.buffer()).toString('base64') as any
       case 'json':

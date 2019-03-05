@@ -40,7 +40,9 @@
   "dependencies": {
     "@seagull/commands": "^2.4.0",
     "@seagull/mode": "^2.0.0",
-    "node-fetch": "^2.3.0"
+    "node-fetch": "^2.3.0",
+    "encoding": "^0.1.12",
+    "iconv-lite": "^0.4.24"
   },
   "nyc": {
     "extension": [
