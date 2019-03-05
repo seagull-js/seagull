@@ -1,6 +1,6 @@
 import { RequestInit } from 'node-fetch'
 
-export type ParseBodyType = 'json' | 'xml' | 'text'
+export type ParseBodyType = 'json' | 'xml' | 'text' | 'base64'
 
 /**
  * Http request command configuration.

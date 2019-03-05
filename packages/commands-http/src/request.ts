@@ -1,7 +1,14 @@
 import { Command } from '@seagull/commands'
-import fetch from 'node-fetch'
+import fetch, { Response } from 'node-fetch'
 import { Http, RequestConfig } from './index'
 import SeedStorage from './seedStorage'
+
+export interface RequestException {
+  body: NodeJS.ReadableStream
+  headers: Headers
+  message: string
+  status: number
+}
 
 /**
  * Http request command.
@@ -30,14 +37,22 @@ export class Request<T> extends Command<T> {
 
   async executeCloud(): Promise<T> {
     const response = await fetch(this.config.url, this.config.init)
+    let body
     switch (this.config.parseBody) {
       case 'xml':
         throw new Error('not implemented')
       case 'text':
-        return (await response.text()) as any
+        body = (await response.text()) as any
+      case 'base64':
+        body = (await response.buffer()).toString('base64') as any
       case 'json':
       default:
-        return await response.json()
+        body = await response.json()
+    }
+    if (response.status === 200) {
+      return body
+    } else {
+      throw response as Response
     }
   }
 
@@ -75,6 +90,11 @@ export class Request<T> extends Command<T> {
     throw new Error('HttpCommand: fixture (seed) is missing.')
   }
 
+  /**
+   * Executes the http request command
+   * @throws {Error} Other errors
+   * @throws {RequestException} Http non-200 response status
+   */
   execute(): Promise<T> {
     return this.executeHandler()
   }
