@@ -36,7 +36,7 @@ export class WriteLog extends Command<
     const events = mapLogToEvent(log, logLevel)
     this.params = {
       logEvents: events,
-      logGroupName: getAppName(),
+      logGroupName: `/${getAppName()}/data-log`,
       logStreamName: createStreamName(logStreamName),
     }
   }

@@ -39,7 +39,9 @@ export class ReadLog extends Command<
 
   constructor(params: GetLogsRequest) {
     super()
-    const groupName = { logGroupName: params.logGroupName || getAppName() }
+    const groupName = {
+      logGroupName: params.logGroupName || `/${getAppName()}/data-log`,
+    }
     this.params = { ...params, ...groupName }
   }
 
