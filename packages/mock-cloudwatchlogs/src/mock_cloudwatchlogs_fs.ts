@@ -55,6 +55,7 @@ export class CWLMockFS implements Mock {
    * write a file into the bucket
    */
   putLogEvents = (Input: PutLogRequest, cb: any) => {
+    Input.logGroupName = Input.logGroupName.replace(/(\/)/g, '-').substring(1)
     this.ensureLogGroup(Input.logGroupName)
     const content = JSON.stringify(Input.logEvents)
     this.fsModule.writeFileSync(this.getEncodedPath(Input), content, 'utf-8')
@@ -63,6 +64,7 @@ export class CWLMockFS implements Mock {
   }
 
   getLogEvents = (Input: GetLogRequest, cb: any) => {
+    Input.logGroupName = Input.logGroupName.replace(/(\/)/g, '-').substring(1)
     this.ensureLogGroup(Input.logGroupName)
     const result: GetLogResponse = {}
     let events = []
