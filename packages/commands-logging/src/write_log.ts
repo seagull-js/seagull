@@ -9,10 +9,8 @@ import {
 } from 'aws-sdk/clients/cloudwatchlogs'
 import { PromiseResult } from 'aws-sdk/lib/request'
 import * as moment from 'moment'
+import { LogLevel, Message } from './index'
 import { CWLSandbox } from './logging_sandbox'
-
-type LogLevel = 'info' | 'debug' | 'warn' | 'error'
-type Message = string | object | number | any[]
 
 /**
  * Command to write log object to cloudwatch
