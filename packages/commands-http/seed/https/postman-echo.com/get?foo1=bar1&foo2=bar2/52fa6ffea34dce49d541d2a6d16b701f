@@ -1,0 +1,1 @@
+{"args":{"foo1":"bar1","foo2":"bar2"},"headers":{"x-forwarded-proto":"https","host":"postman-echo.com","accept":"application/vnd.sdmx.data+json;version=1.0.0-wd","accept-encoding":"gzip,deflate","user-agent":"node-fetch/1.0 (+https://github.com/bitinn/node-fetch)","x-forwarded-port":"443"},"url":"https://postman-echo.com/get?foo1=bar1&foo2=bar2"}
