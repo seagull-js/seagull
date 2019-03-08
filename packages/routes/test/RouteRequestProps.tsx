@@ -46,17 +46,17 @@ export class Test extends RouteTest {
   route = DemoRoute
 
   @test
-  async 'can be instantiated and executed'() {
+  'can be instantiated and executed'() {
     RouteParams.create({ numProp: 3, stringProp: '' })
   }
   @test
-  async 'throws for invalid'() {
+  'throws for invalid'() {
     const testCase = () =>
       RouteParams.create({ numProp: 3, stringProp: 3 } as any)
     expect(testCase).to.throw()
   }
   @test
-  async 'supports custom constructors'() {
+  'supports custom constructors'() {
     class TestA extends RouteRequestProps {
       numProp = 3
       private param1: string
