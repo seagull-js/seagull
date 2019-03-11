@@ -1,5 +1,9 @@
 import { Command } from '@seagull/commands'
-import fetch, { Response } from 'node-fetch'
+import nodefetch, {
+  Request as NodeRequest,
+  RequestInit,
+  Response,
+} from 'node-fetch'
 import { Http, RequestConfig } from './index'
 import SeedStorage from './seedStorage'
 
@@ -20,12 +24,22 @@ export class Request<T> extends Command<T> {
   executeEdge = this.executeCloud
 
   private seed: SeedStorage<T>
+  private fetch: (
+    url: string | NodeRequest,
+    init?: RequestInit | undefined
+  ) => Promise<Response>
 
   /**
    * Creates an http request command.
    * @param config Http request command configuration.
    */
-  constructor(public config: RequestConfig) {
+  constructor(
+    public config: RequestConfig,
+    fetch = nodefetch as (
+      url: string | NodeRequest,
+      init?: RequestInit | undefined
+    ) => Promise<Response>
+  ) {
     super()
     if (!config) {
       throw new Error('HttpCommand: You have to specify a config!')
@@ -35,18 +49,21 @@ export class Request<T> extends Command<T> {
     }
     this.config = config
     this.seed = SeedStorage.createByRequest(config.url, config.init)
+    this.fetch = fetch
   }
 
   async executeCloud(): Promise<T> {
-    const response = await fetch(this.config.url, this.config.init)
+    const response = await this.fetch(this.config.url, this.config.init)
     let body
     switch (this.config.parseBody) {
       case 'xml':
         throw new Error('not implemented')
       case 'text':
         body = (await response.textConverted()) as any
+        break
       case 'base64':
         body = (await response.buffer()).toString('base64') as any
+        break
       case 'json':
       default:
         body = await response.json()
