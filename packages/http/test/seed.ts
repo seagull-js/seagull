@@ -6,7 +6,7 @@ import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as querystring from 'querystring'
 import { HttpPure, HttpSeed } from '../src'
 
-@suite('Http::Request::Seed')
+@suite('Http::Seed::Request')
 export class Test extends BasicTest {
   httpSeed = new HttpSeed()
   httpPure = new HttpPure()

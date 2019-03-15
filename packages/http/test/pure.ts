@@ -7,17 +7,8 @@ import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as querystring from 'querystring'
 import { Http, HttpPure } from '../src'
 
-@suite('Http::Request::Pure')
+@suite('Http::Pure::Fetch')
 export class Test extends BasicTest {
-  static before() {
-    // delete old seed
-    const path =
-      './seed/https/postman-echo.com/get?foo1=bar1&foo2=bar2/default.json'
-    if (fs.existsSync(path)) {
-      fs.unlinkSync(path)
-    }
-  }
-
   injector = ReflectiveInjector.resolveAndCreate([
     {
       provide: Http,
@@ -28,7 +19,30 @@ export class Test extends BasicTest {
   baseUrl = `https://postman-echo.com`
 
   @test
+  async 'can get json'() {
+    const method = 'get'
+    const params = {
+      foo1: 'bar1',
+      foo2: 'bar2',
+    }
+    const url = `${this.baseUrl}/${method}?${querystring.stringify(params)}`
+    const result = (await (await this.http.fetch(
+      url
+    )).json()) as ExpectedResponse
+    expect(result).to.be.an('object')
+    expect(result.args).to.have.ownProperty('foo1')
+    expect(result.args).to.have.ownProperty('foo2')
+  }
+
+  @test
   async 'throws error when seed is not available'() {
+    // delete old seed
+    const path =
+      './seed/https/postman-echo.com/get?foo1=bar1&foo2=bar2/default.json'
+    if (fs.existsSync(path)) {
+      fs.unlinkSync(path)
+    }
+
     try {
       const method = 'get'
       const params = {

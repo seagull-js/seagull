@@ -6,7 +6,7 @@ import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as querystring from 'querystring'
 import { Http, HttpSeed } from '../../src'
 
-@suite('Http::Request::Base')
+@suite('Http::Base::Fetch')
 export class Test extends BasicTest {
   injector = ReflectiveInjector.resolveAndCreate([
     { provide: Http, useClass: HttpSeed },
