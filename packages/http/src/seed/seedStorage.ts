@@ -20,6 +20,20 @@ export default class SeedStorage<T> {
     return pathExistsSync(this.path) ? fs.statSync(this.path).mtime : undefined
   }
 
+  get expired(): boolean {
+    const addDays = (date: Date, days?: number) => {
+      if (typeof days !== 'number') {
+        return undefined
+      }
+      const result = new Date(date)
+      result.setDate(result.getDate() + days)
+      return result
+    }
+    const seedDate = this.createdDate!
+    const expireDate = addDays(seedDate, this.config.expiresInDays)
+    return (expireDate && expireDate.getTime() <= new Date().getTime()) || false
+  }
+
   /**
    * The seed configuration placed within the fixture folder.
    * @param uri
@@ -43,7 +57,9 @@ export default class SeedStorage<T> {
   static createByRequest<T>(url: string, init?: RequestInit): SeedStorage<T> {
     url = url.replace('http://', 'http/')
     url = url.replace('https://', 'https/')
-    return new SeedStorage(`${url}/${this.hash(JSON.stringify(init || {}))}`)
+    return new SeedStorage(
+      `${url}/${init ? this.hash(JSON.stringify(init)) : 'default'}.json`
+    )
   }
 
   private static hash(key: string) {
@@ -72,7 +88,7 @@ export default class SeedStorage<T> {
    * @param value Fixture value (response/file content)
    */
   set(value: T | string) {
-    return outputJsonSync(this.path, value)
+    return outputJsonSync(this.path, value, { spaces: 2 })
   }
 
   private getConfigRecursive(

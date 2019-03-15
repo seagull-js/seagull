@@ -1,5 +1,5 @@
 {
-  "name": "@seagull/commands-http",
+  "name": "@seagull/http",
   "version": "2.10.0",
   "description": "Http commands for the seagull framework",
   "main": "dist/src/index.js",
@@ -40,9 +40,10 @@
   "dependencies": {
     "@seagull/commands": "^2.10.0",
     "@seagull/mode": "^2.10.0",
+    "reflect-metadata": "^0.1.13",
+    "node-fetch": "^2.3.0",
     "encoding": "^0.1.12",
-    "iconv-lite": "^0.4.24",
-    "node-fetch": "^2.3.0"
+    "iconv-lite": "^0.4.24"
   },
   "nyc": {
     "extension": [
