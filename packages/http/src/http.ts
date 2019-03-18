@@ -7,7 +7,7 @@ export type RequestInitGet = Omit<RequestInit, 'method' | 'body'>
 /**
  * Http interface.
  */
-export interface Http {
+export interface IHttp {
   fetch: (url: string, init?: RequestInit) => Promise<Response>
 
   // some convenience ...

@@ -16,7 +16,7 @@ export interface RequestException {
  * Http seed mode implementation.
  */
 @Injectable()
-export class HttpSeed<T> extends HttpBase {
+export class HttpSeed extends HttpBase {
   async fetch(url: string, init?: RequestInit): Promise<Response> {
     const seed = SeedStorage.createByRequest<Fixture>(url, init)
     const seedFixture = seed.get()

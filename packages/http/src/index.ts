@@ -2,7 +2,7 @@ export { RequestInitBase, RequestInitGet } from './http'
 export { RequestInit, Response } from 'node-fetch'
 
 // mode provider
-export { httpModeProvider } from './provider'
+export { provider, seed } from './provider'
 
 // http injectables
 export { Http } from './modes/cloud'

@@ -1,15 +1,13 @@
-import { Mode } from '@seagull/mode'
-import { modes } from './modes'
+import { HttpPure, HttpSeed } from '.'
+import { createModeProvider } from '../../injectable/src'
+import { IHttp } from './http'
 import { Http } from './modes/cloud'
 
-/**
- * Http mode injectable provider.
- */
-const httpModeFactory = (): typeof Http => {
-  return modes[Mode.environment]
-}
+export const seed = false
 
-export const httpModeProvider = {
-  provide: Http,
-  useFactory: httpModeFactory,
-}
+export const provider = createModeProvider<IHttp>({
+  cloud: Http,
+  connected: Http,
+  edge: Http,
+  pure: seed ? HttpPure : HttpSeed, // TODO: is seed a new mode?
+})
