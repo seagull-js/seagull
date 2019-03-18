@@ -1,4 +1,5 @@
 import * as fs from 'fs'
+import { flatten } from 'lodash'
 import * as path from 'path'
 
 export function createFolderRecursive(folderPath: string, fsModule = fs) {
@@ -13,6 +14,16 @@ export function removeFolderRecursive(folderPath: string, fsModule = fs) {
 
 export function copyFolderRecursive(from: string, to: string, fsModule = fs) {
   copyDir(fsModule, from, to)
+}
+
+export function listFilesRecursive(
+  filePath: string,
+  pattern?: RegExp,
+  fsModule = fs
+) {
+  const exists = fsModule.existsSync(filePath)
+  const list = exists ? listFiles(fsModule, filePath) : []
+  return pattern ? list.filter(f => pattern!.test(f)) : list
 }
 
 export function getAppName() {
@@ -79,5 +90,15 @@ function copyDir(fsModule: typeof fs, from: string, to: string) {
     } else {
       fsModule.copyFileSync(srcPath, destPath)
     }
+  }
+}
+
+function listFiles(fsModule: typeof fs, cwd: string): string[] {
+  if (fsModule.lstatSync(cwd).isFile()) {
+    return [cwd]
+  } else {
+    const names = fsModule.readdirSync(cwd)
+    const list = names.map(f => listFiles(fsModule, `${cwd}/${f}`))
+    return flatten(list)
   }
 }
