@@ -6,6 +6,13 @@ import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as querystring from 'querystring'
 import { HttpPure, HttpSeed } from '../src'
 
+interface ExpectedResponse {
+  args: {
+    param1: string
+    param2: string
+  }
+}
+
 @suite('Http::Seed::Request')
 export class Test extends BasicTest {
   httpSeed = new HttpSeed()

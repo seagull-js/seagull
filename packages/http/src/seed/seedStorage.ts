@@ -11,7 +11,7 @@ require('ts-node')
 /**
  * Seed storage for managing seed fixtures.
  */
-export default class SeedStorage<T> {
+export class SeedStorage<T> {
   /**
    * Date the fixture has been created (in case a fixture exists).
    * @param uri Fixture uri

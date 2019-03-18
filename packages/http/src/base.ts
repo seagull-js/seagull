@@ -1,10 +1,7 @@
-import { Omit } from 'lodash'
 import { RequestInit, Response } from 'node-fetch'
 import 'reflect-metadata'
-import { Http } from '..'
-
-export type RequestInitBase = Omit<RequestInit, 'method'>
-export type RequestInitGet = Omit<RequestInit, 'method' | 'body'>
+import { RequestInitBase, RequestInitGet } from './http'
+import { Http } from './modes/cloud'
 
 export abstract class HttpBase implements Http {
   abstract fetch(url: string, init?: RequestInit | undefined): Promise<Response>

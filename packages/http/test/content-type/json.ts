@@ -7,6 +7,13 @@ import * as querystring from 'querystring'
 import { Http, HttpSeed } from '../../src'
 import { HttpJson } from '../../src'
 
+interface ExpectedResponse {
+  args: {
+    param1: string
+    param2: string
+  }
+}
+
 @suite('Http::Json')
 export class Test extends BasicTest {
   injector = ReflectiveInjector.resolveAndCreate([

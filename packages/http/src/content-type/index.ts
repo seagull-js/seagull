@@ -1,7 +1,2 @@
-import { Response } from 'node-fetch'
-
-export { HttpJson } from './json'
-
-export interface HttpError extends Response {
-  message: string
-}
+export { HttpError } from './http_error'
+export { HttpJson } from './http_json'

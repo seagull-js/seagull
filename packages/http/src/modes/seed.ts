@@ -1,8 +1,9 @@
 import { Injectable } from 'injection-js'
 import fetch, { Headers, RequestInit, Response } from 'node-fetch'
-import { HttpBase } from './base'
-import { createResponse, Fixture } from './seed/fixture'
-import SeedStorage from './seed/seedStorage'
+import 'reflect-metadata'
+import { HttpBase } from '../base'
+import { createResponse, Fixture } from '../seed/fixture'
+import { SeedStorage } from '../seed/seedStorage'
 
 export interface RequestException {
   body: NodeJS.ReadableStream

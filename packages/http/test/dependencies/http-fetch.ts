@@ -1,6 +1,7 @@
 import { BasicTest } from '@seagull/testing'
 import { expect } from 'chai'
 import * as fs from 'fs'
+import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import { Headers, Response } from 'node-fetch'
 import * as Path from 'path'
 

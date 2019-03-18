@@ -7,6 +7,13 @@ import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as querystring from 'querystring'
 import { Http, HttpPure } from '../src'
 
+interface ExpectedResponse {
+  args: {
+    param1: string
+    param2: string
+  }
+}
+
 @suite('Http::Pure::Fetch')
 export class Test extends BasicTest {
   injector = ReflectiveInjector.resolveAndCreate([

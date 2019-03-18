@@ -1,9 +1,9 @@
 import { Injectable } from 'injection-js'
 import { RequestInit, Response } from 'node-fetch'
 import 'reflect-metadata'
-import { HttpBase } from './base'
-import { createResponse, Fixture } from './seed/fixture'
-import SeedStorage from './seed/seedStorage'
+import { HttpBase } from '../base'
+import { createResponse, Fixture } from '../seed/fixture'
+import { SeedStorage } from '../seed/seedStorage'
 
 /**
  * Http pure mode implementation.

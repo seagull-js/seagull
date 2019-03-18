@@ -4,7 +4,7 @@ import 'chai/register-should'
 import { ReflectiveInjector } from 'injection-js'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as querystring from 'querystring'
-import { Http, HttpSeed } from '../../src'
+import { Http, HttpSeed } from '../src'
 
 @suite('Http::Base::Fetch')
 export class Test extends BasicTest {

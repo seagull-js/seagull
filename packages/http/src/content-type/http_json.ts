@@ -2,10 +2,12 @@ import { forwardRef, Inject, Injectable } from 'injection-js'
 import { Response } from 'node-fetch'
 import 'reflect-metadata'
 import { HttpError } from '.'
-import { RequestInitBase, RequestInitGet } from '../base/base'
-import { Http } from '../index'
+import { RequestInitBase, RequestInitGet } from '../http'
+import { Http } from '../modes/cloud'
 
-@Injectable()
+/**
+ * Http json client.
+ */
 export class HttpJson {
   constructor(@Inject(forwardRef(() => Http)) private http: Http) {}
 

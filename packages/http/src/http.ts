@@ -1,4 +1,8 @@
-import { RequestInitBase, RequestInitGet } from '.'
+import { Omit } from 'lodash'
+import { RequestInit, Response } from 'node-fetch'
+
+export type RequestInitBase = Omit<RequestInit, 'method'>
+export type RequestInitGet = Omit<RequestInit, 'method' | 'body'>
 
 /**
  * Http interface.
