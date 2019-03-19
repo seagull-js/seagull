@@ -14,12 +14,23 @@ import * as Lambda from './lambda'
 import * as Runner from './runner'
 import * as Server from './server'
 
+/**
+ * Service which generates necessary wiring code in our dist folder.
+ * Currently the different use cases (lambda, server, local development, lazy mode) are hardcoded. A possible refactoring could be other services registering their codegen needs.
+ *
+ * Input Events:
+ * - GenerateCode
+ * Output Events:
+ * - GeneratedCode
+ */
 export class CodeGeneratorService {
   bus: ServiceEventBus<CodeGeneratorServiceEvents>
   fs: typeof fsModule
   config = {
     // Our working folder
     appFolder: process.cwd(),
+    // only in non release; adds code to runner to bundle pages lazyly
+    lazy: true,
     // will the output be a relase bundle?
     release: false,
   }
@@ -34,6 +45,9 @@ export class CodeGeneratorService {
     this.bus = bus.on(GenerateCodeEvent, this.handleStartGeneration.bind(this))
   }
 
+  /**
+   * Kicks of the right code generation.
+   */
   handleStartGeneration() {
     const startGen = process.hrtime()
     this.config.release ? this.genRelease() : this.genDevelopment()
@@ -43,7 +57,7 @@ export class CodeGeneratorService {
     this.bus.emit(GeneratedCodeEvent)
   }
 
-  genRelease() {
+  private genRelease() {
     const { appFolder } = this.config
     const dist = join(appFolder, 'dist')
     const _ = [
@@ -56,11 +70,11 @@ export class CodeGeneratorService {
     ].map(({ path, content }) => this.fs.writeFileSync(path, content, 'utf-8'))
   }
 
-  genDevelopment() {
-    const { appFolder } = this.config
+  private genDevelopment() {
+    const { appFolder, lazy } = this.config
     const dist = join(appFolder, 'dist')
     const path = join(dist, 'runner.js')
-    const content = Runner.generate(appFolder)
+    const content = Runner.generate(lazy)
     this.fs.writeFileSync(path, content, 'utf-8')
   }
 }
