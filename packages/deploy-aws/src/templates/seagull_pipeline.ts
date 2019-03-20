@@ -51,6 +51,7 @@ export class SeagullPipeline {
       'apigateway:*',
       'lambda:*',
       'logs:*',
+      'events:*',
     ]
   }
 
