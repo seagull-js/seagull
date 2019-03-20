@@ -81,7 +81,7 @@ export class SeagullProject {
       input: { path: 'test/rel' },
       name: 'test-rule',
       props: {
-        scheduleExpression: 'rate (3 minutes)',
+        scheduleExpression: 'rate(3 minutes)',
       },
     })
     return app
