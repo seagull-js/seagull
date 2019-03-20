@@ -76,6 +76,13 @@ export class SeagullProject {
     s3DeploymentNeeded ? addS3() : importS3()
     app.stack.addLogGroup(`/aws/lambda/${name}-lambda-handler`)
     app.stack.addLogGroup(`/${name}/data-log`)
+    app.stack.addEventRule({
+      input: { path: 'test/rel' },
+      name: 'test-rule',
+      props: {
+        scheduleExpression: 'rate (3 minutes)',
+      },
+    })
     return app
   }
 

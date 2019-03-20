@@ -5,6 +5,7 @@ import * as CM from '@aws-cdk/aws-certificatemanager'
 import * as CF from '@aws-cdk/aws-cloudfront'
 import * as CB from '@aws-cdk/aws-codebuild'
 import { GitHubSourceAction, Pipeline } from '@aws-cdk/aws-codepipeline'
+import * as Events from '@aws-cdk/aws-events'
 import * as IAM from '@aws-cdk/aws-iam'
 import { Code, Function as LambdaFunction, Runtime } from '@aws-cdk/aws-lambda'
 import { LogGroup } from '@aws-cdk/aws-logs'
@@ -151,6 +152,18 @@ export class SeagullStack extends Stack {
     role && bucket.grantReadWrite(role)
     return bucket
   }
+
+  addEventRule(params: RuleConfig) {
+    const rule = new Events.EventRule(this, params.name, params.props)
+    rule.addTarget(undefined, { jsonTemplate: params.input })
+    return rule
+  }
+}
+
+interface RuleConfig {
+  name: string
+  props: Events.EventRuleProps
+  input: object
 }
 
 interface StageConfig {
