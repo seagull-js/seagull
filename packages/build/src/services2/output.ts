@@ -35,3 +35,23 @@ export class OutputService {
     this.console.log(this, module, event, data)
   }
 }
+
+/* Notepad for TS output formatting
+import * as ts from 'typescript'
+
+
+const formatHost: ts.FormatDiagnosticsHost = {
+  getCanonicalFileName: path => path,
+  getCurrentDirectory: ts.sys.getCurrentDirectory,
+  getNewLine: () => ts.sys.newLine,
+}
+function reportDiagnostic(diagnostic: ts.Diagnostic) {
+  !fast && console.error(
+    ts.formatDiagnosticsWithColorAndContext([diagnostic], formatHost),
+  )
+}
+
+function reportWatchStatusChanged(diagnostic: ts.Diagnostic) {
+  console.info(ts.formatDiagnostic(diagnostic, formatHost))
+}
+*/
