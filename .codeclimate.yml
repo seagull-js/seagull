@@ -1,11 +1,1 @@
 version: '2'
-prepare:
-  fetch:
-    - url: 'https://raw.githubusercontent.com/seagull-js/seagull/master/packages/tslint/tslint.json'
-      path: 'node_modules/@seagull/tslint/tslint.json'
-    - url: 'https://raw.githubusercontent.com/seagull-js/seagull/master/packages/tslint/package.json'
-      path: 'node_modules/@seagull/tslint/package.json'
-plugins:
-  tslint:
-    enabled: true
-    config: packages/tslint/tslint.json
