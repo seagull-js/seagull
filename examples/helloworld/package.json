@@ -23,6 +23,7 @@
     "@seagull/deploy-aws": "^2.10.5",
     "@seagull/test-e2e": "^2.10.0",
     "@seagull/test-pages": "^2.10.0",
+    "@seagull/tslint": "^2.10.0",
     "@types/lodash": "^4.14.107",
     "@types/node": "^8.10",
     "jsdom": "^13.0.0",
