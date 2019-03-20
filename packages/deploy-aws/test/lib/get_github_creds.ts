@@ -27,6 +27,7 @@ export class Test extends BasicTest {
     const oauthToken = 'yaq12wsxcde3'
     const props = {
       branch: branchName,
+      mode: 'test',
       owner: directOwner,
       pkg: {
         name: packageName,
@@ -37,14 +38,13 @@ export class Test extends BasicTest {
       },
       repo: directRepo,
       secretParameter: secretParam,
-      token: oauthToken,
     }
 
     const gitData = getGitData(props)
     gitData.branch.should.be.equals(branchName)
     gitData.owner.should.be.equals(directOwner)
     gitData.repo.should.be.equals(directRepo)
-    gitData.secret.resolve().should.be.equals(new Secret(oauthToken).resolve())
+    gitData.secret.resolve().should.be.equals(secretParam.resolve())
   }
 
   @test
@@ -56,6 +56,7 @@ export class Test extends BasicTest {
     const secretParam = new Secret('123456')
     const props = {
       branch: branchName,
+      mode: 'test',
       pkg: {
         name: packageName,
         repository: {
@@ -82,19 +83,19 @@ export class Test extends BasicTest {
     const oauthToken = 'yaq12wsxcde3'
     const props = {
       branch: branchName,
+      mode: 'test',
       owner: directOwner,
       pkg: {
         name: packageName,
       },
       secretParameter: secretParam,
-      token: oauthToken,
     }
 
     const gitData = getGitData(props)
     gitData.branch.should.be.equals(branchName)
     gitData.owner.should.be.equals(directOwner)
     gitData.repo.should.be.equals(packageName)
-    gitData.secret.resolve().should.be.equals(new Secret(oauthToken).resolve())
+    gitData.secret.resolve().should.be.equals(secretParam.resolve())
   }
 
   @test
@@ -102,6 +103,7 @@ export class Test extends BasicTest {
     const branchName = 'test-branch'
     const props = {
       branch: branchName,
+      mode: 'test',
     }
 
     const gitData = getGitData(props)

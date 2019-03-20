@@ -4,16 +4,25 @@ import * as log from './log_messages'
 
 interface GitDataProps {
   branch: string
+  mode: string
   owner?: string
   pkg?: any
   repo?: string
   secretParameter?: Secret
-  token?: string
 }
 
-export function getGitData(props: GitDataProps) {
+export interface RepoData {
+  branch: string
+  mode: string
+  owner: string
+  repo: string
+  secret: Secret
+}
+
+export function getGitData(props: GitDataProps): RepoData {
   return {
     branch: props.branch,
+    mode: props.mode,
     owner: getOwner(props),
     repo: getRepo(props),
     secret: getSecret(props),
@@ -21,16 +30,12 @@ export function getGitData(props: GitDataProps) {
 }
 
 function getSecret(props: GitDataProps) {
-  return getTokenDirect(props) || props.secretParameter || noToken()
+  return props.secretParameter || noToken()
 }
 
 function noToken() {
   log.noGithubTokenFound()
   return new Secret('noToken')
-}
-
-function getTokenDirect(props: GitDataProps) {
-  return props.token && new Secret(props.token)
 }
 
 function getOwner(props: GitDataProps) {
@@ -61,7 +66,7 @@ function getRepoPkgJson(pkg: any) {
   const repoUrl = pkg.repository && pkg.repository.url
   const isGithubUrl = repoUrl && repoUrl.indexOf('github.com') > -1
   const repoUrlRepoName = isGithubUrl && getRepoFromURL(repoUrl)
-  return repoUrlRepoName || pkg.name
+  return repoUrlRepoName || (pkg.name as string)
 }
 
 function noRepo() {
