@@ -1,5 +1,5 @@
-version: "2"
+version: '2'
 plugins:
   tslint:
     enabled: true
-    config: tslint.json
+    config: packages/tslint/tslint.json
