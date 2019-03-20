@@ -29,9 +29,7 @@ module.exports.handler = serverless(app_1.default, {
     binary: ['image/*'],
     request: (request, event, context) => {
       console.log('event', event);
-      console.log('context', context);
-      // request.serverless = { event, context }
-      console.log(request);
+      console.log('request', request);
     },
     response: (response, event, context) => {
         console.log(response);
