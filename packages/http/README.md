@@ -41,6 +41,16 @@ class ... {
 }
 ```
 
+### Bootstrap
+
+```javascript
+import { containerModule } from '@seagull/http'
+import { Container } from 'inversify'
+
+const injector = new Container()
+injector.load(containerModule)
+```
+
 ### Mode behavior
 
 - _cloud_ : returns response of the external resource (as defined via url/config)
