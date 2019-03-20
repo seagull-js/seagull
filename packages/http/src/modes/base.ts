@@ -1,11 +1,10 @@
 import { injectable } from 'inversify'
 import { RequestInit, Response } from 'node-fetch'
 import 'reflect-metadata'
-import { RequestInitBase, RequestInitGet } from '../interface'
-import { Http } from './cloud'
+import { IHttp, RequestInitBase, RequestInitGet } from '../interface'
 
 @injectable()
-export abstract class HttpBase implements Http {
+export abstract class HttpBase implements IHttp {
   abstract fetch(url: string, init?: RequestInit | undefined): Promise<Response>
 
   async get(url: string, init?: RequestInitGet): Promise<Response> {
