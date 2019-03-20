@@ -51,6 +51,7 @@ export class SeagullProject {
       'lambda:InvokeAsync',
       'ses:*',
       's3:*',
+      'events:*',
     ]
     const aliasConfig = await checkForAliasConfig(this.pkgJson)
     const appProps = {
