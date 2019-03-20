@@ -1,3 +1,6 @@
 {
-  "extends": "./packages/tslint/tslint.json"
+  "extends": "./packages/tslint",
+  "linterOptions": {
+    "exclude": ["**/node_modules/**", "**/dist/**"]
+  }
 }
