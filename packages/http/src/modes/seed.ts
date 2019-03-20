@@ -1,9 +1,9 @@
-import { Injectable } from 'injection-js'
+import { injectable } from 'inversify'
 import fetch, { Headers, RequestInit, Response } from 'node-fetch'
 import 'reflect-metadata'
-import { HttpBase } from '../base'
 import { createResponse, Fixture } from '../seed/fixture'
 import { SeedStorage } from '../seed/seedStorage'
+import { HttpBase } from './base'
 
 export interface RequestException {
   body: NodeJS.ReadableStream
@@ -15,7 +15,7 @@ export interface RequestException {
 /**
  * Http seed mode implementation.
  */
-@Injectable()
+@injectable()
 export class HttpSeed extends HttpBase {
   async fetch(url: string, init?: RequestInit): Promise<Response> {
     const seed = SeedStorage.createByRequest<Fixture>(url, init)

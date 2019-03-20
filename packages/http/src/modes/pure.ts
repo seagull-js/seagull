@@ -1,14 +1,14 @@
-import { Injectable } from 'injection-js'
+import { injectable } from 'inversify'
 import { RequestInit, Response } from 'node-fetch'
 import 'reflect-metadata'
-import { HttpBase } from '../base'
 import { createResponse, Fixture } from '../seed/fixture'
 import { SeedStorage } from '../seed/seedStorage'
+import { HttpBase } from './base'
 
 /**
  * Http pure mode implementation.
  */
-@Injectable()
+@injectable()
 export class HttpPure extends HttpBase {
   async fetch(url: string, init?: RequestInit): Promise<Response> {
     const seed = SeedStorage.createByRequest<Fixture>(url, init)

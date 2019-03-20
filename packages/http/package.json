@@ -43,7 +43,9 @@
     "reflect-metadata": "^0.1.13",
     "node-fetch": "^2.3.0",
     "encoding": "^0.1.12",
-    "iconv-lite": "^0.4.24"
+    "iconv-lite": "^0.4.24",
+    "inversify": "^5.0.1",
+    "inversify-inject-decorators": "^3.1.0"
   },
   "nyc": {
     "extension": [

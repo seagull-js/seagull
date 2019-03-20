@@ -1,15 +1,17 @@
-import { forwardRef, Inject, Injectable } from 'injection-js'
+import { injectable } from 'inversify'
 import { Response } from 'node-fetch'
 import 'reflect-metadata'
 import { HttpError } from '.'
-import { RequestInitBase, RequestInitGet } from '../http'
+import { RequestInitBase, RequestInitGet } from '../interface'
 import { Http } from '../modes/cloud'
 
 /**
  * Http json client.
+ * @throws {HttpError}
  */
+@injectable()
 export class HttpJson {
-  constructor(@Inject(forwardRef(() => Http)) private http: Http) {}
+  constructor(private http: Http) {}
 
   async get<T>(url: string, init?: RequestInitGet): Promise<T> {
     return this.handle(this.http.get(url, init))

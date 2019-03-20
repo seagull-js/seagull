@@ -1,11 +1,12 @@
 import { BasicTest } from '@seagull/testing'
 import { expect } from 'chai'
 import 'chai/register-should'
-import { ReflectiveInjector } from 'injection-js'
+import { Container } from 'inversify'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as querystring from 'querystring'
-import { Http, HttpSeed } from '../../src'
+import { Http } from '../../src'
 import { HttpJson } from '../../src'
+import { HttpSeed } from '../../src/modes/seed'
 
 interface ExpectedResponse {
   args: {
@@ -16,11 +17,7 @@ interface ExpectedResponse {
 
 @suite('Http::Json')
 export class Test extends BasicTest {
-  injector = ReflectiveInjector.resolveAndCreate([
-    HttpJson,
-    { provide: Http, useClass: HttpSeed },
-  ])
-  http = this.injector.get(HttpJson) as HttpJson
+  http = new HttpJson(new HttpSeed())
   baseUrl = `https://postman-echo.com`
 
   @test
@@ -32,7 +29,7 @@ export class Test extends BasicTest {
     }
     const url = `${this.baseUrl}/${method}?${querystring.stringify(params)}`
     const result = await this.http.get<ExpectedResponse>(url)
-    console.info('result', result)
+    // console.info('result', result)
     expect(result).to.be.an('object')
     expect(result.args).to.have.ownProperty('foo1')
     expect(result.args).to.have.ownProperty('foo2')

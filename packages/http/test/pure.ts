@@ -2,10 +2,9 @@ import { BasicTest } from '@seagull/testing'
 import { expect } from 'chai'
 import 'chai/register-should'
 import * as fs from 'fs'
-import { ReflectiveInjector } from 'injection-js'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as querystring from 'querystring'
-import { Http, HttpPure } from '../src'
+import { HttpPure } from '../src/modes/pure'
 
 interface ExpectedResponse {
   args: {
@@ -16,13 +15,7 @@ interface ExpectedResponse {
 
 @suite('Http::Pure::Fetch')
 export class Test extends BasicTest {
-  injector = ReflectiveInjector.resolveAndCreate([
-    {
-      provide: Http,
-      useClass: HttpPure,
-    },
-  ])
-  http = this.injector.get(Http) as Http
+  http = new HttpPure()
   baseUrl = `https://postman-echo.com`
 
   @test

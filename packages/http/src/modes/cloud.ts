@@ -1,12 +1,12 @@
-import { Injectable } from 'injection-js'
+import { injectable } from 'inversify'
 import fetch, { RequestInit, Response } from 'node-fetch'
 import 'reflect-metadata'
-import { HttpBase } from '../base'
+import { HttpBase } from './base'
 
 /**
  * Http (default) cloud mode implementation.
  */
-@Injectable()
+@injectable()
 export class Http extends HttpBase {
   async fetch(url: string, init?: RequestInit): Promise<Response> {
     return await fetch(url, init)

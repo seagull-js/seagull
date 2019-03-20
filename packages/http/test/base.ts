@@ -1,17 +1,13 @@
 import { BasicTest } from '@seagull/testing'
 import { expect } from 'chai'
 import 'chai/register-should'
-import { ReflectiveInjector } from 'injection-js'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as querystring from 'querystring'
-import { Http, HttpSeed } from '../src'
+import { HttpSeed } from '../src/modes/seed'
 
 @suite('Http::Base::Fetch')
 export class Test extends BasicTest {
-  injector = ReflectiveInjector.resolveAndCreate([
-    { provide: Http, useClass: HttpSeed },
-  ])
-  http = this.injector.get(Http) as Http
+  http = new HttpSeed()
   baseUrl = `https://postman-echo.com`
 
   @test

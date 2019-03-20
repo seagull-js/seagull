@@ -1,7 +1,6 @@
 import { BasicTest } from '@seagull/testing'
 import { expect } from 'chai'
 import 'chai/register-should'
-import { ReflectiveInjector } from 'injection-js'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as querystring from 'querystring'
 import { Http } from '../src'
@@ -14,8 +13,7 @@ interface ExpectedResponse {
 }
 @suite('Http::Cloud::Fetch')
 export class Test extends BasicTest {
-  injector = ReflectiveInjector.resolveAndCreate([Http])
-  http = this.injector.get(Http)
+  http = new Http()
   baseUrl = `https://postman-echo.com`
 
   @test
