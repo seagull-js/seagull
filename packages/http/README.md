@@ -1,14 +1,44 @@
-# command-http
+# http (injectable)
 
-> Command for http requests, implements seed data generation for test cases.
+> Injectable library for http requests using [http-fetch](https://github.com/bitinn/node-fetch).
 
-The command can be used like this:
+- Implements seagull environment mode (cloud, connected, edge, pure)
+- Implements seed data generation for test cases
+
+### Usage
+
+The basic fetch command can be used like this:
 
 ```javascript
-import { Http, RequestConfig } from '../src'
+import { Http } from '@seagull/http'
 ...
-const config: RequestConfig = { url }
-const response = await new Http.Request<any>(config).execute()
+class ... {
+  // inject http implementation
+  constructor(private http: Http) {}
+  doSomething() {
+    const response = await this.http.get(url)
+    const json = await response.json()
+  }
+}
+```
+
+For convinience, you can use content-specific adapters as well:
+
+```javascript
+import { HttpJson } from '@seagull/http'
+...
+class ... {
+  // inject http implementation
+  constructor(private http: HttpJson) {}
+  doSomething() {
+    try {
+      const json = this.http.get(url)
+    } catch (err) {
+      ...
+    }
+
+  }
+}
 ```
 
 ### Mode behavior
@@ -23,11 +53,13 @@ const response = await new Http.Request<any>(config).execute()
 Use global switch to enable seed data generation while http request:
 
 ```javascript
-Http.fetchPureSeed = true
+import { config } from '@seagull/http'
+
+config.seed = true
 ...
 // do your thing
 ...
-Http.fetchPureSeed = false
+config.seed = false
 ```
 
 The seed data can be fetched in any mode except pure, as tests within the code pipeline should not call external ressources.
