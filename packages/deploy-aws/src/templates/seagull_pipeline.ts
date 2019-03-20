@@ -51,6 +51,7 @@ export class SeagullPipeline {
       'apigateway:*',
       'lambda:*',
       'logs:*',
+      'events:*',
     ]
     this.install = ['npm i -g npm', 'npm ci']
     this.build = ['npm run build']
