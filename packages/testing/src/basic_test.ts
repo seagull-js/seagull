@@ -1,7 +1,6 @@
 import { Mock } from '@seagull/mock'
 import { SetMode } from '@seagull/mode'
 import { Sandbox } from '@seagull/sandbox'
-import { Container } from 'inversify'
 
 export class BasicTest {
   /**
