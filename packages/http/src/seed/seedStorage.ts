@@ -97,7 +97,7 @@ export class SeedStorage<T> {
   ): SeedLocalConfig<T> {
     if (pathExistsSync(path)) {
       // node_modules/@seagull/commands-http/dist/src
-      const seedFolder = `${__dirname}/${'../'.repeat(5)}`
+      const seedFolder = `${__dirname}/${'../'.repeat(6)}`
       config = Object.assign(config, require(seedFolder + path).default)
     }
     if (path.indexOf('/') > -1) {
