@@ -1,7 +1,7 @@
 import { BasicTest } from '@seagull/testing'
 import { expect } from 'chai'
 import * as fs from 'fs'
-import { suite, test } from 'mocha-typescript'
+import { suite, test, timeout } from 'mocha-typescript'
 import {
   Headers,
   Request as NodeRequest,
@@ -210,6 +210,7 @@ export class CloudTest extends BasicTest {
     expect(response).to.deep.equal(expected)
   }
 
+  @timeout(30000)
   @test
   async 'converts response to utf8 text'() {
     const fetch: (
