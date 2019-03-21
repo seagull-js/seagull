@@ -1,0 +1,69 @@
+{
+  "name": "@seagull/soap",
+  "version": "2.11.0",
+  "description": "A soap module for the seagull framework",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "rm -rf dist && tsc && npm run lint",
+    "test": "NODE_ENV=test tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
+    "test:watch": "npm run test -- --watch --reporter min",
+    "lint": "tslint --project ./tsconfig.json --config ./tslint.json --fix './{src, test}/**/*.ts'",
+    "docs": "rm -rf docs && typedoc --mode modules --ignoreCompilerErrors --excludeExternals --excludePrivate --excludeNotExported --out docs src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seagull-js/seagull.git"
+  },
+  "keywords": [
+    "web",
+    "framework",
+    "web framework",
+    "serverless",
+    "cloud",
+    "aws",
+    "react",
+    "react.js",
+    "isomorphic"
+  ],
+  "author": "Christian Pätzold",
+  "license": "LGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/seagull-js/seagull/issues"
+  },
+  "homepage": "https://github.com/seagull-js/seagull#readme",
+  "devDependencies": {
+    "@seagull/testing": "^2.11.0",
+    "@seagull/tslint": "^2.11.0"
+  },
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "inversify": "^5.0.1",
+    "reflect-metadata": "^0.1.13",
+    "soap": "^0.26.0"
+  },
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "exclude": [
+      "**/*.d.ts",
+      "coverage",
+      "dist",
+      "docs",
+      "node_modules",
+      "test"
+    ],
+    "reporter": [
+      "html",
+      "lcov",
+      "text",
+      "text-summary"
+    ]
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "2f2098cb8e421957a8c86541462ef341134fccce"
+}
