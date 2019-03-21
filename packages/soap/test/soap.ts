@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { suite, test } from 'mocha-typescript'
-import { SoapClientSupplier } from '../src/soap'
+import { SoapClientSupplier } from '../src'
 
 // tslint:disable-next-line:no-var-requires
 @suite('SOAP::IBE')

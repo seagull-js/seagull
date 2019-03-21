@@ -2,8 +2,7 @@ import { expect } from 'chai'
 import { Container } from 'inversify'
 import { suite, test } from 'mocha-typescript'
 import 'reflect-metadata'
-import { SoapClientSupplier } from '../src/soap'
-import { SoapDIModule } from '../src/soap-di-module'
+import { SoapClientSupplier, SoapDIModule } from '../src'
 
 // tslint:disable-next-line:no-var-requires
 @suite('SOAP::IBE')
