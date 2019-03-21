@@ -1,0 +1,25 @@
+{
+  "body": {
+    "args": {},
+    "data": "foobar",
+    "files": {},
+    "form": {},
+    "headers": {
+      "x-forwarded-proto": "https",
+      "host": "postman-echo.com",
+      "content-length": "6",
+      "accept": "*/*",
+      "accept-encoding": "gzip,deflate",
+      "content-type": "text/plain;charset=UTF-8",
+      "user-agent": "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)",
+      "x-forwarded-port": "443"
+    },
+    "json": null,
+    "url": "https://postman-echo.com/post"
+  },
+  "options": {
+    "headers": {},
+    "status": 200,
+    "statusText": "OK"
+  }
+}
