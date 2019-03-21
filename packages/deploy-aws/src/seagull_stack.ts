@@ -151,7 +151,7 @@ export class SeagullStack extends Stack {
 
   addEventRule(params: RuleConfig) {
     const rule = new Events.EventRule(this, params.name, params.props)
-    rule.addTarget(undefined, { jsonTemplate: params.input })
+    rule.addTarget(params.target, { jsonTemplate: params.input })
     return rule
   }
 }
@@ -159,7 +159,8 @@ export class SeagullStack extends Stack {
 interface RuleConfig {
   name: string
   props: Events.EventRuleProps
-  input: object
+  input: string
+  target: Events.IEventRuleTarget
 }
 
 interface StageConfig {
