@@ -7,29 +7,23 @@ interface StageConfigParams {
   mode: string
   owner: string
   pipeline: Pipeline
-  repositoryName: string
+  repo: string
   role: Role
   ssmSecret: { name: string; secret: Secret }
 }
 
-export function getStageConfigs(stageConfigParams: StageConfigParams) {
-  const sourceConfig = getSourceConfig(stageConfigParams, 0)
-  const buildConfig = getBuildConfig(stageConfigParams, 1)
-  return { buildConfig, sourceConfig }
-}
-
-function getSourceConfig(params: StageConfigParams, index: number) {
+export function getSourceConfig(params: StageConfigParams, index: number) {
   return {
     atIndex: index,
     branch: params.branch,
     oauthToken: params.ssmSecret.secret,
     owner: params.owner,
     pipeline: params.pipeline,
-    repo: params.repositoryName,
+    repo: params.repo,
   }
 }
 
-function getBuildConfig(params: StageConfigParams, index: number) {
+export function getBuildConfig(params: StageConfigParams, index: number) {
   return {
     atIndex: index,
     build: getBuild(params),
@@ -42,8 +36,7 @@ function getBuildConfig(params: StageConfigParams, index: number) {
 }
 
 function getInstall(params: StageConfigParams) {
-  const { owner, repositoryName } = params
-  const curlCmd = getCurlToSendTestResult(owner, repositoryName)
+  const curlCmd = getCurlToSendTestResult(params.owner, params.repo)
   const upgradeNpm = addStateChangeToCmd('npm i -g npm')
   const runInstall = addStateChangeToCmd('npm ci')
   const commands = [curlCmd, upgradeNpm, checkState(), runInstall, checkState()]
@@ -51,19 +44,17 @@ function getInstall(params: StageConfigParams) {
 }
 
 function getBuild(params: StageConfigParams) {
-  const { owner, repositoryName } = params
-  const curlCmd = getCurlToSendTestResult(owner, repositoryName)
+  const curlCmd = getCurlToSendTestResult(params.owner, params.repo)
   const runBuild = addStateChangeToCmd('npm run build')
   return { commands: [runBuild, checkState()], finally: [curlCmd] }
 }
 
 function getPostBuild(params: StageConfigParams) {
-  const { owner, repositoryName } = params
   const runTest = addStateChangeToCmd('npm run test')
   const runDeploy = addStateChangeToCmd('npm run deploy')
   const setState = 'export PIPELINE_STATE="success"'
   const setDesc = 'export PIPELINE_DESC="finished successfully"'
-  const curlCmd = getCurlToSendTestResult(owner, repositoryName)
+  const curlCmd = getCurlToSendTestResult(params.owner, params.repo)
   const setSuccess = `${setState};${setDesc};`
   const commands = [runTest, checkState(), runDeploy, checkState(), setSuccess]
   return { commands, finally: [curlCmd] }

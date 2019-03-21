@@ -23,8 +23,6 @@ export class Test extends BasicTest {
     const packageName = 'test-pkg'
     const pkgRepoName = 'pkg-repo-name'
     const pkgRepoOwner = 'pkg-owner-name'
-    const secretParam = new Secret('123456')
-    const oauthToken = 'yaq12wsxcde3'
     const props = {
       branch: branchName,
       mode: 'test',
@@ -37,14 +35,12 @@ export class Test extends BasicTest {
         },
       },
       repo: directRepo,
-      secretParameter: secretParam,
     }
 
     const gitData = getGitData(props)
     gitData.branch.should.be.equals(branchName)
     gitData.owner.should.be.equals(directOwner)
     gitData.repo.should.be.equals(directRepo)
-    gitData.secret.resolve().should.be.equals(secretParam.resolve())
   }
 
   @test
@@ -53,7 +49,6 @@ export class Test extends BasicTest {
     const packageName = 'test-pkg'
     const pkgRepoName = 'pkg-repo-name'
     const pkgRepoOwner = 'pkg-owner-name'
-    const secretParam = new Secret('123456')
     const props = {
       branch: branchName,
       mode: 'test',
@@ -64,14 +59,12 @@ export class Test extends BasicTest {
           url: `git+https://github.com/${pkgRepoOwner}/${pkgRepoName}.git`,
         },
       },
-      secretParameter: secretParam,
     }
 
     const gitData = getGitData(props)
     gitData.branch.should.be.equals(branchName)
     gitData.owner.should.be.equals(pkgRepoOwner)
     gitData.repo.should.be.equals(pkgRepoName)
-    gitData.secret.resolve().should.be.equals(secretParam.resolve())
   }
 
   @test
@@ -79,8 +72,6 @@ export class Test extends BasicTest {
     const branchName = 'test-branch'
     const directOwner = 'me'
     const packageName = 'test-pkg'
-    const secretParam = new Secret('123456')
-    const oauthToken = 'yaq12wsxcde3'
     const props = {
       branch: branchName,
       mode: 'test',
@@ -88,14 +79,12 @@ export class Test extends BasicTest {
       pkg: {
         name: packageName,
       },
-      secretParameter: secretParam,
     }
 
     const gitData = getGitData(props)
     gitData.branch.should.be.equals(branchName)
     gitData.owner.should.be.equals(directOwner)
     gitData.repo.should.be.equals(packageName)
-    gitData.secret.resolve().should.be.equals(secretParam.resolve())
   }
 
   @test
@@ -110,6 +99,5 @@ export class Test extends BasicTest {
     gitData.branch.should.be.equals(branchName)
     gitData.owner.should.be.equals('noOwner')
     gitData.repo.should.be.equals('noRepo')
-    gitData.secret.resolve().should.be.equals(new Secret('noToken').resolve())
   }
 }

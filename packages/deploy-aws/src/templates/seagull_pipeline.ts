@@ -93,14 +93,13 @@ export class SeagullPipeline {
       mode: this.mode,
       owner: gitData.owner,
       pipeline,
-      repositoryName: gitData.repo,
+      repo: gitData.repo,
       role,
       ssmSecret,
     }
-    const stageConfigs = lib.getStageConfigs(stageConfigParams)
 
-    stack.addSourceStage('source', stageConfigs.sourceConfig)
-    stack.addBuildStage('build', stageConfigs.buildConfig)
+    stack.addSourceStage('source', lib.getSourceConfig(stageConfigParams, 0))
+    stack.addBuildStage('build', lib.getBuildConfig(stageConfigParams, 1))
     return pipelineApp
   }
 

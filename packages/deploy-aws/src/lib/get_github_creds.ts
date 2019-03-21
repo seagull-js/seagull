@@ -4,38 +4,23 @@ import * as log from './log_messages'
 
 interface GitDataProps {
   branch: string
-  mode: string
   owner?: string
   pkg?: any
   repo?: string
-  secretParameter?: Secret
 }
 
 export interface RepoData {
   branch: string
-  mode: string
   owner: string
   repo: string
-  secret: Secret
 }
 
 export function getGitData(props: GitDataProps): RepoData {
   return {
     branch: props.branch,
-    mode: props.mode,
     owner: getOwner(props),
     repo: getRepo(props),
-    secret: getSecret(props),
   }
-}
-
-function getSecret(props: GitDataProps) {
-  return props.secretParameter || noToken()
-}
-
-function noToken() {
-  log.noGithubTokenFound()
-  return new Secret('noToken')
 }
 
 function getOwner(props: GitDataProps) {
