@@ -7,30 +7,20 @@ interface GitDataProps {
   owner?: string
   pkg?: any
   repo?: string
-  secretParameter?: Secret
-  token?: string
 }
 
-export function getGitData(props: GitDataProps) {
+export interface RepoData {
+  branch: string
+  owner: string
+  repo: string
+}
+
+export function getGitData(props: GitDataProps): RepoData {
   return {
     branch: props.branch,
     owner: getOwner(props),
     repo: getRepo(props),
-    secret: getSecret(props),
   }
-}
-
-function getSecret(props: GitDataProps) {
-  return getTokenDirect(props) || props.secretParameter || noToken()
-}
-
-function noToken() {
-  log.noGithubTokenFound()
-  return new Secret('noToken')
-}
-
-function getTokenDirect(props: GitDataProps) {
-  return props.token && new Secret(props.token)
 }
 
 function getOwner(props: GitDataProps) {
@@ -61,7 +51,7 @@ function getRepoPkgJson(pkg: any) {
   const repoUrl = pkg.repository && pkg.repository.url
   const isGithubUrl = repoUrl && repoUrl.indexOf('github.com') > -1
   const repoUrlRepoName = isGithubUrl && getRepoFromURL(repoUrl)
-  return repoUrlRepoName || pkg.name
+  return repoUrlRepoName || (pkg.name as string)
 }
 
 function noRepo() {

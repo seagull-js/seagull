@@ -1,6 +1,6 @@
 {
   "name": "@seagull/routes",
-  "version": "2.10.0",
+  "version": "2.11.1",
   "description": "Routing functionalities for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -32,17 +32,17 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/mock-process": "^2.10.0",
-    "@seagull/pages": "^2.10.0",
-    "@seagull/testing": "^2.10.0",
-    "@seagull/tslint": "^2.10.0",
+    "@seagull/mock-process": "^2.11.1",
+    "@seagull/pages": "^2.11.1",
+    "@seagull/testing": "^2.11.1",
+    "@seagull/tslint": "^2.11.1",
     "@types/express": "^4.16.0",
     "@types/lodash": "^4.14.107",
     "mock-fs": "^4.5.0"
   },
   "dependencies": {
-    "@seagull/commands-fs": "^2.10.0",
-    "@seagull/libraries": "^2.10.0",
+    "@seagull/commands-fs": "^2.11.1",
+    "@seagull/libraries": "^2.11.1",
     "body-parser": "^1.18.3",
     "class-validator": "^0.9.1",
     "express": "^4.16.3",
