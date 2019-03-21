@@ -3,15 +3,15 @@ import * as fs from 'fs'
 import { outputJsonSync, pathExistsSync, readJsonSync } from 'fs-extra'
 import { RequestInit } from 'node-fetch'
 import { join } from 'path'
-import { SeedLocalConfig } from './seedLocalConfig'
+import { LocalConfig } from './localConfig'
 
 // tslint:disable-next-line:no-var-requires
 require('ts-node')
 
 /**
- * Seed storage for managing seed fixtures.
+ * Seed fixtureStorage for managing seed fixtures.
  */
-export class SeedStorage<T> {
+export class FixtureStorage<T> {
   /**
    * Date the fixture has been created (in case a fixture exists).
    * @param uri Fixture uri
@@ -38,10 +38,9 @@ export class SeedStorage<T> {
    * The seed configuration placed within the fixture folder.
    * @param uri
    */
-  get config(): SeedLocalConfig<T> {
-    const path = this.path + '.ts'
+  get config(): LocalConfig<T> {
+    const path = this.path.replace('.json', '')
     const config = this.getConfigRecursive({}, path)
-    // console.log('config is ' + JSON.stringify(config))
     return config
   }
 
@@ -50,14 +49,17 @@ export class SeedStorage<T> {
   }
 
   /**
-   * Alternate constructor to create a seed storage by request informations.
+   * Alternate constructor to create a seed fixtureStorage by request informations.
    * @param url The request url.
    * @param init The request configuration.
    */
-  static createByRequest<T>(url: string, init?: RequestInit): SeedStorage<T> {
+  static createByRequest<T>(
+    url: string,
+    init?: RequestInit
+  ): FixtureStorage<T> {
     url = url.replace('http://', 'http/')
     url = url.replace('https://', 'https/')
-    return new SeedStorage(
+    return new FixtureStorage(
       `${url}/${init ? this.hash(JSON.stringify(init)) : 'default'}.json`
     )
   }
@@ -70,7 +72,7 @@ export class SeedStorage<T> {
   }
 
   /**
-   * Creates a new seed storage for managing seed fixtures.
+   * Creates a new seed fixtureStorage for managing seed fixtures.
    * @param uri Fixture uri
    */
   constructor(public uri: string) {}
@@ -92,19 +94,22 @@ export class SeedStorage<T> {
   }
 
   private getConfigRecursive(
-    config: SeedLocalConfig<T>,
+    config: LocalConfig<T>,
     path: string
-  ): SeedLocalConfig<T> {
-    if (pathExistsSync(path)) {
-      // node_modules/@seagull/commands-http/dist/src
-      const seedFolder = `${__dirname}/${'../'.repeat(6)}`
-      config = Object.assign(config, require(seedFolder + path).default)
-    }
+  ): LocalConfig<T> {
+    const tsPath = path + '.ts'
+
     if (path.indexOf('/') > -1) {
-      return this.getConfigRecursive(
+      const parentConfig = this.getConfigRecursive(
         config,
-        path.substring(0, path.lastIndexOf('/')) + '.ts'
+        path.substring(0, path.lastIndexOf('/'))
       )
+      if (pathExistsSync(tsPath)) {
+        // node_modules/@seagull/http/dist/src/seed
+        const seedFolder = `${__dirname}/${'../'.repeat(6)}`
+        config = Object.assign(config, require(seedFolder + tsPath).default)
+      }
+      return parentConfig
     } else {
       return config
     }
