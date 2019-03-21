@@ -163,7 +163,7 @@ export class SeagullStack extends Stack {
 interface RuleConfig {
   name: string
   props: Events.EventRuleProps
-  input: object
+  input: string
   target: Events.IEventRuleTarget
 }
 
