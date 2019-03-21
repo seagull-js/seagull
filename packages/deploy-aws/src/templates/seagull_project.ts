@@ -78,7 +78,7 @@ export class SeagullProject {
     app.stack.addLogGroup(`/aws/lambda/${name}-lambda-handler`)
     app.stack.addLogGroup(`/${name}/data-log`)
     app.stack.addEventRule({
-      input: '{ "path":"test/rel" }',
+      input: '{ "path":"/test/rel" }',
       name: 'test-rule',
       props: {
         scheduleExpression: 'rate(3 minutes)',
