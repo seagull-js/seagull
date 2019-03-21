@@ -205,10 +205,11 @@ export class Test extends BasicTest {
     stack.addSourceStage(sourceName, sourceConfig)
     const buildConfig = {
       atIndex: 1,
-      build: ['echo "start build"'],
-      install: ['npm i'],
+      build: { commands: ['echo "start build"'], finally: [] },
+      env: { variables: {} },
+      install: { commands: ['npm i'], finally: [] },
       pipeline,
-      postBuild: ['npm run test'],
+      postBuild: { commands: ['npm run test'], finally: [] },
       role,
     }
     stack.addBuildStage(buildName, buildConfig)
