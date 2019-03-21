@@ -20,11 +20,14 @@ export interface OutputServiceEvents {
  */
 export class OutputService {
   console: Console
+  bus: ServiceEventBus<OutputServiceEvents>
+
   constructor(
-    bus: ServiceEventBus<OutputServiceEvents>,
+    bus: OutputService['bus'],
     { stdout = process.stdout, stderr = process.stderr }
   ) {
-    bus.on(LogEvent, this.log.bind(this))
+    this.bus = bus
+    this.bus.on(LogEvent, this.log.bind(this))
     this.console = new Console(stdout, stderr)
   }
   /**
