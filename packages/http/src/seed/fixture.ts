@@ -1,15 +1,18 @@
 import { Response, ResponseInit } from 'node-fetch'
 
 // TODO: make class
-export interface Fixture {
-  body: string | object
+export interface Fixture<T> {
+  body: T
   options?: ResponseInit
 }
 
 // TODO: move to Fixture class
-export const createResponse = (seedFixture: Fixture) => {
+export const createResponse = <T>(seedFixture: Fixture<T>) => {
+  let bodyString
   if (typeof seedFixture.body !== 'string') {
-    seedFixture.body = JSON.stringify(seedFixture.body)
+    bodyString = JSON.stringify(seedFixture.body)
+  } else {
+    bodyString = seedFixture.body
   }
-  return new Response(seedFixture.body, seedFixture.options)
+  return new Response(bodyString, seedFixture.options)
 }
