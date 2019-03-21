@@ -61,7 +61,7 @@ export class SeagullPipeline {
     const isTest = this.mode === 'test'
     const suffix = `${isTest ? `-${this.branch}-test` : ''}-ci`
     const pkgJson = require(`${this.appPath}/package.json`)
-    const name = `${pkgJson.name}${suffix}`
+    const name = `${pkgJson.name}${suffix}`.replace(/[^0-9A-Za-z-]/g, '')
     const sdk = new SDK({})
     const account = await sdk.defaultAccount()
     const stackProps = { env: { account, region: this.region } }
