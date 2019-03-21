@@ -83,6 +83,7 @@ export class SeagullProject {
       props: {
         scheduleExpression: 'rate(3 minutes)',
       },
+      target: lambda,
     })
     return app
   }
