@@ -22,7 +22,6 @@ export class SeagullProject {
   accountId?: string
   appPath: string
   branch: string
-  cronJson: any
   mode: string
   pkgJson: any
   profile: string
@@ -36,7 +35,6 @@ export class SeagullProject {
     this.profile = props.profile
     this.region = props.region
     this.pkgJson = require(`${this.appPath}/package.json`)
-    this.cronJson = require(`${this.appPath}/dist/cron.json`)
   }
 
   async createSeagullApp() {
@@ -80,8 +78,8 @@ export class SeagullProject {
     s3DeploymentNeeded ? addS3() : importS3()
     app.stack.addLogGroup(`/aws/lambda/${name}-lambda-handler`)
     app.stack.addLogGroup(`/${name}/data-log`)
-    console.info('this.cronJson', this.cronJson)
-    this.cronJson.forEach((rule: Rule) => {
+    const cronJson = require(`${this.appPath}/dist/cron.json`)
+    cronJson.forEach((rule: Rule) => {
       app.stack.addEventRule(rule, lambda)
     })
 

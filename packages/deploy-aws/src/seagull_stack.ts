@@ -166,13 +166,6 @@ export interface Rule {
   cron: string
 }
 
-interface RuleConfig {
-  name: string
-  props: Events.EventRuleProps
-  input: string
-  target: Events.IEventRuleTarget
-}
-
 interface StageConfig {
   atIndex: number
   pipeline: Pipeline
