@@ -156,7 +156,7 @@ export class SeagullStack extends Stack {
     }
 
     const eventRule = new Events.EventRule(this, name, schedule)
-    eventRule.addTarget(target, { jsonTemplate: rule })
+    eventRule.addTarget(target, { jsonTemplate: `{"path":"${rule.path}"}` })
     return eventRule
   }
 }
