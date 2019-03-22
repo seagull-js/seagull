@@ -6,6 +6,7 @@ import { FS } from '@seagull/commands-fs'
 import * as lib from '../lib'
 import { ProvideAssetFolder } from '../provide_asset_folder'
 import { SeagullApp } from '../seagull_app'
+import { Rule } from '../seagull_stack'
 import { setCredsByProfile } from '../set_aws_credentials'
 
 interface SeagullProjectProps {
@@ -21,6 +22,7 @@ export class SeagullProject {
   accountId?: string
   appPath: string
   branch: string
+  cronJson: any
   mode: string
   pkgJson: any
   profile: string
@@ -34,6 +36,7 @@ export class SeagullProject {
     this.profile = props.profile
     this.region = props.region
     this.pkgJson = require(`${this.appPath}/package.json`)
+    this.cronJson = require(`${this.appPath}/dist/cron.json`)
   }
 
   async createSeagullApp() {
@@ -77,14 +80,11 @@ export class SeagullProject {
     s3DeploymentNeeded ? addS3() : importS3()
     app.stack.addLogGroup(`/aws/lambda/${name}-lambda-handler`)
     app.stack.addLogGroup(`/${name}/data-log`)
-    app.stack.addEventRule({
-      input: '{ "path":"/cron/import-content" }',
-      name: 'test-rule',
-      props: {
-        scheduleExpression: 'rate(1 hour)',
-      },
-      target: lambda,
+    console.info('this.cronJson', this.cronJson)
+    this.cronJson.forEach((rule: Rule) => {
+      app.stack.addEventRule(rule, lambda)
     })
+
     return app
   }
 

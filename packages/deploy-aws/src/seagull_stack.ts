@@ -149,11 +149,21 @@ export class SeagullStack extends Stack {
     return bucket
   }
 
-  addEventRule(params: RuleConfig) {
-    const rule = new Events.EventRule(this, params.name, params.props)
-    rule.addTarget(params.target, { jsonTemplate: params.input })
-    return rule
+  addEventRule(rule: Rule, target: Events.IEventRuleTarget) {
+    const name = rule.path.split('/').pop() || 'rootPath'
+    const schedule = {
+      scheduleExpression: rule.cron,
+    }
+
+    const eventRule = new Events.EventRule(this, name, schedule)
+    eventRule.addTarget(target, { jsonTemplate: rule })
+    return eventRule
   }
+}
+
+export interface Rule {
+  path: string
+  cron: string
 }
 
 interface RuleConfig {
