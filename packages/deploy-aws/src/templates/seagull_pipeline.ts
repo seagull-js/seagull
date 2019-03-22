@@ -75,7 +75,7 @@ export class SeagullPipeline {
     const role = stack.addIAMRole('role', principal, actions)
     const pipeline = stack.addPipeline('pipeline')
     const token = this.githubToken
-    const tokenName = this.ssmParam || token ? `${name}-github` : undefined
+    const tokenName = token ? `${name}-github` : this.ssmParam || undefined
     const secretParams = { ssmHandler: this.ssmHandler, token, tokenName }
     const ssmSecret = await handleSSMSecret(secretParams)
     const gitDataProps = {
