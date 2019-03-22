@@ -18,7 +18,10 @@ export class Test extends BasicTest {
     await createBackendFolder.execute()
     await new FS.WriteFile(`${backendFolder}/server.js`, '').execute()
     await new FS.WriteFile(`${backendFolder}/lambda.js`, '').execute()
-    await new FS.WriteFile(`${this.appPath}/dist/cron.json`, '[]').execute()
+    await new FS.WriteFile(
+      `${this.appPath}/dist/cron.json`,
+      JSON.stringify([])
+    ).execute()
   }
 
   async after() {
