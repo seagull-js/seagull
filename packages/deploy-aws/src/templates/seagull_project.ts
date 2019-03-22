@@ -78,7 +78,7 @@ export class SeagullProject {
     s3DeploymentNeeded ? addS3() : importS3()
     app.stack.addLogGroup(`/aws/lambda/${name}-lambda-handler`)
     app.stack.addLogGroup(`/${name}/data-log`)
-    const cronJson = require(`${this.appPath}/dist/cron.json`)
+    const cronJson = await buildCronJson(this.appPath)
     cronJson.forEach((rule: Rule) => {
       app.stack.addEventRule(rule, lambda)
     })
@@ -154,4 +154,10 @@ async function replaceS3BucketName(appPath: string, itemsBucket: string) {
   const lambda = await new FS.ReadFile(lambdaFile).execute()
   const lambdaWithBucketName = lambda.replace('demo-bucket', itemsBucket)
   await new FS.WriteFile(lambdaFile, lambdaWithBucketName).execute()
+}
+
+async function buildCronJson(appPath: string) {
+  const cronPath = `${appPath}/dist/cron.json`
+  const cronFile = await new FS.ReadFile(cronPath).execute()
+  return JSON.parse(cronFile)
 }
