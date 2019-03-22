@@ -20,25 +20,41 @@ const createSoapClient = async (wsdlURI: string, opts?: soap.IOptions) => {
   return soapClients[hash]
 }
 
+export type Credentials = { username: string; password: string }
+
+export const makeAuthOptions = ({ username, password }: Credentials) => {
+  const credString = username + ':' + password
+  const Authorization = `Basic ${new Buffer(credString).toString('base64')}`
+  return { wsdl_headers: { Authorization } }
+}
+
+export const setSecurity = (client: soap.Client, credentials: Credentials) => {
+  const { username, password } = credentials
+  client.setSecurity(new soap.BasicAuthSecurity(username, password))
+}
+export interface ClientOptions {
+  /** Where can I find the WSDL? Could be a file path or a URI */
+  wsdlPath: string
+  /** If set, an Authorization Header is sent when requesting the client */
+  credentials?: Credentials
+  /** If the actual endpoint differs from the WSDL path, assign a URI to this
+   * Property */
+  endpoint?: string
+}
 @injectable()
 export class SoapClientSupplier {
-  async getClient<T extends soap.Client>(
-    wsdlPath: string,
-    username: string,
-    password: string,
-    endpoint?: string,
-  ): Promise<T> {
-    const creds = username + ':' + password
-    const Authorization = `Basic ${new Buffer(creds).toString('base64')}`
-    const defaultOptions = {
-      rejectUnauthorized: false,
-      strictSSL: false,
-      wsdl_headers: { Authorization },
-    }
-    const options = { endpoint: wsdlPath, ...defaultOptions }
+  async getClient<T extends soap.Client>({
+    wsdlPath,
+    credentials,
+    endpoint,
+  }: ClientOptions): Promise<T> {
+    const authOptions = credentials ? makeAuthOptions(credentials) : {}
+    const defaultOptions = { rejectUnauthorized: false, strictSSL: false }
+    const options = { endpoint: wsdlPath, ...defaultOptions, ...authOptions }
     const client: T = await createSoapClient(wsdlPath, options)
     client.setEndpoint(endpoint || wsdlPath)
-    client.setSecurity(new soap.BasicAuthSecurity(username, password))
+    // tslint:disable-next-line:no-unused-expression
+    credentials && setSecurity(client, credentials)
     return client
   }
 }
