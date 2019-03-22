@@ -23,7 +23,7 @@ class DemoMock {
 export class Test extends BasicTest {
   @test
   async 'tests should run in pure mode'() {
-    const basicTest = new BasicTest()
+    const basicTest = new Test()
     basicTest.before()
     Mode.environment.should.be.eq('pure')
   }
@@ -35,7 +35,7 @@ export class Test extends BasicTest {
 
   @test
   async 'does activate mocks on before() and disable on after()'() {
-    const basicTest = new BasicTest()
+    const basicTest = new Test()
     const mock = new DemoMock()
     basicTest.mocks = [mock]
     mock.activated.should.be.equal(false)
