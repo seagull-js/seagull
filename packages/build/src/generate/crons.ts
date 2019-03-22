@@ -19,7 +19,7 @@ export class Crons extends Command {
     const srcFolder = path.join(this.appFolder, 'src', 'routes', 'cron')
     const routeFiles = await new FS.ListFiles(srcFolder, /tsx?$/).execute()
     const routes = routeFiles.map(f => this.getRelativeRouteName(f))
-    const content = routes.map(this.buildCronInfos)
+    const content = routes.map(this.buildCronInfos).filter(r => !!r)
     await new FS.WriteFile(this.dstFile, JSON.stringify(content)).execute()
   }
 
@@ -29,8 +29,9 @@ export class Crons extends Command {
 
   private buildCronInfos(route: string) {
     const cronRoute = require(`${process.cwd()}/dist/routes/${route}`).default
-
-    return { path: cronRoute.path, cron: cronRoute.cron }
+    if (cronRoute.path && cronRoute.cron) {
+      return { path: cronRoute.path, cron: cronRoute.cron }
+    }
   }
 
   private getRelativeRouteName(filePath: string) {
