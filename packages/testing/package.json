@@ -34,7 +34,10 @@
   "devDependencies": {
     "@seagull/tslint": "^3.0.0",
     "@types/lodash": "^4.14.107",
-    "aws-sdk": "*"
+    "@seagull/http": "^3.0.0",
+    "aws-sdk": "*",
+    "mocha-typescript": "^1.1.17",
+    "chai": "^4.2.0"
   },
   "dependencies": {
     "@seagull/mock": "^3.0.0",
