@@ -1,6 +1,6 @@
 {
   "name": "@seagull/sandbox",
-  "version": "2.11.1",
+  "version": "3.0.0",
   "description": "Sandbox registry for the seagull framework. Gathering side effects",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/tslint": "^2.11.1"
+    "@seagull/tslint": "^3.0.0"
   },
   "nyc": {
     "extension": [

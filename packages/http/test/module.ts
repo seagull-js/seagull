@@ -4,16 +4,17 @@ import { expect } from 'chai'
 import 'chai/register-should'
 import { Container } from 'inversify'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
-import { Http, HttpPure } from '../src'
-import { config } from '../src'
-import { containerModule } from '../src/containerModule'
+import { config } from '../src/config'
+import { Http } from '../src/modes/cloud'
+import { HttpPure } from '../src/modes/pure'
 import { HttpSeed } from '../src/modes/seed'
+import { module } from '../src/module'
 
 @suite('Http::Module::Fetch')
 export class Test extends BasicTest {
   static injector = new Container()
   static before() {
-    this.injector.load(containerModule)
+    this.injector.load(module)
   }
 
   @test

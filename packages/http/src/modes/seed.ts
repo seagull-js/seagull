@@ -2,7 +2,7 @@ import { injectable } from 'inversify'
 import fetch, { Headers, RequestInit, Response } from 'node-fetch'
 import 'reflect-metadata'
 import { createResponse, Fixture } from '../seed/fixture'
-import { SeedStorage } from '../seed/seedStorage'
+import { FixtureStorage } from '../seed/fixtureStorage'
 import { HttpBase } from './base'
 
 export interface RequestException {
@@ -18,9 +18,8 @@ export interface RequestException {
 @injectable()
 export class HttpSeed extends HttpBase {
   async fetch(url: string, init?: RequestInit): Promise<Response> {
-    const seed = SeedStorage.createByRequest<Fixture>(url, init)
+    const seed = FixtureStorage.createByRequest<Fixture<any>>(url, init)
     const seedFixture = seed.get()
-    const seedLocalHookConfig = seed.config
 
     if (seedFixture && !seed.expired) {
       // seed exists => return seed
@@ -29,7 +28,7 @@ export class HttpSeed extends HttpBase {
 
     const res = await fetch(url, init)
 
-    let fixture: Fixture = {
+    let fixture: Fixture<any> = {
       body: (await res.json()) || (await res.text()),
       options: {
         headers: res.headers,
@@ -38,13 +37,9 @@ export class HttpSeed extends HttpBase {
       },
     }
 
-    if (seedLocalHookConfig.hook) {
-      fixture = seedLocalHookConfig.hook(fixture)
+    if (seed.config.hook) {
+      fixture = seed.config.hook(fixture)
     }
-
-    // else if (Http.seedGlobalHookScript) {
-    //   fixture = Http.seedGlobalHookScript<T>(fixture) || fixture
-    // }
 
     seed.set(fixture)
 
