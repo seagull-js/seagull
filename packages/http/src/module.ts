@@ -6,7 +6,10 @@ import { Http } from './modes/cloud'
 import { HttpPure } from './modes/pure'
 import { HttpSeed } from './modes/seed'
 
-export const containerModule = new ContainerModule((bind: interfaces.Bind) => {
+/**
+ * Injectable container module
+ */
+export const module = new ContainerModule((bind: interfaces.Bind) => {
   bind(Http)
     .toSelf()
     .when(
