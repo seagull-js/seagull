@@ -1,9 +1,8 @@
-import { httpDiModule } from '@seagull/http'
 import { SetMode } from '@seagull/mode'
 import { Container } from 'inversify'
 
 export abstract class InjectableTest {
-  diModules = [httpDiModule]
+  abstract injectDiModules: any[]
   abstract inject: any[]
   injector = new Container()
 
@@ -13,7 +12,7 @@ export abstract class InjectableTest {
   before() {
     new SetMode('environment', 'pure').execute()
     this.injector = new Container()
-    for (const diMod of this.diModules) {
+    for (const diMod of this.injectDiModules) {
       this.injector.load(diMod)
     }
     for (const injectable of this.inject) {
@@ -29,7 +28,7 @@ export abstract class InjectableTest {
    * after every test, deactivate all mocks in reverse order
    */
   after() {
-    for (const diMod of this.diModules) {
+    for (const diMod of this.injectDiModules) {
       this.injector.unload(diMod)
     }
     for (const injectable of this.inject) {

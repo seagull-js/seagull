@@ -1,9 +1,9 @@
-import { Http, HttpJson } from '@seagull/http'
 import { Mode } from '@seagull/mode'
 import { expect } from 'chai'
 import 'chai/register-should'
-import { injectable } from 'inversify'
+import { ContainerModule, injectable, interfaces } from 'inversify'
 import { suite, test } from 'mocha-typescript'
+import 'reflect-metadata'
 import { InjectableTest } from '../src/injectable_test'
 
 @injectable()
@@ -11,30 +11,19 @@ class DemoInjectable {
   demoFunction = () => true
 }
 
+@injectable()
+class DemoContainerInjectable {
+  demoFunction = () => true
+}
+
+const diModule = new ContainerModule((bind: interfaces.Bind) => {
+  bind(DemoContainerInjectable).toSelf()
+})
+
 @suite('BasicTest')
 export class Test extends InjectableTest {
   inject = [DemoInjectable]
-
-  beforeEachHasBeenCalled = false
-  afterEachHasBeenCalled = false
-
-  beforeEach() {
-    this.beforeEachHasBeenCalled = true
-  }
-
-  afterEach() {
-    this.afterEachHasBeenCalled = true
-  }
-
-  @test
-  async 'beforeEach has been called'() {
-    expect(this.beforeEachHasBeenCalled).to.equal(true)
-  }
-
-  @test
-  async 'afterEach has been called'() {
-    expect(this.afterEachHasBeenCalled).to.equal(true)
-  }
+  injectDiModules = [diModule]
 
   @test
   async 'tests should run in pure mode'() {
@@ -46,9 +35,7 @@ export class Test extends InjectableTest {
   @test
   async 'diModules are registered'() {
     // @seagull/http
-    const http = this.injector.get(Http)
-    expect(http).to.be.an('object')
-    const httpJson = this.injector.get(HttpJson)
+    const http = this.injector.get(DemoContainerInjectable)
     expect(http).to.be.an('object')
   }
 
