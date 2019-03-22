@@ -18,6 +18,7 @@ export class Generator extends Service {
     this.registerAppFileGeneration()
     this.registerServerFileGeneration()
     this.registerLambdaFileGeneration()
+    this.registerCronFileGeneration()
   }
 
   private registerAppFileGeneration(name: string = 'app.js') {
@@ -33,5 +34,10 @@ export class Generator extends Service {
   private registerLambdaFileGeneration(name: string = 'lambda.js') {
     const location = path.join(this.appFolder, 'dist', 'lambda.js')
     this.register(name, new Generate.Lambda(location))
+  }
+
+  private registerCronFileGeneration(name: string = 'cron.json') {
+    const location = path.join(this.appFolder, 'dist', 'cron.json')
+    this.register(name, new Generate.Crons(this.appFolder, location))
   }
 }
