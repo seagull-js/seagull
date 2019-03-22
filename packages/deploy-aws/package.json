@@ -1,6 +1,6 @@
 {
   "name": "@seagull/deploy-aws",
-  "version": "3.0.2",
+  "version": "3.0.4",
   "description": "Code deploying for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
