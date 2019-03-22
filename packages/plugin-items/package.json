@@ -34,7 +34,7 @@
   "devDependencies": {
     "@seagull/testing": "^3.0.1",
     "@seagull/tslint": "^3.0.1",
-    "@types/lodash": "^4.14.107"
+    "@types/lodash": "^4.14.123"
   },
   "dependencies": {
     "@seagull/commands": "^3.0.1",

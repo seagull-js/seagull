@@ -33,11 +33,10 @@
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
     "@seagull/tslint": "^3.0.1",
-    "@types/lodash": "^4.14.107",
-    "@seagull/http": "^3.0.0",
+    "@types/lodash": "^4.14.123",
     "aws-sdk": "*",
-    "mocha-typescript": "^1.1.17",
-    "chai": "^4.2.0"
+    "mocha-typescript": "^1.1.16",
+    "chai": "^4.1.2"
   },
   "dependencies": {
     "@seagull/mock": "^3.0.1",

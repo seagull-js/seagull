@@ -33,7 +33,7 @@
     "homepage": "https://github.com/seagull-js/seagull#readme",
     "devDependencies": {
         "@seagull/tslint": "^3.0.1",
-        "@types/lodash": "^4.14.107",
+        "@types/lodash": "^4.14.123",
         "@types/npmlog": "^4.1.1"
     },
     "dependencies": {

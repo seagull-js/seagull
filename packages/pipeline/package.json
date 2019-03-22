@@ -37,7 +37,7 @@
     "devDependencies": {
         "@seagull/testing": "^3.0.1",
         "@seagull/tslint": "^3.0.1",
-        "@types/lodash": "^4.14.107",
+        "@types/lodash": "^4.14.123",
         "@types/mock-require": "^2.0.0",
         "@types/yaml": "^1.0.1",
         "mock-require": "^3.0.2"
