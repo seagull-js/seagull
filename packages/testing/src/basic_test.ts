@@ -16,6 +16,11 @@ export abstract class BasicTest {
     new SetMode('environment', 'pure').execute()
     this.mocks.forEach(mock => mock.activate())
     Sandbox.reset()
+
+    // call beforeEach hook
+    if (typeof (this as any).beforeEach === 'function') {
+      ;(this as any).beforeEach()
+    }
   }
 
   /**
@@ -23,5 +28,10 @@ export abstract class BasicTest {
    */
   after() {
     this.mocks.reverse().forEach(mock => mock.deactivate())
+
+    // call afterEach hook
+    if (typeof (this as any).afterEach === 'function') {
+      ;(this as any).afterEach()
+    }
   }
 }
