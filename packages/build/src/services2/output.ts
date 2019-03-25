@@ -35,7 +35,7 @@ export class OutputService {
    * @param msg
    */
   log(module: string, event: string, data: any) {
-    this.console.log(this, module, event, data)
+    this.console.log(module, event, data)
   }
 }
 

@@ -1,5 +1,5 @@
 import * as NodeDEV from 'node-dev'
-import {join} from 'path'
+import { join } from 'path'
 import { LogEvent, OutputServiceEvents, ServiceEventBus } from './'
 export const StartBackendEvent = Symbol('Start code generation Event')
 export interface BackendRunnerServiceEvents extends OutputServiceEvents {
@@ -8,14 +8,14 @@ export interface BackendRunnerServiceEvents extends OutputServiceEvents {
 
 export class BackendRunnerService {
   bus: ServiceEventBus<BackendRunnerServiceEvents>
-  config= {
-    script: join(process.cwd(),'dist','src','runner.js')
+  config = {
+    script: join(process.cwd(), 'dist', 'runner.js'),
   }
   constructor(bus: BackendRunnerService['bus']) {
     this.bus = bus.on(StartBackendEvent, this.handleStart.bind(this))
   }
 
   handleStart() {
-    NodeDEV(this.config.script,[],[],{respawn:true})
+    NodeDEV(this.config.script, [], [], { respawn: true })
   }
 }

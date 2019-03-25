@@ -29,7 +29,7 @@ const registerRoute = (route) => {
 const requireRoute = (routePath)=>{
   const relRoutePath = routePath.replace(routeFolder, '').replace(/\.tsx?$/, '')
   try { 
-    const rPath = join(process.cwd(),'dist','routes',relRoutePath)
+    const rPath = join(process.cwd(),'dist','src','routes',relRoutePath)
     const route = require(rPath).default;
     if(!SGRoutes.routeIsValid(route)){
       throw new Error('Route not valid')
@@ -52,23 +52,24 @@ exports.default = app;
 app.listen(8080,()=>console.log("Started"))`
 
 const appProxy = `
+const pagePromise = (page) => (resolve, reject) => {
+  const cancelTimeout = setTimeout(()=>reject('Timeout for ' + page), 5000)
+  process.emit('message', {'type':'pageRenderRequested', 'page':page})
+  process.once('message', (m)=>{
+    if (!(m && m.type && m.type === 'pageBundled' && m.page === page)) {
+      return
+    }
+    cancelTimeout()
+    resolve()
+  })
+}
 class LazyRouteContext extends SGRoutes.RouteContext {
-  pagePromise = (page) => (resolve, reject) => {
-    const cancelTimeout = setTimeout(()=>reject('Timeout for ' + page), 5000)
-    process.emit('message', {'type':'pageRenderRequested', 'page':page})
-    process.once('message', (m)=>{
-      if (!(m && m.type && m.type === 'pageBundled' && m.page === page)) {
-        return
-      }
-      cancelTimeout()
-      resolve()
-    })
-  }
+
   async render(src, data) {
     const pagePath = join(process.cwd(),'/dist/assets/pages/',src+'.js')
     const waitForPage = existsSync(pagePath) 
       ? Promise.resolve() 
-      : new Promise(this.pagePromise(src))
+      : new Promise(pagePromise(src))
     try {
       console.log("try to render")
       await waitForPage

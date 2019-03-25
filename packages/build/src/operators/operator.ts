@@ -1,20 +1,35 @@
 import * as Services from '../services2'
-import { LogEvent, ServiceEventBus as EventBus } from '../services2'
+import { ServiceEventBus as EventBus } from '../services2'
 
-type ServicesMap = {
+export type ServicesMap = {
   Output: Services.OutputService
   Prepare: Services.PrepareService
   Compiler: Services.CompilerService
   CodeGenerator: Services.CodeGeneratorService
   BackendRunner: Services.BackendRunnerService
 }
-type ServicesTypes = ServicesMap[keyof ServicesMap]
-type ServicesEvents = ServicesTypes['bus'] extends EventBus<infer U> ? U : never
-interface Wiring {
-  from: keyof ServicesEvents
-  to: keyof ServicesEvents
+export type ServicesTypes = ServicesMap[keyof ServicesMap]
+export type ServicesEvents = ServicesTypes['bus'] extends EventBus<infer U>
+  ? (U & OperatorEvents)
+  : never
+
+export interface ReEmit {
+  on: keyof ServicesEvents
+  emit: keyof ServicesEvents
 }
+export interface ReEmitOnce {
+  once: keyof ServicesEvents
+  emit: keyof ServicesEvents
+}
+export type Wiring = ReEmit | ReEmitOnce
+
+export const StartEvent = Symbol('Start event, starts operator operations')
+export interface OperatorEvents {
+  [StartEvent]: () => void
+}
+
 export class Operator extends EventBus<ServicesEvents> {
+  static StartEvent = StartEvent
   services: ServicesMap = {} as any
   wiring: Wiring[] = []
 
@@ -49,30 +64,16 @@ export class Operator extends EventBus<ServicesEvents> {
   }
 
   setupWiring() {
-    const wire = ({ from, to }: Wiring) =>
-      this.on(from, (this as any).emit.bind(this, to))
+    const wireOnce = ({ once, emit }: ReEmitOnce) =>
+      this.once(once, (this as any).emit.bind(this, emit))
+    const wireOn = ({ on, emit }: ReEmit) =>
+      this.on(on, (this as any).emit.bind(this, emit))
+
+    const wire = (wiring: Wiring) => {
+      let _
+      _ = 'on' in wiring && wireOn(wiring)
+      _ = 'once' in wiring && wireOnce(wiring)
+    }
     this.wiring.forEach(wire)
-  }
-}
-
-const E = Services
-class DevOperator extends Operator {
-  wiring: Wiring[] = [
-    { from: E.PreparedEvent, to: E.CompileEvent },
-    { from: E.CompiledEvent, to: E.GenerateCodeEvent },
-    { from: E.GeneratedCodeEvent, to: E.StartBackendEvent },
-  ]
-
-  constructor() {
-    super()
-    this.addDevServices()
-    this.setupWiring()
-  }
-
-  addDevServices() {
-    this.addPrepareService()
-    this.addCodeGeneratorService()
-    this.addCompileService()
-    this.addOutputService()
   }
 }
