@@ -3,12 +3,12 @@ import { ACM, STS } from 'aws-sdk'
 
 import { FS } from '@seagull/commands-fs'
 
+import { existsSync } from 'fs'
 import * as lib from '../lib'
 import { ProvideAssetFolder } from '../provide_asset_folder'
 import { SeagullApp } from '../seagull_app'
 import { Rule } from '../seagull_stack'
 import { setCredsByProfile } from '../set_aws_credentials'
-import { existsSync } from 'fs'
 
 interface SeagullProjectProps {
   accountId?: string
