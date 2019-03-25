@@ -1,14 +1,18 @@
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import { Route, RouteContext, RouteTest } from '../src'
+import { blockParams } from 'handlebars';
 
 class DemoRoute extends Route {
   static apiKey = '2135t'
   static method = 'GET'
   static path = '/'
   static cache = 300
+  static injector: new Container
 
   static async handler(this: RouteContext) {
+    DemoRoute.injector
+    injector = new Container()
     this.text('hey' + this.request.url)
   }
 }
@@ -19,7 +23,8 @@ export class Test extends RouteTest {
 
   @test
   async 'no token does not work'() {
-    const { code, data, headers } = await this.invoke('GET', '/', {})
+    blockParams.bind(..)
+    const { code, data, headers } = await this.invoke('GET', '/', {}, { injector: bla})
     code.should.be.equal(500)
   }
 
