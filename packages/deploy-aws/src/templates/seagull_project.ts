@@ -8,6 +8,7 @@ import { ProvideAssetFolder } from '../provide_asset_folder'
 import { SeagullApp } from '../seagull_app'
 import { Rule } from '../seagull_stack'
 import { setCredsByProfile } from '../set_aws_credentials'
+import { existsSync } from 'fs'
 
 interface SeagullProjectProps {
   accountId?: string
@@ -79,11 +80,15 @@ export class SeagullProject {
     app.stack.addLogGroup(`/aws/lambda/${name}-lambda-handler`)
     app.stack.addLogGroup(`/${name}/data-log`)
     const cronJson = await buildCronJson(this.appPath)
-    cronJson.forEach((rule: Rule) => {
-      app.stack.addEventRule(rule, lambda)
-    })
-
+    cronJson.forEach((rule: Rule) => app.stack.addEventRule(rule, lambda))
+    this.customizeStack(app)
     return app
+  }
+
+  customizeStack(app: SeagullApp) {
+    const extensionPath = `${this.appPath}/infrastructure.ts`
+    const hasExtensions = existsSync(extensionPath)
+    return hasExtensions && require(extensionPath).default(app)
   }
 
   async deployProject() {

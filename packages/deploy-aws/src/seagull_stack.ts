@@ -18,6 +18,7 @@ import { getApiGatewayDomain, getApiGatewayPath } from './lib'
  */
 
 export class SeagullStack extends Stack {
+  defaultRole?: IAM.Role // for extensions
   constructor(app: App, projectName: string, stackProps?: StackProps) {
     super(app, projectName, stackProps)
   }
@@ -70,11 +71,13 @@ export class SeagullStack extends Stack {
   addIAMRole(roleName: string, principleName: string, actions: string[]) {
     const name = `${this.id}-${roleName}`
     const roleParams = { assumedBy: new IAM.ServicePrincipal(principleName) }
-    const role = new IAM.Role(this, name, roleParams)
+    this.defaultRole = new IAM.Role(this, name, roleParams)
     const policyStatement = new IAM.PolicyStatement()
     // TODO: add actions directly to the resources that need it
-    role.addToPolicy(policyStatement.addAllResources().addActions(...actions))
-    return role
+    this.defaultRole.addToPolicy(
+      policyStatement.addAllResources().addActions(...actions)
+    )
+    return this.defaultRole
   }
 
   addCloudfront(cfdName: string, props: CloudfrontProps) {
