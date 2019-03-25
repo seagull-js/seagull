@@ -4,7 +4,8 @@ import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
 import { suite, test } from 'mocha-typescript'
 
-import { string } from 'prop-types'
+import { PolicyStatement } from '@aws-cdk/aws-iam'
+import { find } from 'lodash'
 import { SeagullStack } from '../src'
 
 @suite('SeagullStack')
@@ -66,7 +67,21 @@ export class Test extends BasicTest {
     roleInTemp.should.be.equals(true)
     roleInMeta.should.be.equals(true)
   }
-
+  @test
+  async 'can add policies after adding a role to stack'() {
+    const stackName = 'test-stack'
+    const roleName = 'test-role'
+    const app = new App()
+    const stack = new SeagullStack(app, stackName)
+    stack.addIAMRole(roleName, 'lambda.amazonaws.com', ['action1', 'action2'])
+    stack.defaultRole!.addToPolicy(
+      new PolicyStatement().addAllResources().addAction('action3')
+    )
+    const synth = app.synthesizeStack(stackName)
+    const newPolicyCriterion = resourceHasNewAction('action3')
+    const hasNewPolicy = !!find(synth.template.Resources, newPolicyCriterion)
+    hasNewPolicy.should.be.equal(true)
+  }
   @test
   async 'can add a s3 bucket to a stack'() {
     const stackName = 'test-stack'
@@ -260,3 +275,8 @@ function searchInEntry(entry: string, toBeSearched: string[]) {
   const searchRes = toBeSearched.map(searched => entry.indexOf(searched) > -1)
   return searchRes.find(isInString => isInString === false) === undefined
 }
+const resPropHasNewAction = (action: string) => (resProp: any) =>
+  !!resProp.Statement &&
+  !!find(resProp.Statement, (s: any) => s.Action.includes(action))
+const resourceHasNewAction = (action: string) => (res: any) =>
+  !!find(res.Properties, resPropHasNewAction(action))
