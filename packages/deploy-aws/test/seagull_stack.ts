@@ -209,7 +209,10 @@ export class Test extends BasicTest {
       env: { variables: {} },
       install: { commands: ['npm i'], finally: [] },
       pipeline,
-      postBuild: { commands: ['npm run test'], finally: [] },
+      postBuild: {
+        commands: ['npm run test', 'npm run test:e2e'],
+        finally: [],
+      },
       role,
     }
     stack.addBuildStage(buildName, buildConfig)
