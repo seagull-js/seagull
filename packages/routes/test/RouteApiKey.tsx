@@ -1,4 +1,5 @@
 import 'chai/register-should'
+import { blockParams } from 'handlebars'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import { Route, RouteContext, RouteTest } from '../src'
 
