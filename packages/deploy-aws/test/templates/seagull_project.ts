@@ -1,10 +1,9 @@
+import { FS } from '@seagull/commands-fs'
 import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
 import { suite, test } from 'mocha-typescript'
-
-import { FS } from '@seagull/commands-fs'
-
 import { SeagullProject } from '../../src'
+import { isInList } from '../test-helper/template_searching'
 
 @suite('SeagullProject')
 export class Test extends BasicTest {
@@ -43,5 +42,38 @@ export class Test extends BasicTest {
     const project = await new SeagullProject(props).createSeagullApp()
     const synthStack = project.synthesizeStack('helloworld')
     Object.keys(synthStack.template.Resources).length.should.be.above(1)
+  }
+  @test
+  async 'can create a project with customized stack'() {
+    const s3Name = 'another-s3'
+    const infra = `export default function (app: any){
+      app.stack.addS3(${s3Name})
+    }`
+    await new FS.WriteFile(`${this.appPath}/infrastructure.ts`, infra).execute()
+
+    const props = {
+      accountId: 'test-account-id',
+      appPath: this.appPath,
+      branch: 'master',
+      githubToken: 'Token123',
+      mode: 'prod',
+      owner: 'me',
+      profile: 'default',
+      region: 'eu-central-1',
+      repository: 'test-repo',
+    }
+    const project = await new SeagullProject(props).createSeagullApp()
+    const stackName = 'helloworld'
+    const synthStack = project.synthesizeStack(stackName)
+    const resources = Object.keys(synthStack.template.Resources)
+    console.info(JSON.stringify(synthStack.template.Resources))
+
+    const metadata = Object.keys(synthStack.metadata)
+    const stackNameNoDash = stackName.replace(/-/g, '')
+    const s3NameNoDash = s3Name.replace(/-/g, '')
+    const s3InTemp = isInList(resources, s3NameNoDash, stackNameNoDash)
+    const s3InMeta = isInList(metadata, s3Name, stackName)
+    s3InTemp.should.be.equals(true)
+    s3InMeta.should.be.equals(true)
   }
 }

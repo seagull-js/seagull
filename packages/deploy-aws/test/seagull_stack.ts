@@ -7,6 +7,7 @@ import { suite, test } from 'mocha-typescript'
 import { PolicyStatement } from '@aws-cdk/aws-iam'
 import { find } from 'lodash'
 import { SeagullStack } from '../src'
+import { isInList } from './test-helper/template_searching'
 
 @suite('SeagullStack')
 export class Test extends BasicTest {
@@ -267,14 +268,6 @@ export class Test extends BasicTest {
   }
 }
 
-function isInList(list: string[], ...toBeSearched: string[]) {
-  return list.find(entry => searchInEntry(entry, toBeSearched)) !== undefined
-}
-
-function searchInEntry(entry: string, toBeSearched: string[]) {
-  const searchRes = toBeSearched.map(searched => entry.indexOf(searched) > -1)
-  return searchRes.find(isInString => isInString === false) === undefined
-}
 const resPropHasNewAction = (action: string) => (resProp: any) =>
   !!resProp.Statement &&
   !!find(resProp.Statement, (s: any) => s.Action.includes(action))

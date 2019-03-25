@@ -85,10 +85,10 @@ export class SeagullProject {
     return app
   }
 
-  customizeStack(app: SeagullApp) {
+  async customizeStack(app: SeagullApp) {
     const extensionPath = `${this.appPath}/infrastructure.ts`
     const hasExtensions = existsSync(extensionPath)
-    return hasExtensions && require(extensionPath).default(app)
+    return hasExtensions && (await import(`${extensionPath}`)).default(app)
   }
 
   async deployProject() {
