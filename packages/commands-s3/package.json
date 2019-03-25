@@ -1,6 +1,6 @@
 {
   "name": "@seagull/commands-s3",
-  "version": "3.0.6",
+  "version": "3.0.7",
   "description": "S3 commands for the seagull framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -32,14 +32,14 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/testing": "^3.0.6",
-    "@seagull/tslint": "^3.0.5"
+    "@seagull/testing": "^3.0.7",
+    "@seagull/tslint": "^3.0.7"
   },
   "dependencies": {
-    "@seagull/commands": "^3.0.6",
-    "@seagull/mock-s3": "^3.0.6",
-    "@seagull/mode": "^3.0.5",
-    "@seagull/sandbox": "^3.0.5"
+    "@seagull/commands": "^3.0.7",
+    "@seagull/mock-s3": "^3.0.7",
+    "@seagull/mode": "^3.0.7",
+    "@seagull/sandbox": "^3.0.7"
   },
   "nyc": {
     "extension": [

@@ -1,6 +1,6 @@
 {
   "name": "@seagull/soap",
-  "version": "2.11.0",
+  "version": "3.0.7",
   "description": "A soap module for the seagull framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
