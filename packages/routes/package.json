@@ -43,6 +43,7 @@
   "dependencies": {
     "@seagull/commands-fs": "^3.0.5",
     "@seagull/libraries": "^3.0.5",
+    "@seagull/http": "^3.0.5",
     "body-parser": "^1.18.3",
     "class-validator": "^0.9.1",
     "express": "^4.16.3",

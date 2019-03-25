@@ -1,3 +1,4 @@
+import { httpDiModule } from '@seagull/http'
 import { PageType, render } from '@seagull/pages'
 import { Request, Response } from 'express'
 import * as fs from 'fs'
@@ -17,6 +18,9 @@ export class RouteContext {
   constructor(request: Request, response: Response) {
     this.request = request
     this.response = response
+
+    // bind all seagull injectables
+    this.injector.load(httpDiModule)
   }
 
   // returns plain text
