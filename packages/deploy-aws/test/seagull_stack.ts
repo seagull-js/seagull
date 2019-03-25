@@ -278,5 +278,6 @@ function searchInEntry(entry: string, toBeSearched: string[]) {
 const resPropHasNewAction = (action: string) => (resProp: any) =>
   !!resProp.Statement &&
   !!find(resProp.Statement, (s: any) => s.Action.includes(action))
+
 const resourceHasNewAction = (action: string) => (res: any) =>
   !!find(res.Properties, resPropHasNewAction(action))
