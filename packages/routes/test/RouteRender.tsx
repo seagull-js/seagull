@@ -5,7 +5,7 @@ import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as path from 'path'
 import * as React from 'react'
-import { Route, RouteContext, RouteTest } from '../src'
+import { HttpMethod, Route, RouteContext, RouteTest } from '../src'
 
 class DemoPage extends Page {
   html() {
@@ -14,7 +14,7 @@ class DemoPage extends Page {
 }
 
 class DemoRouteWithPage extends Route {
-  static method = 'GET'
+  static method: HttpMethod = 'GET'
   static path = '/'
   static async handler(this: RouteContext) {
     return this.render(DemoPage, {})
@@ -22,7 +22,7 @@ class DemoRouteWithPage extends Route {
 }
 
 class DemoRouteWithPath extends Route {
-  static method = 'GET'
+  static method: HttpMethod = 'GET'
   static path = '/'
   static async handler(this: RouteContext) {
     return this.render('DemoPage', {})
@@ -54,7 +54,7 @@ export class Test extends RouteTest {
 
   @test
   async 'can return rendered Page as html response when given Page Class'() {
-    const { code, data, headers } = await this.invoke('GET', '/', {})
+    const { code, data, headers } = await this.invoke('/', {})
     code.should.be.equal(200)
     headers['content-type'].should.be.equal('text/html')
     data.should.be.a('string')
@@ -72,7 +72,7 @@ export class Test extends RouteTest {
 
     // execute route handler
     this.route = DemoRouteWithPath
-    const { code, data, headers } = await this.invoke('GET', '/', {})
+    const { code, data, headers } = await this.invoke('/', {})
 
     // inspect response
     code.should.be.equal(200)

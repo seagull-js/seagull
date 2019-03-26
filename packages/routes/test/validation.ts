@@ -1,10 +1,16 @@
 // tslint:disable:no-unused-expression
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
-import { pathIsValid, Route, RouteContext, routeIsValid } from '../src'
+import {
+  HttpMethod,
+  pathIsValid,
+  Route,
+  RouteContext,
+  routeIsValid,
+} from '../src'
 
 class DemoRoute extends Route {
-  static method = 'GET'
+  static method: HttpMethod = 'GET'
   static path = '/'
   static async handler(this: RouteContext) {
     return this.text('hello world')

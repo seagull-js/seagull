@@ -22,8 +22,12 @@ export abstract class RouteTest extends BasicTest {
    * @param params Params object passed through TODO: think body vs query vs path params...
    */
 
-  async invoke(method: HttpMethod = 'GET', path = '/', params: any = {}) {
-    const { request, response } = this.requestAndResponse(method, path, params)
+  async invoke(path = '/', params: any = {}) {
+    const { request, response } = this.requestAndResponse(
+      this.route.method,
+      path,
+      params
+    )
     await this.executeRoute({ request, response })
     return this.gatherResponseData(response)
   }
@@ -37,8 +41,12 @@ export abstract class RouteTest extends BasicTest {
    * @param params Params object passed through TODO: think body vs query vs path params...
    */
 
-  async invokeMocked(method: HttpMethod = 'GET', path = '/', params: any = {}) {
-    const { request, response } = this.requestAndResponse(method, path, params)
+  async invokeMocked(path = '/', params: any = {}) {
+    const { request, response } = this.requestAndResponse(
+      this.route.method,
+      path,
+      params
+    )
     const ctx = new RouteContextMock(request, response)
 
     await this.executeRoute(ctx)

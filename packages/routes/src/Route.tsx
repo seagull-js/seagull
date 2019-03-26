@@ -1,4 +1,5 @@
 import { Express, Request, Response } from 'express'
+import { HttpMethod } from '.'
 import { RouteContext } from './RouteContext'
 import { RouteContextMock } from './RouteContextMock'
 
@@ -14,7 +15,7 @@ export abstract class Route {
   // cache in seconds
   static cache: number = 0
   // http method
-  static method: string
+  static method: HttpMethod = 'GET'
   /**
    * Path at which the route can be called.
    * Must start with /.

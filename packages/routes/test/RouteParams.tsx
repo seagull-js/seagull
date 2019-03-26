@@ -1,13 +1,13 @@
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
-import { Route, RouteContext, RouteTest } from '../src'
+import { HttpMethod, Route, RouteContext, RouteTest } from '../src'
 
 class DemoRoute extends Route {
-  static method = 'GET'
+  static method: HttpMethod = 'GET'
   static path = '/:id'
   static async handler(this: RouteContext) {
     const id = this.request.params.id
-    return this.json({ id: id })
+    return this.json({ id })
   }
 }
 
@@ -17,7 +17,7 @@ export class Test extends RouteTest {
 
   @test
   async 'can be invoked'() {
-    const { code, data } = await this.invoke('GET', '/123456', {
+    const { code, data } = await this.invoke('/123456', {
       params: { id: 123456 },
     })
     code.should.be.equal(200)

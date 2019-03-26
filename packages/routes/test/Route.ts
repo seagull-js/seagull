@@ -1,10 +1,10 @@
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as httpMocks from 'node-mocks-http'
-import { Route, RouteContext } from '../src'
+import { HttpMethod, Route, RouteContext } from '../src'
 
 class DemoRoute extends Route {
-  static method = 'GET'
+  static method: HttpMethod = 'GET'
   static path = '/'
   static async handler(this: RouteContext) {
     this.text('demo route')
