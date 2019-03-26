@@ -1,8 +1,7 @@
-import { httpDiModule } from '@seagull/http'
 import { PageType, render } from '@seagull/pages'
 import { Request, Response } from 'express'
 import * as fs from 'fs'
-import { Container, ContainerModule } from 'inversify'
+import { Container } from 'inversify'
 import { isString } from 'lodash'
 import * as rfs from 'require-from-string'
 
@@ -14,24 +13,10 @@ export class RouteContext {
   request: Request
   response: Response
   injector = new Container()
-  diModule: ContainerModule | undefined
 
-  constructor(
-    request: Request,
-    response: Response,
-    diModule?: ContainerModule
-  ) {
+  constructor(request: Request, response: Response) {
     this.request = request
     this.response = response
-    this.diModule = diModule
-
-    // bind all seagull injectables
-    this.injector.load(httpDiModule)
-
-    // bind explicit injectables
-    if (diModule) {
-      this.injector.load(diModule)
-    }
   }
 
   // returns plain text

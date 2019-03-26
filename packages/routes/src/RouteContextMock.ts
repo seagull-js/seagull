@@ -1,6 +1,7 @@
 import { PageType, render } from '@seagull/pages'
 import { Request, Response } from 'express'
 import * as fs from 'fs'
+import { Container } from 'inversify'
 import { isString } from 'lodash'
 import * as rfs from 'require-from-string'
 import { RouteContext } from './RouteContext'
@@ -21,6 +22,7 @@ type RouteContextCalls =
 export class RouteContextMock {
   request: Request
   response: Response
+  injector = new Container()
 
   /**
    * dumb data structure for saving the call arguments of the instance methods.
