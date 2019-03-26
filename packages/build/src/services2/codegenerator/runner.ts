@@ -12,6 +12,7 @@ const SGRoutes = require('@seagull/routes');
 const {listFilesRecursive} = require('@seagull/libraries');
 const {join} = require('path');
 const bodyParser = require("body-parser");
+const fs = require("fs");
 const app = express();
 app.use(morgan('combined'));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -54,12 +55,12 @@ app.listen(8080,()=>console.log("Started"))`
 const appProxy = `
 const pagePromise = (page) => (resolve, reject) => {
   const cancelTimeout = setTimeout(()=>reject('Timeout for ' + page), 5000)
-  process.emit('message', {'type':'pageRenderRequested', 'page':page})
+  process.send({'type':'pageRenderRequested', 'page':page})
   process.once('message', (m)=>{
     if (!(m && m.type && m.type === 'pageBundled' && m.page === page)) {
       return
     }
-    cancelTimeout()
+    clearTimeout(cancelTimeout)
     resolve()
   })
 }
@@ -67,11 +68,10 @@ class LazyRouteContext extends SGRoutes.RouteContext {
 
   async render(src, data) {
     const pagePath = join(process.cwd(),'/dist/assets/pages/',src+'.js')
-    const waitForPage = existsSync(pagePath) 
+    const waitForPage = fs.existsSync(pagePath) 
       ? Promise.resolve() 
       : new Promise(pagePromise(src))
     try {
-      console.log("try to render")
       await waitForPage
       super.render(src,data)
     } catch (e) {

@@ -8,6 +8,7 @@ export class DevOperator extends Operator {
     { on: E.PreparedEvent, emit: E.CompileEvent },
     { on: E.CompiledEvent, emit: E.GenerateCodeEvent },
     { once: E.GeneratedCodeEvent, emit: E.StartBackendEvent },
+    { on: E.PageBundleRequested, emit: E.PageBundleEmitted },
   ]
 
   constructor() {

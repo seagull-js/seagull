@@ -54,6 +54,7 @@
     "@seagull/mock-s3": "^2.10.0",
     "@seagull/mode": "^2.10.0",
     "@seagull/testing": "^2.10.0",
+    "mock-require": "^3.0.2",
     "babelify": "^10.0.0",
     "browserify": "^16.2.0",
     "browserify-incremental": "^3.1.1",
