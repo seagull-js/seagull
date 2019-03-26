@@ -1,9 +1,8 @@
 import { expect } from 'chai'
 import { suite, test } from 'mocha-typescript'
-import { HttpMethod, Route, RouteContext, RouteTest } from '../src'
+import { Route, RouteContext, RouteTest } from '../src'
 
 class DemoRoute extends Route {
-  static method: HttpMethod = 'GET'
   static path = '/:id'
   static async handler(this: RouteContext) {
     const done = await new Promise<string>(resolve =>

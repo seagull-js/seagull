@@ -1,6 +1,7 @@
 import { BasicTest } from '@seagull/testing'
 import { EventEmitter } from 'events'
 import { Request, Response } from 'express'
+import { Container } from 'inversify'
 import * as httpMocks from 'node-mocks-http'
 import { Route } from './Route'
 import { RouteContextMock } from './RouteContextMock'

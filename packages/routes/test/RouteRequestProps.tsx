@@ -5,13 +5,7 @@ import { EventEmitter } from 'events'
 import * as express from 'express'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as httpMocks from 'node-mocks-http'
-import {
-  HttpMethod,
-  Route,
-  RouteContext,
-  RouteRequestProps,
-  RouteTest,
-} from '../src'
+import { Route, RouteContext, RouteRequestProps, RouteTest } from '../src'
 
 class RouteParams extends RouteRequestProps {
   // geter and setter (for example to convert string to num) are working like expected
@@ -39,7 +33,6 @@ class RouteParams extends RouteRequestProps {
 }
 
 class DemoRoute extends Route {
-  static method: HttpMethod = 'GET'
   static path = '/:numProp'
   static async handler(this: RouteContext) {
     const params = RouteParams.fromRequest(this.request)

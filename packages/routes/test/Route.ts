@@ -1,10 +1,12 @@
+import { Http } from '@seagull/http'
+import { expect } from 'chai'
 import 'chai/register-should'
+import { ContainerModule, injectable } from 'inversify'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as httpMocks from 'node-mocks-http'
-import { HttpMethod, Route, RouteContext } from '../src'
+import { Route, RouteContext } from '../src'
 
 class DemoRoute extends Route {
-  static method: HttpMethod = 'GET'
   static path = '/'
   static async handler(this: RouteContext) {
     this.text('demo route')
@@ -14,6 +16,11 @@ class DemoRoute extends Route {
 @suite('Route')
 export class Test {
   route = DemoRoute
+
+  @test
+  async 'default method is GET'() {
+    expect(DemoRoute.method).to.equal('GET')
+  }
 
   @test
   async 'can be instantiated and executed'() {

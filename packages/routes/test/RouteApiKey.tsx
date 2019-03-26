@@ -1,11 +1,10 @@
 import 'chai/register-should'
 import { blockParams } from 'handlebars'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
-import { HttpMethod, Route, RouteContext, RouteTest } from '../src'
+import { Route, RouteContext, RouteTest } from '../src'
 
 class DemoRoute extends Route {
   static apiKey = '2135t'
-  static method: HttpMethod = 'GET'
   static path = '/'
   static cache = 300
 
