@@ -102,7 +102,7 @@ export class SeagullPipeline {
     }
 
     stack.addSourceStage('source', lib.getSourceConfig(stageConfigParams, 0))
-    stack.addBuildStage('build', lib.getBuildConfig(stageConfigParams, 1))
+    stack.addBuildStage('build', await lib.getBuildConfig(stageConfigParams, 1))
     return pipelineApp
   }
 

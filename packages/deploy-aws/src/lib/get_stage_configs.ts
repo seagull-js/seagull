@@ -1,6 +1,7 @@
 import { Pipeline } from '@aws-cdk/aws-codepipeline'
 import { Role } from '@aws-cdk/aws-iam'
 import { Secret } from '@aws-cdk/cdk'
+import { FS } from '@seagull/commands-fs'
 
 interface StageConfigParams {
   branch: string
@@ -23,14 +24,14 @@ export function getSourceConfig(params: StageConfigParams, index: number) {
   }
 }
 
-export function getBuildConfig(params: StageConfigParams, index: number) {
+export async function getBuildConfig(params: StageConfigParams, index: number) {
   return {
     atIndex: index,
     build: getBuild(params),
     env: getEnv(params),
     install: getInstall(params),
     pipeline: params.pipeline,
-    postBuild: getPostBuild(params),
+    postBuild: await getPostBuild(params),
     role: params.role,
   }
 }
@@ -49,10 +50,11 @@ function getBuild(params: StageConfigParams) {
   return { commands: [runBuild, checkState()], finally: [curlCmd] }
 }
 
-function getPostBuild(params: StageConfigParams) {
+async function getPostBuild(params: StageConfigParams) {
+  const cfurl = await getCfUrl()
   const runTest = addStateChangeToCmd('npm run test')
-  const runE2eTest = addStateChangeToCmd('npm run test:e2e')
   const runDeploy = addStateChangeToCmd('npm run deploy')
+  const runE2eTest = addStateChangeToCmd(`CFURL="${cfurl}" npm run test:e2e`)
   const setState = 'export PIPELINE_STATE="success"'
   const setDesc = 'export PIPELINE_DESC="finished successfully"'
   const curlCmd = getCurlToSendTestResult(params.owner, params.repo)
@@ -60,9 +62,9 @@ function getPostBuild(params: StageConfigParams) {
   const commands = [
     runTest,
     checkState(),
-    runE2eTest,
-    checkState(),
     runDeploy,
+    checkState(),
+    runE2eTest,
     checkState(),
     setSuccess,
   ]
@@ -100,4 +102,8 @@ function getEnv(params: StageConfigParams) {
     TEST_PIPELINE_LINK: pipelineLink,
   }
   return { 'parameter-store': parameterStore, variables }
+}
+
+async function getCfUrl() {
+  return await new FS.ReadFile('/tmp/cfurl.txt').execute()
 }

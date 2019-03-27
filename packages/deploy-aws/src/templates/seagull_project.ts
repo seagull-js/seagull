@@ -105,7 +105,8 @@ export class SeagullProject {
     this.validate()
     const app = await this.createSeagullApp()
     await app.deployStack()
-    const url = await aws.getCFURL(this.getAppName(), this.cloudfront)
+    const url = (await aws.getCFURL(this.getAppName(), this.cloudfront)) || ''
+    await new FS.WriteFile('/tmp/cfurl.txt', url).execute()
     console.info('cloudfront-url', url)
   }
 
