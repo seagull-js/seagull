@@ -1,5 +1,7 @@
 import { SDK } from 'aws-cdk'
 
+import { FS } from '@seagull/commands-fs'
+
 import { handleSSMSecret, SSMHandler } from '../aws_sdk_handler'
 import * as lib from '../lib'
 import { SeagullApp } from '../seagull_app'
@@ -90,19 +92,24 @@ export class SeagullPipeline {
       secretParameter: ssmSecret.secret,
     }
     const gitData = lib.getGitData(gitDataProps)
-
+    const cloudfrontUrl = await new FS.ReadFile('/tmp/cfurl.txt').execute()
+    const pipelineDomain = `https://${this.region}.console.aws.amazon.com`
+    const pipelinePath = `/codesuite/codepipeline/pipelines/${pipeline.id}/view`
+    const pipelineLink = `${pipelineDomain}${pipelinePath}`
     const stageConfigParams = {
       branch: gitData.branch,
+      cloudfrontUrl,
       mode: this.mode,
       owner: gitData.owner,
       pipeline,
+      pipelineLink,
       repo: gitData.repo,
       role,
       ssmSecret,
     }
 
     stack.addSourceStage('source', lib.getSourceConfig(stageConfigParams, 0))
-    stack.addBuildStage('build', await lib.getBuildConfig(stageConfigParams, 1))
+    stack.addBuildStage('build', lib.getBuildConfig(stageConfigParams, 1))
     return pipelineApp
   }
 
