@@ -9,14 +9,13 @@ export async function checkForAliasConfig(pkgJson: any, handler: ACMHandler) {
 }
 
 async function getAliasConfig(domains: string[], handler: ACMHandler) {
-  const certArns = await handler.listCertificates()
-  const arns = certArns.filter(arn => arn !== undefined) as string[]
-  const getArnDomains = (arn: string) => getCertificateDomains(arn, handler)
+  const arns = await handler.listCertificates()
+  const getArnDomains = async (arn: string) => getCertDomains(arn, handler)
   const arnsWithSchemata = await Promise.all(arns.map(getArnDomains))
   return findAliasConfig(arnsWithSchemata, domains)
 }
 
-async function getCertificateDomains(acmCertRef: string, handler: ACMHandler) {
+async function getCertDomains(acmCertRef: string, handler: ACMHandler) {
   return { acmCertRef, names: await handler.describeCertificate(acmCertRef) }
 }
 
@@ -30,7 +29,9 @@ export class ACMHandler {
   async listCertificates() {
     const params = { CertificateStatuses: ['ISSUED'] }
     const response = await this.acm.listCertificates(params).promise()
-    return (response && response.CertificateSummaryList) || []
+    const certSumList = (response && response.CertificateSummaryList) || []
+    const arns = certSumList.map(certSum => certSum && certSum.CertificateArn)
+    return arns.filter(arn => arn !== undefined) as string[]
   }
 
   async describeCertificate(acmCertRef: string) {

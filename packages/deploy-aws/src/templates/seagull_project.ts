@@ -16,9 +16,9 @@ interface SeagullProjectProps {
   profile: string
   region: string
   handlers?: {
-    acmHandler: aws.ACMHandler
-    cloudfrontHandler: aws.CloudfrontHandler
-    stsHandler: aws.STSHandler
+    acmHandler?: aws.ACMHandler
+    cloudfrontHandler?: aws.CloudfrontHandler
+    stsHandler?: aws.STSHandler
   }
 }
 
