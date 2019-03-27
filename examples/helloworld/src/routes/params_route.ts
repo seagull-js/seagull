@@ -1,7 +1,6 @@
 import { Route, RouteContext } from '@seagull/routes'
 
 export default class ParamsRoute extends Route {
-  static method = 'get'
   static path = '/params/:id'
   static async handler(this: RouteContext) {
     const data = {
