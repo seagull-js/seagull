@@ -5,6 +5,8 @@ import 'chai/register-should'
 import { suite, test } from 'mocha-typescript'
 
 import { PolicyStatement } from '@aws-cdk/aws-iam'
+import * as IAM from '@aws-cdk/aws-iam'
+import { expect } from 'chai'
 import { find } from 'lodash'
 import { SeagullStack } from '../src'
 import { isInList } from './test-helper/template_searching'
@@ -48,6 +50,25 @@ export class Test extends BasicTest {
     const logInMeta = isInList(metadata, logGroupName, stackName)
     logInTemp.should.be.equals(true)
     logInMeta.should.be.equals(true)
+  }
+
+  @test
+  async 'has no defaultRole after instanciation'() {
+    const stackName = 'test-stack'
+    const roleName = 'test-role'
+    const app = new App()
+    const stack = new SeagullStack(app, stackName)
+    expect(stack.defaultRole).to.be.equal(undefined)
+  }
+
+  @test
+  async 'property defaultRole is set after adding a role to stack'() {
+    const stackName = 'test-stack'
+    const roleName = 'test-role'
+    const app = new App()
+    const stack = new SeagullStack(app, stackName)
+    stack.addIAMRole(roleName, 'lambda.amazonaws.com', ['action1', 'action2'])
+    expect(stack.defaultRole).to.be.instanceOf(IAM.Role)
   }
 
   @test
