@@ -4,7 +4,6 @@ import { Secret } from '@aws-cdk/cdk'
 
 interface StageConfigParams {
   branch: string
-  cloudfrontUrl: string
   mode: string
   owner: string
   pipeline: Pipeline
@@ -58,7 +57,7 @@ function getPostBuild(params: StageConfigParams) {
     checkState(),
     addStateChangeToCmd('npm run deploy'),
     checkState(),
-    setEnvAfterDeploy(params.cloudfrontUrl),
+    setEnvAfterDeploy(),
     addStateChangeToCmd(`npm run test:e2e`),
     checkState(),
     `export PIPELINE_STATE="success";export PIPELINE_DESC="successful";`,
@@ -66,9 +65,9 @@ function getPostBuild(params: StageConfigParams) {
   return { commands, finally: [curlCmd] }
 }
 
-function setEnvAfterDeploy(cloudfrontUrl: string) {
-  const setCFURL = `export CFURL="${cloudfrontUrl}";`
-  const setTarget = `export TARGET_URL="${cloudfrontUrl}";`
+function setEnvAfterDeploy() {
+  const setCFURL = `export CFURL=$(cat /tmp/cfurl.txt);`
+  const setTarget = `export TARGET_URL=$(cat /tmp/cfurl.txt);`
   const setDesc = `export PIPELINE_DESC="repository was successfully deployed";`
   const setContext = `export TEST_PIPELINE_CONTEXT="continuous-integration/seagull-deployment";`
   return `${setCFURL}${setTarget}${setDesc}${setContext}`

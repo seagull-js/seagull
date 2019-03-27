@@ -92,13 +92,11 @@ export class SeagullPipeline {
       secretParameter: ssmSecret.secret,
     }
     const gitData = lib.getGitData(gitDataProps)
-    const cloudfrontUrl = await new FS.ReadFile('/tmp/cfurl.txt').execute()
     const pipelineDomain = `https://${this.region}.console.aws.amazon.com`
     const pipelinePath = `/codesuite/codepipeline/pipelines/${pipeline.id}/view`
     const pipelineLink = `${pipelineDomain}${pipelinePath}`
     const stageConfigParams = {
       branch: gitData.branch,
-      cloudfrontUrl,
       mode: this.mode,
       owner: gitData.owner,
       pipeline,
