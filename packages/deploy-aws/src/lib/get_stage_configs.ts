@@ -51,12 +51,21 @@ function getBuild(params: StageConfigParams) {
 
 function getPostBuild(params: StageConfigParams) {
   const runTest = addStateChangeToCmd('npm run test')
+  const runE2eTest = addStateChangeToCmd('npm run test:e2e')
   const runDeploy = addStateChangeToCmd('npm run deploy')
   const setState = 'export PIPELINE_STATE="success"'
   const setDesc = 'export PIPELINE_DESC="finished successfully"'
   const curlCmd = getCurlToSendTestResult(params.owner, params.repo)
   const setSuccess = `${setState};${setDesc};`
-  const commands = [runTest, checkState(), runDeploy, checkState(), setSuccess]
+  const commands = [
+    runTest,
+    checkState(),
+    runE2eTest,
+    checkState(),
+    runDeploy,
+    checkState(),
+    setSuccess,
+  ]
   return { commands, finally: [curlCmd] }
 }
 

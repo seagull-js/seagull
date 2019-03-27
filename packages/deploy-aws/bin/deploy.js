@@ -16,5 +16,8 @@ const options = {
   profile: process.env.AWS_PROFILE || 'default',
   region: process.env.AWS_REGION || 'eu-central-1'
 }
+
+process.env.AWS_REGION = options.region
+
 const project = new SeagullProject(options)
 project.deployProject().then(logSuccess()).catch(error => logError(error))

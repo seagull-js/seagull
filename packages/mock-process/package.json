@@ -1,6 +1,6 @@
 {
   "name": "@seagull/mock-process",
-  "version": "3.0.5",
+  "version": "3.0.7",
   "description": "Process Mocking module for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/tslint": "^3.0.5"
+    "@seagull/tslint": "^3.0.7"
   },
   "nyc": {
     "extension": [
@@ -54,8 +54,8 @@
     ]
   },
   "dependencies": {
-    "@seagull/mock": "^3.0.5",
-    "@seagull/testing": "^3.0.5",
+    "@seagull/mock": "^3.0.7",
+    "@seagull/testing": "^3.0.7",
     "pmock": "^0.2.3"
   },
   "publishConfig": {

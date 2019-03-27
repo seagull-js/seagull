@@ -1,13 +1,14 @@
 {
-  "name": "@seagull/mock-fs",
+  "name": "@seagull/soap",
   "version": "3.0.7",
-  "description": "FS Mocking module for the Seagull Framework",
+  "description": "A soap module for the seagull framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
-    "build": "rm -rf dist && tsc",
+    "build": "rm -rf dist && tsc && npm run lint",
     "test": "NODE_ENV=test tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
     "test:watch": "npm run test -- --watch --reporter min",
+    "lint": "tslint --project ./tsconfig.json --config ./tslint.json --fix './{src, test}/**/*.ts'",
     "docs": "rm -rf docs && typedoc --mode modules --ignoreCompilerErrors --excludeExternals --excludePrivate --excludeNotExported --out docs src"
   },
   "repository": {
@@ -25,14 +26,21 @@
     "react.js",
     "isomorphic"
   ],
-  "author": "Tom Jaster",
+  "author": "Christian Pätzold",
   "license": "LGPL-3.0",
   "bugs": {
     "url": "https://github.com/seagull-js/seagull/issues"
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/tslint": "^3.0.7"
+    "@seagull/testing": "^2.11.0",
+    "@seagull/tslint": "^2.11.0"
+  },
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "inversify": "^5.0.1",
+    "reflect-metadata": "^0.1.13",
+    "soap": "^0.26.0"
   },
   "nyc": {
     "extension": [
@@ -49,17 +57,10 @@
     ],
     "reporter": [
       "html",
+      "lcov",
       "text",
       "text-summary"
     ]
-  },
-  "dependencies": {
-    "@seagull/mock": "^3.0.7",
-    "@seagull/testing": "^3.0.7",
-    "fs-monkey": "0.3.3",
-    "memfs": "^2.14.2",
-    "mock-fs": "^4.5.0",
-    "mock-require": "^3.0.2"
   },
   "publishConfig": {
     "access": "public"
