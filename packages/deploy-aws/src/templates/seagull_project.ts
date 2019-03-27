@@ -70,6 +70,7 @@ export class SeagullProject {
     // construct the stack and the app
     const app = new SeagullApp(appProps)
     const role = app.stack.addIAMRole('role', 'lambda.amazonaws.com', actions)
+    app.role = role
     const lambda = app.stack.addUniversalLambda('lambda', this.appPath, role)
     const apiGateway = app.stack.addUniversalApiGateway('api-gateway', lambda)
     app.stack.addCloudfront('cloudfront', { apiGateway, aliasConfig })
@@ -81,24 +82,25 @@ export class SeagullProject {
     app.stack.addLogGroup(`/${name}/data-log`)
     const cronJson = await buildCronJson(this.appPath)
     cronJson.forEach((rule: Rule) => app.stack.addEventRule(rule, lambda))
-    await this.customizeStack(app)
     return app
   }
 
   async customizeStack(app: SeagullApp) {
-    const extensionPath = `${this.appPath}/infrastructure.ts`
-    const hasExtensions = existsSync(extensionPath)
-    return hasExtensions && (await import(`${extensionPath}`)).default(app)
+    const extensionPath = `${this.appPath}/infrastructure-aws.ts`
+    const hasExtensionFile = existsSync(extensionPath)
+    return hasExtensionFile && (await import(`${extensionPath}`)).default(app)
   }
 
   async deployProject() {
     this.validate()
     const app = await this.createSeagullApp()
+    await this.customizeStack(app)
     await app.deployStack()
   }
 
   async diffProject() {
     const app = await this.createSeagullApp()
+    await this.customizeStack(app)
     await app.diffStack()
   }
 

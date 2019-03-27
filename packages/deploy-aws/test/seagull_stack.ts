@@ -5,8 +5,6 @@ import 'chai/register-should'
 import { suite, test } from 'mocha-typescript'
 
 import { PolicyStatement } from '@aws-cdk/aws-iam'
-import * as IAM from '@aws-cdk/aws-iam'
-import { expect } from 'chai'
 import { find } from 'lodash'
 import { SeagullStack } from '../src'
 import { isInList } from './test-helper/template_searching'
@@ -53,25 +51,6 @@ export class Test extends BasicTest {
   }
 
   @test
-  async 'has no defaultRole after instanciation'() {
-    const stackName = 'test-stack'
-    const roleName = 'test-role'
-    const app = new App()
-    const stack = new SeagullStack(app, stackName)
-    expect(stack.defaultRole).to.be.equal(undefined)
-  }
-
-  @test
-  async 'property defaultRole is set after adding a role to stack'() {
-    const stackName = 'test-stack'
-    const roleName = 'test-role'
-    const app = new App()
-    const stack = new SeagullStack(app, stackName)
-    stack.addIAMRole(roleName, 'lambda.amazonaws.com', ['action1', 'action2'])
-    expect(stack.defaultRole).to.be.instanceOf(IAM.Role)
-  }
-
-  @test
   async 'can add a role to stack'() {
     const stackName = 'test-stack'
     const roleName = 'test-role'
@@ -89,21 +68,7 @@ export class Test extends BasicTest {
     roleInTemp.should.be.equals(true)
     roleInMeta.should.be.equals(true)
   }
-  @test
-  async 'can add policies after adding a role to stack'() {
-    const stackName = 'test-stack'
-    const roleName = 'test-role'
-    const app = new App()
-    const stack = new SeagullStack(app, stackName)
-    stack.addIAMRole(roleName, 'lambda.amazonaws.com', ['action1', 'action2'])
-    stack.defaultRole!.addToPolicy(
-      new PolicyStatement().addAllResources().addAction('action3')
-    )
-    const synth = app.synthesizeStack(stackName)
-    const newPolicyCriterion = resourceHasNewAction('action3')
-    const hasNewPolicy = !!find(synth.template.Resources, newPolicyCriterion)
-    hasNewPolicy.should.be.equal(true)
-  }
+
   @test
   async 'can add a s3 bucket to a stack'() {
     const stackName = 'test-stack'
@@ -246,10 +211,7 @@ export class Test extends BasicTest {
       env: { variables: {} },
       install: { commands: ['npm i'], finally: [] },
       pipeline,
-      postBuild: {
-        commands: ['npm run test', 'npm run test:e2e'],
-        finally: [],
-      },
+      postBuild: { commands: ['npm run test'], finally: [] },
       role,
     }
     stack.addBuildStage(buildName, buildConfig)
@@ -291,10 +253,3 @@ export class Test extends BasicTest {
     secretMeta.should.be.equals(true)
   }
 }
-
-const resPropHasNewAction = (action: string) => (resProp: any) =>
-  !!resProp.Statement &&
-  !!find(resProp.Statement, (s: any) => s.Action.includes(action))
-
-const resourceHasNewAction = (action: string) => (res: any) =>
-  !!find(res.Properties, resPropHasNewAction(action))
