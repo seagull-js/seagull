@@ -1,4 +1,5 @@
 import { Http } from '@seagull/http'
+import { Mode } from '@seagull/mode'
 import { expect } from 'chai'
 import 'chai/register-should'
 import { ContainerModule, injectable } from 'inversify'
@@ -26,6 +27,10 @@ class DemoInjectable {}
 export class Test extends RouteTest {
   route = DemoRoute
 
+  @test
+  async 'mode environment is pure'() {
+    expect(Mode.environment).to.be.eq('pure')
+  }
   @test
   async 'can be invoked'() {
     const { code, data } = await this.invoke('/', {})
