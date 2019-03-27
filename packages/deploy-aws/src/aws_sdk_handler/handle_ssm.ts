@@ -1,7 +1,7 @@
 import { Secret } from '@aws-cdk/cdk'
 import { config, SSM } from 'aws-sdk'
 
-import * as lib from './lib'
+import * as lib from '../lib'
 
 interface TokenParams {
   ssmHandler: SSMHandler
