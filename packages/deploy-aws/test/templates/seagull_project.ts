@@ -1,6 +1,7 @@
 import { FS } from '@seagull/commands-fs'
 import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
+import { unlinkSync, writeFileSync } from 'fs'
 import { suite, test } from 'mocha-typescript'
 import { SeagullProject } from '../../src'
 import { isInList } from '../test-helper/template_searching'
@@ -43,13 +44,15 @@ export class Test extends BasicTest {
     const synthStack = project.synthesizeStack('helloworld')
     Object.keys(synthStack.template.Resources).length.should.be.above(1)
   }
+
   @test
   async 'can create a project with customized stack'() {
     const s3Name = 'another-s3'
-    const infra = `export default function (app: any){
-      app.stack.addS3(${s3Name})
+    const infra = `import { SeagullApp } from '../src'
+    export default function(app: SeagullApp) {
+      app.stack.addS3('another-s3', app.stack.defaultRole)
     }`
-    await new FS.WriteFile(`${this.appPath}/infrastructure.ts`, infra).execute()
+    writeFileSync(`${this.appPath}/infrastructure.ts`, infra)
 
     const props = {
       accountId: 'test-account-id',
@@ -66,14 +69,13 @@ export class Test extends BasicTest {
     const stackName = 'helloworld'
     const synthStack = project.synthesizeStack(stackName)
     const resources = Object.keys(synthStack.template.Resources)
-    console.info(JSON.stringify(synthStack.template.Resources))
-
     const metadata = Object.keys(synthStack.metadata)
     const stackNameNoDash = stackName.replace(/-/g, '')
     const s3NameNoDash = s3Name.replace(/-/g, '')
     const s3InTemp = isInList(resources, s3NameNoDash, stackNameNoDash)
     const s3InMeta = isInList(metadata, s3Name, stackName)
-    s3InTemp.should.be.equals(true)
-    s3InMeta.should.be.equals(true)
+    s3InTemp.should.be.equal(true)
+    s3InMeta.should.be.equal(true)
+    unlinkSync(`${this.appPath}/infrastructure.ts`)
   }
 }

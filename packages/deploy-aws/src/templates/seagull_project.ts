@@ -81,7 +81,7 @@ export class SeagullProject {
     app.stack.addLogGroup(`/${name}/data-log`)
     const cronJson = await buildCronJson(this.appPath)
     cronJson.forEach((rule: Rule) => app.stack.addEventRule(rule, lambda))
-    this.customizeStack(app)
+    await this.customizeStack(app)
     return app
   }
 
