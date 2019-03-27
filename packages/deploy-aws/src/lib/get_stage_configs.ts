@@ -4,9 +4,11 @@ import { Secret } from '@aws-cdk/cdk'
 
 interface StageConfigParams {
   branch: string
+  cloudfrontUrl: string
   mode: string
   owner: string
   pipeline: Pipeline
+  pipelineLink: string
   repo: string
   role: Role
   ssmSecret: { name: string; secret: Secret }
@@ -50,23 +52,26 @@ function getBuild(params: StageConfigParams) {
 }
 
 function getPostBuild(params: StageConfigParams) {
-  const runTest = addStateChangeToCmd('npm run test')
-  const runE2eTest = addStateChangeToCmd('npm run test:e2e')
-  const runDeploy = addStateChangeToCmd('npm run deploy')
-  const setState = 'export PIPELINE_STATE="success"'
-  const setDesc = 'export PIPELINE_DESC="finished successfully"'
   const curlCmd = getCurlToSendTestResult(params.owner, params.repo)
-  const setSuccess = `${setState};${setDesc};`
   const commands = [
-    runTest,
+    addStateChangeToCmd('npm run test'),
     checkState(),
-    runE2eTest,
+    addStateChangeToCmd('npm run deploy'),
     checkState(),
-    runDeploy,
+    setEnvAfterDeploy(params.cloudfrontUrl),
+    addStateChangeToCmd(`npm run test:e2e`),
     checkState(),
-    setSuccess,
+    `export PIPELINE_STATE="success";export PIPELINE_DESC="successful";`,
   ]
   return { commands, finally: [curlCmd] }
+}
+
+function setEnvAfterDeploy(cloudfrontUrl: string) {
+  const setCFURL = `export CFURL="${cloudfrontUrl}";`
+  const setTarget = `export TARGET_URL="${cloudfrontUrl}";`
+  const setDesc = `export PIPELINE_DESC="repository was successfully deployed";`
+  const setContext = `export TEST_PIPELINE_CONTEXT="continuous-integration/seagull-deployment";`
+  return `${setCFURL}${setTarget}${setDesc}${setContext}`
 }
 
 function checkState() {
@@ -83,21 +88,19 @@ function getCurlToSendTestResult(owner: string, name: string) {
   const curlParams = `?access_token=$ACCESS_TOKEN`
   const curlUrl = `"${curlDomain}${curlPath}${curlParams}"`
   const curlHeaders = `-H 'Content-Type: application/json'`
-  const curlData = `-d '{ "state": "'$PIPELINE_STATE'", "target_url": "'$TEST_PIPELINE_LINK'", "description": "'"$PIPELINE_DESC"' - Seagull Test CI", "context": "continuous-integration/seagull"}'`
+  const curlData = `-d '{ "state": "'$PIPELINE_STATE'", "target_url": "'$TARGET_URL'", "description": "'"$PIPELINE_DESC"' - Seagull Test CI", "context": "'$TEST_PIPELINE_CONTEXT'"}'`
   return `curl -g -X POST ${curlUrl} ${curlHeaders} ${curlData}`
 }
 
 function getEnv(params: StageConfigParams) {
-  const domain = 'https://eu-central-1.console.aws.amazon.com'
-  const path = `/codesuite/codepipeline/pipelines/${params.pipeline.id}/view`
-  const pipelineLink = `${domain}${path}`
   const parameterStore = { ACCESS_TOKEN: params.ssmSecret.name }
   const variables = {
     BRANCH_NAME: params.branch,
     DEPLOY_MODE: params.mode,
     PIPELINE_DESC: 'Bootstraping pipeline',
     PIPELINE_STATE: 'pending',
-    TEST_PIPELINE_LINK: pipelineLink,
+    TARGET_URL: params.pipelineLink,
+    TEST_PIPELINE_CONTEXT: 'continuous-integration/seagull',
   }
   return { 'parameter-store': parameterStore, variables }
 }

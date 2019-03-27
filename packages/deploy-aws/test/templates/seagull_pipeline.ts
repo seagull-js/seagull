@@ -2,7 +2,7 @@ import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
 import { suite, test } from 'mocha-typescript'
 import { SeagullPipeline } from '../../src'
-import { SSMHandler } from '../../src/handle_ssm_secret'
+import { SSMHandler } from '../../src/aws_sdk_handler/handle_ssm'
 
 @suite('SeagullPipeline')
 export class Test extends BasicTest {
@@ -19,12 +19,12 @@ export class Test extends BasicTest {
       appPath: `${process.cwd()}/test_data`,
       branch: 'master',
       githubToken: 'Token123',
+      handlers: { ssmHandler: new TestSSMHandler({ Token123: '123' }) },
       mode: 'prod',
       owner: 'me',
       profile: 'default',
       region: 'eu-central-1',
       repository: 'test-repo',
-      ssmHandler: new TestSSMHandler({ Token123: '123' }),
     }
     const pipeline = await new SeagullPipeline(props).createPipeline()
     const synthStack = pipeline.synthesizeStack('helloworld-ci')

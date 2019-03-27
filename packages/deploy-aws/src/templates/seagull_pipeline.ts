@@ -1,6 +1,8 @@
 import { SDK } from 'aws-cdk'
 
-import { handleSSMSecret, SSMHandler } from '../handle_ssm_secret'
+import { FS } from '@seagull/commands-fs'
+
+import { handleSSMSecret, SSMHandler } from '../aws_sdk_handler'
 import * as lib from '../lib'
 import { SeagullApp } from '../seagull_app'
 import { setCredsByProfile } from '../set_aws_credentials'
@@ -15,7 +17,9 @@ interface SeagullPipelineProps {
   region: string
   repository?: string
   ssmParameter?: string
-  ssmHandler?: SSMHandler
+  handlers?: {
+    ssmHandler?: SSMHandler
+  }
 }
 
 export class SeagullPipeline {
@@ -26,7 +30,7 @@ export class SeagullPipeline {
   profile: string
   region: string
   repository?: string
-  ssmHandler: SSMHandler
+  ssm: SSMHandler
   ssmParam?: string
   githubToken?: string
   actions: string[]
@@ -41,7 +45,8 @@ export class SeagullPipeline {
     this.repository = props.repository
     this.ssmParam = props.ssmParameter
     this.githubToken = props.githubToken
-    this.ssmHandler = props.ssmHandler || new SSMHandler()
+    const propsSSMHandler = props.handlers && props.handlers.ssmHandler
+    this.ssm = propsSSMHandler || new SSMHandler()
     this.actions = [
       'cloudformation:*',
       'cloudfront:*',
@@ -76,7 +81,7 @@ export class SeagullPipeline {
     const pipeline = stack.addPipeline('pipeline')
     const token = this.githubToken
     const tokenName = token ? `${name}-github` : this.ssmParam || undefined
-    const secretParams = { ssmHandler: this.ssmHandler, token, tokenName }
+    const secretParams = { ssmHandler: this.ssm, token, tokenName }
     const ssmSecret = await handleSSMSecret(secretParams)
     const gitDataProps = {
       branch: this.branch,
@@ -87,12 +92,17 @@ export class SeagullPipeline {
       secretParameter: ssmSecret.secret,
     }
     const gitData = lib.getGitData(gitDataProps)
-
+    const cloudfrontUrl = await new FS.ReadFile('/tmp/cfurl.txt').execute()
+    const pipelineDomain = `https://${this.region}.console.aws.amazon.com`
+    const pipelinePath = `/codesuite/codepipeline/pipelines/${pipeline.id}/view`
+    const pipelineLink = `${pipelineDomain}${pipelinePath}`
     const stageConfigParams = {
       branch: gitData.branch,
+      cloudfrontUrl,
       mode: this.mode,
       owner: gitData.owner,
       pipeline,
+      pipelineLink,
       repo: gitData.repo,
       role,
       ssmSecret,
