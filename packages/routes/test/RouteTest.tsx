@@ -1,14 +1,26 @@
+import { Http } from '@seagull/http'
 import { expect } from 'chai'
 import 'chai/register-should'
+import { ContainerModule, injectable } from 'inversify'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import { Route, RouteContext, RouteTest } from '../src'
 
 class DemoRoute extends Route {
   static path = '/'
+  static dependencies = new ContainerModule(bind => {
+    bind(DemoInjectable).toSelf()
+  })
   static async handler(this: RouteContext) {
+    const demo = this.injector.get(DemoInjectable)
+    expect(demo).to.be.an('object')
+    const http = this.injector.get(Http)
+    expect(http).to.be.an('object')
     return this.text('demo route')
   }
 }
+
+@injectable()
+class DemoInjectable {}
 
 @suite('RouteTest')
 export class Test extends RouteTest {
