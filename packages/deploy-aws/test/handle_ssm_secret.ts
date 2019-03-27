@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import 'chai/register-should'
 import { suite, test } from 'mocha-typescript'
 
-import { handleSSMSecret, SSMHandler } from '../src/handle_ssm_secret'
+import { handleSSMSecret, SSMHandler } from '../src/aws_sdk_handler/handle_ssm'
 
 @suite('HandleSSMSecret')
 export class Test extends BasicTest {

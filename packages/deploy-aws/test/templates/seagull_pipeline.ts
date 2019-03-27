@@ -2,7 +2,7 @@ import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
 import { suite, test } from 'mocha-typescript'
 import { SeagullPipeline } from '../../src'
-import { SSMHandler } from '../../src/handle_ssm_secret'
+import { SSMHandler } from '../../src/aws_sdk_handler/handle_ssm'
 
 @suite('SeagullPipeline')
 export class Test extends BasicTest {

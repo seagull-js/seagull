@@ -1,4 +1,4 @@
-interface SchemaArn {
+export interface SchemaArn {
   acmCertRef: string
   names: string[]
 }
