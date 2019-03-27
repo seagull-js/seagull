@@ -164,5 +164,5 @@ async function replaceS3BucketName(appPath: string, itemsBucket: string) {
 async function buildCronJson(appPath: string) {
   const cronPath = `${appPath}/dist/cron.json`
   const cronFile = await new FS.ReadFile(cronPath).execute()
-  return JSON.parse(cronFile)
+  return cronFile && cronFile !== '' ? JSON.parse(cronFile) : []
 }

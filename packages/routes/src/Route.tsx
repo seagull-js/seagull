@@ -36,7 +36,6 @@ export abstract class Route {
     res?: Response
   ): Promise<void> {
     const ctx = 'request' in req ? req : new RouteContext(req, res!)
-
     await this.pipeline.reduce(
       this.applyMiddleware.bind(this, ctx),
       Promise.resolve(false)
