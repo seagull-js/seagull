@@ -4,12 +4,12 @@ import { Command } from './Command'
  * A Service manages a bag of initialized Command instances and can process them
  * all or partially as often as you want.
  */
-export abstract class Service {
+export abstract class CommandService {
   /**
    * Static constructor that returns a new service instance with the
    * [[initialize]] method already applied.
    */
-  static async create<T extends Service>(
+  static async create<T extends CommandService>(
     this: new (...args: any) => T,
     ...args: any
   ) {
