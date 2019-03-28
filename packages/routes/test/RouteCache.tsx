@@ -3,7 +3,6 @@ import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import { Route, RouteContext, RouteTest } from '../src'
 
 class DemoRoute extends Route {
-  static method = 'GET'
   static path = '/'
   static cache = 300
 
@@ -18,7 +17,7 @@ export class Test extends RouteTest {
 
   @test
   async 'setting cache in routes works'() {
-    const { code, data, headers } = await this.invoke('GET', '/', {})
+    const { code, data, headers } = await this.invoke('/', {})
     code.should.be.equal(200)
     headers['cache-control'].should.be.equal('max-age=300')
   }

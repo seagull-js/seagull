@@ -35,7 +35,7 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/tslint": "^3.0.7"
+    "@seagull/tslint": "^3.1.1"
   },
   "dependencies": {
     "@types/cucumber": "^4.0.4",

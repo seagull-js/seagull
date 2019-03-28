@@ -11,7 +11,6 @@ class Todo extends Item {
 }
 
 export default class ItemRoute extends Route {
-  static method = 'get'
   static path = '/items'
   static async handler(this: RouteContext) {
     await Todo.put({ id: 'first!' })
