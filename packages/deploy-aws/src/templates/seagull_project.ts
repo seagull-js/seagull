@@ -79,6 +79,7 @@ export class SeagullProject {
     // construct the stack and the app
     const app = new SeagullApp(appProps)
     const role = app.stack.addIAMRole('role', 'lambda.amazonaws.com', actions)
+    app.role = role
     const lambda = app.stack.addUniversalLambda('lambda', this.appPath, role)
     const apiGateway = app.stack.addUniversalApiGateway('api-gateway', lambda)
     app.stack.addCloudfront('cloudfront', { apiGateway, aliasConfig })
@@ -96,6 +97,12 @@ export class SeagullProject {
     return app
   }
 
+  async customizeStack(app: SeagullApp) {
+    const extensionPath = `${this.appPath}/infrastructure-aws.ts`
+    const hasExtensionFile = await new FS.Exists(extensionPath).execute()
+    return hasExtensionFile && (await import(`${extensionPath}`)).default(app)
+  }
+
   getAppName() {
     const suffix = this.mode === 'test' ? `-${this.branch}-${this.mode}` : ''
     return `${this.pkgJson.name}${suffix}`.replace(/[^0-9A-Za-z-]/g, '')
@@ -104,6 +111,7 @@ export class SeagullProject {
   async deployProject() {
     this.validate()
     const app = await this.createSeagullApp()
+    await this.customizeStack(app)
     await app.deployStack()
     const url = (await aws.getCFURL(this.getAppName(), this.cloudfront)) || ''
     await new FS.WriteFile('/tmp/cfurl.txt', url).execute()
@@ -112,6 +120,7 @@ export class SeagullProject {
 
   async diffProject() {
     const app = await this.createSeagullApp()
+    await this.customizeStack(app)
     await app.diffStack()
   }
 
