@@ -38,12 +38,8 @@ export abstract class RouteTest extends BasicTest {
    */
 
   async invokeMocked(path = '/', params: any = {}) {
-    const { request, response } = this.requestAndResponse(
-      this.route.method,
-      path,
-      params
-    )
-    const ctx = new RouteContextMock(request, response)
+    const reqRes = this.requestAndResponse(this.route.method, path, params)
+    const ctx = new RouteContextMock(reqRes.request, reqRes.response)
 
     await this.executeRoute(ctx)
     return ctx.results
