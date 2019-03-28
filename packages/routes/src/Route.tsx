@@ -1,4 +1,7 @@
+import { httpDiModule } from '@seagull/http'
 import { Express, Request, Response } from 'express'
+import { ContainerModule } from 'inversify'
+import { HttpMethod } from '.'
 import { RouteContext } from './RouteContext'
 import { RouteContextMock } from './RouteContextMock'
 
@@ -14,7 +17,7 @@ export abstract class Route {
   // cache in seconds
   static cache: number = 0
   // http method
-  static method: string
+  static method: HttpMethod = 'GET'
   /**
    * Path at which the route can be called.
    * Must start with /.
@@ -24,6 +27,8 @@ export abstract class Route {
    * - /this/is/a/:pathParam/path/with/a/wildcard/*
    */
   static path: string
+  /** DI module that is being registered within route */
+  static dependencies: ContainerModule
 
   // implement your route here
   static handler: (this: RouteContext) => Promise<void>
@@ -49,10 +54,21 @@ export abstract class Route {
   }
 
   private static pipeline: Middleware[] = [
+    Route.registerDependencies,
     Route.setExpireHeader,
     Route.authRequest,
     Route.processRequest,
   ]
+
+  private static async registerDependencies(ctx: RouteContext) {
+    // bind all seagull injectables
+    ctx.injector.load(httpDiModule)
+
+    // bind explicit injectables
+    if (this.dependencies) {
+      ctx.injector.load(this.dependencies)
+    }
+  }
 
   // applies cache header
   private static async setExpireHeader(ctx: RouteContext) {

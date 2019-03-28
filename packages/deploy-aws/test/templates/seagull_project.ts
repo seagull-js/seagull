@@ -1,12 +1,14 @@
 import { PolicyStatement, Role } from '@aws-cdk/aws-iam'
 import { FS } from '@seagull/commands-fs'
 import { BasicTest } from '@seagull/testing'
+import { DistributionSummary } from 'aws-sdk/clients/cloudfront'
 import { expect, use } from 'chai'
 import * as promisedChai from 'chai-as-promised'
 import 'chai/register-should'
 import { cloneDeep, find } from 'lodash'
-import { suite, test, timeout } from 'mocha-typescript'
+import { suite, test } from 'mocha-typescript'
 import { SeagullApp, SeagullProject } from '../../src'
+import * as Handlers from '../../src/aws_sdk_handler'
 import { isInList } from '../test-helper/template_searching'
 use(promisedChai)
 
@@ -15,21 +17,9 @@ const customizationCode = `import { SeagullApp } from '../src'
 export default function(app: SeagullApp) {
   app.stack.addS3('another-s3', app.role)
 }`
-
 @suite('SeagullProject')
 export class Test extends BasicTest {
   appPath = `${process.cwd()}/test_data`
-  projectProps = {
-    accountId: 'test-account-id',
-    appPath: this.appPath,
-    branch: 'master',
-    githubToken: 'Token123',
-    mode: 'prod',
-    owner: 'me',
-    profile: 'default',
-    region: 'eu-central-1',
-    repository: 'test-repo',
-  }
   async before() {
     await BasicTest.prototype.before.bind(this)()
     process.env.AWS_REGION = 'eu-central-1'
@@ -39,34 +29,41 @@ export class Test extends BasicTest {
     await createBackendFolder.execute()
     await new FS.WriteFile(`${backendFolder}/server.js`, '').execute()
     await new FS.WriteFile(`${backendFolder}/lambda.js`, '').execute()
-    await new FS.WriteFile(`${this.appPath}/dist/cron.json`, '[]').execute()
+    await new FS.WriteFile(
+      `${this.appPath}/dist/cron.json`,
+      JSON.stringify([])
+    ).execute()
   }
 
   async after() {
     await BasicTest.prototype.after.bind(this)()
   }
-
   @test
   async 'can create a project'() {
-    const project = await new SeagullProject(
-      this.projectProps
-    ).createSeagullApp()
+    const props = getDefaultProps(this.appPath)
+
+    const project = await new SeagullProject(props).createSeagullApp()
     const synthStack = project.synthesizeStack('helloworld')
+
     Object.keys(synthStack.template.Resources).length.should.be.above(1)
   }
 
   @test
   async 'assigns a default role to role property of SeagullApp'() {
-    const app = await new SeagullProject(this.projectProps).createSeagullApp()
+    const props = getDefaultProps(this.appPath)
+
+    const app = await new SeagullProject(props).createSeagullApp()
+
     expect(app.role).to.be.instanceOf(Role)
   }
 
   @test
   async 'can add policies after creating SeagullApp'() {
-    const app = await new SeagullProject(this.projectProps).createSeagullApp()
-    app.role!.addToPolicy(
-      new PolicyStatement().addAllResources().addAction('action3')
-    )
+    const props = getDefaultProps(this.appPath)
+
+    const app = await new SeagullProject(props).createSeagullApp()
+    const stmt = new PolicyStatement().addAllResources().addAction('action3')
+    app.role!.addToPolicy(stmt)
     const synth = app.synthesizeStack('helloworld')
     const newPolicyCriterion = resourceHasNewAction('action3')
     const hasNewPolicy = !!find(synth.template.Resources, newPolicyCriterion)
@@ -75,12 +72,15 @@ export class Test extends BasicTest {
 
   @test
   async 'can create a project and customize stack'() {
+    const props = getDefaultProps(this.appPath)
     await writeCustomInfraFile(this.appPath)
-    const project = new SeagullProject(this.projectProps)
+
+    const project = new SeagullProject(props)
     const app = await project.createSeagullApp()
     const stackName = 'helloworld'
     await project.customizeStack(app)
     const synthStack = app.synthesizeStack(stackName)
+
     const resources = Object.keys(synthStack.template.Resources)
     const metadata = Object.keys(synthStack.metadata)
     const stackNameNoDash = stackName.replace(/-/g, '')
@@ -106,18 +106,7 @@ export class Test extends BasicTest {
     await new FS.WriteFile(`${backendFolder}/lambda.js`, '').execute()
     await new FS.WriteFile(`${newCWD}/dist/cron.json`, '[]').execute()
     await writeCustomInfraFile(newCWD, 'export default 123')
-
-    const props = {
-      accountId: 'test-account-id',
-      appPath: `${this.appPath}/corrupted-infrastructure`,
-      branch: 'master',
-      githubToken: 'Token123',
-      mode: 'prod',
-      owner: 'me',
-      profile: 'default',
-      region: 'eu-central-1',
-      repository: 'test-repo',
-    }
+    const props = getDefaultProps(newCWD)
 
     const project = new SeagullProject(props)
     const app = await project.createSeagullApp()
@@ -126,20 +115,23 @@ export class Test extends BasicTest {
     await expect(customize()).to.be.rejectedWith(Error)
     await deleteCustomInfra(`${this.appPath}/corrupted-infrastructure`)
   }
-
   @test
   async 'customizeStack should do nothing but return false without an infrastructure-aws.ts-file'() {
-    const project = new SeagullProject(this.projectProps)
+    const props = getDefaultProps(this.appPath)
+
+    const project = new SeagullProject(props)
     const app = await project.createSeagullApp()
     const appBeforeCustomization = cloneDeep(app)
     const returnValue = await project.customizeStack(app)
+
     expect(app).to.deep.equal(appBeforeCustomization)
     expect(returnValue).to.be.equal(false)
   }
 
   @test
   async 'can deploy a project without customized stack'() {
-    const project = new SeagullProject(this.projectProps)
+    const props = getDefaultProps(this.appPath)
+    const project = new SeagullProject(props)
     let hasBeenCalled = false
     const deployStack = () => (hasBeenCalled = true)
     project.createSeagullApp = () =>
@@ -153,8 +145,9 @@ export class Test extends BasicTest {
   @test
   async 'can deploy a project with customized stack'() {
     await writeCustomInfraFile(this.appPath)
+    const props = getDefaultProps(this.appPath)
 
-    const project = new SeagullProject(this.projectProps)
+    const project = new SeagullProject(props)
     let hasBeenCalled = false
     const deployStack = async () => {
       hasBeenCalled = true
@@ -187,7 +180,8 @@ export class Test extends BasicTest {
 
   @test
   async 'can diff a project without customized stack'() {
-    const project = new SeagullProject(this.projectProps)
+    const props = getDefaultProps(this.appPath)
+    const project = new SeagullProject(props)
     let hasBeenCalled = false
     const diffStack = () => (hasBeenCalled = true)
     project.createSeagullApp = () =>
@@ -201,8 +195,9 @@ export class Test extends BasicTest {
   @test
   async 'can diff a project with customized stack'() {
     await writeCustomInfraFile(this.appPath)
+    const props = getDefaultProps(this.appPath)
 
-    const project = new SeagullProject(this.projectProps)
+    const project = new SeagullProject(props)
     let hasBeenCalled = false
     const diffStack = async () => {
       hasBeenCalled = true
@@ -232,6 +227,66 @@ export class Test extends BasicTest {
     await deleteCustomInfra(this.appPath)
   }
 }
+
+class TestACMHandler extends Handlers.ACMHandler {
+  private arnsWithDomains: { [arn: string]: string[] }
+
+  constructor(testData?: { [arn: string]: string[] }) {
+    super()
+    this.arnsWithDomains = testData || { arn1: ['www.aida.de', 'www2.aida.de'] }
+  }
+
+  async listCertificates() {
+    return Object.keys(this.arnsWithDomains)
+  }
+
+  async describeCertificate(acmCertRef: string) {
+    return this.arnsWithDomains[acmCertRef] || []
+  }
+}
+
+class TestCloudfrontHandler extends Handlers.CloudfrontHandler {
+  private cloudfrontList: Array<{ Comment: string; DomainName: string }>
+
+  constructor(testData?: Array<{ Comment: string; DomainName: string }>) {
+    super()
+    const defaultData = [{ Comment: 'helloworld', DomainName: 'abcdef.cf.net' }]
+    this.cloudfrontList = testData || defaultData
+  }
+
+  async listDistributions() {
+    return this.cloudfrontList as DistributionSummary[]
+  }
+}
+
+class TestSTSHandler extends Handlers.STSHandler {
+  private accountId: string
+
+  constructor(testAccount?: string) {
+    super()
+    this.accountId = testAccount || 'test-account-id'
+  }
+
+  async getAccountId() {
+    return this.accountId
+  }
+}
+
+const getDefaultProps = (appPath: string) => ({
+  appPath,
+  branch: 'master',
+  githubToken: 'Token123',
+  handlers: {
+    acmHandler: new TestACMHandler(),
+    cloudfrontHandler: new TestCloudfrontHandler(),
+    stsHandler: new TestSTSHandler(),
+  },
+  mode: 'prod',
+  owner: 'me',
+  profile: 'default',
+  region: 'eu-central-1',
+  repository: 'test-repo',
+})
 
 const deleteCustomInfra = async (appPath: string) => {
   const customInfraDel = new FS.DeleteFile(`${appPath}/infrastructure-aws.ts`)

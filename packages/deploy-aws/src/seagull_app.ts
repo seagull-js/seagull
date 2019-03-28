@@ -1,9 +1,8 @@
-import * as IAM from '@aws-cdk/aws-iam'
+import { Role } from '@aws-cdk/aws-iam'
 import { App, StackProps } from '@aws-cdk/cdk'
 import * as cfnDiff from '@aws-cdk/cloudformation-diff'
 import * as cdk from 'aws-cdk'
 import * as yaml from 'yaml'
-
 import * as lib from './lib'
 import { SeagullStack } from './seagull_stack'
 
@@ -14,8 +13,9 @@ interface OperationsProps {
 
 export class SeagullApp extends App {
   stack: SeagullStack
-  role?: IAM.Role
+  role?: Role
   private projectName: string
+
   constructor(props: OperationsProps) {
     super()
     const { projectName, stackProps } = props
