@@ -6,7 +6,7 @@ import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as querystring from 'querystring'
 import { Http } from '../../src'
 import { HttpJson } from '../../src'
-import { HttpSeed } from '../../src/modes/seed'
+import { HttpSeed } from '../../src/mode/seed'
 
 interface ExpectedResponse {
   args: {

@@ -4,7 +4,7 @@ import 'chai/register-should'
 import * as fs from 'fs'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as querystring from 'querystring'
-import { HttpPure } from '../src/modes/pure'
+import { HttpPure } from '../src/mode/pure'
 
 interface ExpectedResponse {
   args: {

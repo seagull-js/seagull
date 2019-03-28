@@ -5,9 +5,9 @@ import 'chai/register-should'
 import { Container } from 'inversify'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import { config } from '../src/config'
-import { Http } from '../src/modes/cloud'
-import { HttpPure } from '../src/modes/pure'
-import { HttpSeed } from '../src/modes/seed'
+import { Http } from '../src/mode/cloud'
+import { HttpPure } from '../src/mode/pure'
+import { HttpSeed } from '../src/mode/seed'
 import { module } from '../src/module'
 
 @suite('Http::Module::Fetch')
