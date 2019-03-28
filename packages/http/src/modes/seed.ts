@@ -1,7 +1,8 @@
-import { createResponse, Fixture, FixtureStorage } from '@seagull/seed'
 import { injectable } from 'inversify'
 import fetch, { Headers, RequestInit, Response } from 'node-fetch'
 import 'reflect-metadata'
+import { createResponse, Fixture } from '../seed/fixture'
+import { FixtureStorage } from '../seed/fixtureStorage'
 import { HttpBase } from './base'
 
 export interface RequestException {
