@@ -2,7 +2,6 @@ import { SDK } from 'aws-cdk'
 import { ACM, STS } from 'aws-sdk'
 
 import { FS } from '@seagull/commands-fs'
-
 import { existsSync } from 'fs'
 import * as lib from '../lib'
 import { ProvideAssetFolder } from '../provide_asset_folder'
@@ -87,7 +86,7 @@ export class SeagullProject {
 
   async customizeStack(app: SeagullApp) {
     const extensionPath = `${this.appPath}/infrastructure-aws.ts`
-    const hasExtensionFile = existsSync(extensionPath)
+    const hasExtensionFile = await new FS.Exists(extensionPath).execute()
     return hasExtensionFile && (await import(`${extensionPath}`)).default(app)
   }
 

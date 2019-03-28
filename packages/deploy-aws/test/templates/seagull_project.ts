@@ -4,7 +4,6 @@ import { BasicTest } from '@seagull/testing'
 import { expect, use } from 'chai'
 import * as promisedChai from 'chai-as-promised'
 import 'chai/register-should'
-import { readFileSync, unlinkSync, writeFileSync } from 'fs'
 import { cloneDeep, find } from 'lodash'
 import { suite, test, timeout } from 'mocha-typescript'
 import { SeagullApp, SeagullProject } from '../../src'
@@ -40,15 +39,13 @@ export class Test extends BasicTest {
     await createBackendFolder.execute()
     await new FS.WriteFile(`${backendFolder}/server.js`, '').execute()
     await new FS.WriteFile(`${backendFolder}/lambda.js`, '').execute()
-    await new FS.WriteFile(
-      `${this.appPath}/dist/cron.json`,
-      JSON.stringify([])
-    ).execute()
+    await new FS.WriteFile(`${this.appPath}/dist/cron.json`, '[]').execute()
   }
 
   async after() {
     await BasicTest.prototype.after.bind(this)()
   }
+
   @test
   async 'can create a project'() {
     const project = await new SeagullProject(
@@ -78,8 +75,7 @@ export class Test extends BasicTest {
 
   @test
   async 'can create a project and customize stack'() {
-    writeFileSync(`${this.appPath}/infrastructure-aws.ts`, customizationCode)
-
+    await writeCustomInfraFile(this.appPath)
     const project = new SeagullProject(this.projectProps)
     const app = await project.createSeagullApp()
     const stackName = 'helloworld'
@@ -93,7 +89,7 @@ export class Test extends BasicTest {
     const s3InMeta = isInList(metadata, s3Name, stackName)
     s3InTemp.should.be.equal(true)
     s3InMeta.should.be.equal(true)
-    unlinkSync(`${this.appPath}/infrastructure-aws.ts`)
+    await deleteCustomInfra(this.appPath)
   }
 
   /** This test needs to use another directory, because imports are cached
@@ -101,20 +97,15 @@ export class Test extends BasicTest {
    * other than the infrastructure-aws.ts above */
   @test
   async 'customize stack throws when infrastructure-aws.ts is corrupted'() {
-    const assetFolder = `${this.appPath}/corrupted-infrastructure/dist/assets`
+    const newCWD = `${this.appPath}/corrupted-infrastructure`
+    const assetFolder = `${newCWD}/dist/assets`
     const backendFolder = `${assetFolder}/backend`
     const createBackendFolder = new FS.CreateFolder(backendFolder)
     await createBackendFolder.execute()
     await new FS.WriteFile(`${backendFolder}/server.js`, '').execute()
     await new FS.WriteFile(`${backendFolder}/lambda.js`, '').execute()
-    await new FS.WriteFile(
-      `${this.appPath}/corrupted-infrastructure/dist/cron.json`,
-      JSON.stringify([])
-    ).execute()
-    writeFileSync(
-      `${this.appPath}/corrupted-infrastructure/infrastructure-aws.ts`,
-      'export default 123'
-    )
+    await new FS.WriteFile(`${newCWD}/dist/cron.json`, '[]').execute()
+    await writeCustomInfraFile(newCWD, 'export default 123')
 
     const props = {
       accountId: 'test-account-id',
@@ -133,7 +124,7 @@ export class Test extends BasicTest {
 
     const customize = () => project.customizeStack(app)
     await expect(customize()).to.be.rejectedWith(Error)
-    unlinkSync(`${this.appPath}/corrupted-infrastructure/infrastructure-aws.ts`)
+    await deleteCustomInfra(`${this.appPath}/corrupted-infrastructure`)
   }
 
   @test
@@ -161,7 +152,7 @@ export class Test extends BasicTest {
 
   @test
   async 'can deploy a project with customized stack'() {
-    writeFileSync(`${this.appPath}/infrastructure-aws.ts`, customizationCode)
+    await writeCustomInfraFile(this.appPath)
 
     const project = new SeagullProject(this.projectProps)
     let hasBeenCalled = false
@@ -191,7 +182,7 @@ export class Test extends BasicTest {
     s3InMeta.should.be.equal(true)
 
     hasBeenCalled.should.be.equal(true)
-    unlinkSync(`${this.appPath}/infrastructure-aws.ts`)
+    await deleteCustomInfra(this.appPath)
   }
 
   @test
@@ -209,7 +200,7 @@ export class Test extends BasicTest {
 
   @test
   async 'can diff a project with customized stack'() {
-    writeFileSync(`${this.appPath}/infrastructure-aws.ts`, customizationCode)
+    await writeCustomInfraFile(this.appPath)
 
     const project = new SeagullProject(this.projectProps)
     let hasBeenCalled = false
@@ -238,8 +229,26 @@ export class Test extends BasicTest {
     s3InMeta.should.be.equal(true)
 
     hasBeenCalled.should.be.equal(true)
-    unlinkSync(`${this.appPath}/infrastructure-aws.ts`)
+    await deleteCustomInfra(this.appPath)
   }
+}
+
+const deleteCustomInfra = async (appPath: string) => {
+  const customInfraDel = new FS.DeleteFile(`${appPath}/infrastructure-aws.ts`)
+  await customInfraDel.execute()
+  customInfraDel.mode = { environment: 'edge' }
+  await customInfraDel.execute()
+}
+
+const writeCustomInfraFile = async (
+  appPath: string,
+  code = customizationCode
+) => {
+  const customizationPath = `${appPath}/infrastructure-aws.ts`
+  const customInfraGen = new FS.WriteFile(customizationPath, code)
+  await customInfraGen.execute()
+  customInfraGen.mode = { environment: 'edge' }
+  await customInfraGen.execute()
 }
 
 const resPropHasNewAction = (action: string) => (resProp: any) =>
