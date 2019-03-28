@@ -3,7 +3,7 @@ import { Response } from 'node-fetch'
 import 'reflect-metadata'
 import { HttpError } from '.'
 import { RequestInitBase, RequestInitGet } from '../interface'
-import { Http } from '../modes/cloud'
+import { Http } from '../mode/cloud'
 
 /**
  * Http json client.

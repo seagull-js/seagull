@@ -2,9 +2,9 @@ import { Mode } from '@seagull/mode'
 import { ContainerModule, interfaces } from 'inversify'
 import { config } from './config'
 import { HttpJson } from './content-type/http_json'
-import { Http } from './modes/cloud'
-import { HttpPure } from './modes/pure'
-import { HttpSeed } from './modes/seed'
+import { Http } from './mode/cloud'
+import { HttpPure } from './mode/pure'
+import { HttpSeed } from './mode/seed'
 
 /**
  * Injectable container module

@@ -10,6 +10,6 @@ export { module as httpDiModule } from './module'
 export { HttpJson } from './content-type/http_json'
 
 // http injectables
-export { Http } from './modes/cloud'
-export { HttpPure } from './modes/pure'
-export { HttpSeed } from './modes/seed'
+export { Http } from './mode/cloud'
+export { HttpPure } from './mode/pure'
+export { HttpSeed } from './mode/seed'
