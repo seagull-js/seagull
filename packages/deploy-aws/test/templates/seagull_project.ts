@@ -40,7 +40,7 @@ export class Test extends BasicTest {
   }
   @test
   async 'can create a project'() {
-    const props = getDefaultProps(this.appPath)
+    const props = getTestProps(this.appPath)
 
     const project = await new SeagullProject(props).createSeagullApp()
     const synthStack = project.synthesizeStack('helloworld')
@@ -50,7 +50,7 @@ export class Test extends BasicTest {
 
   @test
   async 'assigns a default role to role property of SeagullApp'() {
-    const props = getDefaultProps(this.appPath)
+    const props = getTestProps(this.appPath)
 
     const app = await new SeagullProject(props).createSeagullApp()
 
@@ -59,7 +59,7 @@ export class Test extends BasicTest {
 
   @test
   async 'can add policies after creating SeagullApp'() {
-    const props = getDefaultProps(this.appPath)
+    const props = getTestProps(this.appPath)
 
     const app = await new SeagullProject(props).createSeagullApp()
     const stmt = new PolicyStatement().addAllResources().addAction('action3')
@@ -72,7 +72,7 @@ export class Test extends BasicTest {
 
   @test
   async 'can create a project and customize stack'() {
-    const props = getDefaultProps(this.appPath)
+    const props = getTestProps(this.appPath)
     await writeCustomInfraFile(this.appPath)
 
     const project = new SeagullProject(props)
@@ -106,7 +106,7 @@ export class Test extends BasicTest {
     await new FS.WriteFile(`${backendFolder}/lambda.js`, '').execute()
     await new FS.WriteFile(`${newCWD}/dist/cron.json`, '[]').execute()
     await writeCustomInfraFile(newCWD, 'export default 123')
-    const props = getDefaultProps(newCWD)
+    const props = getTestProps(newCWD)
 
     const project = new SeagullProject(props)
     const app = await project.createSeagullApp()
@@ -117,7 +117,7 @@ export class Test extends BasicTest {
   }
   @test
   async 'customizeStack should do nothing but return false without an infrastructure-aws.ts-file'() {
-    const props = getDefaultProps(this.appPath)
+    const props = getTestProps(this.appPath)
 
     const project = new SeagullProject(props)
     const app = await project.createSeagullApp()
@@ -130,7 +130,7 @@ export class Test extends BasicTest {
 
   @test
   async 'can deploy a project without customized stack'() {
-    const props = getDefaultProps(this.appPath)
+    const props = getTestProps(this.appPath)
     const project = new SeagullProject(props)
     let hasBeenCalled = false
     const deployStack = () => (hasBeenCalled = true)
@@ -145,7 +145,7 @@ export class Test extends BasicTest {
   @test
   async 'can deploy a project with customized stack'() {
     await writeCustomInfraFile(this.appPath)
-    const props = getDefaultProps(this.appPath)
+    const props = getTestProps(this.appPath)
 
     const project = new SeagullProject(props)
     let hasBeenCalled = false
@@ -180,7 +180,7 @@ export class Test extends BasicTest {
 
   @test
   async 'can diff a project without customized stack'() {
-    const props = getDefaultProps(this.appPath)
+    const props = getTestProps(this.appPath)
     const project = new SeagullProject(props)
     let hasBeenCalled = false
     const diffStack = () => (hasBeenCalled = true)
@@ -195,7 +195,7 @@ export class Test extends BasicTest {
   @test
   async 'can diff a project with customized stack'() {
     await writeCustomInfraFile(this.appPath)
-    const props = getDefaultProps(this.appPath)
+    const props = getTestProps(this.appPath)
 
     const project = new SeagullProject(props)
     let hasBeenCalled = false
@@ -272,7 +272,7 @@ class TestSTSHandler extends Handlers.STSHandler {
   }
 }
 
-const getDefaultProps = (appPath: string) => ({
+const getTestProps = (appPath: string) => ({
   appPath,
   branch: 'master',
   githubToken: 'Token123',
