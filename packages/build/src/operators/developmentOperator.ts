@@ -1,4 +1,5 @@
 import * as E from '../services2'
+import { LazyPageOperator } from './lazyPageOperator'
 import { Operator, Wiring } from './operator'
 import * as O from './operator'
 
@@ -8,13 +9,14 @@ export class DevOperator extends Operator {
     { on: E.PreparedEvent, emit: E.CompileEvent },
     { on: E.CompiledEvent, emit: E.GenerateCodeEvent },
     { once: E.GeneratedCodeEvent, emit: E.StartBackendEvent },
-    { on: E.PageBundleRequested, emit: E.PageBundleEmitted },
+    { on: E.BundledPageEvent, emit: E.PageBundleEmitted },
   ]
 
   constructor() {
     super()
     this.addDevServices()
     this.setupWiring()
+    this.addLazyPageOperator()
   }
 
   addDevServices() {
@@ -24,4 +26,6 @@ export class DevOperator extends Operator {
     this.addBackendRunnerService()
     this.addOutputService()
   }
+
+  addLazyPageOperator = () => new LazyPageOperator(this)
 }

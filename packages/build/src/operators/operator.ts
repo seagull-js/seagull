@@ -7,23 +7,36 @@ export type ServicesMap = {
   Compiler: Services.CompilerService
   CodeGenerator: Services.CodeGeneratorService
   BackendRunner: Services.BackendRunnerService
+  LambdaBackend: Services.LambdaBundleService
+  ServerBackend: Services.ServerBundleService
+  BrowserPage: Services.BrowserPageBundleService
+  BackendPage: Services.BackendPageBundleService
+  Page: Services.PageBundleService
 }
 export type ServicesTypes = ServicesMap[keyof ServicesMap]
 export type ServicesEvents = ServicesTypes['bus'] extends EventBus<infer U>
   ? (U & OperatorEvents)
   : never
 
+type ExplicitMessage = [Operator, keyof ServicesEvents]
+type Message = keyof ServicesEvents | ExplicitMessage
 export interface ReEmit {
-  on: keyof ServicesEvents
-  emit: keyof ServicesEvents
+  on: Message
+  emit: Message
 }
 export interface ReEmitOnce {
-  once: keyof ServicesEvents
-  emit: keyof ServicesEvents
+  once: Message
+  emit: Message
+}
+interface ExplicitWiring {
+  type: 'on' | 'once'
+  from: { ctx: Operator; event: keyof ServicesEvents }
+  to: { ctx: Operator; event: keyof ServicesEvents }
 }
 export type Wiring = ReEmit | ReEmitOnce
 
 export const StartEvent = Symbol('Start event, starts operator operations')
+
 export interface OperatorEvents {
   [StartEvent]: () => void
 }
@@ -32,9 +45,11 @@ export class Operator extends EventBus<ServicesEvents> {
   static StartEvent = StartEvent
   services: ServicesMap = {} as any
   wiring: Wiring[] = []
+  parent?: Operator
 
-  constructor() {
+  constructor(parent?: Operator) {
     super()
+    this.parent = parent
   }
 
   addOutputService() {
@@ -63,17 +78,47 @@ export class Operator extends EventBus<ServicesEvents> {
     this.services.BackendRunner = new Services.BackendRunnerService(bus)
   }
 
-  setupWiring() {
-    const wireOnce = ({ once, emit }: ReEmitOnce) =>
-      this.once(once, (this as any).emit.bind(this, emit))
-    const wireOn = ({ on, emit }: ReEmit) =>
-      this.on(on, (this as any).emit.bind(this, emit))
+  addLambdaBackendService(config?: Services.LambdaBundleService['config']) {
+    const bus = this as EventBus<Services.LambdaBundleServiceEvents>
+    this.services.LambdaBackend = new Services.LambdaBundleService(bus)
+  }
 
-    const wire = (wiring: Wiring) => {
-      let _
-      _ = 'on' in wiring && wireOn(wiring)
-      _ = 'once' in wiring && wireOnce(wiring)
+  addServerBackendService(config?: Services.ServerBundleService['config']) {
+    const bus = this as EventBus<Services.ServerBundleServiceEvents>
+    this.services.ServerBackend = new Services.ServerBundleService(bus)
+  }
+
+  setupWiring() {
+    const ctx = (m: Message) => (m instanceof Array ? m[0] : this)
+    const event = (m: Message) => (m instanceof Array ? m[1] : m)
+
+    const wire = ({ from, to, type }: ExplicitWiring) =>
+      from.ctx[type](from.event, to.ctx.emit.bind(to.ctx, to.event as any))
+
+    const getFromType = (wiring: Wiring) => {
+      let type: 'on' | 'once' = 'on'
+      type = 'on' in wiring ? 'on' : type
+      type = 'once' in wiring ? 'once' : type
+      return type
     }
-    this.wiring.forEach(wire)
+
+    const buildWiringInfo = (
+      type: 'on' | 'once',
+      from: Message,
+      to: Message
+    ): ExplicitWiring => ({
+      from: { ctx: ctx(from), event: event(from) },
+      to: { ctx: ctx(to), event: event(to) },
+      type,
+    })
+
+    const applyToOperator = (wiring: Wiring) => {
+      const type = getFromType(wiring)
+      const from: Message = (wiring as any)[type]
+
+      const wireInfo = buildWiringInfo(type, from, wiring.emit)
+      wire(wireInfo)
+    }
+    this.wiring.forEach(applyToOperator)
   }
 }

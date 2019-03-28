@@ -54,7 +54,7 @@ app.listen(8080,()=>console.log("Started"))`
 
 const appProxy = `
 const pagePromise = (page) => (resolve, reject) => {
-  const cancelTimeout = setTimeout(()=>reject('Timeout for ' + page), 5000)
+  const cancelTimeout = setTimeout(()=>reject('Timeout for ' + page), 20000)
   process.send({'type':'pageRenderRequested', 'page':page})
   process.once('message', (m)=>{
     if (!(m && m.type && m.type === 'pageBundled' && m.page === page)) {
