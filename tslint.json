@@ -1,3 +1,6 @@
 {
-  "extends": "@seagull/tslint"
+  "extends": "./packages/tslint",
+  "linterOptions": {
+    "exclude": ["**/node_modules/**", "**/dist/**"]
+  }
 }

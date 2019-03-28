@@ -5,6 +5,7 @@ import * as CM from '@aws-cdk/aws-certificatemanager'
 import * as CF from '@aws-cdk/aws-cloudfront'
 import * as CB from '@aws-cdk/aws-codebuild'
 import { GitHubSourceAction, Pipeline } from '@aws-cdk/aws-codepipeline'
+import * as Events from '@aws-cdk/aws-events'
 import * as IAM from '@aws-cdk/aws-iam'
 import { Code, Function as LambdaFunction, Runtime } from '@aws-cdk/aws-lambda'
 import { LogGroup } from '@aws-cdk/aws-logs'
@@ -108,19 +109,15 @@ export class SeagullStack extends Stack {
     return new GitHubSourceAction(this, sourceName, stageConfig)
   }
 
-  addBuildStage(name: string, buildConfig: BuildStageConfig) {
+  addBuildStage(name: string, config: BuildStageConfig) {
     const stageName = `${this.id}-stage-${name}`
     const buildName = `${this.id}-code-${name}`
     const projectName = `${this.id}-project-${name}`
-    const { atIndex, build, install, pipeline, postBuild, role } = buildConfig
+    const { atIndex, build, env, install, pipeline, postBuild, role } = config
     const buildImage = CB.LinuxBuildImage.UBUNTU_14_04_NODEJS_8_11_0
-    const phases = {
-      build: { commands: build },
-      install: { commands: install },
-      post_build: { commands: postBuild },
-    }
+    const phases = { build, install, post_build: postBuild }
     const projectConfig = {
-      buildSpec: { phases, version: '0.2' },
+      buildSpec: { env, phases, version: '0.2' },
       environment: { buildImage },
       role,
     }
@@ -151,6 +148,22 @@ export class SeagullStack extends Stack {
     role && bucket.grantReadWrite(role)
     return bucket
   }
+
+  addEventRule(rule: Rule, target: Events.IEventRuleTarget) {
+    const name = rule.path.split('/').pop() || 'rootPath'
+    const schedule = {
+      scheduleExpression: rule.cron,
+    }
+
+    const eventRule = new Events.EventRule(this, name, schedule)
+    eventRule.addTarget(target, { jsonTemplate: `{"path":"${rule.path}"}` })
+    return eventRule
+  }
+}
+
+export interface Rule {
+  path: string
+  cron: string
 }
 
 interface StageConfig {
@@ -159,10 +172,11 @@ interface StageConfig {
 }
 
 interface BuildStageConfig extends StageConfig {
-  build: string[]
-  install: string[]
-  postBuild: string[]
+  build: { commands: string[]; finally: string[] }
+  install: { commands: string[]; finally: string[] }
+  postBuild: { commands: string[]; finally: string[] }
   role: IAM.Role
+  env: { variables: { [key: string]: string } }
 }
 
 interface SourceStageConfig extends StageConfig {

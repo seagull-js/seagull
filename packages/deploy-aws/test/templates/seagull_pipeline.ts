@@ -2,6 +2,7 @@ import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
 import { suite, test } from 'mocha-typescript'
 import { SeagullPipeline } from '../../src'
+import { SSMHandler } from '../../src/aws_sdk_handler/handle_ssm'
 
 @suite('SeagullPipeline')
 export class Test extends BasicTest {
@@ -18,6 +19,7 @@ export class Test extends BasicTest {
       appPath: `${process.cwd()}/test_data`,
       branch: 'master',
       githubToken: 'Token123',
+      handlers: { ssmHandler: new TestSSMHandler({ Token123: '123' }) },
       mode: 'prod',
       owner: 'me',
       profile: 'default',
@@ -27,5 +29,23 @@ export class Test extends BasicTest {
     const pipeline = await new SeagullPipeline(props).createPipeline()
     const synthStack = pipeline.synthesizeStack('helloworld-ci')
     Object.keys(synthStack.template.Resources).length.should.be.equals(8)
+  }
+}
+
+class TestSSMHandler extends SSMHandler {
+  private mockStore: { [key: string]: string }
+
+  constructor(testData?: { [key: string]: string }) {
+    super()
+    this.mockStore = testData || {}
+  }
+
+  async getParameter(ssmName: string) {
+    return this.mockStore[ssmName] || ''
+  }
+
+  async createParameter(name: string, value: string) {
+    this.mockStore[name] = value
+    return
   }
 }

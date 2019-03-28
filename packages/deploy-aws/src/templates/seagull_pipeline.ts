@@ -1,7 +1,8 @@
-import { Secret } from '@aws-cdk/cdk'
 import { SDK } from 'aws-cdk'
-import { config, SSM } from 'aws-sdk'
 
+import { FS } from '@seagull/commands-fs'
+
+import { handleSSMSecret, SSMHandler } from '../aws_sdk_handler'
 import * as lib from '../lib'
 import { SeagullApp } from '../seagull_app'
 import { setCredsByProfile } from '../set_aws_credentials'
@@ -16,6 +17,9 @@ interface SeagullPipelineProps {
   region: string
   repository?: string
   ssmParameter?: string
+  handlers?: {
+    ssmHandler?: SSMHandler
+  }
 }
 
 export class SeagullPipeline {
@@ -26,12 +30,10 @@ export class SeagullPipeline {
   profile: string
   region: string
   repository?: string
+  ssm: SSMHandler
   ssmParam?: string
   githubToken?: string
   actions: string[]
-  install: string[]
-  build: string[]
-  postBuild: string[]
 
   constructor(props: SeagullPipelineProps) {
     this.appPath = props.appPath
@@ -43,20 +45,18 @@ export class SeagullPipeline {
     this.repository = props.repository
     this.ssmParam = props.ssmParameter
     this.githubToken = props.githubToken
+    const propsSSMHandler = props.handlers && props.handlers.ssmHandler
+    this.ssm = propsSSMHandler || new SSMHandler()
     this.actions = [
       'cloudformation:*',
       'cloudfront:*',
       'iam:*',
       's3:*',
+      'ssm:GetParameters',
       'apigateway:*',
       'lambda:*',
       'logs:*',
-    ]
-    this.install = ['npm i -g npm', 'npm ci']
-    this.build = ['npm run build']
-    this.postBuild = [
-      'npm run test',
-      `BRANCH_NAME=${this.branch} DEPLOY_MODE=${this.mode} npm run deploy`,
+      'events:*',
     ]
   }
 
@@ -66,12 +66,11 @@ export class SeagullPipeline {
     const isTest = this.mode === 'test'
     const suffix = `${isTest ? `-${this.branch}-test` : ''}-ci`
     const pkgJson = require(`${this.appPath}/package.json`)
-    const name = `${pkgJson.name}${suffix}`
+    const name = `${pkgJson.name}${suffix}`.replace(/[^0-9A-Za-z-]/g, '')
     const sdk = new SDK({})
     const account = await sdk.defaultAccount()
-    const projectName = name
     const stackProps = { env: { account, region: this.region } }
-    const props = { projectName, sdk, stackProps }
+    const props = { projectName: name, sdk, stackProps }
     const actions = this.actions
 
     // construct the stack and the app
@@ -80,34 +79,35 @@ export class SeagullPipeline {
     const principal = 'codebuild.amazonaws.com'
     const role = stack.addIAMRole('role', principal, actions)
     const pipeline = stack.addPipeline('pipeline')
-    const ssmSecret = this.ssmParam ? getSSMSecret(this.ssmParam) : undefined
+    const token = this.githubToken
+    const tokenName = token ? `${name}-github` : this.ssmParam || undefined
+    const secretParams = { ssmHandler: this.ssm, token, tokenName }
+    const ssmSecret = await handleSSMSecret(secretParams)
     const gitDataProps = {
       branch: this.branch,
+      mode: this.mode,
       owner: this.owner,
       pkg: pkgJson,
       repo: this.repository,
-      secretParameter: await ssmSecret,
-      token: this.githubToken,
+      secretParameter: ssmSecret.secret,
     }
     const gitData = lib.getGitData(gitDataProps)
-    const sourceConfig = {
-      atIndex: 0,
+    const pipelineDomain = `https://${this.region}.console.aws.amazon.com`
+    const pipelinePath = `/codesuite/codepipeline/pipelines/${pipeline.id}/view`
+    const pipelineLink = `${pipelineDomain}${pipelinePath}`
+    const stageConfigParams = {
       branch: gitData.branch,
-      oauthToken: gitData.secret,
+      mode: this.mode,
       owner: gitData.owner,
       pipeline,
+      pipelineLink,
       repo: gitData.repo,
-    }
-    stack.addSourceStage('source', sourceConfig)
-    const buildConfig = {
-      atIndex: 1,
-      build: this.build,
-      install: this.install,
-      pipeline,
-      postBuild: this.postBuild,
       role,
+      ssmSecret,
     }
-    stack.addBuildStage('build', buildConfig)
+
+    stack.addSourceStage('source', lib.getSourceConfig(stageConfigParams, 0))
+    stack.addBuildStage('build', lib.getBuildConfig(stageConfigParams, 1))
     return pipelineApp
   }
 
@@ -115,12 +115,4 @@ export class SeagullPipeline {
     const pipeline = await this.createPipeline()
     await pipeline.deployStack()
   }
-}
-
-async function getSSMSecret(parameter: string) {
-  const ssm = new SSM({ credentials: config.credentials })
-  const param = { Name: parameter, WithDecryption: true }
-  const ssmParam = await ssm.getParameter(param).promise()
-  const value = ssmParam && ssmParam.Parameter && ssmParam.Parameter.Value
-  return value ? new Secret(value) : undefined
 }

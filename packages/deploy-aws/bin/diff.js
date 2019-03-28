@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const logSuccess = () => console.log('done')
-const logError = (error) => console.log('error', error)
+const logError = (error) => console.log('error', error) && process.exit(1)
 const {
   SeagullProject
 } = require('../dist/src/templates/seagull_project')
@@ -17,4 +17,4 @@ const options = {
   region: process.env.AWS_REGION || 'eu-central-1'
 }
 const project = new SeagullProject(options)
-project.diffProject().then(logSuccess()).catch(error => logError(error))
+project.diffProject().then(() => logSuccess()).catch(error => logError(error))

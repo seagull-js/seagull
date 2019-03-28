@@ -1,45 +1,56 @@
 import { SDK } from 'aws-cdk'
-import { ACM, STS } from 'aws-sdk'
 
 import { FS } from '@seagull/commands-fs'
 
+import * as aws from '../aws_sdk_handler'
 import * as lib from '../lib'
 import { ProvideAssetFolder } from '../provide_asset_folder'
 import { SeagullApp } from '../seagull_app'
+import { Rule } from '../seagull_stack'
 import { setCredsByProfile } from '../set_aws_credentials'
 
 interface SeagullProjectProps {
-  accountId?: string
   appPath: string
   branch: string
   mode: string
   profile: string
   region: string
+  handlers?: {
+    acmHandler?: aws.ACMHandler
+    cloudfrontHandler?: aws.CloudfrontHandler
+    stsHandler?: aws.STSHandler
+  }
 }
 
 export class SeagullProject {
-  accountId?: string
   appPath: string
   branch: string
   mode: string
   pkgJson: any
   profile: string
   region: string
+  acm: aws.ACMHandler
+  cloudfront: aws.CloudfrontHandler
+  sts: aws.STSHandler
 
   constructor(props: SeagullProjectProps) {
-    this.accountId = props.accountId
     this.appPath = props.appPath
     this.branch = props.branch
     this.mode = props.mode
     this.profile = props.profile
     this.region = props.region
     this.pkgJson = require(`${this.appPath}/package.json`)
+    const propsACMHandler = props.handlers && props.handlers.acmHandler
+    const propsCFHandler = props.handlers && props.handlers.cloudfrontHandler
+    const propsSTSHandler = props.handlers && props.handlers.stsHandler
+    this.acm = propsACMHandler || new aws.ACMHandler()
+    this.cloudfront = propsCFHandler || new aws.CloudfrontHandler()
+    this.sts = propsSTSHandler || new aws.STSHandler()
   }
 
   async createSeagullApp() {
     // preparations for deployment
-    const suffix = this.mode === 'test' ? `-${this.branch}-${this.mode}` : ''
-    const name = `${this.pkgJson.name}${suffix}`
+    const name = this.getAppName()
     const sdk = new SDK({})
     const account = await sdk.defaultAccount()
     const itemBucketName = await this.getBucketName()
@@ -51,8 +62,9 @@ export class SeagullProject {
       'lambda:InvokeAsync',
       'ses:*',
       's3:*',
+      'events:*',
     ]
-    const aliasConfig = await checkForAliasConfig(this.pkgJson)
+    const aliasConfig = await aws.checkForAliasConfig(this.pkgJson, this.acm)
     const appProps = {
       addAssets: true,
       appPath: this.appPath,
@@ -76,13 +88,26 @@ export class SeagullProject {
     s3DeploymentNeeded ? addS3() : importS3()
     app.stack.addLogGroup(`/aws/lambda/${name}-lambda-handler`)
     app.stack.addLogGroup(`/${name}/data-log`)
+    const cronJson = await buildCronJson(this.appPath)
+    cronJson.forEach((rule: Rule) => {
+      app.stack.addEventRule(rule, lambda)
+    })
+
     return app
+  }
+
+  getAppName() {
+    const suffix = this.mode === 'test' ? `-${this.branch}-${this.mode}` : ''
+    return `${this.pkgJson.name}${suffix}`.replace(/[^0-9A-Za-z-]/g, '')
   }
 
   async deployProject() {
     this.validate()
     const app = await this.createSeagullApp()
     await app.deployStack()
+    const url = (await aws.getCFURL(this.getAppName(), this.cloudfront)) || ''
+    await new FS.WriteFile('/tmp/cfurl.txt', url).execute()
+    console.info('cloudfront-url', url)
   }
 
   async diffProject() {
@@ -97,41 +122,12 @@ export class SeagullProject {
   }
 
   async getBucketName() {
-    const accountId = await getAccountId(this.accountId)
+    const accountId = await aws.getAccountId(this.sts)
     const prefix = `${this.region}-${accountId}-`
     const bucketName = `${require(`${this.appPath}/package.json`).name}-items`
     const suffix = `${this.mode !== 'prod' ? `-${this.mode}` : ''}`
     return `${prefix}${bucketName}${suffix}`
   }
-}
-
-async function checkForAliasConfig(pkgJson: any) {
-  const domains: string[] = pkgJson.seagull && pkgJson.seagull.domains
-  const needAliases = domains && domains.length > 0
-  return needAliases ? await getAliasConfig(domains) : undefined
-}
-
-async function getAliasConfig(domains: string[]) {
-  const acm = new ACM({ region: 'us-east-1' })
-  const params = { CertificateStatuses: ['ISSUED'] }
-  const response = await acm.listCertificates(params).promise()
-  const certList = (response && response.CertificateSummaryList) || []
-  const certArns = certList.map(cert => cert.CertificateArn)
-  const arns = certArns.filter(arn => arn !== undefined) as string[]
-  const arnsWithSchemata = await Promise.all(arns.map(getCertificateDomains))
-  return lib.findAliasConfig(arnsWithSchemata, domains)
-}
-
-async function getCertificateDomains(acmCertRef: string) {
-  const acm = new ACM({ region: 'us-east-1' })
-  const params = { CertificateArn: acmCertRef }
-  const cert = (await acm.describeCertificate(params).promise()).Certificate
-  const names = (cert && cert.SubjectAlternativeNames) || []
-  return { acmCertRef, names }
-}
-
-async function getAccountId(accountId?: string) {
-  return accountId || (await new STS().getCallerIdentity().promise()).Account
 }
 
 async function addResources(appPath: string, itemsBucket?: string) {
@@ -147,4 +143,10 @@ async function replaceS3BucketName(appPath: string, itemsBucket: string) {
   const lambda = await new FS.ReadFile(lambdaFile).execute()
   const lambdaWithBucketName = lambda.replace('demo-bucket', itemsBucket)
   await new FS.WriteFile(lambdaFile, lambdaWithBucketName).execute()
+}
+
+async function buildCronJson(appPath: string) {
+  const cronPath = `${appPath}/dist/cron.json`
+  const cronFile = await new FS.ReadFile(cronPath).execute()
+  return cronFile && cronFile !== '' ? JSON.parse(cronFile) : []
 }
