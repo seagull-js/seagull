@@ -23,13 +23,9 @@ export abstract class RouteTest extends BasicTest {
    */
 
   async invoke(path = '/', params: any = {}) {
-    const { request, response } = this.requestAndResponse(
-      this.route.method,
-      path,
-      params
-    )
-    await this.executeRoute({ request, response })
-    return this.gatherResponseData(response)
+    const reqRes = this.requestAndResponse(this.route.method, path, params)
+    await this.executeRoute(reqRes)
+    return this.gatherResponseData(reqRes.response)
   }
 
   /**
