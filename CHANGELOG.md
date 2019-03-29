@@ -1,5 +1,10 @@
 # CHANGE LOG
 
+## 3.2.0 - 2019-03-29
+
+- @seagull/deploy-aws -> api gateway defines it's stage by the mode it is called in.
+- @seagull/deploy-aws -> infrastructure customizable by infrastructure-aws.ts in project directory (top level)
+
 ## 3.1.1 - 2019-03-27
 
 - @seagull/deploy-aws -> bug fixes for e2e tests
