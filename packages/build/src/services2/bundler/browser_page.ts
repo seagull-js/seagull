@@ -39,7 +39,7 @@ export class BrowserPageBundleService {
   }
   private bundlerPaths() {
     const dist = join(process.cwd(), 'dist')
-    const src = join(dist, 'src', 'pages', this.config.page + '.js')
+    const src = join(dist, 'pages', this.config.page + '.js')
     const dst = join(dist, 'assets', 'pages', this.config.page + '.js')
     return { src, dst }
   }

@@ -1,6 +1,7 @@
 import * as ts from 'typescript'
 import { LogEvent, OutputServiceEvents, ServiceEventBus } from './'
-
+import * as fs from 'fs'
+import { join } from 'path'
 export const CompileEvent = Symbol('Start code generation Event')
 export const CompiledEvent = Symbol('Code generation completed')
 export interface CompilerServiceEvents extends OutputServiceEvents {
@@ -16,7 +17,7 @@ type AfterProgramCreate = CompilerHost['afterProgramCreate']
 
 export class CompilerService {
   bus: ServiceEventBus<CompilerServiceEvents>
-  compilerHost: CompilerHost
+  compilerHost!: CompilerHost
   config = {
     fast: false,
     watch: true,
@@ -24,11 +25,11 @@ export class CompilerService {
 
   constructor(bus: CompilerService['bus']) {
     this.bus = bus.on(CompileEvent, this.handleStartCompilation)
-    this.compilerHost = this.createCompilerHost()
-    this.patchCompilerHost(this.compilerHost)
   }
 
   handleStartCompilation = () => {
+    this.compilerHost = this.createCompilerHost()
+    this.patchCompilerHost(this.compilerHost)
     ts.createWatchProgram(this.compilerHost)
     this.bus.emit(CompiledEvent)
   }
@@ -40,7 +41,9 @@ export class CompilerService {
   }
 
   private createCompilerHost() {
-    const config = ts.findConfigFile(process.cwd(), ts.sys.fileExists)
+    const tsName = 'tsconfig.build.json'
+    const config = ts.findConfigFile(process.cwd(), ts.sys.fileExists, tsName)
+
     return ts.createWatchCompilerHost(
       config!,
       {},

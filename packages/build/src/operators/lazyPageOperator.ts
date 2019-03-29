@@ -17,7 +17,7 @@ export class LazyPageOperator extends Operator {
 
   handleBundleRequested = (page: string) => {
     // tslint:disable-next-line:no-unused-expression
-    void (!this.hasPage(page) && this.addPage(page))
+    !this.hasPage(page) && this.addPage(page)
     this.emit(E.BundlePageEvent, page)
   }
 

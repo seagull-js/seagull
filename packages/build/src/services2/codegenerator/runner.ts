@@ -30,7 +30,7 @@ const registerRoute = (route) => {
 const requireRoute = (routePath)=>{
   const relRoutePath = routePath.replace(routeFolder, '').replace(/\.tsx?$/, '')
   try { 
-    const rPath = join(process.cwd(),'dist','src','routes',relRoutePath)
+    const rPath = join(process.cwd(),'dist','routes',relRoutePath)
     const route = require(rPath).default;
     if(!SGRoutes.routeIsValid(route)){
       throw new Error('Route not valid')
