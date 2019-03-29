@@ -1,3 +1,4 @@
+import { getRandomSequenceToken } from '@seagull/libraries'
 import { Mock } from '@seagull/mock'
 import * as AWS from 'aws-sdk'
 import * as AWSMock from 'aws-sdk-mock'
@@ -49,7 +50,9 @@ export class CWLMockMem implements Mock {
   putLogEvents = (Input: PutLogRequest, cb: any) => {
     this.ensureLogGroup(Input.logGroupName)
     this.storage[Input.logGroupName][Input.logStreamName] = Input.logEvents
-    const result: PutLogResponse = {}
+    const result: PutLogResponse = {
+      nextSequenceToken: getRandomSequenceToken(),
+    }
     return this.result(cb, result)
   }
 

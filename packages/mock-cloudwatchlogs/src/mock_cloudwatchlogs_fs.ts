@@ -1,4 +1,7 @@
-import { createFolderRecursive } from '@seagull/libraries'
+import {
+  createFolderRecursive,
+  getRandomSequenceToken,
+} from '@seagull/libraries'
 import { Mock } from '@seagull/mock'
 import * as AWSMock from 'aws-sdk-mock'
 import * as fs from 'fs'
@@ -59,7 +62,9 @@ export class CWLMockFS implements Mock {
     this.ensureLogGroup(Input.logGroupName)
     const content = JSON.stringify(Input.logEvents)
     this.fsModule.writeFileSync(this.getEncodedPath(Input), content, 'utf-8')
-    const result: PutLogResponse = {}
+    const result: PutLogResponse = {
+      nextSequenceToken: getRandomSequenceToken(),
+    }
     return this.result(cb, result)
   }
 
