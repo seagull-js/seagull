@@ -1,7 +1,6 @@
 import * as ts from 'typescript'
 import { LogEvent, OutputServiceEvents, ServiceEventBus } from './'
-import * as fs from 'fs'
-import { join } from 'path'
+
 export const CompileEvent = Symbol('Start code generation Event')
 export const CompiledEvent = Symbol('Code generation completed')
 export interface CompilerServiceEvents extends OutputServiceEvents {
@@ -23,7 +22,11 @@ export class CompilerService {
     watch: true,
   }
 
-  constructor(bus: CompilerService['bus']) {
+  constructor(
+    bus: CompilerService['bus'],
+    config?: Partial<CompilerService['config']>
+  ) {
+    Object.assign(this.config, config)
     this.bus = bus.on(CompileEvent, this.handleStartCompilation)
   }
 
