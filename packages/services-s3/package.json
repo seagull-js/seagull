@@ -1,5 +1,5 @@
 {
-  "name": "@seagull/service-s3",
+  "name": "@seagull/services-s3",
   "version": "3.1.1",
   "description": "S3 service for the seagull framework",
   "main": "dist/src/index.js",
@@ -38,7 +38,8 @@
   "dependencies": {
     "@seagull/commands": "^3.1.1",
     "@seagull/commands-s3": "^3.1.1",
-    "@seagull/mode": "^3.1.1"
+    "@seagull/mode": "^3.1.1",
+    "@seagull/seed": "^3.1.1"
   },
   "nyc": {
     "extension": [

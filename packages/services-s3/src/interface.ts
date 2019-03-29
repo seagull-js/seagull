@@ -1,3 +1,4 @@
+import { IMode } from '@seagull/mode'
 import { PromiseResult } from 'aws-sdk/lib/request'
 
 /**

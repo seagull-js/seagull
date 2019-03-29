@@ -4,7 +4,7 @@ import 'chai/register-should'
 import { ContainerModule, injectable, interfaces } from 'inversify'
 import { suite, test } from 'mocha-typescript'
 import 'reflect-metadata'
-import { InjectableTest } from '../src/injectable_test'
+import { ServiceTest } from '../src/service_test'
 
 @injectable()
 class DemoInjectable {
@@ -21,9 +21,9 @@ const diModule = new ContainerModule((bind: interfaces.Bind) => {
 })
 
 @suite('BasicTest')
-export class Test extends InjectableTest {
-  inject = [DemoInjectable]
-  injectDiModules = [diModule]
+export class Test extends ServiceTest {
+  services = [DemoInjectable]
+  serviceModules = [diModule]
 
   @test
   async 'tests should run in pure mode'() {

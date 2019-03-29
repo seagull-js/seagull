@@ -1,6 +1,6 @@
 import { Mode } from '@seagull/mode'
+import { config } from '@seagull/seed'
 import { ContainerModule, interfaces } from 'inversify'
-import { config } from './config'
 import { HttpJson } from './content-type/http_json'
 import { Http } from './mode/cloud'
 import { HttpPure } from './mode/pure'

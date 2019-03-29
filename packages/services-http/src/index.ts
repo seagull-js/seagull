@@ -1,15 +1,15 @@
+// types
 export { RequestInitBase, RequestInitGet } from './interface'
 export { RequestInit, Response } from 'node-fetch'
 
-export { config as httpConfig } from './config'
+// service container modules
+export { module as httpDiModule } from './module' // TODO: obsolete
+export { module as httpServicesModule } from './module'
 
-// injection container module
-export { module as httpDiModule } from './module'
-
-// content-type clients (convinience adapters)
+// content-type services
 export { HttpJson } from './content-type/http_json'
 
-// http injectables
+// services
 export { Http } from './mode/cloud'
 export { HttpPure } from './mode/pure'
 export { HttpSeed } from './mode/seed'
