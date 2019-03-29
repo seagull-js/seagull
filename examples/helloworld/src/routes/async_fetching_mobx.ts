@@ -1,7 +1,6 @@
 import { Route, RouteContext } from '@seagull/routes'
 
 export default class TicTacToe extends Route {
-  static method = 'get'
   static path = '/async-fetching/mobx'
   static async handler(this: RouteContext) {
     this.render('AsyncFetchingMobx', {

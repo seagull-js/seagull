@@ -19,12 +19,12 @@
   "author": "Maximilian Stroh <hisako1337@gmail.com>",
   "license": "LGPL-3.0",
   "devDependencies": {
-    "@seagull/build": "^3.1.0",
+    "@seagull/build": "^3.1.1",
     "@seagull/commands-logging": "^3.0.7",
     "@seagull/deploy-aws": "^3.1.1",
     "@seagull/test-e2e": "^3.1.1",
-    "@seagull/test-pages": "^3.1.0",
-    "@seagull/tslint": "^3.0.7",
+    "@seagull/test-pages": "^3.1.1",
+    "@seagull/tslint": "^3.1.1",
     "@types/lodash": "^4.14.107",
     "@types/node": "^8.10",
     "jsdom": "^13.0.0",
@@ -35,9 +35,9 @@
     "typescript": "^3.1.1"
   },
   "dependencies": {
-    "@seagull/pages": "^3.1.0",
-    "@seagull/plugin-items": "^3.0.7",
-    "@seagull/routes": "^3.1.0",
+    "@seagull/pages": "^3.1.1",
+    "@seagull/plugin-items": "^3.1.1",
+    "@seagull/routes": "^3.1.1",
     "instantclick": "^3.1.0-2",
     "lodash": "^4.17.5",
     "mobx": "^4",
