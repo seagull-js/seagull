@@ -4,8 +4,10 @@ import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
 import { suite, test } from 'mocha-typescript'
 
-import { string } from 'prop-types'
+import { PolicyStatement } from '@aws-cdk/aws-iam'
+import { find } from 'lodash'
 import { SeagullStack } from '../src'
+import { isInList } from './test-helper/template_searching'
 
 @suite('SeagullStack')
 export class Test extends BasicTest {
@@ -209,10 +211,7 @@ export class Test extends BasicTest {
       env: { variables: {} },
       install: { commands: ['npm i'], finally: [] },
       pipeline,
-      postBuild: {
-        commands: ['npm run test', 'npm run test:e2e'],
-        finally: [],
-      },
+      postBuild: { commands: ['npm run test'], finally: [] },
       role,
     }
     stack.addBuildStage(buildName, buildConfig)
@@ -253,13 +252,4 @@ export class Test extends BasicTest {
     secretInParameters.should.be.equals(true)
     secretMeta.should.be.equals(true)
   }
-}
-
-function isInList(list: string[], ...toBeSearched: string[]) {
-  return list.find(entry => searchInEntry(entry, toBeSearched)) !== undefined
-}
-
-function searchInEntry(entry: string, toBeSearched: string[]) {
-  const searchRes = toBeSearched.map(searched => entry.indexOf(searched) > -1)
-  return searchRes.find(isInString => isInString === false) === undefined
 }
