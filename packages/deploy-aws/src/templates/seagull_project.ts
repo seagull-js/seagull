@@ -80,8 +80,8 @@ export class SeagullProject {
     const app = new SeagullApp(appProps)
     const role = app.stack.addIAMRole('role', 'lambda.amazonaws.com', actions)
     const lambda = app.stack.addUniversalLambda('lambda', this.appPath, role)
-    const apiGateway = app.stack.addUniversalApiGateway('api-gateway', lambda)
-    app.stack.addCloudfront('cloudfront', { apiGateway, aliasConfig })
+    const apiGW = app.stack.addUniversalApiGateway('apiGW', lambda, this.mode)
+    app.stack.addCloudfront('cloudfront', { apiGateway: apiGW, aliasConfig })
     const s3DeploymentNeeded = this.mode === 'prod' || this.branch === 'master'
     const importS3 = () => app.stack.importS3(itemBucketName, role)
     const addS3 = () => app.stack.addS3(itemBucketName, role)
