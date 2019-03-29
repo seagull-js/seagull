@@ -8,6 +8,7 @@ export class DevOperator extends Operator {
     { on: O.StartEvent, emit: E.PrepareEvent },
     { on: E.PreparedEvent, emit: E.CompileEvent },
     { on: E.CompiledEvent, emit: E.GenerateCodeEvent },
+    { once: E.GeneratedCodeEvent, emit: E.BundleVendorEvent },
     { once: E.GeneratedCodeEvent, emit: E.StartBackendEvent },
     { on: E.BundledPageEvent, emit: E.PageBundleEmitted },
   ]
@@ -23,6 +24,7 @@ export class DevOperator extends Operator {
     this.addPrepareService()
     this.addCodeGeneratorService()
     this.addCompileService()
+    this.addVendorBundleService()
     this.addBackendRunnerService()
     this.addOutputService()
   }
