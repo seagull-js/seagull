@@ -3,7 +3,10 @@ import { config } from '@seagull/seed'
 import { ServiceTest } from '@seagull/testing'
 import { expect } from 'chai'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
-import { S3, S3Edge, S3Pure, S3Seed, s3ServicesModule } from '../src'
+import { S3, s3ServicesModule } from '../src'
+import { S3Edge } from '../src/mode/edge'
+import { S3Pure } from '../src/mode/pure'
+import { S3Seed } from '../src/mode/seed'
 
 @suite('S3::Module')
 export class Test extends ServiceTest {

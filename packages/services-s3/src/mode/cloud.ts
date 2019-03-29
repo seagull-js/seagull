@@ -4,7 +4,7 @@ import 'reflect-metadata'
 import { S3Base } from './base'
 
 /**
- * Http (default) cloud mode implementation.
+ * Http cloud mode implementation.
  */
 @injectable()
 export class S3 extends S3Base {

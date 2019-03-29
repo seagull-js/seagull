@@ -4,7 +4,7 @@ import 'reflect-metadata'
 import { S3Base } from './base'
 
 /**
- * Http (default) edge mode implementation.
+ * Http edge mode implementation.
  */
 @injectable()
 export class S3Edge extends S3Base {

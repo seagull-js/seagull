@@ -1,7 +1,7 @@
 {
   "name": "@seagull/services-s3",
   "version": "3.1.1",
-  "description": "S3 service for the seagull framework",
+  "description": "S3 services for the seagull framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
