@@ -20,6 +20,7 @@
   "license": "LGPL-3.0",
   "devDependencies": {
     "@seagull/build": "^3.1.0",
+    "@seagull/commands-logging": "^3.0.7",
     "@seagull/deploy-aws": "^3.1.1",
     "@seagull/test-e2e": "^3.1.1",
     "@seagull/test-pages": "^3.1.0",
