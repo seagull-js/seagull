@@ -3,6 +3,9 @@ import { RequestInit, Response } from 'node-fetch'
 import 'reflect-metadata'
 import { IHttp, RequestInitBase, RequestInitGet } from '../interface'
 
+/**
+ * Http (default) base implementation.
+ */
 @injectable()
 export abstract class HttpBase implements IHttp {
   abstract fetch(url: string, init?: RequestInit | undefined): Promise<Response>
