@@ -9,6 +9,7 @@ export type ServicesMap = {
   BackendRunner: Services.BackendRunnerService
   LambdaBackend: Services.LambdaBundleService
   ServerBackend: Services.ServerBundleService
+  VendorBundle: Services.VendorBundleService
   BrowserPage: Services.BrowserPageBundleService
   BackendPage: Services.BackendPageBundleService
   Page: Services.PageBundleService
@@ -57,35 +58,50 @@ export class Operator extends EventBus<ServicesEvents> {
     this.services.Output = new Services.OutputService(bus, {})
   }
 
-  addPrepareService(config?: Services.PrepareService['config']) {
+  addPrepareService(config?: Partial<Services.PrepareService['config']>) {
     const bus = this as EventBus<Services.PrepareServiceEvents>
     this.services.Prepare = new Services.PrepareService(bus, config)
   }
 
-  addCompileService(config?: Services.CompilerService['config']) {
+  addCompileService(config?: Partial<Services.CompilerService['config']>) {
     const bus = this as EventBus<Services.CompilerServiceEvents>
-    this.services.Compiler = new Services.CompilerService(bus)
+    this.services.Compiler = new Services.CompilerService(bus, config)
   }
 
-  addCodeGeneratorService(config?: Services.CodeGeneratorService['config']) {
+  addCodeGeneratorService(
+    config?: Partial<Services.CodeGeneratorService['config']>
+  ) {
     const bus = this as EventBus<Services.CodeGeneratorServiceEvents>
     const service = new Services.CodeGeneratorService(bus, config)
     this.services.CodeGenerator = service
   }
 
-  addBackendRunnerService(config?: Services.BackendRunnerService['config']) {
+  addBackendRunnerService(
+    config?: Partial<Services.BackendRunnerService['config']>
+  ) {
     const bus = this as EventBus<Services.BackendRunnerServiceEvents>
     this.services.BackendRunner = new Services.BackendRunnerService(bus)
   }
 
-  addLambdaBackendService(config?: Services.LambdaBundleService['config']) {
+  addLambdaBackendService(
+    config?: Partial<Services.LambdaBundleService['config']>
+  ) {
     const bus = this as EventBus<Services.LambdaBundleServiceEvents>
     this.services.LambdaBackend = new Services.LambdaBundleService(bus)
   }
 
-  addServerBackendService(config?: Services.ServerBundleService['config']) {
+  addServerBackendService(
+    config?: Partial<Services.ServerBundleService['config']>
+  ) {
     const bus = this as EventBus<Services.ServerBundleServiceEvents>
     this.services.ServerBackend = new Services.ServerBundleService(bus)
+  }
+
+  addVendorBundleService(
+    config?: Partial<Services.VendorBundleService['config']>
+  ) {
+    const bus = this as EventBus<Services.VendorBundleServiceEvents>
+    this.services.VendorBundle = new Services.VendorBundleService(bus)
   }
 
   setupWiring() {
