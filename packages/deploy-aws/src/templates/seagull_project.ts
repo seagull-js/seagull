@@ -1,6 +1,5 @@
 import { FS } from '@seagull/commands-fs'
 import { SDK } from 'aws-cdk'
-import 'ts-node/register'
 import * as aws from '../aws_sdk_handler'
 import * as lib from '../lib'
 import { ProvideAssetFolder } from '../provide_asset_folder'
