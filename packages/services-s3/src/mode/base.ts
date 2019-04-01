@@ -4,6 +4,7 @@ import * as AWS from 'aws-sdk'
 import { PromiseResult } from 'aws-sdk/lib/request'
 import { injectable } from 'inversify'
 import 'reflect-metadata'
+import { S3Error } from '../error'
 import { IS3 } from '../interface'
 
 /**
@@ -13,16 +14,35 @@ import { IS3 } from '../interface'
 export abstract class S3Base implements IS3 {
   protected abstract mode: Readonly<IMode>
 
+  /**
+   * Lists all files of a S3 bucket
+   * @param bucketName bucket name
+   * @param filePath file path
+   */
   async listFiles(bucketName: string, filePath?: string): Promise<string[]> {
     const cmd = new S3C.ListFiles(bucketName, filePath)
     cmd.mode = this.mode
-    return await cmd.execute()
+    return await cmd.execute() // TODO: figure out why this s3cmd has no error interface
   }
+
+  /**
+   * Reads a file from a S3 bucket
+   * @param bucketName bucket name
+   * @param filePath file path
+   */
   async readFile(bucketName: string, filePath: string): Promise<string> {
     const cmd = new S3C.ReadFile(bucketName, filePath)
     cmd.mode = this.mode
-    return await cmd.execute()
+    return await cmd.execute() // TODO: figure out why this s3cmd has no error interface
   }
+
+  /**
+   * Writes a file to a S3 bucket
+   * @param bucketName bucket name
+   * @param filePath file path
+   * @param content file content
+   * @throws {S3Error}
+   */
   async writeFile(
     bucketName: string,
     filePath: string,
@@ -30,14 +50,36 @@ export abstract class S3Base implements IS3 {
   ): Promise<PromiseResult<AWS.S3.PutObjectOutput, AWS.AWSError>> {
     const cmd = new S3C.WriteFile(bucketName, filePath, content)
     cmd.mode = this.mode
-    return await cmd.execute()
+    return await this.handle(cmd.execute())
   }
+
+  /**
+   * Deletes a file from a S3 bucket
+   * @param bucketName bucket name
+   * @param filePath file path
+   */
   async deleteFile(
     bucketName: string,
     filePath: string
   ): Promise<PromiseResult<AWS.S3.PutObjectOutput, AWS.AWSError>> {
     const cmd = new S3C.DeleteFile(bucketName, filePath)
     cmd.mode = this.mode
-    return await cmd.execute()
+    return await this.handle(cmd.execute())
+  }
+
+  protected async handle(
+    response: Promise<PromiseResult<AWS.S3.PutObjectOutput, AWS.AWSError>>
+  ): Promise<PromiseResult<AWS.S3.PutObjectOutput, AWS.AWSError>> {
+    const res = await response
+
+    if (res.$response.error) {
+      throw Object.assign(res, {
+        message: `S3 error code ${res.$response.error.code}: ${
+          res.$response.error.message
+        }`,
+      }) as S3Error
+    }
+
+    return res
   }
 }

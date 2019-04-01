@@ -1,7 +1,8 @@
-import { createResponse, Fixture, FixtureStorage } from '@seagull/seed'
+import { FixtureStorage } from '@seagull/seed'
 import { injectable } from 'inversify'
 import fetch, { Headers, RequestInit, Response } from 'node-fetch'
 import 'reflect-metadata'
+import { createResponse, Fixture } from '../seed/fixture'
 import { HttpBase } from './base'
 
 export interface RequestException {
@@ -17,12 +18,12 @@ export interface RequestException {
 @injectable()
 export class HttpSeed extends HttpBase {
   async fetch(url: string, init?: RequestInit): Promise<Response> {
-    const seed = FixtureStorage.createByRequest<Fixture<any>>(url, init)
+    const seed = FixtureStorage.createByFetchParams<Fixture<any>>(url, init)
     const seedFixture = seed.get()
 
     if (seedFixture && !seed.expired) {
       // seed exists => return seed
-      createResponse(seedFixture)
+      return createResponse(seedFixture)
     }
 
     const res = await fetch(url, init)

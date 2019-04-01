@@ -53,7 +53,7 @@ export class FixtureStorage<T> {
    * @param url The request url.
    * @param init The request configuration.
    */
-  static createByRequest<T>(
+  static createByFetchParams<T>(
     url: string,
     init?: RequestInit
   ): FixtureStorage<T> {
@@ -62,6 +62,13 @@ export class FixtureStorage<T> {
     return new FixtureStorage(
       `${url}/${init ? this.hash(JSON.stringify(init)) : 'default'}.json`
     )
+  }
+
+  static createByS3Params<T>(
+    bucketName: string,
+    filePath: string
+  ): FixtureStorage<T> {
+    return new FixtureStorage(`s3/${bucketName}/${filePath}.json`)
   }
 
   private static hash(key: string) {

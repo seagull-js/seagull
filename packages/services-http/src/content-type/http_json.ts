@@ -14,16 +14,16 @@ export class HttpJson {
   constructor(private http: Http) {}
 
   async get<T>(url: string, init?: RequestInitGet): Promise<T> {
-    return this.handle(this.http.get(url, init))
+    return await this.handle(this.http.get(url, init))
   }
   async post<T>(url: string, init?: RequestInitBase): Promise<T> {
-    return (await this.http.post(url, init)).json()
+    return await this.handle(this.http.post(url, init))
   }
   async put<T>(url: string, init?: RequestInitBase): Promise<T> {
-    return (await this.http.put(url, init)).json()
+    return await this.handle(this.http.put(url, init))
   }
   async delete<T>(url: string, init?: RequestInitBase): Promise<T> {
-    return (await this.http.delete(url, init)).json()
+    return await this.handle(this.http.delete(url, init))
   }
 
   private async handle<T>(response: Promise<Response>): Promise<T> {
