@@ -98,7 +98,12 @@ export class SeagullProject {
   async customizeStack(app: SeagullApp) {
     const extensionPath = `${this.appPath}/infrastructure-aws.ts`
     const hasExtensionFile = await new FS.Exists(extensionPath).execute()
-    return hasExtensionFile && (await import(`${extensionPath}`)).default(app)
+    return hasExtensionFile && (await this.loadAndExecute(extensionPath, app))
+  }
+
+  async loadAndExecute(path: string, app: SeagullApp) {
+    const extensionFkt = (await import(`${path}`)).default
+    await extensionFkt(app)
   }
 
   getAppName() {
