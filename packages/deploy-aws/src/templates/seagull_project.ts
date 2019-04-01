@@ -1,6 +1,5 @@
 import { FS } from '@seagull/commands-fs'
 import { SDK } from 'aws-cdk'
-import 'ts-node/register'
 import * as aws from '../aws_sdk_handler'
 import * as lib from '../lib'
 import { ProvideAssetFolder } from '../provide_asset_folder'
@@ -99,7 +98,12 @@ export class SeagullProject {
   async customizeStack(app: SeagullApp) {
     const extensionPath = `${this.appPath}/infrastructure-aws.ts`
     const hasExtensionFile = await new FS.Exists(extensionPath).execute()
-    return hasExtensionFile && (await import(`${extensionPath}`)).default(app)
+    return hasExtensionFile && (await this.loadAndExecute(extensionPath, app))
+  }
+
+  async loadAndExecute(path: string, app: SeagullApp) {
+    const extensionFkt = (await import(`${path}`)).default
+    await extensionFkt(app)
   }
 
   getAppName() {
