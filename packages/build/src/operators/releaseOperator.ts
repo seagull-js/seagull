@@ -21,10 +21,10 @@ export class ReleaseOperator extends Operator {
 
   constructor() {
     super()
-    this.addReleaseServices()
     this.setupWiring()
     this.addPageOperator()
-    this.waitForDone().then(process.exit.bind({}, 0))
+    this.addReleaseServices()
+    this.waitForDone().then(this.exit)
   }
 
   addReleaseServices() {
@@ -37,4 +37,5 @@ export class ReleaseOperator extends Operator {
     this.addOutputService()
   }
   addPageOperator = () => new PageOperator(this)
+  exit = () => process.exit(0)
 }
