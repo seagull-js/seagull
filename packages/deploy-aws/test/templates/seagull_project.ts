@@ -17,6 +17,16 @@ const customizationCode = `import { SeagullApp } from '../src'
 export default function(app: SeagullApp) {
   app.stack.addS3('another-s3', app.role)
 }`
+const customizeAsync = `import { SeagullApp } from '../../src'
+export default async function(app: SeagullApp) {
+  await new Promise(resolve => {
+    const addS3Async = () => {
+      app.stack.addS3('another-s3', app.role)
+      resolve()
+    }
+    setTimeout(addS3Async, 50)
+  })
+}`
 @suite('SeagullProject')
 export class Test extends BasicTest {
   appPath = `${process.cwd()}/test_data`
@@ -96,6 +106,39 @@ export class Test extends BasicTest {
    * and here the import of infrastructure-aws.ts needs to be something
    * other than the infrastructure-aws.ts above */
   @test
+  async 'can create a project and customize stack asynchronously'() {
+    const newCWD = `${this.appPath}/async-customization`
+    const assetFolder = `${newCWD}/dist/assets`
+    const backendFolder = `${assetFolder}/backend`
+    const createBackendFolder = new FS.CreateFolder(backendFolder)
+    await createBackendFolder.execute()
+    await new FS.WriteFile(`${backendFolder}/server.js`, '').execute()
+    await new FS.WriteFile(`${backendFolder}/lambda.js`, '').execute()
+    await new FS.WriteFile(`${newCWD}/dist/cron.json`, '[]').execute()
+    await writeCustomInfraFile(newCWD, customizeAsync)
+    const props = getTestProps(newCWD)
+
+    const project = new SeagullProject(props)
+    const app = await project.createSeagullApp()
+    const stackName = 'helloworld'
+    await project.customizeStack(app)
+    const synthStack = app.synthesizeStack(stackName)
+
+    const resources = Object.keys(synthStack.template.Resources)
+    const metadata = Object.keys(synthStack.metadata)
+    const stackNameNoDash = stackName.replace(/-/g, '')
+    const s3NameNoDash = s3Name.replace(/-/g, '')
+    const s3InTemp = isInList(resources, s3NameNoDash, stackNameNoDash)
+    const s3InMeta = isInList(metadata, s3Name, stackName)
+    s3InTemp.should.be.equal(true)
+    s3InMeta.should.be.equal(true)
+    await deleteCustomInfra(newCWD)
+  }
+
+  /** This test needs to use another directory, because imports are cached
+   * and here the import of infrastructure-aws.ts needs to be something
+   * other than the infrastructure-aws.ts above */
+  @test
   async 'customize stack throws when infrastructure-aws.ts is corrupted'() {
     const newCWD = `${this.appPath}/corrupted-infrastructure`
     const assetFolder = `${newCWD}/dist/assets`
@@ -113,8 +156,9 @@ export class Test extends BasicTest {
 
     const customize = () => project.customizeStack(app)
     await expect(customize()).to.be.rejectedWith(Error)
-    await deleteCustomInfra(`${this.appPath}/corrupted-infrastructure`)
+    await deleteCustomInfra(newCWD)
   }
+
   @test
   async 'customizeStack should do nothing but return false without an infrastructure-aws.ts-file'() {
     const props = getTestProps(this.appPath)
