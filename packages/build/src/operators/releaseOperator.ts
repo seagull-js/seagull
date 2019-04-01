@@ -13,12 +13,6 @@ export class ReleaseOperator extends Operator {
     { once: PageOperator.DoneEvent, emit: E.BundleServerEvent },
   ]
 
-  waitForDone = Promise.all.bind(this, [
-    this.promisifyEmitOnce(E.BundledVendorEvent),
-    this.promisifyEmitOnce(E.BundledLambdaEvent),
-    this.promisifyEmitOnce(E.BundledServerEvent),
-  ])
-
   constructor() {
     super()
     this.setupWiring()
@@ -37,5 +31,12 @@ export class ReleaseOperator extends Operator {
     this.addOutputService()
   }
   addPageOperator = () => new PageOperator(this)
+
+  waitForDone = () =>
+    Promise.all([
+      this.promisifyEmitOnce(E.BundledVendorEvent),
+      this.promisifyEmitOnce(E.BundledLambdaEvent),
+      this.promisifyEmitOnce(E.BundledServerEvent),
+    ])
   exit = () => process.exit(0)
 }
