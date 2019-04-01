@@ -50,7 +50,8 @@ const routes = routeFiles
   .sort(SGRoutes.routeSort);
 routes.map(registerRoute);
 exports.default = app;
-app.listen(8080,()=>console.log("Started"))`
+const port = process.env.PORT || 8080 
+app.listen(port,()=>console.log("Started"))`
 
 const appProxy = `
 const pagePromise = (page) => (resolve, reject) => {

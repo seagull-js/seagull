@@ -5,8 +5,8 @@ import * as O from './operator'
 
 export class DevOperator extends Operator {
   wiring: Wiring[] = [
-    { on: O.StartEvent, emit: E.PrepareEvent },
-    { on: E.PreparedEvent, emit: E.CompileEvent },
+    { once: O.StartEvent, emit: E.PrepareEvent },
+    { once: E.PreparedEvent, emit: E.CompileEvent },
     { on: E.CompiledEvent, emit: E.GenerateCodeEvent },
     { once: E.GeneratedCodeEvent, emit: E.BundleVendorEvent },
     { once: E.GeneratedCodeEvent, emit: E.StartBackendEvent },

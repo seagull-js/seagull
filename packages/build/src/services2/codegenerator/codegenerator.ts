@@ -67,7 +67,7 @@ export class CodeGeneratorService {
       },
       { path: join(dist, 'server.js'), content: Server.generate(appFolder) },
       { path: join(dist, 'lambda.js'), content: Lambda.generate(appFolder) },
-    ].map(({ path, content }) => this.fs.writeFileSync(path, content, 'utf-8'))
+    ].map(this.writeFile)
   }
 
   private genDevelopment() {
@@ -75,6 +75,15 @@ export class CodeGeneratorService {
     const dist = join(appFolder, 'dist')
     const path = join(dist, 'runner.js')
     const content = Runner.generate(lazy)
-    this.fs.writeFileSync(path, content, 'utf-8')
+    this.writeFile({ path, content })
+  }
+
+  private writeFile = (info: { path: string; content: string }) => {
+    const { path, content } = info
+    const oldContent = this.fs.existsSync(path)
+      ? this.fs.readFileSync(path, 'utf-8')
+      : null
+    // tslint:disable-next-line:no-unused-expression
+    oldContent !== content && this.fs.writeFileSync(path, content, 'utf-8')
   }
 }

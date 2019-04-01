@@ -1,4 +1,6 @@
 import { Console } from 'console'
+import * as ts from 'typescript'
+
 import * as process from 'process'
 import { ServiceEventBus } from './'
 
@@ -30,31 +32,36 @@ export class OutputService {
     this.bus.on(LogEvent, this.log.bind(this))
     this.console = new Console(stdout, stderr)
   }
+
+  logTSCDiagnostic = (diagnostic: ts.Diagnostic) =>
+    this.console.error(
+      ts.formatDiagnosticsWithColorAndContext([diagnostic], formatHost)
+    )
+
+  logTSCWatchStatus = (diagnostic: ts.Diagnostic) =>
+    this.console.info(ts.formatDiagnostic(diagnostic, formatHost))
+
   /**
    * Accepts a log event and "processes" it
    * @param msg
    */
   log(module: string, event: string, data: any) {
-    this.console.log(module, event, data)
+    const type = `${module}:${event}`
+    switch (type) {
+      case 'CompilerService:diagnostic':
+        this.logTSCDiagnostic(data.diagnostic)
+        break
+      case 'CompilerService:watch':
+        this.logTSCWatchStatus(data.diagnostic)
+        break
+      default:
+        this.console.log(module, event, data)
+    }
   }
 }
-
-/* Notepad for TS output formatting
-import * as ts from 'typescript'
-
 
 const formatHost: ts.FormatDiagnosticsHost = {
   getCanonicalFileName: path => path,
   getCurrentDirectory: ts.sys.getCurrentDirectory,
   getNewLine: () => ts.sys.newLine,
 }
-function reportDiagnostic(diagnostic: ts.Diagnostic) {
-  !fast && console.error(
-    ts.formatDiagnosticsWithColorAndContext([diagnostic], formatHost),
-  )
-}
-
-function reportWatchStatusChanged(diagnostic: ts.Diagnostic) {
-  console.info(ts.formatDiagnostic(diagnostic, formatHost))
-}
-*/
