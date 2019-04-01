@@ -19,8 +19,8 @@ export type ServicesEvents = ServicesTypes['bus'] extends EventBus<infer U>
   ? (U & OperatorEvents)
   : never
 
-type ExplicitMessage = [Operator, keyof ServicesEvents]
-type Message = keyof ServicesEvents | ExplicitMessage
+type ExplicitMessage = [Operator, symbol]
+type Message = symbol | ExplicitMessage
 export interface ReEmit {
   on: Message
   emit: Message
@@ -31,19 +31,22 @@ export interface ReEmitOnce {
 }
 interface ExplicitWiring {
   type: 'on' | 'once'
-  from: { ctx: Operator; event: keyof ServicesEvents }
-  to: { ctx: Operator; event: keyof ServicesEvents }
+  from: { ctx: Operator; event: symbol }
+  to: { ctx: Operator; event: symbol }
 }
 export type Wiring = ReEmit | ReEmitOnce
 
 export const StartEvent = Symbol('Start event, starts operator operations')
+export const DoneEvent = Symbol('DONE event, emitted when operator is done')
 
 export interface OperatorEvents {
   [StartEvent]: () => void
+  [DoneEvent]: () => void
 }
 
-export class Operator extends EventBus<ServicesEvents> {
+export class Operator extends EventBus<any> {
   static StartEvent = StartEvent
+  static DoneEvent = DoneEvent
   services: ServicesMap = {} as any
   wiring: Wiring[] = []
   parent?: Operator
@@ -87,21 +90,21 @@ export class Operator extends EventBus<ServicesEvents> {
     config?: Partial<Services.LambdaBundleService['config']>
   ) {
     const bus = this as EventBus<Services.LambdaBundleServiceEvents>
-    this.services.LambdaBackend = new Services.LambdaBundleService(bus)
+    this.services.LambdaBackend = new Services.LambdaBundleService(bus, config)
   }
 
   addServerBackendService(
     config?: Partial<Services.ServerBundleService['config']>
   ) {
     const bus = this as EventBus<Services.ServerBundleServiceEvents>
-    this.services.ServerBackend = new Services.ServerBundleService(bus)
+    this.services.ServerBackend = new Services.ServerBundleService(bus, config)
   }
 
   addVendorBundleService(
     config?: Partial<Services.VendorBundleService['config']>
   ) {
     const bus = this as EventBus<Services.VendorBundleServiceEvents>
-    this.services.VendorBundle = new Services.VendorBundleService(bus)
+    this.services.VendorBundle = new Services.VendorBundleService(bus, config)
   }
 
   setupWiring() {

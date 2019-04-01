@@ -1,13 +1,10 @@
-import { listFilesRecursive } from '@seagull/libraries'
 import * as fsModule from 'fs'
 import * as path from 'path'
+import * as project from '../../lib/project'
 
 export const generate = (appFolder: string, fs = fsModule) => {
-  const srcFolder = routeSourceFolder(appFolder)
-  const routeFiles = listFilesRecursive(srcFolder, /tsx?$/, fs)
-
-  const routes = routeFiles.map(f => getRelativeRouteName(appFolder, f))
-  const content = [...header, ...body(routes), ...footer].join('\n')
+  const routes = project.listRoutes(appFolder, fs)
+  const content = [...header, body(routes), ...footer].join('\n')
   return content
 }
 
@@ -30,7 +27,7 @@ const header = [
 ]
 
 const body = (routes: string[]) => {
-  const absPath = (r: string) => path.join('./routes', r)
+  const absPath = path.join.bind(null, './routes')
   const requireRoute = (routePath: string) => `
       (() => {
         try { 
@@ -50,11 +47,3 @@ const body = (routes: string[]) => {
 }
 
 const footer = ['routes.map(registerRoute);', 'exports.default = app;']
-
-const getRelativeRouteName = (appFolder: string, filePath: string) => {
-  const srcFolder = routeSourceFolder(appFolder)
-  return filePath.replace(srcFolder, '').replace(/\.tsx?$/, '')
-}
-
-const routeSourceFolder = (appFolder: string) =>
-  path.join(appFolder, 'src', 'routes')

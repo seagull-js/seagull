@@ -1,5 +1,8 @@
 #!/usr/bin/env node
+const Ops = require('../dist/src/operators')
+new Ops.ReleaseOperator().emit(Ops.StartEvent)
 
+/*
 const {
   build
 } = require('../dist/src/build')
@@ -11,3 +14,4 @@ const opts = {
   vendor: ['react', 'react-dom', 'react-helmet', 'lodash', 'typestyle'],
 }
 build(appPath, opts).then(() => logSuccess()).catch(error => logError(error))
+*/

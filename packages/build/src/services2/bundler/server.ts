@@ -34,8 +34,8 @@ export class ServerBundleService {
   }
   private bundlerPaths() {
     const cwd = process.cwd()
-    const src = join(cwd, 'dist', 'lambda.js')
-    const dst = join(cwd, 'dist', 'assets', 'backend', 'lambda.js')
+    const src = join(cwd, 'dist', 'server.js')
+    const dst = join(cwd, 'dist', 'assets', 'backend', 'server.js')
     return { src, dst }
   }
   private handleStartBundling = async () => {
