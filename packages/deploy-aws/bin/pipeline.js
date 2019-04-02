@@ -19,5 +19,6 @@ const options = {
   ssmParameter: process.env.GITHUB_SSM_PARAMETER,
   githubToken: process.env.GITHUB_OAUTH
 }
+process.env.AWS_REGION = options.region
 const pipeline = new SeagullPipeline(options)
-pipeline.deployPipeline().then(() => logSuccess()).catch(error => logError(error))
+pipeline.deployPipeline().then(() => logSuccess()).catch(e => logError(e))

@@ -1,7 +1,7 @@
 {
   "name": "helloworld",
   "private": true,
-  "version": "3.2.0",
+  "version": "2.0.1",
   "description": "Helloworld example app using the Seagull Framework",
   "main": "index.js",
   "scripts": {
@@ -13,19 +13,15 @@
     "start": "node dist/assets/backend/server.js",
     "test": "npm run test:unit",
     "test:unit": "NODE_ENV=test mocha --opts test/mocha.opts",
-    "test:unit:watch": "npm run test:unit -- --watch --reporter min",
-    "test:e2e": "seagull-e2e"
+    "test:unit:watch": "npm run test:unit -- --watch --reporter min"
   },
   "author": "Maximilian Stroh <hisako1337@gmail.com>",
   "license": "LGPL-3.0",
   "devDependencies": {
-    "@seagull/build": "^3.2.0",
-    "@seagull/commands-logging": "^3.1.1",
-    "@seagull/deploy-aws": "^3.2.0",
-    "@seagull/test-e2e": "^3.2.0",
-    "@seagull/test-pages": "^3.2.0",
-    "@seagull/tslint": "^3.2.0",
-    "@types/lodash": "^4.14.107",
+    "@seagull/build": "^2.0.0",
+    "@seagull/deploy-aws": "^2.0.0",
+    "@seagull/test-pages": "^2.0.0",
+    "@types/lodash": "^4.14.123",
     "@types/node": "^8.10",
     "jsdom": "^13.0.0",
     "jsdom-global": "^3.0.2",
@@ -35,17 +31,17 @@
     "typescript": "^3.1.1"
   },
   "dependencies": {
-    "@seagull/libraries": "^3.1.1",
-    "@seagull/pages": "^3.2.0",
-    "@seagull/plugin-items": "^3.2.0",
-    "@seagull/routes": "^3.2.0",
+    "@seagull/pages": "^2.0.0",
+    "@seagull/plugin-items": "^2.0.0",
+    "@seagull/routes": "^2.0.1",
     "instantclick": "^3.1.0-2",
     "lodash": "^4.17.5",
     "mobx": "^4",
     "mobx-react": "^5.4.3",
     "serverless-http": "^1.8.0"
   },
-  "seagull": {
-    "domains": []
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AIDACruises/unicorn.git"
   }
 }
