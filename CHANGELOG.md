@@ -5,6 +5,7 @@
 - @seagull/deploy-aws -> added feature to modify deploy stack within an app
 - @seagull/deploy-aws -> fixed a bug, where the AWS_REGIOn was not set to process.env
 - @seagull/deploy-aws -> added feature, where env variables can be set via a file name .env.test or .env.prod according to the deploy mode
+- @seagull/deploy-aws -> set node_env in lambda env to deploy_mode
 
 ## 3.3.0 - 2019-04-02
 
