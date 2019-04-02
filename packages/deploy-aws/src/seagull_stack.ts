@@ -36,20 +36,20 @@ export class SeagullStack extends Stack {
     return bucket
   }
 
-  addUniversalLambda(lambdaName: string, folder: string, role: IAM.Role) {
-    const name = `${this.id}-${lambdaName}`
+  addLambda(name: string, folder: string, role: IAM.Role, env: any) {
+    const lambdaName = `${this.id}-${name}`
     const conf = {
       code: Code.asset(`${folder}/.seagull/deploy`),
       description: 'universal route',
-      environment: { MODE: 'cloud', APP: this.id },
-      functionName: `${name}-handler`,
+      environment: env,
+      functionName: `${lambdaName}-handler`,
       handler: 'dist/assets/backend/lambda.handler',
       memorySize: 1536,
       role,
       runtime: Runtime.NodeJS810,
       timeout: 300,
     }
-    return new Lambda(this, name, conf)
+    return new Lambda(this, lambdaName, conf)
   }
 
   addUniversalApiGateway(apiGWName: string, lambda: Lambda, stageName: string) {
