@@ -18,6 +18,7 @@ export abstract class S3Base implements IS3 {
    * Lists all files of a S3 bucket
    * @param bucketName bucket name
    * @param filePath file path
+   * @throws {S3Error}
    */
   async listFiles(bucketName: string, filePath?: string): Promise<string[]> {
     const cmd = new S3C.ListFiles(bucketName, filePath)
@@ -29,6 +30,7 @@ export abstract class S3Base implements IS3 {
    * Reads a file from a S3 bucket
    * @param bucketName bucket name
    * @param filePath file path
+   * @throws {S3Error}
    */
   async readFile(bucketName: string, filePath: string): Promise<string> {
     const cmd = new S3C.ReadFile(bucketName, filePath)
@@ -57,6 +59,7 @@ export abstract class S3Base implements IS3 {
    * Deletes a file from a S3 bucket
    * @param bucketName bucket name
    * @param filePath file path
+   * @throws {S3Error}
    */
   async deleteFile(
     bucketName: string,
@@ -72,7 +75,7 @@ export abstract class S3Base implements IS3 {
   ): Promise<PromiseResult<AWS.S3.PutObjectOutput, AWS.AWSError>> {
     const res = await response
 
-    if (res.$response.error) {
+    if (res && res.$response && res.$response.error) {
       throw Object.assign(res, {
         message: `S3 error code ${res.$response.error.code}: ${
           res.$response.error.message

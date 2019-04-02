@@ -1,4 +1,5 @@
-import { IMode } from '@seagull/mode'
+import { AWSError } from 'aws-sdk'
+import { PutObjectOutput } from 'aws-sdk/clients/s3'
 import { PromiseResult } from 'aws-sdk/lib/request'
 
 /**
@@ -11,9 +12,9 @@ export interface IS3 {
     bucketName: string,
     filePath: string,
     content: string
-  ) => Promise<PromiseResult<AWS.S3.PutObjectOutput, AWS.AWSError>>
+  ) => Promise<PromiseResult<PutObjectOutput, AWSError>>
   deleteFile: (
     bucketName: string,
     filePath: string
-  ) => Promise<PromiseResult<AWS.S3.PutObjectOutput, AWS.AWSError>>
+  ) => Promise<PromiseResult<PutObjectOutput, AWSError>>
 }

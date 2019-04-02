@@ -39,13 +39,16 @@ export class FixtureStorage<T> {
    * @param uri
    */
   get config(): LocalConfig<T> {
-    const path = this.path.replace('.json', '')
+    let path = this.path
+    if (this.fileExtension) {
+      path = path.replace(this.fileExtension, '')
+    }
     const config = this.getConfigRecursive({}, path)
     return config
   }
 
   private get path() {
-    return join('seed', this.uri)
+    return join('seed', this.uri + (this.fileExtension || ''))
   }
 
   /**
@@ -60,7 +63,8 @@ export class FixtureStorage<T> {
     url = url.replace('http://', 'http/')
     url = url.replace('https://', 'https/')
     return new FixtureStorage(
-      `${url}/${init ? this.hash(JSON.stringify(init)) : 'default'}.json`
+      `${url}/${init ? this.hash(JSON.stringify(init)) : 'default'}`,
+      `.json`
     )
   }
 
@@ -68,7 +72,7 @@ export class FixtureStorage<T> {
     bucketName: string,
     filePath: string
   ): FixtureStorage<T> {
-    return new FixtureStorage(`s3/${bucketName}/${filePath}.json`)
+    return new FixtureStorage(`s3/${bucketName}/${filePath}`)
   }
 
   private static hash(key: string) {
@@ -82,7 +86,7 @@ export class FixtureStorage<T> {
    * Creates a new seed fixtureStorage for managing seed fixtures.
    * @param uri Fixture uri
    */
-  constructor(public uri: string) {}
+  constructor(public uri: string, public fileExtension?: string) {}
 
   /**
    * Get fixture.

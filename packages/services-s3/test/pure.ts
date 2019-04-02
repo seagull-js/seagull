@@ -29,6 +29,19 @@ export class Test extends ServiceTest {
     const list = await this.s3.listFiles('mybucket')
     expect(list).to.deep.equal(['index.html', 'bundle.js'])
   }
+
+  @test
+  async 'can write multiple files into a bucket'() {
+    await this.s3.writeFiles('mybucket', [
+      { path: 'index2.html', content: 'test2' },
+      { path: 'index3.html', content: 'test3' },
+    ])
+    const file2 = await this.s3.readFile('mybucket', 'index2.html')
+    expect(file2).to.be.equal('test2')
+    const file3 = await this.s3.readFile('mybucket', 'index3.html')
+    expect(file3).to.be.equal('test3')
+  }
+
   @test
   async 'can read all files in a bucket with a prefix'() {
     await this.s3.writeFile('mybucket', 'assets/bundle.js', '')
@@ -38,9 +51,14 @@ export class Test extends ServiceTest {
   }
 
   @test
-  async 'readFile returns empty string (falsy) if target does not exist'() {
-    const file = await this.s3.readFile('mybucket', 'index.html')
-    expect(file).to.be.equal('')
+  async 'readFile returns an error if target does not exist or is empty'() {
+    try {
+      await this.s3.readFile('mybucket', 'index.html')
+    } catch (e) {
+      expect(e.message).to.eq(
+        'S3: File not found and fixture (seed) is missing.'
+      )
+    }
   }
 
   @test
@@ -49,7 +67,12 @@ export class Test extends ServiceTest {
     const file = await this.s3.readFile('mybucket', 'index.html')
     expect(file).to.be.equal('content')
     await this.s3.deleteFile('mybucket', 'index.html')
-    const empty = await this.s3.readFile('mybucket', 'index.html')
-    expect(empty).to.be.equal('')
+    try {
+      await this.s3.readFile('mybucket', 'index.html')
+    } catch (e) {
+      expect(e.message).to.eq(
+        'S3: File not found and fixture (seed) is missing.'
+      )
+    }
   }
 }
