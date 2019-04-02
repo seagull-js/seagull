@@ -9,13 +9,13 @@ import {
 } from 'aws-sdk/clients/cloudwatchlogs'
 import { PromiseResult } from 'aws-sdk/lib/request'
 import * as moment from 'moment'
-import { LogLevel } from './index'
+import { LogLevel, Message } from './index'
 import { CWLSandbox } from './logging_sandbox'
 
 /**
  * Command to write log object to cloudwatch
  */
-export class WriteLogs extends Command<
+export class AddLog extends Command<
   PromiseResult<PutLogEventsResponse, AWS.AWSError>
 > {
   params: PutLogEventsRequest
@@ -29,13 +29,19 @@ export class WriteLogs extends Command<
   executeConnected = this.executeCloud
   executeEdge = this.exec.bind(this, new CWLMockFS('/tmp/.data') as any)
 
-  constructor(logStreamName: string, logs: any[], logLevel?: LogLevel) {
+  constructor(
+    existingStreamName: string,
+    log: Message,
+    sequenceToken?: string,
+    logLevel?: LogLevel
+  ) {
     super()
-    const events = mapLogToEvents(logs, logLevel)
+    const events = mapLogToEvent(log, logLevel)
     this.params = {
       logEvents: events,
       logGroupName: `/${getAppName()}/data-log`,
-      logStreamName: createStreamName(logStreamName),
+      logStreamName: existingStreamName,
+      sequenceToken,
     }
   }
 
@@ -48,33 +54,18 @@ export class WriteLogs extends Command<
   }
 
   private async exec(client: AWS.CloudWatchLogs) {
-    await client
-      .createLogStream({
-        logGroupName: this.params.logGroupName,
-        logStreamName: this.params.logStreamName,
-      })
-      .promise()
-
     const result = await client.putLogEvents(this.params).promise()
 
-    return result
+    return Object.assign(result, { logStreamName: this.params.logStreamName })
   }
 }
 
-function mapLogToEvents(logs: any[], logLevel?: LogLevel): InputLogEvents {
+function mapLogToEvent(log: Message, logLevel?: LogLevel): InputLogEvents {
   const level = logLevel || 'info'
-  return logs.map(logItem => {
-    return {
-      message: `[${level}] ${JSON.stringify(logItem)}`,
+  return [
+    {
+      message: `[${level}] ${JSON.stringify(log)}`,
       timestamp: moment().unix() * 1000,
-    }
-  })
-}
-
-function createStreamName(customName: string) {
-  const hash = Math.random()
-    .toString(36)
-    .substring(7)
-  const time = moment.utc()
-  return `${customName}-${time.format()}-${hash}`.replace(/(\*)|(:)/g, '-')
+    },
+  ]
 }

@@ -1,6 +1,6 @@
 {
   "name": "@seagull/pipeline",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "Code pipeline for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -35,8 +35,8 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/testing": "^3.2.0",
-    "@seagull/tslint": "^3.2.0",
+    "@seagull/testing": "^3.3.0",
+    "@seagull/tslint": "^3.3.0",
     "@types/lodash": "^4.14.107",
     "@types/mock-require": "^2.0.0",
     "@types/yaml": "^1.0.1",
@@ -48,7 +48,7 @@
     "@aws-cdk/aws-codepipeline": "^0.21.0",
     "@aws-cdk/aws-iam": "^0.21.0",
     "@aws-cdk/cdk": "^0.21.0",
-    "@seagull/commands": "^3.2.0",
+    "@seagull/commands": "^3.3.0",
     "aws-cdk": "^0.21.0",
     "aws-sdk": "*",
     "chalk": "^2.4.1",
