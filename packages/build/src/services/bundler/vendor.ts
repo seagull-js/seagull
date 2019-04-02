@@ -4,9 +4,11 @@ import { BrowserLibraryBundle, Bundler } from './lib/bundler'
 
 export const BundleVendorEvent = Symbol('Start Vendor Bundling Event')
 export const BundledVendorEvent = Symbol('A Vendor Bundle got Bundled')
+export const BundleVendorErrorEvent = Symbol('Error on bundling')
 export interface VendorBundleServiceEvents extends OutputServiceEvents {
   [BundleVendorEvent]: VendorBundleService['handleStartBundling']
   [BundledVendorEvent]: () => void
+  [BundleVendorErrorEvent]: () => void
 }
 
 export class VendorBundleService {
@@ -31,7 +33,7 @@ export class VendorBundleService {
     bundle.optimized = this.config.optimized
     bundle.compatible = this.config.compatible
 
-    this.bundler = new Bundler(bundle, this.handleBundled)
+    this.bundler = new Bundler(bundle, this.handleBundled, this.handleError)
   }
 
   private handleStartBundling = async () => {
@@ -40,5 +42,9 @@ export class VendorBundleService {
 
   private handleBundled = () => {
     this.bus.emit(BundledVendorEvent)
+  }
+  private handleError = (err: any) => {
+    this.bus.emit(LogEvent, 'VendorBundleService', 'BundleError', { err })
+    this.bus.emit(BundleVendorErrorEvent)
   }
 }

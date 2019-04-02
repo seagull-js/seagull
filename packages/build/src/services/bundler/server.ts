@@ -4,9 +4,12 @@ import { Bundler, NodeAppBundle } from './lib/bundler'
 
 export const BundleServerEvent = Symbol('Start backend Bundling')
 export const BundledServerEvent = Symbol('Server got Bundled event')
+export const BundleServerErrorEvent = Symbol('Error on bundling')
+
 export interface ServerBundleServiceEvents extends OutputServiceEvents {
   [BundleServerEvent]: ServerBundleService['handleStartBundling']
   [BundledServerEvent]: () => void
+  [BundleServerErrorEvent]: () => void
 }
 
 export class ServerBundleService {
@@ -30,7 +33,12 @@ export class ServerBundleService {
     const bundle = new NodeAppBundle(src, dst)
     bundle.optimized = this.config.optimized
 
-    this.bundler = new Bundler(bundle, this.handleBundled, this.config.watch)
+    this.bundler = new Bundler(
+      bundle,
+      this.handleBundled,
+      this.handleError,
+      this.config.watch
+    )
   }
   private bundlerPaths() {
     const cwd = process.cwd()
@@ -44,5 +52,9 @@ export class ServerBundleService {
 
   private handleBundled = () => {
     this.bus.emit(BundledServerEvent)
+  }
+  private handleError = (err: any) => {
+    this.bus.emit(LogEvent, 'ServerBundleService', 'BundleError', { err })
+    this.bus.emit(BundleServerErrorEvent)
   }
 }

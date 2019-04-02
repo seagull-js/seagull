@@ -76,20 +76,24 @@ export class Bundler {
 
   private watch = false
   private onBundled: () => void
+  private onError: (err: any) => void
 
   constructor(
     bundlerType: Bundler['bundlerType'],
     onBundled: Bundler['onBundled'],
+    onError: Bundler['onError'],
     watch = false
   ) {
     this.bundlerType = bundlerType
     this.watch = watch
     this.onBundled = onBundled
+    this.onError = onError
     this.createBundlerInstance()
   }
 
   bundle = async () => {
     const stream = this.bfy.bundle()
+    this.addErrorLogging(stream)
     const content = await sts(stream)
     await new FS.WriteFile(this.bundlerType.dstFile, content).execute()
     this.onBundled()
@@ -128,4 +132,7 @@ export class Bundler {
     // tslint:disable-next-line:no-unused-expression
     this.watch && this.bfy.plugin(wify as any, opts).on('update', this.bundle)
   }
+
+  private addErrorLogging = (b: NodeJS.ReadableStream) =>
+    b.on('error', this.onError)
 }

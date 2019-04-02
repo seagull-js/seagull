@@ -4,7 +4,9 @@ import {
   BackendPageBundleServiceEvents,
   BrowserPageBundleService,
   BrowserPageBundleServiceEvents,
+  BundleBackendPageErrorEvent,
   BundleBackendPageEvent,
+  BundleBrowserPageErrorEvent,
   BundleBrowserPageEvent,
   BundledBackendPageEvent,
   BundledBrowserPageEvent,
@@ -12,9 +14,11 @@ import {
 
 export const BundlePageEvent = Symbol('Start page bundling')
 export const BundledPageEvent = Symbol('page bundling completed')
+export const BundlePageErrorEvent = Symbol('Error page bundling')
 export interface PageBundleServiceEvents extends OutputServiceEvents {
   [BundlePageEvent]: PageBundleService['handleBundling']
   [BundledPageEvent]: (page: string) => void
+  [BundlePageErrorEvent]: () => void
 }
 
 type BrowserPageBundlerBus = ServiceEventBus<BrowserPageBundleServiceEvents>
@@ -45,8 +49,11 @@ export class PageBundleService {
     this.bundlerBus = new ServiceEventBus()
     this.bundlerBus.on(BundledBrowserPageEvent, this.handleBundled('backend'))
     this.bundlerBus.on(BundledBackendPageEvent, this.handleBundled('browser'))
+    this.bundlerBus.on(BundleBrowserPageErrorEvent, this.emitError)
+    this.bundlerBus.on(BundleBackendPageErrorEvent, this.emitError)
     this.createBackendPageBundler()
     this.createBrowserPageBundler()
+    this.bundlerBus.on(LogEvent, (this as any).bus.emit.bind(this, LogEvent))
   }
 
   private createBackendPageBundler = () => {
@@ -73,4 +80,6 @@ export class PageBundleService {
     this.bundled.add(type).size === 2 &&
       this.bus.emit(BundledPageEvent, this.config.page)
   }
+
+  private emitError = () => this.bus.emit(BundlePageErrorEvent)
 }

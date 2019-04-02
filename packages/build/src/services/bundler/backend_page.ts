@@ -4,9 +4,11 @@ import { Bundler, IsomorphicAppBundle } from './lib/bundler'
 
 export const BundleBackendPageEvent = Symbol('Start BackendPage Bundling')
 export const BundledBackendPageEvent = Symbol('BackendPage got Bundled event')
+export const BundleBackendPageErrorEvent = Symbol('Error on bundling')
 export interface BackendPageBundleServiceEvents extends OutputServiceEvents {
   [BundleBackendPageEvent]: BackendPageBundleService['handleBundling']
   [BundledBackendPageEvent]: (page: string) => void
+  [BundleBackendPageErrorEvent]: () => void
 }
 
 export class BackendPageBundleService {
@@ -30,7 +32,12 @@ export class BackendPageBundleService {
     const { src, dst } = this.bundlerPaths()
     const bundle = new IsomorphicAppBundle(src, dst)
     bundle.optimized = this.config.optimized
-    this.bundler = new Bundler(bundle, this.handleBundled, this.config.watch)
+    this.bundler = new Bundler(
+      bundle,
+      this.handleBundled,
+      this.handleError,
+      this.config.watch
+    )
   }
 
   private bundlerPaths() {
@@ -47,5 +54,10 @@ export class BackendPageBundleService {
 
   private handleBundled = () => {
     this.bus.emit(BundledBackendPageEvent, this.config.page)
+  }
+
+  private handleError = (err: any) => {
+    this.bus.emit(LogEvent, 'BackendPageBundleService', 'BundleError', { err })
+    this.bus.emit(BundleBackendPageErrorEvent)
   }
 }

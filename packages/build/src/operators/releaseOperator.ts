@@ -20,6 +20,10 @@ export class ReleaseOperator extends Operator {
     this.addReleaseServices()
     this.waitForDone().then(this.exitSuccess)
     this.on(E.CompileError, this.exitFailure)
+    this.on(E.BundlePageErrorEvent, this.exitFailure)
+    this.on(E.BundleLambdaErrorEvent, this.exitFailure)
+    this.on(E.BundleVendorErrorEvent, this.exitFailure)
+    this.on(E.BundleBackendPageErrorEvent, this.exitFailure)
   }
 
   addReleaseServices() {

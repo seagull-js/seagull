@@ -4,9 +4,12 @@ import { Bundler, NodeAppBundle } from './lib/bundler'
 
 export const BundleLambdaEvent = Symbol('Start backend Bundling')
 export const BundledLambdaEvent = Symbol('Lambda got Bundled event')
+export const BundleLambdaErrorEvent = Symbol('Error on bundling')
+
 export interface LambdaBundleServiceEvents extends OutputServiceEvents {
   [BundleLambdaEvent]: LambdaBundleService['handleStartBundling']
   [BundledLambdaEvent]: () => void
+  [BundleLambdaErrorEvent]: () => void
 }
 
 export class LambdaBundleService {
@@ -28,7 +31,12 @@ export class LambdaBundleService {
     const { src, dst } = this.bundlerPaths()
     const bundle = new NodeAppBundle(src, dst)
     bundle.optimized = this.config.optimized
-    this.bundler = new Bundler(bundle, this.handleBundled, this.config.watch)
+    this.bundler = new Bundler(
+      bundle,
+      this.handleBundled,
+      this.handleError,
+      this.config.watch
+    )
   }
   private bundlerPaths() {
     const cwd = process.cwd()
@@ -43,5 +51,9 @@ export class LambdaBundleService {
 
   private handleBundled = () => {
     this.bus.emit(BundledLambdaEvent)
+  }
+  private handleError = (err: any) => {
+    this.bus.emit(LogEvent, 'LambdaBundleService', 'BundleError', { err })
+    this.bus.emit(BundleLambdaErrorEvent)
   }
 }

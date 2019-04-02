@@ -4,9 +4,12 @@ import { Bundler, IsomorphicAppBundle } from './lib/bundler'
 
 export const BundleBrowserPageEvent = Symbol('Start BrowserPage Bundling')
 export const BundledBrowserPageEvent = Symbol('BrowserPage got Bundled event')
+export const BundleBrowserPageErrorEvent = Symbol('Error on bundling')
+
 export interface BrowserPageBundleServiceEvents extends OutputServiceEvents {
   [BundleBrowserPageEvent]: BrowserPageBundleService['handleBundling']
   [BundledBrowserPageEvent]: (page: string) => void
+  [BundleBrowserPageErrorEvent]: () => void
 }
 
 export class BrowserPageBundleService {
@@ -35,7 +38,12 @@ export class BrowserPageBundleService {
     bundle.compatible = this.config.compatible
     bundle.excludes = this.config.excludes
 
-    this.bundler = new Bundler(bundle, this.handleBundled, this.config.watch)
+    this.bundler = new Bundler(
+      bundle,
+      this.handleBundled,
+      this.handleError,
+      this.config.watch
+    )
   }
   private bundlerPaths() {
     const dist = join(process.cwd(), 'dist')
@@ -51,5 +59,10 @@ export class BrowserPageBundleService {
 
   private handleBundled = () => {
     this.bus.emit(BundledBrowserPageEvent, this.config.page)
+  }
+
+  private handleError = (err: any) => {
+    this.bus.emit(LogEvent, 'BrowserPageBundleService', 'BundleError', { err })
+    this.bus.emit(BundleBrowserPageErrorEvent)
   }
 }
