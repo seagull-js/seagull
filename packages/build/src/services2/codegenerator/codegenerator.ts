@@ -9,6 +9,7 @@ export interface CodeGeneratorServiceEvents extends OutputServiceEvents {
   [GeneratedCodeEvent]: () => void
 }
 
+import * as Cron from './cron'
 import * as Express from './express'
 import * as Lambda from './lambda'
 import * as Runner from './runner'
@@ -67,6 +68,7 @@ export class CodeGeneratorService {
       },
       { path: join(dist, 'server.js'), content: Server.generate(appFolder) },
       { path: join(dist, 'lambda.js'), content: Lambda.generate(appFolder) },
+      { path: join(dist, 'cron.json'), content: Cron.generate(appFolder) },
     ].map(this.writeFile)
   }
 
