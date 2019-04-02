@@ -3,8 +3,8 @@ import { FS } from '@seagull/mock-fs'
 import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
-import * as Services from '../../src/services2'
-import { ServiceEventBus } from '../../src/services2'
+import * as Services from '../../src/services'
+import { ServiceEventBus } from '../../src/services'
 
 @suite('Services::CodeGeneration')
 export class Test extends BasicTest {

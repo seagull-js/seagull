@@ -1,49 +1,113 @@
-import { Service } from '@seagull/commands'
-import { FS } from '@seagull/commands-fs'
-import * as fs from 'fs'
-import * as path from 'path'
 import * as ts from 'typescript'
-import { Compile } from '../compile'
+import { LogEvent, OutputServiceEvents, ServiceEventBus } from './'
 
-export class Compiler extends Service {
-  /**
-   * reference to where the app code resides in
-   */
-  appFolder: string
+export const CompileEvent = Symbol('Start code generation Event')
+export const CompiledEvent = Symbol('Code generation completed')
+export interface CompilerServiceEvents extends OutputServiceEvents {
+  [CompileEvent]: CompilerService['handleStartCompilation']
+  [CompiledEvent]: () => void
+}
 
-  /**
-   * object containing the contents of the tsconfig file
-   */
-  tsconfig: any
+type CompilerHost = ts.WatchCompilerHostOfConfigFile<
+  ts.EmitAndSemanticDiagnosticsBuilderProgram
+>
+type CreateProgram = CompilerHost['createProgram']
+type AfterProgramCreate = CompilerHost['afterProgramCreate']
 
-  constructor(appFolder: string) {
-    super()
-    this.appFolder = appFolder
+export class CompilerService {
+  bus: ServiceEventBus<CompilerServiceEvents>
+  compilerHost!: CompilerHost
+  config = {
+    fast: false,
+    watch: true,
   }
 
-  async initialize() {
-    this.tsconfig = await this.readTsconfig()
-    const files = await this.listSourceFiles()
-    files.forEach(f => this.registerSourceFile(f))
+  constructor(
+    bus: CompilerService['bus'],
+    config?: Partial<CompilerService['config']>
+  ) {
+    Object.assign(this.config, config)
+    this.bus = bus.on(CompileEvent, this.handleStartCompilation)
   }
 
-  registerSourceFile(sourcePath: string) {
-    const srcFolder = path.join(this.appFolder, 'src')
-    const from = path.resolve(path.join(sourcePath))
-    const fragment = path.relative(srcFolder, from).replace(/tsx?$/, 'js')
-    const to = path.resolve(path.join(this.appFolder, 'dist', fragment))
-    this.register(sourcePath, new Compile.Typescript(from, to, this.tsconfig))
+  handleStartCompilation = () => {
+    this.compilerHost = this.createCompilerHost()
+    this.patchCompilerHost(this.compilerHost)
+    ts.createWatchProgram(this.compilerHost)
+    this.bus.emit(CompiledEvent)
   }
 
-  private async listSourceFiles() {
-    const srcFolder = path.join(this.appFolder, 'src')
-    return await new FS.ListFiles(srcFolder, /tsx?$/).execute()
+  private patchCompilerHost(host: CompilerHost) {
+    const { createProgram, afterProgramCreate } = host
+    host.createProgram = this.wrapCreateProgram(createProgram)
+    host.afterProgramCreate = this.wrapAfterProgramCreate(afterProgramCreate)
   }
 
-  private async readTsconfig() {
-    const file = path.resolve(path.join(this.appFolder, 'tsconfig.json'))
-    const exists = await new FS.Exists(file).execute()
-    const reader = (filePath: string) => fs.readFileSync(filePath, 'utf-8')
-    return exists ? ts.readConfigFile(file, reader).config : {}
+  private createCompilerHost() {
+    const tsName = 'tsconfig.build.json'
+    const config = ts.findConfigFile(process.cwd(), ts.sys.fileExists, tsName)
+
+    return ts.createWatchCompilerHost(
+      config!,
+      {},
+      ts.sys,
+      ts.createEmitAndSemanticDiagnosticsBuilderProgram,
+      this.logDiagnostics('diagnostic'),
+      this.logDiagnostics('watch')
+    )
+  }
+
+  private wrapEmit = (onEmit: ts.Program['emit']) => (...args: any) => {
+    const emitted = onEmit(...args)
+    this.bus.emit(LogEvent, 'CompilerService', 'compiled', {})
+    this.bus.emit(CompiledEvent)
+    return emitted
+  }
+
+  private wrapCreateProgram = (creator: CreateProgram) => (
+    roots?: ReadonlyArray<string>,
+    options = {},
+    host?: ts.CompilerHost,
+    prevProg?: ts.EmitAndSemanticDiagnosticsBuilderProgram
+  ) => {
+    options = this.config.fast ? options : this.setTranspileOnly(options)
+    const prog = creator(roots, options, host, prevProg)
+    this.bus.emit(LogEvent, 'CompilerService', 'createCompiler', {})
+    prog.emit = this.wrapEmit(prog.emit)
+    return prog
+  }
+
+  // tslint:disable-next-line:no-empty
+  private wrapAfterProgramCreate = (hook: AfterProgramCreate = () => {}) => (
+    program: ts.EmitAndSemanticDiagnosticsBuilderProgram
+  ) => {
+    this.bus.emit(LogEvent, 'CompilerService', 'createdCompiler', {})
+    hook(program)
+  }
+
+  private logDiagnostics = (type: string) => (diagnostic: ts.Diagnostic) => {
+    this.bus.emit(LogEvent, 'CompilerService', type, { diagnostic })
+  }
+
+  private setTranspileOnly(options: ts.CompilerOptions) {
+    return {
+      ...options,
+      allowNonTsExtensions: true,
+      composite: undefined,
+      declaration: undefined,
+      declarationDir: undefined,
+      isolatedModules: true,
+      lib: undefined,
+      noEmit: undefined,
+      noEmitOnError: undefined,
+      noLib: true,
+      noResolve: true,
+      out: undefined,
+      outFile: undefined,
+      paths: undefined,
+      rootDirs: undefined,
+      suppressOutputPathCheck: true,
+      types: undefined,
+    }
   }
 }

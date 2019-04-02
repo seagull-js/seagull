@@ -1,4 +1,4 @@
-import * as E from '../services2'
+import * as E from '../services'
 import { LazyPageOperator } from './lazyPageOperator'
 import { Operator, Wiring } from './operator'
 import * as O from './operator'

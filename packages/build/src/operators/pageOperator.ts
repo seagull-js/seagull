@@ -1,6 +1,6 @@
 import { listPages } from '../lib/project'
-import * as E from '../services2'
-import { PageBundleService as PageService } from '../services2'
+import * as E from '../services'
+import { PageBundleService as PageService } from '../services'
 import { Operator, Wiring } from './operator'
 
 export class PageOperator extends Operator {

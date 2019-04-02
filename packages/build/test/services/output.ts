@@ -2,8 +2,8 @@ import { BasicTest } from '@seagull/testing'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as stream from 'stream-buffers'
-import * as Services from '../../src/services2'
-import { ServiceEventBus } from '../../src/services2'
+import * as Services from '../../src/services'
+import { ServiceEventBus } from '../../src/services'
 
 @suite('Services::Output')
 export class Test extends BasicTest {

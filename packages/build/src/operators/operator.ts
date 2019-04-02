@@ -1,5 +1,5 @@
-import * as Services from '../services2'
-import { ServiceEventBus as EventBus } from '../services2'
+import * as Services from '../services'
+import { ServiceEventBus as EventBus } from '../services'
 
 export type ServicesMap = {
   Output: Services.OutputService
