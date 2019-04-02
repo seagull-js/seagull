@@ -66,7 +66,7 @@ function mapLogToEvents(logs: any[], logLevel?: LogLevel): InputLogEvents {
   return logs.map(logItem => {
     return {
       message: `[${level}] ${JSON.stringify(logItem)}`,
-      timestamp: moment().unix() * 1000,
+      timestamp: moment().valueOf(),
     }
   })
 }

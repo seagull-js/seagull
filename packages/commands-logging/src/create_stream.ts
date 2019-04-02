@@ -2,14 +2,7 @@ import { Command } from '@seagull/commands'
 import { getAppName } from '@seagull/libraries'
 import { CWLMockFS } from '@seagull/mock-cloudwatchlogs'
 import * as AWS from 'aws-sdk'
-import {
-  InputLogEvents,
-  PutLogEventsRequest,
-  PutLogEventsResponse,
-} from 'aws-sdk/clients/cloudwatchlogs'
-import { PromiseResult } from 'aws-sdk/lib/request'
 import * as moment from 'moment'
-import { LogLevel, Message } from './index'
 import { CWLSandbox } from './logging_sandbox'
 
 /**

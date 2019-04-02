@@ -9,13 +9,26 @@ export default class Logging extends Page {
   html() {
     return (
       <div>
-        <button onClick={this.onClick}>Log Something</button>
+        <button onClick={this.log}>Log Something</button>
+        <button onClick={this.getLog}>Get Logs</button>
+        <div />
       </div>
     )
   }
-  onClick = async () => {
+  log = async () => {
     this.fullStreamName = this.fullStreamName || (await this.createStream())
     const log: AddLogRequest = {
+      log: 'HIT!',
+      logStreamName: this.fullStreamName,
+      sequenceToken: this.sequenceToken,
+    }
+
+    const result = await sendLog('/log/addLog', log)
+    this.sequenceToken = result.nextSequenceToken
+  }
+
+  getLog = async () => {
+    const params: GetLogRequest = {
       log: 'HIT!',
       logStreamName: this.fullStreamName,
       sequenceToken: this.sequenceToken,
