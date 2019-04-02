@@ -165,7 +165,7 @@ async function buildCronJson(appPath: string) {
 }
 
 async function getEnv(name: string, appPath: string, mode: string) {
-  const env: any = { MODE: 'cloud', APP: name }
+  const env: any = { APP: name, MODE: 'cloud', NODE_ENV: mode }
   const configPath = `${appPath}/.env.${mode}`
   const config: string = await new FS.ReadFile(configPath).execute()
   return lib.addEnvFromFile(env, config)

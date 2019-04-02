@@ -1,5 +1,11 @@
 # CHANGE LOG
 
+## 3.4.0 - 2019-04-02
+
+- @seagull/deploy-aws -> added feature to modify deploy stack within an app
+- @seagull/deploy-aws -> fixed a bug, where the AWS_REGIOn was not set to process.env
+- @seagull/deploy-aws -> added feature, where env variables can be set via a file name .env.test or .env.prod according to the deploy mode
+
 ## 3.3.0 - 2019-04-02
 
 - @seagull/commands-logging -> improved logging + added example to helloworld
