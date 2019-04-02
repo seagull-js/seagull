@@ -49,8 +49,13 @@ export class CWLMockMem implements Mock {
 
   putLogEvents = (Input: PutLogRequest, cb: any) => {
     this.ensureLogGroup(Input.logGroupName)
-    this.storage[Input.logGroupName][Input.logStreamName] = Input.logEvents
-    const result: PutLogResponse = {
+    const existingLogs =
+      this.storage[Input.logGroupName][Input.logStreamName] || []
+    this.storage[Input.logGroupName][Input.logStreamName] = existingLogs.concat(
+      Input.logEvents
+    )
+    const result = {
+      logStreamName: Input.logStreamName,
       nextSequenceToken: getRandomSequenceToken(),
     }
     return this.result(cb, result)

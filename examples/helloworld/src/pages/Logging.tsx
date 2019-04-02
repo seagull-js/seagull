@@ -1,32 +1,32 @@
+import { sendLog } from '@seagull/libraries'
 import { Page } from '@seagull/pages'
 import * as React from 'react'
-import { WriteLogRequest } from '../routes/log/write_log'
+import { AddLogRequest } from '../routes/frontend-logging/add_log'
 
 export default class Logging extends Page {
+  sequenceToken: string | undefined
+  fullStreamName: string | undefined
   html() {
     return (
       <div>
         <button onClick={this.onClick}>Log Something</button>
-        {/* <div id="data-field">{JSON.stringify(this.state.fetchedData)}</div> */}
       </div>
     )
   }
   onClick = async () => {
-    const log: WriteLogRequest = {
-      log: 'HIT',
-      logStreamName: 'log-test',
+    this.fullStreamName = this.fullStreamName || (await this.createStream())
+    const log: AddLogRequest = {
+      log: 'HIT!',
+      logStreamName: this.fullStreamName,
+      sequenceToken: this.sequenceToken,
     }
-    const rawResponse = await fetch('/log/writeLog', {
-      body: JSON.stringify(log),
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    })
 
-    const content = await rawResponse.json()
+    const result = await sendLog('/log/addLog', log)
+    this.sequenceToken = result.nextSequenceToken
+  }
 
-    console.info('content', content)
+  createStream = async () => {
+    const stream = { logStreamName: 'add-log-test' }
+    return (await sendLog('/log/createStream', stream)) as string
   }
 }

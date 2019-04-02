@@ -5,6 +5,7 @@ import {
 import { Mock } from '@seagull/mock'
 import * as AWSMock from 'aws-sdk-mock'
 import * as fs from 'fs'
+import * as moment from 'moment'
 import * as pathModule from 'path'
 
 type PutLogRequest = AWS.CloudWatchLogs.PutLogEventsRequest
@@ -61,8 +62,13 @@ export class CWLMockFS implements Mock {
     Input.logGroupName = Input.logGroupName.replace(/(\/)/g, '-').substring(1)
     this.ensureLogGroup(Input.logGroupName)
     const content = JSON.stringify(Input.logEvents)
-    this.fsModule.writeFileSync(this.getEncodedPath(Input), content, 'utf-8')
-    const result: PutLogResponse = {
+    this.fsModule.appendFileSync(
+      this.getEncodedPath(Input),
+      `${content}\n`,
+      'utf-8'
+    )
+    const result = {
+      logStreamName: Input.logStreamName,
       nextSequenceToken: getRandomSequenceToken(),
     }
     return this.result(cb, result)
@@ -84,7 +90,15 @@ export class CWLMockFS implements Mock {
   }
 
   createLogStream(params: CreateLogStreamRequest, cb: any) {
-    return this.result(cb, null)
+    const hash = Math.random()
+      .toString(36)
+      .substring(7)
+    const time = moment.utc()
+    const result = `${params.logStreamName}-${time.format()}-${hash}`.replace(
+      /(\*)|(:)/g,
+      '-'
+    )
+    return this.result(cb, result)
   }
 
   /**

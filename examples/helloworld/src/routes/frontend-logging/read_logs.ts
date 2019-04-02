@@ -1,8 +1,8 @@
 import { ReadLog } from '@seagull/commands-logging'
-import { Route, RouteContext } from '@seagull/routes'
+import { HttpMethod, Route, RouteContext } from '@seagull/routes'
 
 export default class extends Route {
-  static method = 'get'
+  static method: HttpMethod = 'GET'
   static path = '/log/:id'
 
   static async handler(this: RouteContext) {
