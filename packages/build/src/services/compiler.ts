@@ -3,9 +3,12 @@ import { LogEvent, OutputServiceEvents, ServiceEventBus } from './'
 
 export const CompileEvent = Symbol('Start code generation Event')
 export const CompiledEvent = Symbol('Code generation completed')
+export const CompileError = Symbol('Error during compile')
+
 export interface CompilerServiceEvents extends OutputServiceEvents {
   [CompileEvent]: CompilerService['handleStartCompilation']
   [CompiledEvent]: () => void
+  [CompileError]: () => void
 }
 
 type CompilerHost = ts.WatchCompilerHostOfConfigFile<
@@ -13,6 +16,9 @@ type CompilerHost = ts.WatchCompilerHostOfConfigFile<
 >
 type CreateProgram = CompilerHost['createProgram']
 type AfterProgramCreate = CompilerHost['afterProgramCreate']
+
+const tsName = 'tsconfig.build.json'
+const cfgPath = ts.findConfigFile(process.cwd(), ts.sys.fileExists, tsName)
 
 export class CompilerService {
   bus: ServiceEventBus<CompilerServiceEvents>
@@ -34,7 +40,6 @@ export class CompilerService {
     this.compilerHost = this.createCompilerHost()
     this.patchCompilerHost(this.compilerHost)
     ts.createWatchProgram(this.compilerHost)
-    this.bus.emit(CompiledEvent)
   }
 
   private patchCompilerHost(host: CompilerHost) {
@@ -44,11 +49,8 @@ export class CompilerService {
   }
 
   private createCompilerHost() {
-    const tsName = 'tsconfig.build.json'
-    const config = ts.findConfigFile(process.cwd(), ts.sys.fileExists, tsName)
-
     return ts.createWatchCompilerHost(
-      config!,
+      cfgPath!,
       {},
       ts.sys,
       ts.createEmitAndSemanticDiagnosticsBuilderProgram,
@@ -59,6 +61,7 @@ export class CompilerService {
 
   private wrapEmit = (onEmit: ts.Program['emit']) => (...args: any) => {
     const emitted = onEmit(...args)
+    this.checkForCompileError(emitted.diagnostics)
     this.bus.emit(LogEvent, 'CompilerService', 'compiled', {})
     this.bus.emit(CompiledEvent)
     return emitted
@@ -66,12 +69,14 @@ export class CompilerService {
 
   private wrapCreateProgram = (creator: CreateProgram) => (
     roots?: ReadonlyArray<string>,
-    options = {},
+    _ = {} as any,
     host?: ts.CompilerHost,
     prevProg?: ts.EmitAndSemanticDiagnosticsBuilderProgram
   ) => {
-    options = this.config.fast ? options : this.setTranspileOnly(options)
-    const prog = creator(roots, options, host, prevProg)
+    const cfg = ts.getParsedCommandLineOfConfigFile(cfgPath!, {}, host! as any)
+    // tslint:disable-next-line:no-unused-expression
+    this.config.fast && this.setTranspileOnly(cfg!.options)
+    const prog = creator(roots, cfg!.options, host, prevProg)
     this.bus.emit(LogEvent, 'CompilerService', 'createCompiler', {})
     prog.emit = this.wrapEmit(prog.emit)
     return prog
@@ -89,9 +94,15 @@ export class CompilerService {
     this.bus.emit(LogEvent, 'CompilerService', type, { diagnostic })
   }
 
+  private checkForCompileError = (diags: ReadonlyArray<ts.Diagnostic>) => {
+    const isError =
+      diags.findIndex(d => d.category === ts.DiagnosticCategory.Error) !== -1
+    const logDiag = this.logDiagnostics('diagnostic')
+    return isError && diags.map(logDiag) && this.bus.emit(CompileError)
+  }
+
   private setTranspileOnly(options: ts.CompilerOptions) {
-    return {
-      ...options,
+    Object.assign(options, {
       allowNonTsExtensions: true,
       composite: undefined,
       declaration: undefined,
@@ -108,6 +119,6 @@ export class CompilerService {
       rootDirs: undefined,
       suppressOutputPathCheck: true,
       types: undefined,
-    }
+    })
   }
 }

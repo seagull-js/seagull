@@ -18,7 +18,8 @@ export class ReleaseOperator extends Operator {
     this.setupWiring()
     this.addPageOperator()
     this.addReleaseServices()
-    this.waitForDone().then(this.exit)
+    this.waitForDone().then(this.exitSuccess)
+    this.on(E.CompileError, this.exitFailure)
   }
 
   addReleaseServices() {
@@ -38,5 +39,6 @@ export class ReleaseOperator extends Operator {
       this.promisifyEmitOnce(E.BundledLambdaEvent),
       this.promisifyEmitOnce(E.BundledServerEvent),
     ])
-  exit = () => process.exit(0)
+  exitSuccess = () => process.exit(0)
+  exitFailure = () => process.nextTick(() => process.exit(1))
 }
