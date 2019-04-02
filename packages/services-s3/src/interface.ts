@@ -13,6 +13,10 @@ export interface IS3 {
     filePath: string,
     content: string
   ) => Promise<PromiseResult<PutObjectOutput, AWSError>>
+  writeFiles: (
+    bucketName: string,
+    files: Array<{ path: string; content: string }>
+  ) => Promise<Array<PromiseResult<PutObjectOutput, AWSError>>>
   deleteFile: (
     bucketName: string,
     filePath: string

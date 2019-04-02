@@ -55,6 +55,18 @@ export abstract class S3Base implements IS3 {
     return await this.handle(cmd.execute())
   }
 
+  async writeFiles(
+    bucketName: string,
+    files: Array<{ path: string; content: string }>
+  ): Promise<Array<PromiseResult<AWS.S3.PutObjectOutput, AWS.AWSError>>> {
+    // TODO: error handling & transaction
+    const writePromises = []
+    for (const file of files) {
+      writePromises.push(this.writeFile(bucketName, file.path, file.content))
+    }
+    return await Promise.all(writePromises)
+  }
+
   /**
    * Deletes a file from a S3 bucket
    * @param bucketName bucket name
