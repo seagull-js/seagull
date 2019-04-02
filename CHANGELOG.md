@@ -1,5 +1,11 @@
 # CHANGE LOG
 
+## 3.3.0 - 2019-04-02
+
+- @seagull/commands-logging -> improved logging + added example to helloworld
+- @seagull/mock-cloudwatchlogs -> adjust mock to addLog function
+- @seagull/libraries -> added helper functions for frontend logging
+
 ## 3.2.0 - 2019-03-29
 
 - @seagull/deploy-aws -> api gateway defines it's stage by the mode it is called in.
