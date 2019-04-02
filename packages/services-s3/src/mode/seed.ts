@@ -1,6 +1,7 @@
 import { ReadFile } from '@seagull/commands-s3/dist/src/read_file'
 import { IMode } from '@seagull/mode'
 import { FixtureStorage } from '@seagull/seed'
+import * as fs from 'fs'
 import { injectable } from 'inversify'
 import 'reflect-metadata'
 import { S3Base } from './base'
@@ -35,5 +36,33 @@ export class S3Seed extends S3Base {
     seed.set(fixture)
 
     return fixture
+  }
+
+  async writeFolder(
+    bucketName: string,
+    path: string,
+    includeSubfolders = true
+  ) {
+    const files = this.getFiles(path, includeSubfolders)
+    this.writeFiles(bucketName, files)
+  }
+
+  private getFiles(
+    path: string,
+    includeSubfolders = true,
+    filesRec?: Array<{ path: string; content: string }>
+  ) {
+    filesRec = filesRec || []
+    const files = fs.readdirSync(path)
+    for (const file of files) {
+      const name = path + '/' + file
+      if (includeSubfolders && fs.statSync(name).isDirectory()) {
+        this.getFiles(name, includeSubfolders, filesRec)
+      } else {
+        const content = fs.readFileSync('DATA', 'utf8')
+        filesRec.push({ path: name, content })
+      }
+    }
+    return filesRec
   }
 }

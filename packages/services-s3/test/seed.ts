@@ -35,4 +35,6 @@ export class Test extends BasicTest {
     const pureResponse = await this.s3Pure.readFile('mybucket', 'index.html')
     expect(pureResponse).to.eq('content')
   }
+
+  // TODO: add writeFolder test
 }
