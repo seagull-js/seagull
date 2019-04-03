@@ -1,7 +1,5 @@
 import { ReadFile } from '@seagull/commands-s3/dist/src/read_file'
-import { WriteFile } from '@seagull/commands-s3/dist/src/write_file'
 import { IMode } from '@seagull/mode'
-import { FixtureStorage } from '@seagull/seed'
 import * as fs from 'fs'
 import { injectable } from 'inversify'
 import 'reflect-metadata'
@@ -59,18 +57,19 @@ export class S3Pure extends S3Base {
   private listFilesFS(
     path: string,
     includeSubfolders = true,
-    filesRec?: string[]
+    fsPaths?: string[]
   ) {
-    filesRec = filesRec || []
+    fsPaths = fsPaths || []
     const files = fs.readdirSync(path)
     for (const file of files) {
-      const name = path + '/' + file
-      if (includeSubfolders && fs.statSync(name).isDirectory()) {
-        this.listFilesFS(name, includeSubfolders, filesRec)
+      const name = `${path}/${file}`
+      const isDirectory = fs.statSync(name).isDirectory()
+      if (includeSubfolders && isDirectory) {
+        this.listFilesFS(name, includeSubfolders, fsPaths)
       } else {
-        filesRec.push(name)
+        fsPaths.push(name)
       }
     }
-    return filesRec
+    return fsPaths
   }
 }
