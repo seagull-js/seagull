@@ -23,6 +23,7 @@ const cfgPath = ts.findConfigFile(process.cwd(), ts.sys.fileExists, tsName)
 export class CompilerService {
   bus: ServiceEventBus<CompilerServiceEvents>
   compilerHost!: CompilerHost
+  compileTimer?: [number, number]
   config = {
     fast: false,
     watch: true,
@@ -62,7 +63,8 @@ export class CompilerService {
   private wrapEmit = (onEmit: ts.Program['emit']) => (...args: any) => {
     const emitted = onEmit(...args)
     this.checkForCompileError(emitted.diagnostics)
-    this.bus.emit(LogEvent, 'CompilerService', 'compiled', {})
+    const time = process.hrtime(this.compileTimer!)
+    this.bus.emit(LogEvent, 'CompilerService', 'compiled', { time })
     this.bus.emit(CompiledEvent)
     return emitted
   }
@@ -91,6 +93,9 @@ export class CompilerService {
   }
 
   private logDiagnostics = (type: string) => (diagnostic: ts.Diagnostic) => {
+    if (diagnostic.code === 6031 || diagnostic.code === 6032) {
+      this.compileTimer = process.hrtime()
+    }
     this.bus.emit(LogEvent, 'CompilerService', type, { diagnostic })
   }
 
