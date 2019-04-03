@@ -44,7 +44,7 @@ class DemoRoute extends Route {
 export class Test extends RouteTest {
   route = DemoRoute
 
-  @test
+  @test.skip
   async 'can be instantiated and executed'() {
     RouteParams.create({ numProp: 3, stringProp: '' })
   }
