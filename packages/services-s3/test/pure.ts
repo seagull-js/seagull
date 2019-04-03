@@ -69,8 +69,6 @@ export class Test extends BasicTest {
   @test
   async 'can add local folder to mocked S3 bucket'() {
     await this.s3.writeFolder('mybucket', `${process.cwd()}/seed/static`)
-    console.info('files:', await this.s3.listFiles('mybucket'))
-
     const file = await this.s3.readFile('mybucket', 'index.html')
     expect(file).to.eq('content\n')
     const file2 = await this.s3.readFile('mybucket', 'asdf/asdf.html')
