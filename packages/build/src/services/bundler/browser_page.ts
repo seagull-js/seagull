@@ -8,7 +8,7 @@ export const BundleBrowserPageErrorEvent = Symbol('Error on bundling')
 
 export interface BrowserPageBundleServiceEvents extends OutputServiceEvents {
   [BundleBrowserPageEvent]: BrowserPageBundleService['handleBundling']
-  [BundledBrowserPageEvent]: (page: string) => void
+  [BundledBrowserPageEvent]: (time: [number, number]) => void
   [BundleBrowserPageErrorEvent]: () => void
 }
 
@@ -60,7 +60,7 @@ export class BrowserPageBundleService {
   private handleBundled = (time: [number, number]) => {
     const logEventOpts = { time, page: this.config.page }
     this.bus.emit(LogEvent, 'BrowserPageBundleService', 'Bundled', logEventOpts)
-    this.bus.emit(BundledBrowserPageEvent, this.config.page)
+    this.bus.emit(BundledBrowserPageEvent, time)
   }
 
   private handleError = (err: any) => {

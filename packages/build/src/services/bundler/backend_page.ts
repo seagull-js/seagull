@@ -7,7 +7,7 @@ export const BundledBackendPageEvent = Symbol('BackendPage got Bundled event')
 export const BundleBackendPageErrorEvent = Symbol('Error on bundling')
 export interface BackendPageBundleServiceEvents extends OutputServiceEvents {
   [BundleBackendPageEvent]: BackendPageBundleService['handleBundling']
-  [BundledBackendPageEvent]: (page: string) => void
+  [BundledBackendPageEvent]: (time: [number, number]) => void
   [BundleBackendPageErrorEvent]: () => void
 }
 
@@ -55,7 +55,7 @@ export class BackendPageBundleService {
   private handleBundled = (time: [number, number]) => {
     const logEventOpts = { time, page: this.config.page }
     this.bus.emit(LogEvent, 'BackendPageBundleService', 'Bundled', logEventOpts)
-    this.bus.emit(BundledBackendPageEvent, this.config.page)
+    this.bus.emit(BundledBackendPageEvent, time)
   }
 
   private handleError = (err: any) => {

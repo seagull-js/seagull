@@ -17,7 +17,7 @@ export const BundledPageEvent = Symbol('page bundling completed')
 export const BundlePageErrorEvent = Symbol('Error page bundling')
 export interface PageBundleServiceEvents extends OutputServiceEvents {
   [BundlePageEvent]: PageBundleService['handleBundling']
-  [BundledPageEvent]: (page: string) => void
+  [BundledPageEvent]: (page: string, time: [number, number]) => void
   [BundlePageErrorEvent]: () => void
 }
 
@@ -32,6 +32,7 @@ export class PageBundleService {
   browserPageBundler!: BrowserPageBundleService
   backendPageBundler!: BackendPageBundleService
   bundled = new Set<'browser' | 'backend'>()
+  bundlingTimer: [number, number] = [0, 0]
 
   config = {
     compatible: false,
@@ -75,10 +76,28 @@ export class PageBundleService {
     this.bundlerBus.emit(BundleBrowserPageEvent, page)
   }
 
-  private handleBundled = (type: 'browser' | 'backend') => () => {
-    // tslint:disable-next-line:no-unused-expression
-    this.bundled.add(type).size === 2 &&
-      this.bus.emit(BundledPageEvent, this.config.page)
+  private handleBundled = (type: 'browser' | 'backend') => (
+    timing: [number, number]
+  ) => {
+    this.bundlingTimer =
+      timing[0] > this.bundlingTimer[0]
+        ? timing
+        : timing[0] === this.bundlingTimer[0] &&
+          timing[1] >= this.bundlingTimer[1]
+        ? timing
+        : this.bundlingTimer
+    if (this.bundled.add(type).size !== 2) {
+      return
+    }
+    this.bus.emit(BundledPageEvent, this.config.page, this.bundlingTimer)
+    const logEventOpts = {
+      page: this.config.page,
+      time: this.bundlingTimer,
+    }
+    this.bus.emit(LogEvent, 'PageBundleService', 'Bundled', logEventOpts)
+
+    this.bundled = new Set()
+    this.bundlingTimer = [0, 0]
   }
 
   private emitError = () => this.bus.emit(BundlePageErrorEvent)
