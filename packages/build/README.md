@@ -3,6 +3,10 @@
 This package can transform a seagull app `src/` directory into a deployable
 application bundle.
 
+## How to Build
+
+- Just run `seagull-build` within your seagull application. This will start the ReleaseOperator.
+
 ## Source Folder
 
 The tool will read code from a seagull source code repository (`cwd`) and uses

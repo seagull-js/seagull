@@ -108,36 +108,16 @@ export class Operator extends EventBus<any> {
   }
 
   setupWiring() {
-    const ctx = (m: Message) => (m instanceof Array ? m[0] : this)
-    const event = (m: Message) => (m instanceof Array ? m[1] : m)
-
-    const wire = ({ from, to, type }: ExplicitWiring) =>
-      from.ctx[type](from.event, to.ctx.emit.bind(to.ctx, to.event as any))
-
-    const getFromType = (wiring: Wiring) => {
-      let type: 'on' | 'once' = 'on'
-      type = 'on' in wiring ? 'on' : type
-      type = 'once' in wiring ? 'once' : type
-      return type
-    }
-
-    const buildWiringInfo = (
-      type: 'on' | 'once',
-      from: Message,
-      to: Message
-    ): ExplicitWiring => ({
-      from: { ctx: ctx(from), event: event(from) },
-      to: { ctx: ctx(to), event: event(to) },
-      type,
-    })
-
-    const applyToOperator = (wiring: Wiring) => {
-      const type = getFromType(wiring)
-      const from: Message = (wiring as any)[type]
-
-      const wireInfo = buildWiringInfo(type, from, wiring.emit)
-      wire(wireInfo)
-    }
-    this.wiring.forEach(applyToOperator)
+    this.wiring.forEach(applyToOperator.bind(this))
   }
+}
+
+function applyToOperator(this: Operator, wiring: Wiring) {
+  const ctx = (m: Message) => (m instanceof Array ? m[0] : this)
+  const event = (m: Message) => (m instanceof Array ? m[1] : m)
+  const type = 'once' in wiring ? 'once' : 'on'
+  const fromMessage: Message = (wiring as any)[type]
+  const from = { ctx: ctx(fromMessage), event: event(fromMessage) }
+  const to = { ctx: ctx(wiring.emit), event: event(wiring.emit) }
+  from.ctx[type](from.event, to.ctx.emit.bind(to.ctx, to.event))
 }
