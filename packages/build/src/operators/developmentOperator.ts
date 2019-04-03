@@ -12,12 +12,17 @@ export class DevOperator extends Operator {
     { once: E.GeneratedCodeEvent, emit: E.StartBackendEvent },
     { on: E.BundledPageEvent, emit: E.PageBundleEmitted },
   ]
+  startupTimer?: [number, number]
 
   constructor() {
     super()
+    this.on(O.StartEvent, this.startTimer)
+
     this.addDevServices()
     this.setupWiring()
     this.addLazyPageOperator()
+
+    this.on(E.StartBackendEvent, this.stopTimer)
   }
 
   addDevServices() {
@@ -30,4 +35,9 @@ export class DevOperator extends Operator {
   }
 
   addLazyPageOperator = () => new LazyPageOperator(this)
+  startTimer = () => (this.startupTimer = process.hrtime())
+  stopTimer = () => {
+    const time = process.hrtime(this.startupTimer)
+    this.emit(E.LogEvent, 'DevOperator', 'Startup', { time })
+  }
 }
