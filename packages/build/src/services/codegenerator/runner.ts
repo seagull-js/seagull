@@ -18,6 +18,7 @@ app.use(morgan('combined'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static(join(process.cwd(),'static')));
+app.use(express.static(\`${process.cwd()}/dist/assets/static\`));
 
 ${lazy && appProxy}
 
@@ -33,12 +34,13 @@ const requireRoute = (routePath)=>{
     const rPath = join(process.cwd(),'dist','routes',relRoutePath)
     const route = require(rPath).default;
     if(!SGRoutes.routeIsValid(route)){
-      throw new Error('Route not valid')
+      throw new Error('Route not valid');
     }
     return route
   }
   catch (error) {
     console.log('error loading route:', routePath, error);
+    exit(1);
   }
 }
 
