@@ -4,7 +4,6 @@ import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import { pathIsValid, Route, RouteContext, routeIsValid } from '../src'
 
 class DemoRoute extends Route {
-  static method = 'GET'
   static path = '/'
   static async handler(this: RouteContext) {
     return this.text('hello world')

@@ -4,7 +4,7 @@ import { join, resolve } from 'path'
 import * as sts from 'stream-string'
 import * as wify from 'watchify'
 import { getCacheRef } from './cache'
-import { addBabelTransform } from './transforms'
+import { addBabelTransform, addEnvify, addUglifyify } from './transforms'
 
 export class BrowserLibraryBundle {
   /** which packages should be bundle */
@@ -112,6 +112,7 @@ export class Bundler {
     this.bfy = this.bundlerType.bfyInstance(this.bundlerOpts())
     this.addExcludes()
     this.addCompatible()
+    this.addOptimizations()
     this.addWatchMode()
   }
 
@@ -129,6 +130,14 @@ export class Bundler {
     'compatible' in this.bundlerType &&
       this.bundlerType.compatible &&
       addBabelTransform(this.bfy)
+  }
+
+  private addOptimizations() {
+    if (!this.bundlerType.optimized) {
+      return
+    }
+    addEnvify(this.bfy)
+    addUglifyify(this.bfy)
   }
 
   private addWatchMode() {

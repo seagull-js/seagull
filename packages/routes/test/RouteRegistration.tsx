@@ -5,7 +5,6 @@ import * as httpMocks from 'node-mocks-http'
 import { Route, RouteContext, RouteTest } from '../src'
 
 class DemoRoute extends Route {
-  static method = 'GET'
   static path = '/'
   static async handler(this: RouteContext) {
     return this.text('demo route')
@@ -13,7 +12,6 @@ class DemoRoute extends Route {
 }
 
 class DemoRoute2 extends Route {
-  static method = 'GET'
   static path = '/api'
   static async handler(this: RouteContext) {
     return this.text('demo route2')

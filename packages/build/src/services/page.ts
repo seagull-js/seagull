@@ -59,12 +59,12 @@ export class PageBundleService {
 
   private createBackendPageBundler = () => {
     const bus = this.bundlerBus as BackendPageBundlerBus
-    const config = { page: this.config.page }
+    const config = { ...this.config, page: this.config.page }
     this.backendPageBundler = new BackendPageBundleService(bus, config)
   }
   private createBrowserPageBundler = () => {
     const bus = this.bundlerBus as BrowserPageBundlerBus
-    const config = { page: this.config.page }
+    const config = { ...this.config, page: this.config.page }
     this.browserPageBundler = new BrowserPageBundleService(bus, config)
   }
 

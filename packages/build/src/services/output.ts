@@ -46,6 +46,9 @@ export class OutputService {
    * @param msg
    */
   log(module: string, event: string, data: any) {
+    if (data && data.time) {
+      data.time = `${data.time[0]}s ${(data.time[1] / 1000000).toFixed()}ms`
+    }
     const type = `${module}:${event}`
     switch (type) {
       case 'CompilerService:diagnostic':
