@@ -1,9 +1,9 @@
 import { injectable } from 'inversify'
 import { Response } from 'node-fetch'
 import 'reflect-metadata'
-import { HttpError } from '.'
 import { RequestInitBase, RequestInitGet } from '../interface'
 import { Http } from '../mode/cloud'
+import { HttpError } from '../typings/http_error'
 
 /**
  * Http json client.
@@ -30,9 +30,10 @@ export class HttpJson {
     const res = await response
 
     if (res.status !== 200) {
-      throw Object.assign(res, {
+      throw {
+        details: res,
         message: `Http error code ${res.status}: ${res.statusText}`,
-      }) as HttpError
+      } as HttpError
     }
 
     return await res.json()

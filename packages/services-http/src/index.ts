@@ -3,6 +3,7 @@ import { Http } from './mode/cloud'
 // types
 export { RequestInitBase, RequestInitGet } from './interface'
 export { RequestInit, Response } from 'node-fetch'
+export { HttpError } from './typings/http_error'
 
 // services
 export { Http }

@@ -1,18 +1,12 @@
-import { ServiceTest } from '@seagull/testing'
+import { BasicTest } from '@seagull/testing'
 import { expect } from 'chai'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
-import { S3, s3ServicesModule } from '../src'
+import { S3Pure } from '../src'
 
-@suite('S3::DeleteFile')
-export class Test extends ServiceTest {
-  serviceModules = [s3ServicesModule]
-  services = []
-  s3!: S3
-
-  beforeEach() {
-    this.s3 = this.injector.get(S3)
-  }
+@suite('S3::Pure')
+export class Test extends BasicTest {
+  s3 = new S3Pure()
 
   @test
   async 'can write and read a file'() {
@@ -55,9 +49,7 @@ export class Test extends ServiceTest {
     try {
       await this.s3.readFile('mybucket', 'index.html')
     } catch (e) {
-      expect(e.message).to.eq(
-        'S3: File not found and fixture (seed) is missing.'
-      )
+      expect(e.message).to.eq('S3: File not found or empty.')
     }
   }
 
@@ -70,9 +62,18 @@ export class Test extends ServiceTest {
     try {
       await this.s3.readFile('mybucket', 'index.html')
     } catch (e) {
-      expect(e.message).to.eq(
-        'S3: File not found and fixture (seed) is missing.'
-      )
+      expect(e.message).to.eq('S3: File not found or empty.')
     }
+  }
+
+  @test
+  async 'can add local folder to mocked S3 bucket'() {
+    await this.s3.writeFolder('mybucket', `${process.cwd()}/seed/static`)
+    console.info('files:', await this.s3.listFiles('mybucket'))
+
+    const file = await this.s3.readFile('mybucket', 'index.html')
+    expect(file).to.eq('content\n')
+    const file2 = await this.s3.readFile('mybucket', 'asdf/asdf.html')
+    expect(file2).to.eq('asdf\n')
   }
 }

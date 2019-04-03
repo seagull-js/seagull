@@ -4,8 +4,8 @@ import * as AWS from 'aws-sdk'
 import { PromiseResult } from 'aws-sdk/lib/request'
 import { injectable } from 'inversify'
 import 'reflect-metadata'
-import { S3Error } from '../error'
 import { IS3 } from '../interface'
+import { S3Error } from '../typings/s3_error'
 
 /**
  * Http (default) cloud mode implementation.
@@ -88,11 +88,12 @@ export abstract class S3Base implements IS3 {
     const res = await response
 
     if (res && res.$response && res.$response.error) {
-      throw Object.assign(res, {
+      throw {
+        details: res,
         message: `S3 error code ${res.$response.error.code}: ${
           res.$response.error.message
         }`,
-      }) as S3Error
+      } as S3Error
     }
 
     return res

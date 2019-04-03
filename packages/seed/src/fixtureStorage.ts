@@ -68,13 +68,6 @@ export class FixtureStorage<T> {
     )
   }
 
-  static createByS3Params<T>(
-    bucketName: string,
-    filePath: string
-  ): FixtureStorage<T> {
-    return new FixtureStorage(`s3/${bucketName}/${filePath}`)
-  }
-
   private static hash(key: string) {
     return crypto
       .createHash('md5')
