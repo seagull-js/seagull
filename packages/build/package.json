@@ -38,15 +38,16 @@
   "devDependencies": {
     "@seagull/tslint": "^3.0.7",
     "@types/browserify": "^12.0.36",
-    "@types/watchify":"^3.7.4",
     "@types/chokidar": "^1.7.5",
-    "stream-buffers": "^3.0.2",
-    "@types/lodash": "^4.14.123"
+    "@types/envify": "0.0.29",
+    "@types/lodash": "^4.14.123",
+    "@types/watchify": "^3.7.4",
+    "stream-buffers": "^3.0.2"
   },
   "dependencies": {
     "@babel/core": "^7.2.2",
     "@babel/polyfill": "^7.2.5",
-    "@babel/preset-env": "^7.3.1",  
+    "@babel/preset-env": "^7.3.1",
     "@seagull/libraries": "^3.0.7",
     "@seagull/commands": "^3.0.7",
     "@seagull/commands-fs": "^3.0.7",
@@ -59,15 +60,17 @@
     "babelify": "^10.0.0",
     "browserify": "^16.2.0",
     "browserify-incremental": "^3.1.1",
-    "watchify":"^3.11.1",
+    "watchify": "^3.11.1",
     "chokidar": "^2.0.3",
     "core-js": "^2.6.4",
     "lodash": "^4.17.5",
     "morgan": "^1.9.1",
     "stoppable": "1.0.5",
     "stream-string": "^2.0.1",
-    "uglify-es": "^3.3.9",
-    "node-dev":"3.1.2"
+    "uglify-js": "^3.5.3",
+    "uglifyify": "^5.0.1",
+    "envify": "^4.1.0",
+    "node-dev": "3.1.2"
   },
   "peerDependencies": {
     "typescript": "*"
