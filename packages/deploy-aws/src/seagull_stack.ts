@@ -81,10 +81,13 @@ export class SeagullStack extends Stack {
     const name = `${this.id}-${cfdName}`
     const domainName = getApiGatewayDomain(props.apiGateway.url)
     const originPath = getApiGatewayPath(props.apiGateway.url)
-    const allowedMethods = CF.CloudFrontAllowedMethods.ALL
-    const forwardedValues = { headers: ['authorization'], queryString: true }
-    const isDefaultBehavior = true
-    const behaviors = [{ allowedMethods, forwardedValues, isDefaultBehavior }]
+    const defaultBehavior = {
+      allowedMethods: CF.CloudFrontAllowedMethods.ALL,
+      compress: true,
+      forwardedValues: { headers: ['authorization'], queryString: true },
+      isDefaultBehavior: true,
+    }
+    const behaviors = [defaultBehavior]
     const customOriginSource = { domainName }
     const conf = {
       aliasConfiguration: props.aliasConfig,
