@@ -1,5 +1,11 @@
 # CHANGE LOG
 
+## NEXT
+
+### Patch
+
+- @seagull/deploy-aws -> cloudfront uses gzip now correclty
+
 ## 3.4.0 - 2019-04-02
 
 - @seagull/deploy-aws -> added feature to modify deploy stack within an app
