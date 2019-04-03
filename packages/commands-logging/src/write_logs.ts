@@ -56,7 +56,6 @@ export class WriteLogs extends Command<
       .promise()
 
     const result = await client.putLogEvents(this.params).promise()
-    console.info('putLogEvents', result)
 
     return result
   }

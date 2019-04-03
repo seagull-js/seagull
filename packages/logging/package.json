@@ -1,66 +1,66 @@
 {
-    "name": "@seagull/logging",
-    "version": "3.0.7",
-    "description": "Logging utilities for the Seagull Framework",
-    "main": "dist/src/index.js",
-    "types": "dist/src/index.d.ts",
-    "scripts": {
-        "build": "rm -rf dist && tsc",
-        "test": "NODE_ENV=test tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
-        "test:watch": "npm run test -- --watch --reporter min",
-        "docs": "rm -rf docs && typedoc --mode modules --ignoreCompilerErrors --excludeExternals --excludePrivate --excludeNotExported --out docs src"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/seagull-js/seagull.git"
-    },
-    "keywords": [
-        "web",
-        "framework",
-        "web framework",
-        "serverless",
-        "cloud",
-        "aws",
-        "react",
-        "react.js",
-        "isomorphic"
+  "name": "@seagull/logging",
+  "version": "3.3.0",
+  "description": "Logging utilities for the Seagull Framework",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "test": "NODE_ENV=test tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
+    "test:watch": "npm run test -- --watch --reporter min",
+    "docs": "rm -rf docs && typedoc --mode modules --ignoreCompilerErrors --excludeExternals --excludePrivate --excludeNotExported --out docs src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seagull-js/seagull.git"
+  },
+  "keywords": [
+    "web",
+    "framework",
+    "web framework",
+    "serverless",
+    "cloud",
+    "aws",
+    "react",
+    "react.js",
+    "isomorphic"
+  ],
+  "author": "Maximilian Stroh",
+  "license": "LGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/seagull-js/seagull/issues"
+  },
+  "homepage": "https://github.com/seagull-js/seagull#readme",
+  "devDependencies": {
+    "@seagull/tslint": "^3.3.0",
+    "@types/lodash": "^4.14.107",
+    "@types/npmlog": "^4.1.1"
+  },
+  "dependencies": {
+    "lodash": "^4.17.5",
+    "npmlog": "^4.1.2"
+  },
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".tsx"
     ],
-    "author": "Maximilian Stroh",
-    "license": "LGPL-3.0",
-    "bugs": {
-        "url": "https://github.com/seagull-js/seagull/issues"
-    },
-    "homepage": "https://github.com/seagull-js/seagull#readme",
-    "devDependencies": {
-        "@seagull/tslint": "^3.0.7",
-        "@types/lodash": "^4.14.107",
-        "@types/npmlog": "^4.1.1"
-    },
-    "dependencies": {
-        "lodash": "^4.17.5",
-        "npmlog": "^4.1.2"
-    },
-    "nyc": {
-        "extension": [
-            ".ts",
-            ".tsx"
-        ],
-        "exclude": [
-            "**/*.d.ts",
-            "coverage",
-            "dist",
-            "docs",
-            "node_modules",
-            "test"
-        ],
-        "reporter": [
-            "html",
-            "text",
-            "text-summary"
-        ]
-    },
-    "publishConfig": {
-        "access": "public"
-    },
-    "gitHead": "17e3e76bc834c2a7b6f966ce331d2e859138529d"
+    "exclude": [
+      "**/*.d.ts",
+      "coverage",
+      "dist",
+      "docs",
+      "node_modules",
+      "test"
+    ],
+    "reporter": [
+      "html",
+      "text",
+      "text-summary"
+    ]
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "17e3e76bc834c2a7b6f966ce331d2e859138529d"
 }

@@ -1,6 +1,6 @@
 {
   "name": "@seagull/mock-cloudwatchlogs",
-  "version": "3.0.7",
+  "version": "3.3.0",
   "description": "AWS CloudWatchLogs Mocking module for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -32,8 +32,8 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/mock-fs": "^3.0.7",
-    "@seagull/tslint": "^3.0.7",
+    "@seagull/mock-fs": "^3.3.0",
+    "@seagull/tslint": "^3.3.0",
     "aws-sdk": "*",
     "memfs": "^2.14.2"
   },
@@ -57,9 +57,9 @@
     ]
   },
   "dependencies": {
-    "@seagull/libraries": "^3.0.7",
-    "@seagull/mock": "^3.0.7",
-    "@seagull/testing": "^3.0.7",
+    "@seagull/libraries": "^3.3.0",
+    "@seagull/mock": "^3.3.0",
+    "@seagull/testing": "^3.3.0",
     "aws-sdk-mock": "^1.7.0",
     "moment": "^2.24.0"
   },

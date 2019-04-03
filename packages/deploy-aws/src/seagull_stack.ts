@@ -7,7 +7,7 @@ import * as CB from '@aws-cdk/aws-codebuild'
 import { GitHubSourceAction, Pipeline } from '@aws-cdk/aws-codepipeline'
 import * as Events from '@aws-cdk/aws-events'
 import * as IAM from '@aws-cdk/aws-iam'
-import { Code, Function as LambdaFunction, Runtime } from '@aws-cdk/aws-lambda'
+import { Code, Function as Lambda, Runtime } from '@aws-cdk/aws-lambda'
 import { LogGroup } from '@aws-cdk/aws-logs'
 import * as S3 from '@aws-cdk/aws-s3'
 import { getApiGatewayDomain, getApiGatewayPath } from './lib'
@@ -36,26 +36,26 @@ export class SeagullStack extends Stack {
     return bucket
   }
 
-  addUniversalLambda(lambdaName: string, folder: string, role: IAM.Role) {
-    const name = `${this.id}-${lambdaName}`
+  addLambda(name: string, folder: string, role: IAM.Role, env: any) {
+    const lambdaName = `${this.id}-${name}`
     const conf = {
       code: Code.asset(`${folder}/.seagull/deploy`),
       description: 'universal route',
-      environment: { MODE: 'cloud', APP: this.id },
-      functionName: `${name}-handler`,
+      environment: env,
+      functionName: `${lambdaName}-handler`,
       handler: 'dist/assets/backend/lambda.handler',
       memorySize: 1536,
       role,
       runtime: Runtime.NodeJS810,
       timeout: 300,
     }
-    return new LambdaFunction(this, name, conf)
+    return new Lambda(this, lambdaName, conf)
   }
 
-  addUniversalApiGateway(gatewayName: string, lambda: LambdaFunction) {
-    const name = `${this.id}-${gatewayName}`
+  addUniversalApiGateway(apiGWName: string, lambda: Lambda, stageName: string) {
+    const name = `${this.id}-${apiGWName}`
     const defaultIntegration = new LambdaIntegration(lambda)
-    const conf = { binaryMediaTypes: ['*/*'] }
+    const conf = { binaryMediaTypes: ['*/*'], deployOptions: { stageName } }
     const apiGateway = new RestApi(this, name, conf)
     const proxy = apiGateway.root.addResource('{any+}')
     apiGateway.root.addMethod('GET', defaultIntegration)
