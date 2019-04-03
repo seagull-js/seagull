@@ -8,9 +8,10 @@ export class PageOperator extends Operator {
   pages: PageService[] = []
   bundled = new Set<string>()
   bundleTimer?: [number, number]
-
-  constructor(parent: Operator) {
+  config: Partial<PageService['config']> = {}
+  constructor(parent: Operator, config?: Partial<PageService['config']>) {
     super(parent)
+    Object.assign(this.config, config)
     this.parent!.on(PageOperator.StartEvent, this.bundleAll)
     this.on(E.BundledPageEvent, this.handleBundled)
     this.on(E.LogEvent, (this.parent as any).emit.bind(this.parent, LogEvent))
@@ -20,7 +21,8 @@ export class PageOperator extends Operator {
     this.bundleTimer = process.hrtime()
     listPages(process.cwd()).map(this.handleBundleRequested)
   }
-  addPage = (page: string) => this.pages.push(new PageService(this, { page }))
+  addPage = (page: string) =>
+    this.pages.push(new PageService(this, { page, ...this.config }))
 
   handleBundleRequested = (page: string) =>
     this.addPage(page) && this.emit(E.BundlePageEvent, page)

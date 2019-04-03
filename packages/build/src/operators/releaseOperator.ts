@@ -36,11 +36,12 @@ export class ReleaseOperator extends Operator {
     this.addCodeGeneratorService({ release: true })
     this.addCompileService({ watch: false })
     this.addVendorBundleService({ compatible: true, optimized: true })
-    this.addLambdaBackendService({ optimized: true, watch: false })
-    this.addServerBackendService({ optimized: true, watch: false })
+    this.addLambdaBackendService({ optimized: false, watch: false })
+    this.addServerBackendService({ optimized: false, watch: false })
     this.addOutputService()
   }
-  addPageOperator = () => new PageOperator(this)
+  addPageOperator = () =>
+    new PageOperator(this, { optimized: true, compatible: true })
 
   waitForDone = () =>
     Promise.all([
