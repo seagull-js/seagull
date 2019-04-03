@@ -52,7 +52,9 @@ export class BackendPageBundleService {
     page === this.config.page && this.bundler.bundle()
   }
 
-  private handleBundled = () => {
+  private handleBundled = (time: [number, number]) => {
+    const logEventOpts = { time, page: this.config.page }
+    this.bus.emit(LogEvent, 'BackendPageBundleService', 'Bundled', logEventOpts)
     this.bus.emit(BundledBackendPageEvent, this.config.page)
   }
 

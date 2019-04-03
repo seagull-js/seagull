@@ -75,8 +75,9 @@ export class Bundler {
     | NodeAppBundle
 
   private watch = false
-  private onBundled: () => void
+  private onBundled: (timing: [number, number]) => void
   private onError: (err: any) => void
+  private bundlingTimer?: [number, number]
 
   constructor(
     bundlerType: Bundler['bundlerType'],
@@ -92,11 +93,12 @@ export class Bundler {
   }
 
   bundle = async () => {
+    this.bundlingTimer = process.hrtime()
     const stream = this.bfy.bundle()
     this.addErrorLogging(stream)
     const content = await sts(stream)
     await new FS.WriteFile(this.bundlerType.dstFile, content).execute()
-    this.onBundled()
+    this.onBundled(process.hrtime(this.bundlingTimer))
   }
 
   private bundlerOpts(): bfy.Options {
@@ -121,12 +123,14 @@ export class Bundler {
     // tslint:disable-next-line:no-unused-expression
     'excludes' in this.bundlerType && this.bundlerType.excludes.forEach(exclude)
   }
+
   private addCompatible() {
     // tslint:disable-next-line:no-unused-expression
     'compatible' in this.bundlerType &&
       this.bundlerType.compatible &&
       addBabelTransform(this.bfy)
   }
+
   private addWatchMode() {
     const opts: wify.Options = { delay: 10, ignoreWatch: true }
     // tslint:disable-next-line:no-unused-expression

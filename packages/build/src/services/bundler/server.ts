@@ -50,7 +50,8 @@ export class ServerBundleService {
     this.bundler.bundle()
   }
 
-  private handleBundled = () => {
+  private handleBundled = (time: [number, number]) => {
+    this.bus.emit(LogEvent, 'ServerBundleService', 'Bundled', { time })
     this.bus.emit(BundledServerEvent)
   }
   private handleError = (err: any) => {

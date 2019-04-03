@@ -49,7 +49,8 @@ export class LambdaBundleService {
     this.bundler.bundle()
   }
 
-  private handleBundled = () => {
+  private handleBundled = (time: [number, number]) => {
+    this.bus.emit(LogEvent, 'LambdaBundleService', 'Bundled', { time })
     this.bus.emit(BundledLambdaEvent)
   }
   private handleError = (err: any) => {

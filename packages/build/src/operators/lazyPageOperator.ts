@@ -7,6 +7,7 @@ export class LazyPageOperator extends Operator {
   wiring: Wiring[] = [
     { on: [this.parent!, E.PageBundleRequested], emit: E.PageBundleRequested },
     { on: E.BundledPageEvent, emit: [this.parent!, E.BundledPageEvent] },
+    { on: E.LogEvent, emit: [this.parent!, E.LogEvent] },
   ]
 
   constructor(parent: Operator) {

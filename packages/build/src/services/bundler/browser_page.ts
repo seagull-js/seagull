@@ -57,7 +57,9 @@ export class BrowserPageBundleService {
     page === this.config.page && this.bundler.bundle()
   }
 
-  private handleBundled = () => {
+  private handleBundled = (time: [number, number]) => {
+    const logEventOpts = { time, page: this.config.page }
+    this.bus.emit(LogEvent, 'BrowserPageBundleService', 'Bundled', logEventOpts)
     this.bus.emit(BundledBrowserPageEvent, this.config.page)
   }
 

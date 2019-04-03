@@ -53,7 +53,7 @@ export class PageBundleService {
     this.bundlerBus.on(BundleBackendPageErrorEvent, this.emitError)
     this.createBackendPageBundler()
     this.createBrowserPageBundler()
-    this.bundlerBus.on(LogEvent, (this as any).bus.emit.bind(this, LogEvent))
+    this.bundlerBus.on(LogEvent, (bus as any).emit.bind(this.bus, LogEvent))
   }
 
   private createBackendPageBundler = () => {

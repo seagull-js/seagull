@@ -1,6 +1,6 @@
 import { listPages } from '../lib/project'
 import * as E from '../services'
-import { PageBundleService as PageService } from '../services'
+import { LogEvent, PageBundleService as PageService } from '../services'
 import { Operator, Wiring } from './operator'
 
 export class PageOperator extends Operator {
@@ -12,6 +12,7 @@ export class PageOperator extends Operator {
     super(parent)
     this.parent!.on(PageOperator.StartEvent, this.bundleAll)
     this.on(E.BundledPageEvent, this.handleBundled)
+    this.on(E.LogEvent, (this.parent as any).emit.bind(this.parent, LogEvent))
   }
 
   bundleAll = () => listPages(process.cwd()).map(this.handleBundleRequested)
