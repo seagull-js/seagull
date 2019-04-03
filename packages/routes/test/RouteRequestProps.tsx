@@ -45,9 +45,8 @@ export class Test extends RouteTest {
   route = DemoRoute
 
   @test
-  'can be instantiated and executed'() {
-    const props = RouteParams.create({ numProp: 3, stringProp: '' })
-    expect(props).to.be.an('object')
+  async 'can be instantiated and executed'() {
+    RouteParams.create({ numProp: 3, stringProp: '' })
   }
   @test
   async 'throws for invalid'() {
