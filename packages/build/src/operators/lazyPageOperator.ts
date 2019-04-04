@@ -3,6 +3,7 @@ import { PageBundleService as PageService } from '../services'
 import { Operator, Wiring } from './operator'
 
 export class LazyPageOperator extends Operator {
+  config: Partial<PageService['config']> = {}
   pages: PageService[] = []
   wiring: Wiring[] = [
     { on: [this.parent!, E.PageBundleRequested], emit: E.PageBundleRequested },
@@ -10,8 +11,9 @@ export class LazyPageOperator extends Operator {
     { on: E.LogEvent, emit: [this.parent!, E.LogEvent] },
   ]
 
-  constructor(parent: Operator) {
+  constructor(parent: Operator, config?: Partial<PageService['config']>) {
     super(parent)
+    Object.assign(this.config, config)
     this.setupWiring()
     this.on(E.PageBundleRequested, this.handleBundleRequested)
   }
@@ -23,5 +25,6 @@ export class LazyPageOperator extends Operator {
   }
 
   hasPage = (page: string) => this.pages.find(s => s.config.page === page)
-  addPage = (page: string) => this.pages.push(new PageService(this, { page }))
+  addPage = (page: string) =>
+    this.pages.push(new PageService(this, { ...this.config, page }))
 }

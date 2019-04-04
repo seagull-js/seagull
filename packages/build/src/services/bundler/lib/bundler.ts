@@ -112,6 +112,7 @@ export class Bundler {
     this.bfy = this.bundlerType.bfyInstance(this.bundlerOpts())
     this.addExcludes()
     this.addCompatible()
+    addEnvify(this.bfy)
     this.addOptimizations()
     this.addWatchMode()
   }
@@ -136,7 +137,6 @@ export class Bundler {
     if (!this.bundlerType.optimized) {
       return
     }
-    addEnvify(this.bfy)
     addUglifyify(this.bfy)
   }
 

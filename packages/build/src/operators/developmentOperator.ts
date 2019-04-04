@@ -13,9 +13,15 @@ export class DevOperator extends Operator {
     { on: E.BundledPageEvent, emit: E.PageBundleEmitted },
   ]
   startupTimer?: [number, number]
+  config = {
+    compatible: false,
+    fast: false,
+    optimized: false,
+  }
 
-  constructor() {
+  constructor(config: any) {
     super()
+    this.applyConfig(config)
     this.on(O.StartEvent, this.startTimer)
 
     this.addDevServices()
@@ -25,16 +31,27 @@ export class DevOperator extends Operator {
     this.on(E.StartBackendEvent, this.stopTimer)
   }
 
+  applyConfig(config: any) {
+    const mapped = {
+      compatible: config.compatible,
+      fast: !config.typeCheck,
+      optimized: config.optimizeBundle,
+    }
+    Object.assign(this.config, mapped)
+  }
+
   addDevServices() {
+    const { optimized, compatible, fast } = this.config
+
     this.addPrepareService()
     this.addCodeGeneratorService()
-    this.addCompileService()
-    this.addVendorBundleService()
+    this.addCompileService({ watch: true, fast })
+    this.addVendorBundleService({ optimized, compatible })
     this.addBackendRunnerService()
     this.addOutputService()
   }
 
-  addLazyPageOperator = () => new LazyPageOperator(this)
+  addLazyPageOperator = () => new LazyPageOperator(this, this.config)
   startTimer = () => (this.startupTimer = process.hrtime())
   stopTimer = () => {
     const time = process.hrtime(this.startupTimer)

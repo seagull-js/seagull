@@ -13,9 +13,15 @@ export class ReleaseOperator extends Operator {
     { once: PageOperator.DoneEvent, emit: E.BundleLambdaEvent },
     { once: PageOperator.DoneEvent, emit: E.BundleServerEvent },
   ]
+  config = {
+    compatible: true,
+    fast: false,
+    optimized: true,
+  }
 
-  constructor() {
+  constructor(config: any) {
     super()
+    this.applyConfig(config)
     this.setupWiring()
     this.addPageOperator()
     this.addReleaseServices()
@@ -31,17 +37,26 @@ export class ReleaseOperator extends Operator {
     this.on(E.BundleBackendPageErrorEvent, this.exitFailure)
   }
 
+  applyConfig(config: any) {
+    const mapped = {
+      compatible: config.compatible,
+      fast: !config.typeCheck,
+      optimized: config.optimizeBundle,
+    }
+    Object.assign(this.config, mapped)
+  }
+
   addReleaseServices() {
+    const { optimized, compatible, fast } = this.config
     this.addPrepareService({ release: true })
     this.addCodeGeneratorService({ release: true })
-    this.addCompileService({ watch: false })
-    this.addVendorBundleService({ compatible: true, optimized: true })
-    this.addLambdaBackendService({ optimized: false, watch: false })
-    this.addServerBackendService({ optimized: false, watch: false })
+    this.addCompileService({ watch: false, fast })
+    this.addVendorBundleService({ optimized, compatible })
+    this.addLambdaBackendService({ optimized, watch: false })
+    this.addServerBackendService({ optimized, watch: false })
     this.addOutputService()
   }
-  addPageOperator = () =>
-    new PageOperator(this, { optimized: true, compatible: true })
+  addPageOperator = () => new PageOperator(this, this.config)
 
   waitForDone = () =>
     Promise.all([
