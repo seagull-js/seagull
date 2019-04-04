@@ -34,22 +34,36 @@ export class S3Pure extends S3Base {
     }
   }
 
+  /**
+   * Returns all files within the path.
+   * @param path path
+   * @param includeSubfolders include subfolders
+   * @param filePaths file path list (for recursion)
+   */
   private listFilesFS(
     path: string,
     includeSubfolders = true,
-    fsPaths?: string[]
+    filePaths: string[] = []
   ) {
-    fsPaths = fsPaths || []
-    const files = fs.readdirSync(path)
-    for (const file of files) {
-      const name = `${path}/${file}`
-      const isDirectory = fs.statSync(name).isDirectory()
-      if (includeSubfolders && isDirectory) {
-        this.listFilesFS(name, includeSubfolders, fsPaths)
+    const elementsInFolder = fs.readdirSync(path)
+
+    for (const element of elementsInFolder) {
+      const elementPath = `${path}/${element}`
+      const isDirectory = fs.statSync(elementPath).isDirectory()
+      const skipDirectory = isDirectory && !includeSubfolders
+
+      if (skipDirectory) {
+        continue
+      }
+      if (isDirectory) {
+        //
+        this.listFilesFS(elementPath, includeSubfolders, filePaths)
       } else {
-        fsPaths.push(name)
+        // add file
+        filePaths.push(elementPath)
       }
     }
-    return fsPaths
+
+    return filePaths
   }
 }

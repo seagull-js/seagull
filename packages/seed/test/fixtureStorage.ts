@@ -37,7 +37,7 @@ export class Test {
     const fs = new FixtureStorage<string>('../seed/something', '.json')
     fs.set('asdf')
     expect(fs.config).to.be.an('object')
-    expect(fs.config.hook).to.be.a('function')
+    expect(fs.config.hook!('asdf')).to.eq('qwer')
     expect(fs.config.expiresInDays).to.eq(0)
   }
 }

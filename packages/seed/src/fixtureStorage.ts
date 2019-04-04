@@ -110,7 +110,7 @@ export class FixtureStorage<T> {
       )
       if (pathExistsSync(tsPath)) {
         // node_modules/@seagull/services-http/dist/src/seed
-        const seedFolder = `${__dirname}/${'../'.repeat(6)}`
+        const seedFolder = `${process.cwd()}/` // `${__dirname}/${'../'.repeat(6)}`
         config = Object.assign(config, require(seedFolder + tsPath).default)
       }
       return parentConfig
