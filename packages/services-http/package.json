@@ -38,14 +38,9 @@
     "@types/node-fetch": "^2.1.6"
   },
   "dependencies": {
-<<<<<<< HEAD:packages/services-http/package.json
     "@seagull/seed": "3.4.1",
     "@seagull/mode": "3.4.1",
     "@seagull/libraries": "3.4.1",
-=======
-    "@seagull/commands": "3.4.1",
-    "@seagull/mode": "3.4.1",
->>>>>>> master:packages/http/package.json
     "encoding": "^0.1.12",
     "iconv-lite": "^0.4.24",
     "inversify": "^5.0.1",
