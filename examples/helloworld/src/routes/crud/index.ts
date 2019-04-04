@@ -2,7 +2,7 @@ import { Route, RouteContext } from '@seagull/routes'
 import { Term } from '../../items'
 
 export default class extends Route {
-  static method = 'get'
+  static method = 'GET' as const
   static path = '/glossary'
 
   static async handler(this: RouteContext) {
