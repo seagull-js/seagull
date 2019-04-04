@@ -32,15 +32,15 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/testing": "3.4.2",
-    "@seagull/tslint": "3.4.2"
+    "@seagull/testing": "^3.4.2",
+    "@seagull/tslint": "^3.4.2"
   },
   "dependencies": {
-    "@seagull/commands": "3.4.2",
-    "@seagull/commands-s3": "3.4.2",
-    "@seagull/libraries": "3.4.2",
-    "@seagull/mode": "3.4.2",
-    "@seagull/seed": "3.4.2",
+    "@seagull/commands": "^3.4.2",
+    "@seagull/commands-s3": "^3.4.2",
+    "@seagull/libraries": "^3.4.2",
+    "@seagull/mode": "^3.4.2",
+    "@seagull/seed": "^3.4.2",
     "inversify": "^5.0.1",
     "reflect-metadata": "^0.1.13"
   },
