@@ -2,6 +2,10 @@
 
 ## NEXT
 
+- @seagull/commands-logging -> more functions, better typing
+- @seagull/mock-cloudwatchlogs -> adjust mock to changed commands-logging package
+- @seagull/libraries -> added helper functions and types for frontend logging
+
 ### Patch
 
 - @seagull/deploy-aws -> cloudfront uses gzip now correclty
