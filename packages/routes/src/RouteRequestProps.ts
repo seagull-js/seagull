@@ -49,9 +49,9 @@ export abstract class RouteRequestProps {
    * Validates the instance. Throws if not valid
    */
   ensureValid() {
-    // const validation = CV.validateSync(this)
-    // const isValid = validation.length === 0
-    // // tslint:disable-next-line:no-unused-expression
-    // isValid || throwError('invalid instance')
+    const validation = CV.validateSync(this)
+    const isValid = validation.length === 0
+    // tslint:disable-next-line:no-unused-expression
+    isValid || throwError('invalid instance')
   }
 }

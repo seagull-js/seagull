@@ -46,7 +46,8 @@ export class Test extends RouteTest {
 
   @test
   async 'can be instantiated and executed'() {
-    RouteParams.create({ numProp: 3, stringProp: '' })
+    const testCase = () => RouteParams.create({ numProp: 3, stringProp: '' })
+    expect(testCase).not.to.throw()
   }
   @test.skip
   async 'throws for invalid'() {
