@@ -34,7 +34,7 @@ export class Test extends ServiceTest {
 
   @test
   async 'diModules are registered'() {
-    // @seagull/http
+    // @seagull/services-http
     const http = this.injector.get(DemoContainerInjectable)
     expect(http).to.be.an('object')
   }

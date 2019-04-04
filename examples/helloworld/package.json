@@ -25,7 +25,7 @@
     "@seagull/test-e2e": "^3.4.0",
     "@seagull/test-pages": "^3.4.0",
     "@seagull/tslint": "^3.4.0",
-    "@types/lodash": "^4.14.107",
+    "@types/lodash": "^4.14.123",
     "@types/node": "^8.10",
     "jsdom": "^13.0.0",
     "jsdom-global": "^3.0.2",

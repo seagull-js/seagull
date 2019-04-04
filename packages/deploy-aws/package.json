@@ -40,7 +40,7 @@
     "@seagull/testing": "^3.4.0",
     "@seagull/tslint": "^3.4.0",
     "@types/chai-as-promised": "^7.1.0",
-    "@types/lodash": "^4.14.107",
+    "@types/lodash": "^4.14.123",
     "@types/mock-require": "^2.0.0",
     "@types/yaml": "^1.0.1",
     "chai-as-promised": "^7.1.1",

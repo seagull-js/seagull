@@ -10,7 +10,7 @@
 The basic fetch command can be used like this:
 
 ```javascript
-import { Http } from '@seagull/http'
+import { Http } from '@seagull/services-http'
 ...
 class ... {
   // inject http implementation
@@ -25,7 +25,7 @@ class ... {
 For convinience, you can use content-specific adapters as well:
 
 ```javascript
-import { HttpJson } from '@seagull/http'
+import { HttpJson } from '@seagull/services-http'
 ...
 class ... {
   // inject http implementation
@@ -44,7 +44,7 @@ class ... {
 ### Bootstrap
 
 ```javascript
-import { containerModule } from '@seagull/http'
+import { containerModule } from '@seagull/services-http'
 import { Container } from 'inversify'
 
 const injector = new Container()
@@ -63,7 +63,7 @@ injector.load(containerModule)
 Use global switch to enable seed data generation while http request:
 
 ```javascript
-import { config } from '@seagull/http'
+import { config } from '@seagull/services-http'
 
 config.seed = true
 ...

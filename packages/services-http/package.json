@@ -1,5 +1,5 @@
 {
-  "name": "@seagull/http",
+  "name": "@seagull/services-http",
   "version": "3.4.0",
   "description": "Http services for the seagull framework",
   "main": "dist/src/index.js",

@@ -1,4 +1,4 @@
-import { Http } from '@seagull/http'
+import { Http } from '@seagull/services-http'
 import { Mode } from '@seagull/mode'
 import { expect } from 'chai'
 import 'chai/register-should'
