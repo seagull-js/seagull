@@ -62,7 +62,6 @@ export class CompilerService {
 
   private wrapEmit = (onEmit: ts.Program['emit']) => (...args: any) => {
     const emitted = onEmit(...args)
-    this.checkForCompileError(emitted.diagnostics)
     const time = process.hrtime(this.compileTimer!)
     this.bus.emit(LogEvent, 'CompilerService', 'compiled', { time })
     this.bus.emit(CompiledEvent)
@@ -97,13 +96,12 @@ export class CompilerService {
       this.compileTimer = process.hrtime()
     }
     this.bus.emit(LogEvent, 'CompilerService', type, { diagnostic })
+    this.checkForCompileError(diagnostic)
   }
 
-  private checkForCompileError = (diags: ReadonlyArray<ts.Diagnostic>) => {
-    const isError =
-      diags.findIndex(d => d.category === ts.DiagnosticCategory.Error) !== -1
-    const logDiag = this.logDiagnostics('diagnostic')
-    return isError && diags.map(logDiag) && this.bus.emit(CompileError)
+  private checkForCompileError = (diag: ts.Diagnostic) => {
+    const isError = diag.category === ts.DiagnosticCategory.Error
+    return isError && this.bus.emit(CompileError)
   }
 
   private setTranspileOnly(options: ts.CompilerOptions) {
