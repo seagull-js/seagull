@@ -26,10 +26,10 @@ class RouteParams extends RouteRequestProps {
   private xyz = 'xyz'
 
   // test that functions do not conflict with .create
-  iamafkt() {
-    return this.xyz
-  }
-  iamanonfkt = () => 3
+  // iamafkt() {
+  //   return this.xyz
+  // }
+  // iamanonfkt = () => 3
 }
 
 class DemoRoute extends Route {
