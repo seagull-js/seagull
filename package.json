@@ -6,7 +6,7 @@
     "build": "lerna run build",
     "changes": "lerna changed",
     "publish": "lerna publish",
-    "test": "NODE_ENV=test lerna run test --parallel",
+    "test": "NODE_ENV=test lerna run test --parallel --scope=\"@seagull/routes\"",
     "test:watch": "NODE_ENV=test lerna run test:watch --parallel"
   },
   "devDependencies": {
