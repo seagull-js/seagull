@@ -4,11 +4,15 @@
 
 ### Major
 
+- @seagull/all -> Service is now CommandService, Injectables (noname) are now services
+- @seagull/services-http -> http (noname) injectable is now http-service
+- @seagull/services-s3 -> new S3 service with writeFiles function to add multiple files at once
+
 ### Minor
 
 ### Patch
 
-## 3.4.1 - 2019-04-02
+## 3.4.1 - 2019-04-04
 
 - @seagull/deploy-aws -> fixed missing flag for compression in cloudfront
 - @seagull/deploy-aws -> cloudfront uses gzip now correctly
