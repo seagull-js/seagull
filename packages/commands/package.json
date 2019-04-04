@@ -35,7 +35,7 @@
     "@seagull/mode": "^3.4.0",
     "@seagull/testing": "^3.4.0",
     "@seagull/tslint": "^3.4.0",
-    "@types/lodash": "^4.14.107",
+    "@types/lodash": "^4.14.123",
     "@types/mock-fs": "^3.6.30",
     "mock-fs": "^4.5.0"
   },
