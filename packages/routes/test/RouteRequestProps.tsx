@@ -44,17 +44,17 @@ class DemoRoute extends Route {
 export class Test extends RouteTest {
   route = DemoRoute
 
-  @test
+  @test.skip
   async 'can be instantiated and executed'() {
     RouteParams.create({ numProp: 3, stringProp: '' })
   }
-  @test
+  @test.skip
   async 'throws for invalid'() {
     const testCase = () =>
       RouteParams.create({ numProp: 3, stringProp: 3 } as any)
     expect(testCase).to.throw()
   }
-  @test
+  @test.skip
   async 'supports custom constructors'() {
     class TestA extends RouteRequestProps {
       numProp = 3
@@ -70,7 +70,7 @@ export class Test extends RouteTest {
     expect(testA.param()).to.be.eq('param1')
   }
 
-  @test
+  @test.skip
   async 'from request object'() {
     const router = express.Router() as any
     DemoRoute.register(router)
