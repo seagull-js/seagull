@@ -78,7 +78,8 @@ export class SeagullProject {
     const app = new SeagullApp(appProps)
     const role = app.stack.addIAMRole('role', 'lambda.amazonaws.com', actions)
     app.role = role
-    const lambda = app.stack.addUniversalLambda('lambda', this.appPath, role)
+    const env = getEnv(name, this.appPath, this.mode)
+    const lambda = app.stack.addLambda('lambda', this.appPath, role, env)
     const apiGW = app.stack.addUniversalApiGateway('apiGW', lambda, this.mode)
     app.stack.addCloudfront('cloudfront', { apiGateway: apiGW, aliasConfig })
     const s3DeploymentNeeded = this.mode === 'prod' || this.branch === 'master'
@@ -161,4 +162,11 @@ async function buildCronJson(appPath: string) {
   const cronPath = `${appPath}/dist/cron.json`
   const cronFile = await new FS.ReadFile(cronPath).execute()
   return cronFile && cronFile !== '' ? JSON.parse(cronFile) : []
+}
+
+async function getEnv(name: string, appPath: string, mode: string) {
+  const env: any = { APP: name, MODE: 'cloud', NODE_ENV: mode }
+  const configPath = `${appPath}/.env.${mode}`
+  const config: string = await new FS.ReadFile(configPath).execute()
+  return lib.addEnvFromFile(env, config)
 }

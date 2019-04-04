@@ -36,20 +36,20 @@ export class SeagullStack extends Stack {
     return bucket
   }
 
-  addUniversalLambda(lambdaName: string, folder: string, role: IAM.Role) {
-    const name = `${this.id}-${lambdaName}`
+  addLambda(name: string, folder: string, role: IAM.Role, env: any) {
+    const lambdaName = `${this.id}-${name}`
     const conf = {
       code: Code.asset(`${folder}/.seagull/deploy`),
       description: 'universal route',
-      environment: { MODE: 'cloud', APP: this.id },
-      functionName: `${name}-handler`,
+      environment: env,
+      functionName: `${lambdaName}-handler`,
       handler: 'dist/assets/backend/lambda.handler',
       memorySize: 1536,
       role,
       runtime: Runtime.NodeJS810,
       timeout: 300,
     }
-    return new Lambda(this, name, conf)
+    return new Lambda(this, lambdaName, conf)
   }
 
   addUniversalApiGateway(apiGWName: string, lambda: Lambda, stageName: string) {
@@ -81,10 +81,13 @@ export class SeagullStack extends Stack {
     const name = `${this.id}-${cfdName}`
     const domainName = getApiGatewayDomain(props.apiGateway.url)
     const originPath = getApiGatewayPath(props.apiGateway.url)
-    const allowedMethods = CF.CloudFrontAllowedMethods.ALL
-    const forwardedValues = { headers: ['authorization'], queryString: true }
-    const isDefaultBehavior = true
-    const behaviors = [{ allowedMethods, forwardedValues, isDefaultBehavior }]
+    const defaultBehavior = {
+      allowedMethods: CF.CloudFrontAllowedMethods.ALL,
+      compress: true,
+      forwardedValues: { headers: ['authorization'], queryString: true },
+      isDefaultBehavior: true,
+    }
+    const behaviors = [defaultBehavior]
     const customOriginSource = { domainName }
     const conf = {
       aliasConfiguration: props.aliasConfig,
