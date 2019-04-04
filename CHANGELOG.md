@@ -8,12 +8,11 @@
 
 ### Patch
 
-- @seagull/deploy-aws -> cloudfront uses gzip now correctly
-- @seagull/deploy-aws -> bug fix in pipeline, where a dying e2e test leads to the github details will not give the cloudfront url, but the pipeline url.
-
 ## 3.4.1 - 2019-04-02
 
 - @seagull/deploy-aws -> fixed missing flag for compression in cloudfront
+- @seagull/deploy-aws -> cloudfront uses gzip now correctly
+- @seagull/deploy-aws -> bug fix in pipeline, where a dying e2e test leads to the github details will not give the cloudfront url, but the pipeline url.
 - @seagull/all -> harmonized seagull package version numbers
 
 ## 3.4.1 - 2019-04-02
