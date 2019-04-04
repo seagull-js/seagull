@@ -6,6 +6,11 @@
 
 - @seagull/deploy-aws -> cloudfront uses gzip now correclty
 
+## 3.4.1 - 2019-04-02
+
+- @seagull/deploy-aws -> fixed missing flag for compression in cloudfront
+- @seagull/all -> harmonized seagull package version numbers
+
 ## 3.4.0 - 2019-04-02
 
 - @seagull/deploy-aws -> added feature to modify deploy stack within an app
