@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/mode": "3.4.1",
+    "@seagull/mode": "^3.4.2",
     "@seagull/testing": "^3.4.2",
     "@seagull/tslint": "^3.4.2",
     "@types/lodash": "^4.14.123",

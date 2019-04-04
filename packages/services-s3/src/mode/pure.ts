@@ -13,26 +13,6 @@ export class S3Pure extends S3Base {
   protected mode: Readonly<IMode> = { environment: 'pure' }
 
   /**
-   * Reads a file from a mocked S3 bucket or fixture
-   * @param bucketName bucket name
-   * @param filePath file path
-   * @throws {S3Error}
-   */
-  async readFile(bucketName: string, filePath: string): Promise<string> {
-    let data
-    const cmd = new ReadFile(bucketName, filePath)
-    try {
-      data = await cmd.execute()
-    } catch (e) {
-      /** ignore */
-    }
-    if (data) {
-      return data
-    }
-    throw { message: 'S3: File not found or empty.' }
-  }
-
-  /**
    * Writes a local folder to a mocked S3 bucket
    * @param bucketName bucket name
    * @param filePath file path

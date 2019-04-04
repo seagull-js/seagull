@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "@seagull/commands-fs": "3.4.2",
-    "@seagull/services-http": "3.4.2",
+    "@seagull/services-http": "4.0.0",
     "@seagull/libraries": "3.4.2",
     "body-parser": "^1.18.3",
     "class-validator": "^0.9.1",
