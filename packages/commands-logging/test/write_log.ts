@@ -15,7 +15,11 @@ export class Test extends BasicTest {
       [23, 'Hello World', null, { foo: 'bar' }],
     ]
 
-    const command = new WriteLog('readLog', logs, 'error')
+    const command = new WriteLog({
+      log: logs,
+      logLevel: 'error',
+      logStreamName: 'readLog',
+    })
 
     await command.execute()
 
@@ -36,7 +40,11 @@ export class Test extends BasicTest {
       [23, 'Hello World', null, { foo: 'bar' }],
     ]
 
-    const command = new WriteLog('readLog', logs, 'error')
+    const command = new WriteLog({
+      log: logs,
+      logLevel: 'error',
+      logStreamName: 'readLog',
+    })
     const result = await command.revert()
     ;(result === undefined).should.be.equal(true)
   }

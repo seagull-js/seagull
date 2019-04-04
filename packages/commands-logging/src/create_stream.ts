@@ -1,5 +1,5 @@
 import { Command } from '@seagull/commands'
-import { getAppName } from '@seagull/libraries'
+import { CreateStreamRequest, getAppName } from '@seagull/libraries'
 import { CWLMockFS } from '@seagull/mock-cloudwatchlogs'
 import * as AWS from 'aws-sdk'
 import * as moment from 'moment'
@@ -21,10 +21,10 @@ export class CreateStream extends Command<string> {
   executeConnected = this.executeCloud
   executeEdge = this.exec.bind(this, new CWLMockFS('/tmp/.data') as any)
 
-  constructor(logStreamName: string) {
+  constructor(params: CreateStreamRequest) {
     super()
     this.logGroupName = `/${getAppName()}/data-log`
-    this.logStreamName = createStreamName(logStreamName)
+    this.logStreamName = createStreamName(params.logStreamName)
   }
 
   async execute() {

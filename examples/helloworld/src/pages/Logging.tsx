@@ -1,45 +1,83 @@
-import { sendLog } from '@seagull/libraries'
+import {
+  addLog,
+  AddLogRequest,
+  createStream,
+  getLog,
+  GetLogsRequest,
+} from '@seagull/libraries'
 import { Page } from '@seagull/pages'
+import * as moment from 'moment'
 import * as React from 'react'
-import { AddLogRequest } from '../routes/frontend-logging/add_log'
 
 export default class Logging extends Page {
+  state = {
+    counter: 0,
+    fullStreamName: '',
+    result: [],
+  }
+
   sequenceToken: string | undefined
-  fullStreamName: string | undefined
+
   html() {
     return (
       <div>
-        <button onClick={this.log}>Log Something</button>
-        <button onClick={this.getLog}>Get Logs</button>
+        <div>Counter: {this.state.counter}</div>
+        <p>
+          <button onClick={() => this.addLog('button1')}>Log Something</button>
+        </p>
+        <p>
+          <button onClick={() => this.addLog('button2')}>
+            Log Something else
+          </button>
+        </p>
+        <p>
+          {this.state.fullStreamName && (
+            <button onClick={this.getLog}>Get Logs</button>
+          )}
+        </p>
+        <ul>
+          {this.state.result.map((item: any, key) => (
+            <li key={item.timestamp}>
+              {item.message} =>{' '}
+              {moment(item.timestamp).format('DD.MM.YY - hh:mm:ss.SSS')}
+            </li>
+          ))}
+        </ul>
+        <p />
         <div />
       </div>
     )
   }
-  log = async () => {
-    this.fullStreamName = this.fullStreamName || (await this.createStream())
+  addLog = async (id: string) => {
+    this.setState({
+      counter: this.state.counter + 1,
+      fullStreamName: this.state.fullStreamName || (await this.createStream()),
+    })
     const log: AddLogRequest = {
-      log: 'HIT!',
-      logStreamName: this.fullStreamName,
+      log: id,
+      logStreamName: this.state.fullStreamName,
       sequenceToken: this.sequenceToken,
     }
 
-    const result = await sendLog('/log/addLog', log)
+    const result = await addLog('/log/addLog', log)
     this.sequenceToken = result.nextSequenceToken
   }
 
   getLog = async () => {
-    const params: GetLogRequest = {
-      log: 'HIT!',
-      logStreamName: this.fullStreamName,
-      sequenceToken: this.sequenceToken,
+    if (this.state.fullStreamName) {
+      const params: GetLogsRequest = {
+        logStreamName: this.state.fullStreamName,
+      }
+      const result = await getLog('/log/getLogs', params)
+      this.setState({ result })
+      console.info('read', result)
+      this.sequenceToken = result.nextSequenceToken
+    } else {
+      throw new Error('no stream created')
     }
-
-    const result = await sendLog('/log/addLog', log)
-    this.sequenceToken = result.nextSequenceToken
   }
 
   createStream = async () => {
-    const stream = { logStreamName: 'add-log-test' }
-    return (await sendLog('/log/createStream', stream)) as string
+    return await createStream('/log/createStream', 'add-log-test')
   }
 }

@@ -1,12 +1,6 @@
-import { AddLog, LogLevel, Message } from '@seagull/commands-logging'
+import { AddLog } from '@seagull/commands-logging'
+import { AddLogRequest } from '@seagull/libraries'
 import { HttpMethod, Route, RouteContext } from '@seagull/routes'
-
-export interface AddLogRequest {
-  logStreamName: string
-  log: Message
-  logLevel?: LogLevel
-  sequenceToken?: string
-}
 
 export default class extends Route {
   static method: HttpMethod = 'POST'
@@ -20,12 +14,12 @@ export default class extends Route {
       logLevel,
     }: AddLogRequest = this.request.body
 
-    const result = await new AddLog(
-      logStreamName,
+    const result = await new AddLog({
       log,
-      sequenceToken!,
-      logLevel
-    ).execute()
+      logLevel,
+      logStreamName,
+      sequenceToken,
+    }).execute()
 
     return this.json(result)
   }

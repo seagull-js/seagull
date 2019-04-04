@@ -2,14 +2,17 @@ import { ReadLog } from '@seagull/commands-logging'
 import { HttpMethod, Route, RouteContext } from '@seagull/routes'
 
 export default class extends Route {
-  static method: HttpMethod = 'GET'
-  static path = '/log/:id'
+  static method: HttpMethod = 'POST'
+  static path = '/log/getLogs'
 
   static async handler(this: RouteContext) {
-    const logStreamName: string = this.request.params.id
+    const { logStreamName } = this.request.body
 
-    const result = await new ReadLog({ logStreamName }).execute()
+    const command = new ReadLog({ logStreamName })
+    await command.execute()
 
-    return this.json(result)
+    const orig = command.getOriginalLogWithTimestamps()
+
+    return this.json(orig)
   }
 }
