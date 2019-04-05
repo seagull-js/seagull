@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import 'chai/register-should'
-import { suite, test } from 'mocha-typescript'
+import { suite, test, timeout } from 'mocha-typescript'
 import { FixtureStorage } from '../src'
 
 @suite('Seed::FixtureStorage')
@@ -33,6 +33,7 @@ export class Test {
   }
 
   @test
+  @timeout(60000)
   async 'can get the config of a seed'() {
     const fs = new FixtureStorage<string>('../seed/something', '.json')
     fs.set('asdf')
