@@ -42,8 +42,8 @@
     "mock-fs": "^4.5.0"
   },
   "dependencies": {
-    "@seagull/commands-fs": "^4.0.0",
-    "@seagull/http": "^4.0.0",
+  "@seagull/commands-fs": "^4.0.0",
+    "@seagull/services-http": "^4.0.0",
     "@seagull/libraries": "^4.0.0",
     "body-parser": "^1.18.3",
     "class-validator": "^0.9.1",

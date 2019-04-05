@@ -1,11 +1,11 @@
-import { Service } from '@seagull/commands'
+import { CommandService } from '@seagull/commands'
 import { FS } from '@seagull/commands-fs'
 import * as fs from 'fs'
 import * as path from 'path'
 import * as ts from 'typescript'
 import { Compile } from '../compile'
 
-export class Compiler extends Service {
+export class Compiler extends CommandService {
   /**
    * reference to where the app code resides in
    */

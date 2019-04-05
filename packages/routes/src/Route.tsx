@@ -1,4 +1,4 @@
-import { httpDiModule } from '@seagull/http'
+import { httpDiModule } from '@seagull/services-http'
 import { Express, Request, Response } from 'express'
 import { ContainerModule } from 'inversify'
 import { HttpMethod } from '.'

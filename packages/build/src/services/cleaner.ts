@@ -1,8 +1,8 @@
-import { Service } from '@seagull/commands'
+import { CommandService } from '@seagull/commands'
 import { FS } from '@seagull/commands-fs'
 import * as path from 'path'
 
-export class Cleaner extends Service {
+export class Cleaner extends CommandService {
   /**
    * reference to where the app code resides in
    */

@@ -16,11 +16,13 @@ export abstract class BasicTest {
     new SetMode('environment', 'pure').execute()
     this.mocks.forEach(mock => mock.activate())
     Sandbox.reset()
+    this.beforeEach()
+  }
 
-    // call beforeEach hook
-    if (typeof (this as any).beforeEach === 'function') {
-      ;(this as any).beforeEach()
-    }
+  /** Implement your logic to run before each single test here!
+   * if you override before(), you compromise internal logic of InjectableTest */
+  beforeEach() {
+    /** empty */
   }
 
   /**
@@ -28,10 +30,12 @@ export abstract class BasicTest {
    */
   after() {
     this.mocks.reverse().forEach(mock => mock.deactivate())
+    this.beforeEach()
+  }
 
-    // call afterEach hook
-    if (typeof (this as any).afterEach === 'function') {
-      ;(this as any).afterEach()
-    }
+  /** Implement your logic to run after each single test here!
+   * if you override after(), you compromise internal logic of InjectableTest */
+  afterEach() {
+    /** empty */
   }
 }
