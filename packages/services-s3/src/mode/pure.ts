@@ -2,6 +2,7 @@ import { ReadFile } from '@seagull/commands-s3/dist/src/read_file'
 import { IMode } from '@seagull/mode'
 import * as fs from 'fs'
 import { injectable } from 'inversify'
+import { flatten } from 'lodash'
 import 'reflect-metadata'
 import { S3Base } from './base'
 
@@ -33,37 +34,18 @@ export class S3Pure extends S3Base {
       this.writeFile(bucketName, s3Path, content)
     }
   }
+  private listFilesFS(path: string, includeSubfolders = true): string[] {
+    const paths = fs.readdirSync(path).map(element => `${path}/${element}`)
+    const isDirectory = (p: string) => fs.statSync(p).isDirectory()
+    const files = paths.filter(p => !isDirectory(p))
+    const directories = paths.filter(isDirectory)
+    const noSubdirsNeeded = !includeSubfolders || !directories.length
+    return noSubdirsNeeded ? files : this.addDirContents(files, directories)
+  }
 
-  /**
-   * Returns all files within the path.
-   * @param path path
-   * @param includeSubfolders include subfolders
-   * @param filePaths file path list (for recursion)
-   */
-  private listFilesFS(
-    path: string,
-    includeSubfolders = true,
-    filePaths: string[] = []
-  ) {
-    const elementsInFolder = fs.readdirSync(path)
-
-    for (const element of elementsInFolder) {
-      const elementPath = `${path}/${element}`
-      const isDirectory = fs.statSync(elementPath).isDirectory()
-      const skipDirectory = isDirectory && !includeSubfolders
-
-      if (skipDirectory) {
-        continue
-      }
-      if (isDirectory) {
-        //
-        this.listFilesFS(elementPath, includeSubfolders, filePaths)
-      } else {
-        // add file
-        filePaths.push(elementPath)
-      }
-    }
-
-    return filePaths
+  private addDirContents(files: string[], directories: string[]) {
+    const contents = directories.map(dir => this.listFilesFS(dir))
+    const directoryFiles = flatten(contents)
+    return files.concat(directoryFiles)
   }
 }
