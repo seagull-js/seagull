@@ -1,13 +1,13 @@
 {
   "name": "@seagull/deploy-aws",
-  "version": "3.4.2",
+  "version": "4.0.0",
   "description": "Code deploying for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "bin": {
     "seagull-deploy": "./bin/deploy.js",
-    "seagull-diff": "./bin/diff.js",
-    "seagull-pipeline": "./bin/pipeline.js"
+    "seagull-diff-project": "./bin/diff.js",
+    "seagull-update-pipeline": "./bin/pipeline.js"
   },
   "scripts": {
     "build": "rm -rf dist && tsc",
@@ -37,8 +37,8 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/testing": "^3.4.2",
-    "@seagull/tslint": "^3.4.2",
+    "@seagull/testing": "^4.0.0",
+    "@seagull/tslint": "^4.0.0",
     "@types/chai-as-promised": "^7.1.0",
     "@types/lodash": "^4.14.123",
     "@types/mock-require": "^2.0.0",
@@ -57,8 +57,8 @@
     "@aws-cdk/aws-s3": "^0.21.0",
     "@aws-cdk/cdk": "^0.21.0",
     "@aws-cdk/cloudformation-diff": "^0.21.0",
-    "@seagull/commands": "^3.4.2",
-    "@seagull/commands-fs": "^3.4.2",
+    "@seagull/commands": "^4.0.0",
+    "@seagull/commands-fs": "^4.0.0",
     "aws-cdk": "^0.21.0",
     "aws-sdk": "*",
     "chalk": "^2.4.1",

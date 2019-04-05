@@ -1,16 +1,18 @@
 # CHANGE LOG
 
-## NEXT
+## 4.0.0 - 2019-04-05
 
-### Major
+### Breaking Changes
 
 - @seagull/all -> Service is now CommandService, Injectables (noname) are now services
 - @seagull/services-http -> http (noname) injectable is now http-service
 - @seagull/services-s3 -> new S3 service with writeFiles function to add multiple files at once
 
-### Minor
+### Minor Changes
 
-### Patch
+### Patch Changes
+
+- @seagull/deploy-aws -> renamed binaries to better reflect their purpose and avoid nameclashes with other seagull packages
 
 ## 3.4.1 - 2019-04-04
 
