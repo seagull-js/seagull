@@ -45,7 +45,7 @@ export class Test extends RouteTest {
   route = DemoRoute
 
   @test
-  @timeout(60000)
+  @timeout(10000)
   async 'can be instantiated and executed'() {
     const testCase = () => RouteParams.create({ numProp: 3, stringProp: '' })
     expect(testCase).not.to.throw()

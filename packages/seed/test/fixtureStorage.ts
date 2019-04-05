@@ -33,7 +33,7 @@ export class Test {
   }
 
   @test
-  @timeout(60000)
+  @timeout(10000)
   async 'can get the config of a seed'() {
     const fs = new FixtureStorage<string>('../seed/something', '.json')
     fs.set('asdf')
