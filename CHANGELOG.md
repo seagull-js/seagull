@@ -1,12 +1,10 @@
 # CHANGE LOG
 
-## NEXT
+## 4.0.0 - 2019-04-05
 
-### Major
+### Breaking Changes:
 
-### Minor
-
-### Patch
+- @seagull/deploy-aws -> renamed binaries to better reflect their purpose and avoid nameclashes with other seagull packages
 
 ## 3.4.1 - 2019-04-02
 
