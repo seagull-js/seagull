@@ -5,9 +5,11 @@
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "bin": {
-    "seagull-deploy": "./bin/deploy.js",
+    "seagull-deploy-project": "./bin/deploy-project.js",
+    "seagull-destroy-project": "./bin/destroy-project.js",
     "seagull-diff-project": "./bin/diff.js",
-    "seagull-pipeline": "./bin/pipeline.js"
+    "seagull-deploy-pipeline": "./bin/deploy-pipeline.js",
+    "seagull-destroy-pipeline": "./bin/destroy-pipeline.js"
   },
   "scripts": {
     "build": "rm -rf dist && tsc",
