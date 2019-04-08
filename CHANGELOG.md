@@ -1,5 +1,9 @@
 # CHANGE LOG
 
+- @seagull/commands-logging -> more functions, better typing
+- @seagull/mock-cloudwatchlogs -> adjust mock to changed commands-logging package
+- @seagull/libraries -> added helper functions and types for frontend logging
+
 ## 4.0.0 - 2019-04-05
 
 ### Breaking Changes
@@ -9,10 +13,6 @@
 - @seagull/services-s3 -> new S3 service with writeFiles function to add multiple files at once
 
 ### Minor Changes
-
-- @seagull/commands-logging -> more functions, better typing
-- @seagull/mock-cloudwatchlogs -> adjust mock to changed commands-logging package
-- @seagull/libraries -> added helper functions and types for frontend logging
 
 ### Patch Changes
 
