@@ -88,10 +88,10 @@ export class SeagullProject {
     s3DeploymentNeeded ? addS3() : importS3()
     app.stack.addLogGroup(`/aws/lambda/${name}-lambda-handler`)
     app.stack.addLogGroup(`/${name}/data-log`)
-    const cronJson = await buildCronJson(this.appPath)
-    cronJson.forEach((rule: Rule) => {
-      app.stack.addEventRule(rule, lambda)
-    })
+    const addCrons = this.mode === 'prod' || this.branch === 'master'
+    const cronJson = addCrons ? await buildCronJson(this.appPath) : []
+    const addRule = (rule: Rule) => app.stack.addEventRule(rule, lambda)
+    cronJson.forEach(addRule)
 
     return app
   }
