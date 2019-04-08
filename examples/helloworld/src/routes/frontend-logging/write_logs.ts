@@ -13,7 +13,11 @@ export default class extends Route {
       logLevel,
     }: WriteLogsRequest = this.request.body
 
-    const result = await new WriteLogs(logStreamName, logs, logLevel).execute()
+    const result = await new WriteLogs({
+      logLevel,
+      logStreamName,
+      logs,
+    }).execute()
 
     return this.json(result)
   }

@@ -1,5 +1,5 @@
 import { Command } from '@seagull/commands'
-import { getAppName, WriteLogRequest } from '@seagull/libraries'
+import { getAppName, mapLogToEvent, WriteLogRequest } from '@seagull/libraries'
 import { CWLMockFS } from '@seagull/mock-cloudwatchlogs'
 import * as AWS from 'aws-sdk'
 import {
@@ -59,16 +59,6 @@ export class WriteLog extends Command<
 
     return result
   }
-}
-
-function mapLogToEvent(log: Message, logLevel?: LogLevel): InputLogEvents {
-  const level = logLevel || 'info'
-  return [
-    {
-      message: `[${level}] ${JSON.stringify(log)}`,
-      timestamp: moment().valueOf(),
-    },
-  ]
 }
 
 function createStreamName(customName: string) {

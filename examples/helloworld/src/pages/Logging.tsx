@@ -37,13 +37,9 @@ export default class Logging extends Page {
         </p>
         <ul>
           {this.state.result.map((item: any, key) => (
-            <li key={item.timestamp}>
-              {item.message} =>{' '}
-              {moment(item.timestamp).format('DD.MM.YY - hh:mm:ss.SSS')}
-            </li>
+            <li key={item.timestamp}>{this.formatItem(item)}</li>
           ))}
         </ul>
-        <p />
         <div />
       </div>
     )
@@ -70,11 +66,16 @@ export default class Logging extends Page {
       }
       const result = await getLog('/log/getLogs', params)
       this.setState({ result })
-      console.info('read', result)
       this.sequenceToken = result.nextSequenceToken
     } else {
       throw new Error('no stream created')
     }
+  }
+
+  formatItem = (item: any) => {
+    return `${item.message} => ${moment(item.timestamp).format(
+      'DD.MM.YY - hh:mm:ss.SSS'
+    )}`
   }
 
   createStream = async () => {

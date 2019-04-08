@@ -12,7 +12,7 @@ export default class extends Route {
   static async handler(this: RouteContext) {
     const { logStreamName }: CreateStreamRequest = this.request.body
 
-    const result = await new CreateStream(logStreamName).execute()
+    const result = await new CreateStream({ logStreamName }).execute()
 
     return this.json(result)
   }

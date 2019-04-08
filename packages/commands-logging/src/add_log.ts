@@ -1,5 +1,5 @@
 import { Command } from '@seagull/commands'
-import { AddLogRequest, getAppName } from '@seagull/libraries'
+import { AddLogRequest, getAppName, mapLogToEvent } from '@seagull/libraries'
 import { CWLMockFS } from '@seagull/mock-cloudwatchlogs'
 import * as AWS from 'aws-sdk'
 import {
@@ -53,14 +53,4 @@ export class AddLog extends Command<
 
     return Object.assign(result, { logStreamName: this.params.logStreamName })
   }
-}
-
-function mapLogToEvent(log: Message, logLevel?: LogLevel): InputLogEvents {
-  const level = logLevel || 'info'
-  return [
-    {
-      message: `[${level}] ${JSON.stringify(log)}`,
-      timestamp: moment().valueOf(),
-    },
-  ]
 }

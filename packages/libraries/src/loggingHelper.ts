@@ -1,4 +1,5 @@
-import { Timestamp } from 'aws-sdk/clients/cloudwatchlogs'
+import { InputLogEvents, Timestamp } from 'aws-sdk/clients/cloudwatchlogs'
+import * as moment from 'moment'
 
 export type LogLevel = 'info' | 'debug' | 'warn' | 'error'
 export type Message = string | object | number | any[]
@@ -88,4 +89,17 @@ export async function getLog(logRoute: string, log: GetLogsRequest) {
   })
 
   return await rawResponse.json()
+}
+
+export function mapLogToEvent(
+  log: Message,
+  logLevel?: LogLevel
+): InputLogEvents {
+  const level = logLevel || 'info'
+  return [
+    {
+      message: `[${level}] ${JSON.stringify(log)}`,
+      timestamp: moment().valueOf(),
+    },
+  ]
 }
