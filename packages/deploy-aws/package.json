@@ -7,7 +7,7 @@
   "bin": {
     "seagull-deploy": "./bin/deploy.js",
     "seagull-diff-project": "./bin/diff.js",
-    "seagull-update-pipeline": "./bin/pipeline.js"
+    "seagull-pipeline": "./bin/pipeline.js"
   },
   "scripts": {
     "build": "rm -rf dist && tsc",
