@@ -1,4 +1,4 @@
-import { Http } from '@seagull/http'
+import { Http } from '@seagull/services-http'
 import { expect } from 'chai'
 import 'chai/register-should'
 import { ContainerModule, injectable } from 'inversify'

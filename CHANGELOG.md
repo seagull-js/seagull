@@ -1,14 +1,34 @@
 # CHANGE LOG
 
-## NEXT
+## 4.0.0 - 2019-04-05
+
+### Breaking Changes
+
+- @seagull/all -> Service is now CommandService, Injectables (noname) are now services
+- @seagull/services-http -> http (noname) injectable is now http-service
+- @seagull/services-s3 -> new S3 service with writeFiles function to add multiple files at once
+
+### Minor Changes
 
 - @seagull/commands-logging -> more functions, better typing
 - @seagull/mock-cloudwatchlogs -> adjust mock to changed commands-logging package
 - @seagull/libraries -> added helper functions and types for frontend logging
 
-### Patch
+### Patch Changes
 
-- @seagull/deploy-aws -> cloudfront uses gzip now correclty
+- @seagull/deploy-aws -> renamed binaries to better reflect their purpose and avoid nameclashes with other seagull packages
+
+## 3.4.1 - 2019-04-04
+
+- @seagull/deploy-aws -> fixed missing flag for compression in cloudfront
+- @seagull/deploy-aws -> cloudfront uses gzip now correctly
+- @seagull/deploy-aws -> bug fix in pipeline, where a dying e2e test leads to the github details will not give the cloudfront url, but the pipeline url.
+- @seagull/all -> harmonized seagull package version numbers
+
+## 3.4.1 - 2019-04-02
+
+- @seagull/deploy-aws -> fixed missing flag for compression in cloudfront
+- @seagull/all -> harmonized seagull package version numbers
 
 ## 3.4.0 - 2019-04-02
 

@@ -1,5 +1,6 @@
 import * as crypto from 'crypto'
 import { injectable } from 'inversify'
+import 'reflect-metadata'
 import * as soap from 'soap'
 export * from 'soap'
 // hidden global singleton

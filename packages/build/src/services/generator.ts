@@ -1,9 +1,9 @@
-import { Service } from '@seagull/commands'
+import { CommandService } from '@seagull/commands'
 import { FS } from '@seagull/commands-fs'
 import * as path from 'path'
 import { Generate } from '../generate'
 
-export class Generator extends Service {
+export class Generator extends CommandService {
   /**
    * reference to where the app code resides in
    */
