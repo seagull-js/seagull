@@ -10,6 +10,6 @@ process.env.AWS_REGION = options.region
 
 const project = new SeagullProject(options)
 project
-  .diffProject()
+  .destroyProject()
   .then(() => logSuccess())
   .catch(error => logError(error))

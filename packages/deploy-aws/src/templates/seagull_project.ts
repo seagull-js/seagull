@@ -122,6 +122,12 @@ export class SeagullProject {
     console.info('cloudfront-url', url)
   }
 
+  async destroyProject() {
+    this.validate()
+    const app = await this.createSeagullApp()
+    await app.destroyStack()
+  }
+
   async diffProject() {
     const app = await this.createSeagullApp()
     await this.customizeStack(app)
