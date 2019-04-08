@@ -24,7 +24,7 @@ export class SeagullStack extends Stack {
 
   addLogGroup(logGroupName: string) {
     const retentionDays = Infinity
-    const props = { logGroupName, retentionDays }
+    const props = { logGroupName, retentionDays, retainLogGroup: false }
     return new LogGroup(this, `${this.id}-${logGroupName}`, props)
   }
 
