@@ -8,6 +8,10 @@
 
 ### Patch Changes
 
+## 6.0.0 - 2019-04-09
+
+- @seagull/deploy-aws -> added function to destroy a stack
+
 ## 5.0.0 - 2019-04-08
 
 - @seagull/deploy -> remove package, because deploy-aws does it's job now
