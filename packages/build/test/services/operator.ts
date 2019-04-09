@@ -26,7 +26,7 @@ export class Test extends BasicTest {
   }
 
   @test
-  @timeout(20000)
+  @timeout(60000)
   async 'release operator builds a valid project'() {
     const pre = process.cwd()
     const appFolder = setupProject(pre)
