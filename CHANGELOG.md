@@ -16,6 +16,7 @@
 
 - @seagull/deploy -> remove package, because deploy-aws does it's job now
 - @seagull/pipeline -> remove package, because deploy-aws does it's job now
+- @seagull/deploy-aws -> cloudwatch logs are not retained anymore, when stack is destroyed
 
 ## 4.0.0 - 2019-04-05
 
