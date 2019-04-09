@@ -59,7 +59,7 @@ function getPostBuild(params: StageConfigParams) {
     checkState(),
     addStateChangeToCmd('npm run deploy'),
     checkState(),
-    'export CFURL="https://$(cat /tmp/cfurl.txt)"',
+    'export CFURL="https://$(cat /tmp/cfurl.txt;)"; export TARGET_URL=$CFURL',
     sendDeploymentInfo(params.owner, params.repo),
     addStateChangeToCmd(`npm run test:e2e`),
     checkState(),

@@ -1,5 +1,41 @@
 # CHANGE LOG
 
+## NEXT
+
+### Breaking Changes
+
+### Minor Changes
+
+### Patch Changes
+
+## 6.0.0 - 2019-04-09
+
+- @seagull/deploy-aws -> added function to destroy a stack
+
+## 5.0.0 - 2019-04-08
+
+- @seagull/deploy -> remove package, because deploy-aws does it's job now
+- @seagull/pipeline -> remove package, because deploy-aws does it's job now
+- @seagull/deploy-aws -> cloudwatch logs are not retained anymore, when stack is destroyed
+
+## 4.0.0 - 2019-04-05
+
+- @seagull/all -> Service is now CommandService, Injectables (noname) are now services
+- @seagull/services-http -> http (noname) injectable is now http-service
+- @seagull/services-s3 -> new S3 service with writeFiles function to add multiple files at once
+
+## 3.4.1 - 2019-04-04
+
+- @seagull/deploy-aws -> fixed missing flag for compression in cloudfront
+- @seagull/deploy-aws -> cloudfront uses gzip now correctly
+- @seagull/deploy-aws -> bug fix in pipeline, where a dying e2e test leads to the github details will not give the cloudfront url, but the pipeline url.
+- @seagull/all -> harmonized seagull package version numbers
+
+## 3.4.1 - 2019-04-02
+
+- @seagull/deploy-aws -> fixed missing flag for compression in cloudfront
+- @seagull/all -> harmonized seagull package version numbers
+
 ## 3.4.0 - 2019-04-02
 
 - @seagull/deploy-aws -> added feature to modify deploy stack within an app

@@ -1,6 +1,6 @@
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
-import { Command, Service } from '../src'
+import { Command, CommandService } from '../src'
 
 // dummy command
 class CMD extends Command {
@@ -13,13 +13,13 @@ class CMD extends Command {
 }
 
 // dummy service
-class SRV extends Service {
+class SRV extends CommandService {
   async initialize() {
     // do stuff
   }
 }
 
-@suite('Service')
+@suite('CommandService')
 export class Test {
   @test
   async 'can be instantiated, execute a key and execute all'() {
