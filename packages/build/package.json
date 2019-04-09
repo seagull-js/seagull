@@ -42,7 +42,8 @@
     "@types/envify": "0.0.29",
     "@types/lodash": "^4.14.123",
     "@types/watchify": "^3.7.4",
-    "stream-buffers": "^3.0.2"
+    "stream-buffers": "^3.0.2",
+    "chai-as-promised":"^7.1.1"
   },
   "dependencies": {
     "@babel/core": "^7.2.2",

@@ -18,7 +18,6 @@ type CreateProgram = CompilerHost['createProgram']
 type AfterProgramCreate = CompilerHost['afterProgramCreate']
 
 const tsName = 'tsconfig.build.json'
-const cfgPath = ts.findConfigFile(process.cwd(), ts.sys.fileExists, tsName)
 
 export class CompilerService {
   bus: ServiceEventBus<CompilerServiceEvents>
@@ -50,6 +49,7 @@ export class CompilerService {
   }
 
   private createCompilerHost() {
+    const cfgPath = ts.findConfigFile(process.cwd(), ts.sys.fileExists, tsName)
     return ts.createWatchCompilerHost(
       cfgPath!,
       {},
@@ -74,6 +74,7 @@ export class CompilerService {
     host?: ts.CompilerHost,
     prevProg?: ts.EmitAndSemanticDiagnosticsBuilderProgram
   ) => {
+    const cfgPath = ts.findConfigFile(process.cwd(), ts.sys.fileExists, tsName)
     const cfg = ts.getParsedCommandLineOfConfigFile(cfgPath!, {}, host! as any)
     // tslint:disable-next-line:no-unused-expression
     this.config.fast && this.setTranspileOnly(cfg!.options)

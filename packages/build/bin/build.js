@@ -35,4 +35,6 @@ process.env.STAGE = opts.stage
 process.env.NODE_ENV = opts.optimizeReact ? 'production' : 'development'
 
 const Ops = require('../dist/src/operators')
-new Ops.ReleaseOperator(opts).emit(Ops.StartEvent)
+const op = new Ops.ReleaseOperator(opts)
+op.on(Ops.ReleaseOperator.DoneEvent, () => process.exit(0))
+op.emit(Ops.StartEvent)

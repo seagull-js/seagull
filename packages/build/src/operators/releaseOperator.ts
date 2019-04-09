@@ -3,6 +3,8 @@ import { Operator, Wiring } from './operator'
 import { PageOperator } from './PageOperator'
 
 export class ReleaseOperator extends Operator {
+  static DoneEvent = Symbol('Build completed')
+
   startupTimer?: [number, number]
   wiring: Wiring[] = [
     { once: ReleaseOperator.StartEvent, emit: E.PrepareEvent },
@@ -25,9 +27,7 @@ export class ReleaseOperator extends Operator {
     this.setupWiring()
     this.addPageOperator()
     this.addReleaseServices()
-    this.waitForDone()
-      .then(this.stopTimer)
-      .then(this.exitSuccess)
+    this.waitForDone().then(this.stopTimer)
     this.on(ReleaseOperator.StartEvent, this.startTimer)
 
     this.on(E.CompileError, this.exitFailure)
@@ -71,5 +71,6 @@ export class ReleaseOperator extends Operator {
   stopTimer = () => {
     const time = process.hrtime(this.startupTimer)
     this.emit(E.LogEvent, 'ReleaseOperator', 'Build', { time })
+    this.emit(ReleaseOperator.DoneEvent)
   }
 }

@@ -8,6 +8,17 @@ export function createFolderRecursive(folderPath: string, fsModule = fs) {
   segments.reduce(creator, '/')
 }
 
+export function createFileRecursive(
+  filePath: string,
+  content: string,
+  fsModule = fs
+) {
+  const segments = filePath.split('/').filter(c => c!!)
+  const creator = (p: string, f: string) => createFolderInPath(p, f, fsModule)
+  segments.slice(0, -1).reduce(creator, '/')
+  fsModule.writeFileSync(filePath, content, 'utf-8')
+}
+
 export function removeFolderRecursive(folderPath: string, fsModule = fs) {
   rimraf(fsModule, folderPath)
 }

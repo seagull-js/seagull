@@ -1,4 +1,5 @@
 import { FS } from '@seagull/commands-fs'
+import { createFileRecursive } from '@seagull/libraries'
 import * as bfy from 'browserify'
 import { join, resolve } from 'path'
 import * as sts from 'stream-string'
@@ -97,7 +98,7 @@ export class Bundler {
     const stream = this.bfy.bundle()
     this.addErrorLogging(stream)
     const content = await sts(stream)
-    await new FS.WriteFile(this.bundlerType.dstFile, content).execute()
+    createFileRecursive(this.bundlerType.dstFile, content)
     this.onBundled(process.hrtime(this.bundlingTimer))
   }
 
