@@ -1,6 +1,6 @@
 import * as E from '../services'
 import { Operator, Wiring } from './operator'
-import { PageOperator } from './PageOperator'
+import { PageOperator } from './pageOperator'
 
 export class ReleaseOperator extends Operator {
   static DoneEvent = Symbol('Build completed')
