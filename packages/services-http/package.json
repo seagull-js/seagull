@@ -1,6 +1,6 @@
 {
   "name": "@seagull/services-http",
-  "version": "7.0.0",
+  "version": "7.1.0",
   "description": "Http services for the seagull framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -38,7 +38,7 @@
     "@types/node-fetch": "^2.1.6"
   },
   "dependencies": {
-    "@seagull/libraries": "^7.0.0",
+    "@seagull/libraries": "^7.1.0",
     "@seagull/mode": "^7.0.0",
     "@seagull/seed": "^7.0.0",
     "encoding": "^0.1.12",
