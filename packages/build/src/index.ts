@@ -1,5 +1,2 @@
-export * from './build'
-export * from './bundle'
-export * from './compile'
-export * from './generate'
-export * from './observer'
+export * from './services'
+export * from './operators'

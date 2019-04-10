@@ -2,7 +2,7 @@ import { Route, RouteContext } from '@seagull/routes'
 import { Term } from '../../items/index'
 
 export default class extends Route {
-  static method = 'post'
+  static method = 'POST' as const
   static path = '/glossary/delete'
 
   static async handler(this: RouteContext) {

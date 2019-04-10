@@ -5,7 +5,7 @@ import * as httpMocks from 'node-mocks-http'
 import { Route } from './Route'
 import { RouteContextMock } from './RouteContextMock'
 
-export type HttpMethod = 'GET' | 'POST'
+export type HttpMethod = 'GET' | 'POST' | 'get' | 'post'
 interface Connection {
   request: httpMocks.MockRequest<Request>
   response: httpMocks.MockResponse<Response>

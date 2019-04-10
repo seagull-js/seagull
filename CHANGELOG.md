@@ -12,6 +12,18 @@
 
 ### Patch Changes
 
+##
+
+- @seagull/build -> Dev / Build Server rewrite
+  See `npm run dev -- -h` or `npm run build` -- -h for options
+  Migration:
+
+1. Add a tsconfig.build.json like in `examples/helloworld`
+2. DONT import things outside the `src` folder in the `src` folder
+3. Fix all your Types.
+
+npm run build might not work if you set NODE_ENV to something other than `development` or `production`
+
 ## 6.0.0 - 2019-04-09
 
 - @seagull/deploy-aws -> added function to destroy a stack
