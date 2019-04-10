@@ -66,7 +66,6 @@ export default class Logging extends Page {
       }
       const result = await getLog('/log/getLogs', params)
       this.setState({ result })
-      this.sequenceToken = result.nextSequenceToken
     } else {
       throw new Error('no stream created')
     }
