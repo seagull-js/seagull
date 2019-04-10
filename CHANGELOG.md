@@ -1,22 +1,32 @@
 # CHANGE LOG
 
+## NEXT
+
 - @seagull/commands-logging -> more functions, better typing
 - @seagull/mock-cloudwatchlogs -> adjust mock to changed commands-logging package
 - @seagull/libraries -> added helper functions and types for frontend logging
 
-## 4.0.0 - 2019-04-05
-
 ### Breaking Changes
-
-- @seagull/all -> Service is now CommandService, Injectables (noname) are now services
-- @seagull/services-http -> http (noname) injectable is now http-service
-- @seagull/services-s3 -> new S3 service with writeFiles function to add multiple files at once
 
 ### Minor Changes
 
 ### Patch Changes
 
-- @seagull/deploy-aws -> renamed binaries to better reflect their purpose and avoid nameclashes with other seagull packages
+## 6.0.0 - 2019-04-09
+
+- @seagull/deploy-aws -> added function to destroy a stack
+
+## 5.0.0 - 2019-04-08
+
+- @seagull/deploy -> remove package, because deploy-aws does it's job now
+- @seagull/pipeline -> remove package, because deploy-aws does it's job now
+- @seagull/deploy-aws -> cloudwatch logs are not retained anymore, when stack is destroyed
+
+## 4.0.0 - 2019-04-05
+
+- @seagull/all -> Service is now CommandService, Injectables (noname) are now services
+- @seagull/services-http -> http (noname) injectable is now http-service
+- @seagull/services-s3 -> new S3 service with writeFiles function to add multiple files at once
 
 ## 3.4.1 - 2019-04-04
 

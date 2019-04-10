@@ -115,4 +115,9 @@ export class SeagullPipeline {
     const pipeline = await this.createPipeline()
     await pipeline.deployStack()
   }
+
+  async destroyPipeline() {
+    const pipeline = await this.createPipeline()
+    await pipeline.destroyStack()
+  }
 }
