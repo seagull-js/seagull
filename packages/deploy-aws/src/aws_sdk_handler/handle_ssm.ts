@@ -2,12 +2,7 @@ import { Secret } from '@aws-cdk/cdk'
 import { config, SSM } from 'aws-sdk'
 
 import * as lib from '../lib'
-
-interface TokenParams {
-  ssmHandler: SSMHandler
-  tokenName?: string
-  token?: string
-}
+import { TokenParams } from '../types'
 
 /**
  * method to create and/or retrieve an SSM secret from aws.

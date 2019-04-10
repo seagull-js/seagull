@@ -1,19 +1,5 @@
-import { Secret, SecretParameter } from '@aws-cdk/cdk'
-
+import { GitDataProps, RepoData } from '../types'
 import * as log from './log_messages'
-
-interface GitDataProps {
-  branch: string
-  owner?: string
-  pkg?: any
-  repo?: string
-}
-
-export interface RepoData {
-  branch: string
-  owner: string
-  repo: string
-}
 
 export function getGitData(props: GitDataProps): RepoData {
   return {

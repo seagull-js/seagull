@@ -4,8 +4,8 @@ import * as aws from '../aws_sdk_handler'
 import * as lib from '../lib'
 import { ProvideAssetFolder } from '../provide_asset_folder'
 import { SeagullApp } from '../seagull_app'
-import { Rule } from '../seagull_stack'
 import { setCredsByProfile } from '../set_aws_credentials'
+import { Rule } from '../types'
 
 interface SeagullProjectProps {
   appPath: string
@@ -78,7 +78,7 @@ export class SeagullProject {
     const app = new SeagullApp(appProps)
     const role = app.stack.addIAMRole('role', 'lambda.amazonaws.com', actions)
     app.role = role
-    const env = getEnv(name, this.appPath, this.mode)
+    const env = await getEnv(name, this.appPath, this.mode)
     const lambda = app.stack.addLambda('lambda', this.appPath, role, env)
     const apiGW = app.stack.addUniversalApiGateway('apiGW', lambda, this.mode)
     app.stack.addCloudfront('cloudfront', { apiGateway: apiGW, aliasConfig })

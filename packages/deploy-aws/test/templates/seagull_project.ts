@@ -81,6 +81,28 @@ export class Test extends BasicTest {
   }
 
   @test
+  async 'adds the right lambda'() {
+    const props = getTestProps(this.appPath)
+
+    const project = await new SeagullProject(props).createSeagullApp()
+    const synthStack = project.synthesizeStack('helloworld')
+
+    const lambdaFnKey = Object.keys(synthStack.template.Resources).filter(
+      key => synthStack.template.Resources[key].Type === 'AWS::Lambda::Function'
+    )
+    expect(lambdaFnKey.length).to.equal(1)
+    const lambdaFn = synthStack.template.Resources[lambdaFnKey[0]]
+    // tslint:disable-next-line:no-unused-expression
+    expect(lambdaFn.Properties).to.have.property('Environment')
+    const expectedEnv = {
+      APP: 'helloworld',
+      MODE: 'cloud',
+      NODE_ENV: 'prod',
+    }
+    expect(lambdaFn.Properties.Environment.Variables).to.deep.equal(expectedEnv)
+  }
+
+  @test
   async 'can create a project and customize stack'() {
     const props = getTestProps(this.appPath)
     await writeCustomInfraFile(this.appPath)
