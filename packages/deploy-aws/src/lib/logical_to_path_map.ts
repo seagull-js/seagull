@@ -1,8 +1,5 @@
 import { MetadataEntry, SynthesizedStack } from '@aws-cdk/cx-api'
-
-interface PathMap {
-  [id: string]: string
-}
+import { Keymap as PathMap } from '../types'
 
 export function createLogicalToPathMap(stack: SynthesizedStack) {
   const map: PathMap = {}

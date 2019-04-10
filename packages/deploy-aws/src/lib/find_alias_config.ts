@@ -1,7 +1,4 @@
-export interface SchemaArn {
-  acmCertRef: string
-  names: string[]
-}
+import { SchemaArn } from '../types'
 
 export function findAliasConfig(arns: SchemaArn[], domains: string[]) {
   return arns.find(schemaArn => !!findSchemaArn(schemaArn, domains))

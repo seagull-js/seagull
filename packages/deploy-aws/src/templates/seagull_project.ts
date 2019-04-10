@@ -4,8 +4,8 @@ import * as aws from '../aws_sdk_handler'
 import * as lib from '../lib'
 import { ProvideAssetFolder } from '../provide_asset_folder'
 import { SeagullApp } from '../seagull_app'
-import { Rule } from '../seagull_stack'
 import { setCredsByProfile } from '../set_aws_credentials'
+import { Rule } from '../types'
 
 interface SeagullProjectProps {
   appPath: string

@@ -1,17 +1,4 @@
-import { Pipeline } from '@aws-cdk/aws-codepipeline'
-import { Role } from '@aws-cdk/aws-iam'
-import { Secret } from '@aws-cdk/cdk'
-
-interface StageConfigParams {
-  branch: string
-  mode: string
-  owner: string
-  pipeline: Pipeline
-  pipelineLink: string
-  repo: string
-  role: Role
-  ssmSecret: { name: string; secret: Secret }
-}
+import { StageConfigParams } from '../types'
 
 const curlData = `-d '{ "state": "'$PIPELINE_STATE'", "target_url": "'$TARGET_URL'", "description": "'"$PIPELINE_DESC"' - Seagull Test CI", "context": "'$TEST_PIPELINE_CONTEXT'"}'`
 

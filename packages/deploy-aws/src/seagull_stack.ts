@@ -11,7 +11,13 @@ import { Code, Function as Lambda, Runtime } from '@aws-cdk/aws-lambda'
 import { LogGroup } from '@aws-cdk/aws-logs'
 import * as S3 from '@aws-cdk/aws-s3'
 import { getApiGatewayDomain, getApiGatewayPath } from './lib'
-import { Keymap } from './types'
+import {
+  BuildStageConfig,
+  CloudfrontProps,
+  Keymap,
+  Rule,
+  SourceStageConfig,
+} from './types'
 
 /**
  * The Seagull Stack - including convenience functions to add resources
@@ -163,34 +169,4 @@ export class SeagullStack extends Stack {
     eventRule.addTarget(target, { jsonTemplate: `{"path":"${rule.path}"}` })
     return eventRule
   }
-}
-
-export interface Rule {
-  path: string
-  cron: string
-}
-
-interface StageConfig {
-  atIndex: number
-  pipeline: Pipeline
-}
-
-interface BuildStageConfig extends StageConfig {
-  build: { commands: string[]; finally: string[] }
-  install: { commands: string[]; finally: string[] }
-  postBuild: { commands: string[]; finally: string[] }
-  role: IAM.Role
-  env: { variables: { [key: string]: string } }
-}
-
-interface SourceStageConfig extends StageConfig {
-  branch: string
-  owner: string
-  repo: string
-  oauthToken: Secret
-}
-
-interface CloudfrontProps {
-  apiGateway: RestApi
-  aliasConfig?: CF.AliasConfiguration
 }
