@@ -3,7 +3,7 @@ import { LazyPageOperator } from './lazyPageOperator'
 import { Operator, Wiring } from './operator'
 import * as O from './operator'
 
-export class DevOperator extends Operator {
+export class DevelopmentOperator extends Operator {
   wiring: Wiring[] = [
     { once: O.StartEvent, emit: E.PrepareEvent },
     { once: E.PreparedEvent, emit: E.CompileEvent },
@@ -55,6 +55,6 @@ export class DevOperator extends Operator {
   startTimer = () => (this.startupTimer = process.hrtime())
   stopTimer = () => {
     const time = process.hrtime(this.startupTimer)
-    this.emit(E.LogEvent, 'DevOperator', 'Startup', { time })
+    this.emit(E.LogEvent, 'DevelopmentOperator', 'Startup', { time })
   }
 }

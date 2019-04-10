@@ -4,7 +4,7 @@ const helpText = `
   --mode edge|connected         # Sets MODE
   --stage test|prod             # ... not supported right now
   --compatible false            # Sets Babel transform
-  --optimize-react true|false   # Sets NODE_ENV to production
+  --optimize-runtime true|false   # Sets NODE_ENV to production
   --optimize-bundle false       # Minimize, dead code elimination etc.
   --type-check false            # Transpile only?
   -h                            # show this
@@ -25,14 +25,14 @@ const opts = {
   mode: getArgv('--mode', process.env.MODE),
   stage: getArgv('--stage', process.env.STAGE),
   compatible: getArgv('--compatible', false),
-  optimizeReact: getArgv('--optimize-react', false),
+  optimizeRuntime: getArgv('--optimize-runtime', false),
   optimizeBundle: getArgv('--optimize-bundle', false),
   typeCheck: getArgv('--type-check', true),
 }
 
 opts.mode ? (process.env.MODE = opts.mode) : null
 process.env.STAGE = opts.stage
-process.env.NODE_ENV = opts.optimizeReact ? 'production' : 'development'
+process.env.NODE_ENV = opts.optimizeRuntime ? 'production' : 'development'
 
 const Ops = require('../dist/src/operators')
 const op = new Ops.ReleaseOperator(opts)

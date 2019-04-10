@@ -44,8 +44,8 @@ export class CompilerService {
 
   private patchCompilerHost(host: CompilerHost) {
     const { createProgram, afterProgramCreate } = host
-    host.createProgram = this.wrapCreateProgram(createProgram)
-    host.afterProgramCreate = this.wrapAfterProgramCreate(afterProgramCreate)
+    host.createProgram = this.addConfigurationAndInstrumentation(createProgram)
+    host.afterProgramCreate = this.addAfterPCInstrumentation(afterProgramCreate)
   }
 
   private createCompilerHost() {
@@ -60,7 +60,9 @@ export class CompilerService {
     )
   }
 
-  private wrapEmit = (onEmit: ts.Program['emit']) => (...args: any) => {
+  private addInstrumentationToEmit = (onEmit: ts.Program['emit']) => (
+    ...args: any
+  ) => {
     const emitted = onEmit(...args)
     const time = process.hrtime(this.compileTimer!)
     this.bus.emit(LogEvent, 'CompilerService', 'compiled', { time })
@@ -68,7 +70,7 @@ export class CompilerService {
     return emitted
   }
 
-  private wrapCreateProgram = (creator: CreateProgram) => (
+  private addConfigurationAndInstrumentation = (creator: CreateProgram) => (
     roots?: ReadonlyArray<string>,
     _ = {} as any,
     host?: ts.CompilerHost,
@@ -80,14 +82,14 @@ export class CompilerService {
     this.config.fast && this.setTranspileOnly(cfg!.options)
     const prog = creator(roots, cfg!.options, host, prevProg)
     this.bus.emit(LogEvent, 'CompilerService', 'createCompiler', {})
-    prog.emit = this.wrapEmit(prog.emit)
+    prog.emit = this.addInstrumentationToEmit(prog.emit)
     return prog
   }
 
-  // tslint:disable-next-line:no-empty
-  private wrapAfterProgramCreate = (hook: AfterProgramCreate = () => {}) => (
-    program: ts.EmitAndSemanticDiagnosticsBuilderProgram
-  ) => {
+  private addAfterPCInstrumentation = (
+    // tslint:disable-next-line:no-empty
+    hook: AfterProgramCreate = () => {}
+  ) => (program: ts.EmitAndSemanticDiagnosticsBuilderProgram) => {
     this.bus.emit(LogEvent, 'CompilerService', 'createdCompiler', {})
     hook(program)
   }

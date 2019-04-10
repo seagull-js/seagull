@@ -29,11 +29,7 @@ export interface ReEmitOnce {
   once: Message
   emit: Message
 }
-interface ExplicitWiring {
-  type: 'on' | 'once'
-  from: { ctx: Operator; event: symbol }
-  to: { ctx: Operator; event: symbol }
-}
+
 export type Wiring = ReEmit | ReEmitOnce
 
 export const StartEvent = Symbol('Start event, starts operator operations')
@@ -111,7 +107,7 @@ export class Operator extends EventBus<any> {
     this.wiring.forEach(applyToOperator.bind(this))
   }
 }
-
+// TODO: Refactor all the wiring stuff into a helper lib. Find better names etc.
 function applyToOperator(this: Operator, wiring: Wiring) {
   const ctx = (m: Message) => (m instanceof Array ? m[0] : this)
   const event = (m: Message) => (m instanceof Array ? m[1] : m)

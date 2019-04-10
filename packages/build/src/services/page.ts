@@ -34,16 +34,12 @@ export class PageBundleService {
   bundled = new Set<'browser' | 'backend'>()
   bundlingTimer: [number, number] = [0, 0]
 
-  config = {
-    compatible: false,
-    excludes: ['react', 'react-dom', 'react-helmet', 'lodash', 'typestyle'],
-    optimized: false,
+  config: { page: string } & Partial<BrowserPageBundleService['config']> = {
     page: '',
-    watch: true,
   }
   constructor(
     bus: PageBundleService['bus'],
-    config?: Partial<PageBundleService['config']>
+    config: PageBundleService['config']
   ) {
     Object.assign(this.config, config)
     this.bus = bus.on(BundlePageEvent, this.handleBundling)

@@ -22,7 +22,7 @@ import * as Services from '../../src/services'
 export class Test extends BasicTest {
   @test
   async 'can init dev operator'() {
-    const op = new OP.DevOperator({})
+    const op = new OP.DevelopmentOperator({})
   }
 
   @test
