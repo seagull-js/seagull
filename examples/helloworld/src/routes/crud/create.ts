@@ -1,8 +1,8 @@
-import { Route, RouteContext } from '@seagull/routes'
+import { Route, RouteContext, HttpMethod } from '@seagull/routes'
 import { Term } from '../../items/index'
 
 export default class extends Route {
-  static method = 'post'
+  static method: HttpMethod = 'POST'
   static path = '/glossary/create'
 
   static async handler(this: RouteContext) {

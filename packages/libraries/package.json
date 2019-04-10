@@ -36,7 +36,8 @@
     "@types/lodash": "^4.14.123"
   },
   "dependencies": {
-    "lodash": "^4.17.5"
+    "lodash": "^4.17.5",
+    "memfs": "^2.14.2"
   },
   "nyc": {
     "extension": [

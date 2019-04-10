@@ -39,12 +39,17 @@
     "@seagull/tslint": "^6.0.0",
     "@types/browserify": "^12.0.36",
     "@types/chokidar": "^1.7.5",
-    "@types/lodash": "^4.14.123"
+    "@types/envify": "0.0.29",
+    "@types/lodash": "^4.14.123",
+    "@types/watchify": "^3.7.4",
+    "stream-buffers": "^3.0.2",
+    "chai-as-promised":"^7.1.1"
   },
   "dependencies": {
     "@babel/core": "^7.2.2",
     "@babel/polyfill": "^7.2.5",
     "@babel/preset-env": "^7.3.1",
+    "@seagull/libraries": "^6.0.0",
     "@seagull/commands": "^6.0.0",
     "@seagull/commands-fs": "^6.0.0",
     "@seagull/commands-s3": "^6.0.0",
@@ -57,11 +62,16 @@
     "browserify-incremental": "^3.1.1",
     "chokidar": "^2.0.3",
     "core-js": "^2.6.4",
+    "envify": "^4.1.0",
     "lodash": "^4.17.5",
+    "mock-require": "^3.0.2",
     "morgan": "^1.9.1",
+    "node-dev": "3.1.2",
     "stoppable": "1.0.5",
     "stream-string": "^2.0.1",
-    "uglify-es": "^3.3.9"
+    "uglify-js": "^3.5.3",
+    "uglifyify": "^5.0.1",
+    "watchify": "^3.11.1"
   },
   "peerDependencies": {
     "typescript": "*"

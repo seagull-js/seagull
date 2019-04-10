@@ -19,6 +19,7 @@
   "author": "Maximilian Stroh <hisako1337@gmail.com>",
   "license": "LGPL-3.0",
   "devDependencies": {
+    "@seagull/libraries": "^6.0.0",
     "@seagull/build": "^6.0.0",
     "@seagull/commands-logging": "^6.0.0",
     "@seagull/deploy-aws": "^6.0.0",
