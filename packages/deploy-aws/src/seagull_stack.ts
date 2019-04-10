@@ -11,6 +11,7 @@ import { Code, Function as Lambda, Runtime } from '@aws-cdk/aws-lambda'
 import { LogGroup } from '@aws-cdk/aws-logs'
 import * as S3 from '@aws-cdk/aws-s3'
 import { getApiGatewayDomain, getApiGatewayPath } from './lib'
+import { Keymap } from './types'
 
 /**
  * The Seagull Stack - including convenience functions to add resources
@@ -36,7 +37,7 @@ export class SeagullStack extends Stack {
     return bucket
   }
 
-  addLambda(name: string, folder: string, role: IAM.Role, env: any) {
+  addLambda(name: string, folder: string, role: IAM.Role, env: Keymap) {
     const lambdaName = `${this.id}-${name}`
     const conf = {
       code: Code.asset(`${folder}/.seagull/deploy`),
