@@ -93,4 +93,4 @@ npm run build might not work if you set NODE_ENV to something other than `develo
 
 ## 3.0.6 - 2019-03-25
 
-- @seagull/deploy-aws -> added e2e test to deploy process
+- @seagull/deploy-aws -> added e2e tests to deploy process
