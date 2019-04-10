@@ -12,7 +12,7 @@
 
 ### Patch Changes
 
-##
+## 7.0.0 - 2019-04-10
 
 - @seagull/build -> Dev / Build Server rewrite
   See `npm run dev -- -h` or `npm run build` -- -h for options
