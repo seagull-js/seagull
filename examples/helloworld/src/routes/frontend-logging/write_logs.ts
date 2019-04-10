@@ -1,11 +1,6 @@
-import { LogLevel, WriteLogs } from '@seagull/commands-logging'
+import { WriteLogs } from '@seagull/commands-logging'
+import { WriteLogsRequest } from '@seagull/libraries'
 import { HttpMethod, Route, RouteContext } from '@seagull/routes'
-
-export interface WriteLogsRequest {
-  logStreamName: string
-  logs: any[]
-  logLevel?: LogLevel
-}
 
 export default class extends Route {
   static method: HttpMethod = 'POST'
@@ -18,7 +13,11 @@ export default class extends Route {
       logLevel,
     }: WriteLogsRequest = this.request.body
 
-    const result = await new WriteLogs(logStreamName, logs, logLevel).execute()
+    const result = await new WriteLogs({
+      logLevel,
+      logStreamName,
+      logs,
+    }).execute()
 
     return this.json(result)
   }

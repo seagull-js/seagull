@@ -15,17 +15,19 @@ export class Test extends BasicTest {
       [23, 'Hello World', null, { foo: 'bar' }],
     ]
     const log2 = ['FOO', 'BAR']
-    const stream = await new CreateStream('addLogTest').execute()
-    const command1 = new AddLog(stream, log1)
+    const stream = await new CreateStream({
+      logStreamName: 'addLogTest',
+    }).execute()
+    const command1 = new AddLog({ logStreamName: stream, log: log1 })
     await command1.execute()
 
-    const command2 = new AddLog(stream, log2)
+    const command2 = new AddLog({ logStreamName: stream, log: log2 })
     await command2.execute()
 
     const returnedLogs = await new ReadLog({
       logStreamName: stream,
     }).execute()
-    console.info('returnedLogs', returnedLogs)
+
     returnedLogs.events!.should.be.an('array').with.lengthOf(2)
     returnedLogs.events![0].message!.should.be.a('string')
     returnedLogs.events![0].timestamp!.should.be.a('number')
@@ -39,7 +41,11 @@ export class Test extends BasicTest {
       [23, 'Hello World', null, { foo: 'bar' }],
     ]
 
-    const command = new AddLog('readLog', logs, 'error')
+    const command = new AddLog({
+      log: logs,
+      logLevel: 'error',
+      logStreamName: 'readLog',
+    })
     const result = await command.revert()
     ;(result === undefined).should.be.equal(true)
   }

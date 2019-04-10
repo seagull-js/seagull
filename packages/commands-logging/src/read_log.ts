@@ -1,24 +1,14 @@
 import { Command } from '@seagull/commands'
-import { getAppName } from '@seagull/libraries'
+import { getAppName, GetLogsRequest } from '@seagull/libraries'
 import { CWLMockFS } from '@seagull/mock-cloudwatchlogs'
 import * as AWS from 'aws-sdk'
 import {
   GetLogEventsRequest,
   GetLogEventsResponse,
-  Timestamp,
 } from 'aws-sdk/clients/cloudwatchlogs'
 import { PromiseResult } from 'aws-sdk/lib/request'
 import { CWLSandbox } from './logging_sandbox'
 
-interface GetLogsRequest {
-  logGroupName?: string
-  logStreamName: string
-  startTime?: Timestamp
-  endTime?: Timestamp
-  nextToken?: string
-  limit?: number
-  startFromHead?: boolean
-}
 /**
  * Command to read log object from cloudwatch
  */
@@ -53,7 +43,10 @@ export class ReadLog extends Command<
     return undefined as any
   }
 
-  getOriginalLog(): any {
+  /**
+   * get the original logs from a stream
+   */
+  getOriginalLog(): any[] {
     if (this.result) {
       const events = this.result.events!
       const original = events.map(event => {
@@ -62,9 +55,30 @@ export class ReadLog extends Command<
         return JSON.parse(arr.join(' '))
       })
 
-      return original.length === 1 ? original[0] : original
+      return original
     } else {
-      throw new Error('execute ReadLog first before transform the result')
+      throw new Error('no data, execute ReadLog first')
+    }
+  }
+
+  /**
+   * get the original logs with timestamps from a stream
+   */
+  getOriginalLogWithTimestamps(): any[] {
+    if (this.result) {
+      const events = this.result.events!
+      const original = events.map(event => {
+        const arr = event.message!.split(' ')
+        arr.shift()
+        return {
+          message: JSON.parse(arr.join(' ')),
+          timestamp: event.timestamp,
+        }
+      })
+
+      return original
+    } else {
+      throw new Error('no data, execute ReadLog first')
     }
   }
 

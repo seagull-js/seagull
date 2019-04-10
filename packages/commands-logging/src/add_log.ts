@@ -1,5 +1,5 @@
 import { Command } from '@seagull/commands'
-import { getAppName } from '@seagull/libraries'
+import { AddLogRequest, getAppName, mapLogToEvent } from '@seagull/libraries'
 import { CWLMockFS } from '@seagull/mock-cloudwatchlogs'
 import * as AWS from 'aws-sdk'
 import {
@@ -29,19 +29,14 @@ export class AddLog extends Command<
   executeConnected = this.executeCloud
   executeEdge = this.exec.bind(this, new CWLMockFS('/tmp/.data') as any)
 
-  constructor(
-    existingStreamName: string,
-    log: Message,
-    sequenceToken?: string,
-    logLevel?: LogLevel
-  ) {
+  constructor(params: AddLogRequest) {
     super()
-    const events = mapLogToEvent(log, logLevel)
+    const events = mapLogToEvent(params.log, params.logLevel)
     this.params = {
       logEvents: events,
       logGroupName: `/${getAppName()}/data-log`,
-      logStreamName: existingStreamName,
-      sequenceToken,
+      logStreamName: params.logStreamName,
+      sequenceToken: params.sequenceToken,
     }
   }
 
@@ -58,14 +53,4 @@ export class AddLog extends Command<
 
     return Object.assign(result, { logStreamName: this.params.logStreamName })
   }
-}
-
-function mapLogToEvent(log: Message, logLevel?: LogLevel): InputLogEvents {
-  const level = logLevel || 'info'
-  return [
-    {
-      message: `[${level}] ${JSON.stringify(log)}`,
-      timestamp: moment().unix() * 1000,
-    },
-  ]
 }

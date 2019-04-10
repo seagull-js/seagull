@@ -15,7 +15,7 @@ export class Test extends BasicTest {
       [23, 'Hello World', null, { foo: 'bar' }],
     ]
 
-    const writeCommand = new WriteLogs('writeLogs', logs)
+    const writeCommand = new WriteLogs({ logStreamName: 'writeLogs', logs })
     await writeCommand.execute()
 
     const readCommand = new ReadLog({
@@ -30,7 +30,7 @@ export class Test extends BasicTest {
   async 'can transform a single log to original'() {
     const log = 'Hello World'
 
-    const writeCommand = new WriteLog('writeLog', log)
+    const writeCommand = new WriteLog({ logStreamName: 'writeLog', log })
     await writeCommand.execute()
 
     const readCommand = new ReadLog({
@@ -38,7 +38,7 @@ export class Test extends BasicTest {
     })
     await readCommand.execute()
     const original = readCommand.getOriginalLog()
-    original.should.be.equals(log)
+    original[0].should.be.equals(log)
   }
 
   @test
