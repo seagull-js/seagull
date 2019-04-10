@@ -2,15 +2,18 @@
 
 ## NEXT
 
-- @seagull/commands-logging -> more functions, better typing
-- @seagull/mock-cloudwatchlogs -> adjust mock to changed commands-logging package
-- @seagull/libraries -> added helper functions and types for frontend logging
-
 ### Breaking Changes
 
 ### Minor Changes
 
 ### Patch Changes
+
+## 7.1.0 - 2019-04.10
+
+- @seagull/deploy-aws -> bugfix: missing lambda environment variables
+- @seagull/libraries -> added helper functions and types for frontend logging
+- @seagull/commands-logging -> more functions, better typing
+- @seagull/mock-cloudwatchlogs -> adjust mock to changed commands-logging package
 
 ## 7.0.0 - 2019-04-10
 
