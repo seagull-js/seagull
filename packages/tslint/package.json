@@ -4,8 +4,8 @@
   "description": "Coding Standards for the Seagull Framework",
   "main": "tslint.json",
   "scripts": {
-    "build": "echo \"Nothing to build\"",
-    "test": "echo \"Nothing to test\""
+    "build": "echo \"nothing to build\"",
+    "test": "echo \"nothing to test\""
   },
   "repository": {
     "type": "git",
