@@ -1,6 +1,6 @@
 {
   "name": "@seagull/mock-cloudwatchlogs",
-  "version": "7.2.1",
+  "version": "7.3.0",
   "description": "AWS CloudWatchLogs Mocking module for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -57,7 +57,7 @@
     ]
   },
   "dependencies": {
-    "@seagull/libraries": "^7.2.1",
+    "@seagull/libraries": "^7.3.0",
     "@seagull/mock": "^7.2.1",
     "@seagull/testing": "^7.2.1",
     "aws-sdk-mock": "^1.7.0",
