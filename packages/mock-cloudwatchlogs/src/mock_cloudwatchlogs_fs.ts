@@ -119,9 +119,16 @@ export class CWLMockFS implements Mock {
     const result: DescribeLogStreamsResponse = {}
     const path = this.getEncodedFolderPath(Input)
     const list = this.fsModule.readdirSync(path)
-    const streams = list.map(stream => {
+    let streams = list.map(stream => {
       return { logStreamName: stream }
     })
+
+    if (Input.logStreamNamePrefix) {
+      streams = streams.filter(stream =>
+        stream.logStreamName.startsWith(Input.logStreamNamePrefix!)
+      )
+    }
+
     result.logStreams = streams
 
     return this.result(cb, result)
