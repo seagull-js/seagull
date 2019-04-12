@@ -69,7 +69,7 @@ export class CWLMockFS implements Mock {
    */
   putLogEvents = (Input: PutLogRequest, cb: any) => {
     let existingLogs: any[] = []
-    Input.logGroupName = Input.logGroupName.replace(/(\/)/g, '-')
+    Input.logGroupName = this.formatGroupName(Input.logGroupName)
     this.ensureLogGroup(Input.logGroupName)
     const path = this.getEncodedPath(Input)
     if (this.fsModule.existsSync(path)) {
@@ -87,7 +87,7 @@ export class CWLMockFS implements Mock {
   }
 
   getLogEvents = (Input: GetLogRequest, cb: any) => {
-    Input.logGroupName = Input.logGroupName.replace(/(\/)/g, '-')
+    Input.logGroupName = this.formatGroupName(Input.logGroupName)
     this.ensureLogGroup(Input.logGroupName)
     const result: GetLogResponse = {}
     let events = []
@@ -114,7 +114,7 @@ export class CWLMockFS implements Mock {
   }
 
   describeLogStreams = (Input: DescribeLogStreamsRequest, cb: any) => {
-    Input.logGroupName = Input.logGroupName.replace(/(\/)/g, '-')
+    Input.logGroupName = this.formatGroupName(Input.logGroupName)
     this.ensureLogGroup(Input.logGroupName)
     const result: DescribeLogStreamsResponse = {}
     const path = this.getEncodedFolderPath(Input)
@@ -180,5 +180,14 @@ export class CWLMockFS implements Mock {
       })
       this.fsModule.rmdirSync(path)
     }
+  }
+
+  private formatGroupName(name: string) {
+    let newName = name.replace(/(\/)/g, '-')
+    if (newName.startsWith('-')) {
+      newName = newName.substring(1)
+    }
+
+    return newName
   }
 }
