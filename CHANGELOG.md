@@ -8,6 +8,12 @@
 
 ### Patch Changes
 
+## 7.3.0 - 2019-04.12
+
+- @seagull/libraries -> added types for logging
+- @seagull/commands-logging -> added describeLogStreams
+- @seagull/mock-cloudwatchlogs -> adjust mock to changed commands-logging package
+
 ## 7.1.0 - 2019-04.10
 
 - @seagull/deploy-aws -> bugfix: missing lambda environment variables
