@@ -20,7 +20,7 @@ export function getBuildConfig(params: StageConfigParams, index: number) {
     env: getEnv(params),
     install: getInstall(params),
     pipeline: params.pipeline,
-    postBuild: getPostBuild(params),
+    postBuild: { commands: [] },
     role: params.role,
   }
 }
@@ -35,13 +35,9 @@ function getInstall(params: StageConfigParams) {
 
 function getBuild(params: StageConfigParams) {
   const curlCmd = getCurlToSendTestResult(params.owner, params.repo, curlData)
-  const runBuild = addStateChangeToCmd('npm run build')
-  return { commands: [runBuild, checkState()], finally: [curlCmd] }
-}
-
-function getPostBuild(params: StageConfigParams) {
-  const curlCmd = getCurlToSendTestResult(params.owner, params.repo, curlData)
   const commands = [
+    addStateChangeToCmd('npm run build'),
+    checkState(),
     addStateChangeToCmd('npm run test'),
     checkState(),
     addStateChangeToCmd('npm run deploy'),
@@ -56,7 +52,7 @@ function getPostBuild(params: StageConfigParams) {
 }
 
 function sendDeploymentInfo(owner: string, name: string) {
-  const data = `-d '{ "state": "'"success"'", "target_url": "'"https://$(cat /tmp/cfurl.txt)"'", "description": "'"repository was successfully deployed"' - Seagull Test CI", "context": "'"continuous-integration/seagull-deployment"'"}'`
+  const data = `-d '{ "state": "success", "target_url": "'"https://$(cat /tmp/cfurl.txt)"'", "description": "repository was successfully deployed", "context": "continuous-integration/seagull-deployment"}'`
   return getCurlToSendTestResult(owner, name, data)
 }
 
@@ -81,7 +77,7 @@ function getEnv(params: StageConfigParams) {
   const parameterStore = { ACCESS_TOKEN: params.ssmSecret.name }
   const variables = {
     BRANCH_NAME: params.branch,
-    DEPLOY_MODE: params.mode,
+    DEPLOY_MODE: params.stage,
     PIPELINE_DESC: 'Bootstraping pipeline',
     PIPELINE_STATE: 'pending',
     TARGET_URL: params.pipelineLink,

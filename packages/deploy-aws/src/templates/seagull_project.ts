@@ -10,7 +10,7 @@ import { Rule } from '../types'
 interface SeagullProjectProps {
   appPath: string
   branch: string
-  mode: string
+  stage: string
   profile: string
   region: string
   handlers?: {
@@ -23,7 +23,7 @@ interface SeagullProjectProps {
 export class SeagullProject {
   appPath: string
   branch: string
-  mode: string
+  stage: string
   pkgJson: any
   profile: string
   region: string
@@ -34,7 +34,7 @@ export class SeagullProject {
   constructor(props: SeagullProjectProps) {
     this.appPath = props.appPath
     this.branch = props.branch
-    this.mode = props.mode
+    this.stage = props.stage
     this.profile = props.profile
     this.region = props.region
     this.pkgJson = require(`${this.appPath}/package.json`)
@@ -78,17 +78,17 @@ export class SeagullProject {
     const app = new SeagullApp(appProps)
     const role = app.stack.addIAMRole('role', 'lambda.amazonaws.com', actions)
     app.role = role
-    const env = await getEnv(name, this.appPath, this.mode)
+    const env = await getEnv(name, this.appPath, this.stage)
     const lambda = app.stack.addLambda('lambda', this.appPath, role, env)
-    const apiGW = app.stack.addUniversalApiGateway('apiGW', lambda, this.mode)
+    const apiGW = app.stack.addUniversalApiGateway('apiGW', lambda, this.stage)
     app.stack.addCloudfront('cloudfront', { apiGateway: apiGW, aliasConfig })
-    const s3DeploymentNeeded = this.mode === 'prod' || this.branch === 'master'
+    const s3DeploymentNeeded = this.stage === 'prod' || this.branch === 'master'
     const importS3 = () => app.stack.importS3(itemBucketName, role)
     const addS3 = () => app.stack.addS3(itemBucketName, role)
     s3DeploymentNeeded ? addS3() : importS3()
     app.stack.addLogGroup(`/aws/lambda/${name}-lambda-handler`)
     app.stack.addLogGroup(`/${name}/data-log`)
-    const addCrons = this.mode === 'prod' || this.branch === 'master'
+    const addCrons = this.stage === 'prod' || this.branch === 'master'
     const cronJson = addCrons ? await buildCronJson(this.appPath) : []
     const addRule = (rule: Rule) => app.stack.addEventRule(rule, lambda)
     cronJson.forEach(addRule)
@@ -108,7 +108,7 @@ export class SeagullProject {
   }
 
   getAppName() {
-    const suffix = this.mode === 'test' ? `-${this.branch}-${this.mode}` : ''
+    const suffix = this.stage === 'test' ? `-${this.branch}-${this.stage}` : ''
     return `${this.pkgJson.name}${suffix}`.replace(/[^0-9A-Za-z-]/g, '')
   }
 
@@ -144,7 +144,7 @@ export class SeagullProject {
     const accountId = await aws.getAccountId(this.sts)
     const prefix = `${this.region}-${accountId}-`
     const bucketName = `${require(`${this.appPath}/package.json`).name}-items`
-    const suffix = `${this.mode !== 'prod' ? `-${this.mode}` : ''}`
+    const suffix = `${this.stage !== 'prod' ? `-${this.stage}` : ''}`
     return `${prefix}${bucketName}${suffix}`
   }
 }
@@ -170,9 +170,14 @@ async function buildCronJson(appPath: string) {
   return cronFile && cronFile !== '' ? JSON.parse(cronFile) : []
 }
 
-async function getEnv(name: string, appPath: string, mode: string) {
-  const env: any = { APP: name, MODE: 'cloud', NODE_ENV: mode }
-  const configPath = `${appPath}/.env.${mode}`
+async function getEnv(name: string, appPath: string, stage: string) {
+  const env: any = {
+    APP: name,
+    MODE: 'cloud',
+    NODE_ENV: 'production',
+    STAGE: stage,
+  }
+  const configPath = `${appPath}/.env.${stage}`
   const config: string = await new FS.ReadFile(configPath).execute()
   return lib.addEnvFromFile(env, config)
 }

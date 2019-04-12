@@ -1,5 +1,5 @@
 {
-  "name": "helloworld",
+  "name": "unicorn",
   "private": true,
   "version": "7.3.3",
   "description": "Helloworld example app using the Seagull Framework",
@@ -9,7 +9,7 @@
     "dev": "seagull-dev",
     "deploy": "seagull-deploy",
     "diff": "seagull-diff",
-    "pipeline": "seagull-pipeline",
+    "pipeline": "seagull-deploy-pipeline",
     "start": "node dist/assets/backend/server.js",
     "test": "npm run test:unit",
     "test:unit": "NODE_ENV=test mocha --opts test/mocha.opts",
