@@ -57,7 +57,7 @@ export class WriteLogs extends Command<
 
     const result = await client.putLogEvents(this.params).promise()
 
-    return result
+    return Object.assign(result, { logStreamName: this.params.logStreamName })
   }
 }
 
