@@ -1,6 +1,6 @@
 {
   "name": "@seagull/commands-logging",
-  "version": "7.3.0",
+  "version": "7.3.1",
   "description": "Logging commands for the seagull framework based on AWS CloudWatchLogs",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -38,7 +38,7 @@
   "dependencies": {
     "@seagull/commands": "^7.2.1",
     "@seagull/libraries": "^7.3.0",
-    "@seagull/mock-cloudwatchlogs": "^7.3.0",
+    "@seagull/mock-cloudwatchlogs": "^7.3.1",
     "@seagull/mode": "^7.2.1",
     "@seagull/sandbox": "^7.2.1",
     "moment": "^2.24.0"
