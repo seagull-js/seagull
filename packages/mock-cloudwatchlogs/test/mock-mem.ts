@@ -1,6 +1,7 @@
 import { BasicTest } from '@seagull/testing'
 import * as AWS from 'aws-sdk'
 import {
+  DescribeLogStreamsRequest,
   GetLogEventsRequest,
   InputLogEvents,
   PutLogEventsRequest,
@@ -23,13 +24,23 @@ export class Test extends BasicTest {
     },
   ]
 
+  streams = {
+    logStreams: [
+      { logStreamName: 'cloudwatchlogs-mock' },
+      { logStreamName: 'cloudwatchlogs-mock2' },
+    ],
+  }
+
   @test
   async 'can be enabled and disabled'() {
     const mock = new CWLMockMem()
     mock.activate()
     await this.writeLog('cloudwatchlogs-mock', this.logs)
+    await this.writeLog('cloudwatchlogs-mock2', this.logs)
     const response = await this.readLog('cloudwatchlogs-mock')
+    const streams = await this.listStreams()
     response.events!.should.be.deep.equal(this.logs)
+    streams.should.be.deep.equal(this.streams)
     mock.deactivate()
   }
 
@@ -61,5 +72,13 @@ export class Test extends BasicTest {
     }
     const client = new AWS.CloudWatchLogs({ region: 'eu-central-1' })
     return await client.getLogEvents(params).promise()
+  }
+
+  private async listStreams() {
+    const params: DescribeLogStreamsRequest = {
+      logGroupName: 'test',
+    }
+    const client = new AWS.CloudWatchLogs({ region: 'eu-central-1' })
+    return await client.describeLogStreams(params).promise()
   }
 }

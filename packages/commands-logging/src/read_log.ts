@@ -10,7 +10,7 @@ import { PromiseResult } from 'aws-sdk/lib/request'
 import { CWLSandbox } from './logging_sandbox'
 
 /**
- * Command to read log object from cloudwatch
+ * Command to read a certain log stream from cloudwatch
  */
 export class ReadLog extends Command<
   PromiseResult<GetLogEventsResponse, AWS.AWSError>
