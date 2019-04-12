@@ -4,6 +4,10 @@ import {
 } from '@seagull/libraries'
 import { Mock } from '@seagull/mock'
 import * as AWSMock from 'aws-sdk-mock'
+import {
+  DescribeLogStreamsRequest,
+  DescribeLogStreamsResponse,
+} from 'aws-sdk/clients/cloudwatchlogs'
 import * as fs from 'fs'
 import * as moment from 'moment'
 import * as pathModule from 'path'
@@ -37,6 +41,11 @@ export class CWLMockFS implements Mock {
     AWSMock.mock('CloudWatchLogs', 'putLogEvents', this.putLogEvents)
     AWSMock.mock('CloudWatchLogs', 'getLogEvents', this.getLogEvents)
     AWSMock.mock('CloudWatchLogs', 'createLogStream', this.createLogStream)
+    AWSMock.mock(
+      'CloudWatchLogs',
+      'describeLogStreams',
+      this.describeLogStreams
+    )
     return this
   }
 
@@ -60,7 +69,7 @@ export class CWLMockFS implements Mock {
    */
   putLogEvents = (Input: PutLogRequest, cb: any) => {
     let existingLogs: any[] = []
-    Input.logGroupName = Input.logGroupName.replace(/(\/)/g, '-').substring(1)
+    Input.logGroupName = this.formatGroupName(Input.logGroupName)
     this.ensureLogGroup(Input.logGroupName)
     const path = this.getEncodedPath(Input)
     if (this.fsModule.existsSync(path)) {
@@ -78,7 +87,7 @@ export class CWLMockFS implements Mock {
   }
 
   getLogEvents = (Input: GetLogRequest, cb: any) => {
-    Input.logGroupName = Input.logGroupName.replace(/(\/)/g, '-').substring(1)
+    Input.logGroupName = this.formatGroupName(Input.logGroupName)
     this.ensureLogGroup(Input.logGroupName)
     const result: GetLogResponse = {}
     let events = []
@@ -92,7 +101,7 @@ export class CWLMockFS implements Mock {
     return this.result(cb, result)
   }
 
-  createLogStream(params: CreateLogStreamRequest, cb: any) {
+  createLogStream = (params: CreateLogStreamRequest, cb: any) => {
     const hash = Math.random()
       .toString(36)
       .substring(7)
@@ -101,6 +110,27 @@ export class CWLMockFS implements Mock {
       /(\*)|(:)/g,
       '-'
     )
+    return this.result(cb, result)
+  }
+
+  describeLogStreams = (Input: DescribeLogStreamsRequest, cb: any) => {
+    Input.logGroupName = this.formatGroupName(Input.logGroupName)
+    this.ensureLogGroup(Input.logGroupName)
+    const result: DescribeLogStreamsResponse = {}
+    const path = this.getEncodedFolderPath(Input)
+    const list = this.fsModule.readdirSync(path)
+    let streams = list.map(stream => {
+      return { logStreamName: stream }
+    })
+
+    if (Input.logStreamNamePrefix) {
+      streams = streams.filter(stream =>
+        stream.logStreamName.startsWith(Input.logStreamNamePrefix!)
+      )
+    }
+
+    result.logStreams = streams
+
     return this.result(cb, result)
   }
 
@@ -138,6 +168,13 @@ export class CWLMockFS implements Mock {
     )
   }
 
+  private getEncodedFolderPath(Input: { logGroupName: string }) {
+    return pathModule.join(
+      this.localFolder,
+      encodeURIComponent(Input.logGroupName)
+    )
+  }
+
   private deleteFolderRecursive(path: string) {
     if (this.fsModule.existsSync(path)) {
       this.fsModule.readdirSync(path).forEach((file, index) => {
@@ -150,5 +187,14 @@ export class CWLMockFS implements Mock {
       })
       this.fsModule.rmdirSync(path)
     }
+  }
+
+  private formatGroupName(name: string) {
+    let newName = name.replace(/(\/)/g, '-')
+    if (newName.startsWith('-')) {
+      newName = newName.substring(1)
+    }
+
+    return newName
   }
 }

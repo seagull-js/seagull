@@ -2,6 +2,10 @@ import { getRandomSequenceToken } from '@seagull/libraries'
 import { Mock } from '@seagull/mock'
 import * as AWS from 'aws-sdk'
 import * as AWSMock from 'aws-sdk-mock'
+import {
+  DescribeLogStreamsRequest,
+  DescribeLogStreamsResponse,
+} from 'aws-sdk/clients/cloudwatchlogs'
 
 type PutLogRequest = AWS.CloudWatchLogs.PutLogEventsRequest
 type PutLogResponse = AWS.CloudWatchLogs.PutLogEventsResponse
@@ -29,6 +33,11 @@ export class CWLMockMem implements Mock {
     AWSMock.mock('CloudWatchLogs', 'putLogEvents', this.putLogEvents)
     AWSMock.mock('CloudWatchLogs', 'getLogEvents', this.getLogEvents)
     AWSMock.mock('CloudWatchLogs', 'createLogStream', this.createLogStream)
+    AWSMock.mock(
+      'CloudWatchLogs',
+      'describeLogStreams',
+      this.describeLogStreams
+    )
     return this
   }
 
@@ -68,8 +77,27 @@ export class CWLMockMem implements Mock {
     return this.result(cb, result)
   }
 
-  createLogStream(params: CreateLogStreamRequest, cb: any) {
+  createLogStream = (params: CreateLogStreamRequest, cb: any) => {
+    this.ensureLogGroup(params.logGroupName)
     return this.result(cb, null)
+  }
+
+  describeLogStreams = (Input: DescribeLogStreamsRequest, cb: any) => {
+    this.ensureLogGroup(Input.logGroupName)
+    const group = this.storage[Input.logGroupName]
+    const result: DescribeLogStreamsResponse = {}
+    let streams = Object.keys(group).map(stream => {
+      return { logStreamName: stream }
+    })
+
+    if (Input.logStreamNamePrefix) {
+      streams = streams.filter(stream =>
+        stream.logStreamName.startsWith(Input.logStreamNamePrefix!)
+      )
+    }
+    result.logStreams = streams
+
+    return this.result(cb, result)
   }
 
   /**

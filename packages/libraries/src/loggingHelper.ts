@@ -42,6 +42,15 @@ export interface WriteLogResponse {
   rejectedLogEventsInfo?: object
 }
 
+export interface DescribeLogStreamsRequest {
+  logGroupName?: string
+  logStreamNamePrefix: string
+  orderBy?: 'LogStreamName' | 'LastEventTime'
+  descending?: boolean
+  nextToken?: string
+  limit?: number
+}
+
 export function getRandomSequenceToken() {
   let token = ''
   for (let i = 0; i < 56; i++) {
