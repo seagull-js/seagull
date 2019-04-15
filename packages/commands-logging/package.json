@@ -1,6 +1,6 @@
 {
   "name": "@seagull/commands-logging",
-  "version": "8.0.0",
+  "version": "9.0.0",
   "description": "Logging commands for the seagull framework based on AWS CloudWatchLogs",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -32,15 +32,15 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/testing": "^8.0.0",
-    "@seagull/tslint": "^8.0.0"
+    "@seagull/testing": "^9.0.0",
+    "@seagull/tslint": "^9.0.0"
   },
   "dependencies": {
-    "@seagull/commands": "^8.0.0",
-    "@seagull/libraries": "^8.0.0",
-    "@seagull/mock-cloudwatchlogs": "^8.0.0",
-    "@seagull/mode": "^8.0.0",
-    "@seagull/sandbox": "^8.0.0",
+    "@seagull/commands": "^9.0.0",
+    "@seagull/libraries": "^9.0.0",
+    "@seagull/mock-cloudwatchlogs": "^9.0.0",
+    "@seagull/mode": "^9.0.0",
+    "@seagull/sandbox": "^9.0.0",
     "moment": "^2.24.0"
   },
   "nyc": {
