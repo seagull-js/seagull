@@ -1,6 +1,6 @@
 {
   "name": "@seagull/libraries",
-  "version": "9.0.0",
+   "version": "7.3.4",
   "description": "Business Logic Container for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",

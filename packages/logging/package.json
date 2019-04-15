@@ -1,6 +1,6 @@
 {
   "name": "@seagull/logging",
-  "version": "9.0.0",
+   "version": "7.3.4",
   "description": "Logging utilities for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
