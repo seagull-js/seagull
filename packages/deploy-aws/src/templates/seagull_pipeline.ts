@@ -1,7 +1,4 @@
 import { SDK } from 'aws-cdk'
-
-import { FS } from '@seagull/commands-fs'
-
 import { handleSSMSecret, SSMHandler } from '../aws_sdk_handler'
 import * as lib from '../lib'
 import { SeagullApp } from '../seagull_app'
@@ -11,12 +8,12 @@ interface SeagullPipelineProps {
   appPath: string
   branch: string
   githubToken?: string
-  mode: string
   profile: string
   owner?: string
   region: string
   repository?: string
   ssmParameter?: string
+  stage: string
   handlers?: {
     ssmHandler?: SSMHandler
   }
@@ -25,20 +22,20 @@ interface SeagullPipelineProps {
 export class SeagullPipeline {
   appPath: string
   branch: string
-  mode: string
   owner?: string
   profile: string
   region: string
   repository?: string
   ssm: SSMHandler
   ssmParam?: string
+  stage: string
   githubToken?: string
   actions: string[]
 
   constructor(props: SeagullPipelineProps) {
     this.appPath = props.appPath
     this.branch = props.branch
-    this.mode = props.mode
+    this.stage = props.stage
     this.profile = props.profile
     this.owner = props.owner
     this.region = props.region
@@ -63,7 +60,7 @@ export class SeagullPipeline {
   async createPipeline() {
     setCredsByProfile(this.profile)
     // preparations for deployment
-    const isTest = this.mode === 'test'
+    const isTest = this.stage === 'test'
     const suffix = `${isTest ? `-${this.branch}-test` : ''}-ci`
     const pkgJson = require(`${this.appPath}/package.json`)
     const name = `${pkgJson.name}${suffix}`.replace(/[^0-9A-Za-z-]/g, '')
@@ -85,7 +82,6 @@ export class SeagullPipeline {
     const ssmSecret = await handleSSMSecret(secretParams)
     const gitDataProps = {
       branch: this.branch,
-      mode: this.mode,
       owner: this.owner,
       pkg: pkgJson,
       repo: this.repository,
@@ -97,13 +93,13 @@ export class SeagullPipeline {
     const pipelineLink = `${pipelineDomain}${pipelinePath}`
     const stageConfigParams = {
       branch: gitData.branch,
-      mode: this.mode,
       owner: gitData.owner,
       pipeline,
       pipelineLink,
       repo: gitData.repo,
       role,
       ssmSecret,
+      stage: this.stage,
     }
 
     stack.addSourceStage('source', lib.getSourceConfig(stageConfigParams, 0))

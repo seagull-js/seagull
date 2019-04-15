@@ -34,13 +34,13 @@ export interface RepoData {
 
 export interface StageConfigParams {
   branch: string
-  mode: string
   owner: string
   pipeline: Pipeline
   pipelineLink: string
   repo: string
   role: Role
   ssmSecret: { name: string; secret: Secret }
+  stage: string
 }
 
 export interface OperationsProps {
@@ -61,7 +61,7 @@ export interface StageConfig {
 export interface BuildStageConfig extends StageConfig {
   build: { commands: string[]; finally: string[] }
   install: { commands: string[]; finally: string[] }
-  postBuild: { commands: string[]; finally: string[] }
+  postBuild?: { commands: string[]; finally?: string[] }
   role: IAM.Role
   env: { variables: { [key: string]: string } }
 }

@@ -97,7 +97,8 @@ export class Test extends BasicTest {
     const expectedEnv = {
       APP: 'helloworld',
       MODE: 'cloud',
-      NODE_ENV: 'prod',
+      NODE_ENV: 'production',
+      STAGE: 'prod',
     }
     expect(lambdaFn.Properties.Environment.Variables).to.deep.equal(expectedEnv)
   }
@@ -347,11 +348,11 @@ const getTestProps = (appPath: string) => ({
     cloudfrontHandler: new TestCloudfrontHandler(),
     stsHandler: new TestSTSHandler(),
   },
-  mode: 'prod',
   owner: 'me',
   profile: 'default',
   region: 'eu-central-1',
   repository: 'test-repo',
+  stage: 'prod',
 })
 
 const deleteCustomInfra = async (appPath: string) => {

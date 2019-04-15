@@ -20,11 +20,11 @@ export class Test extends BasicTest {
       branch: 'master',
       githubToken: 'Token123',
       handlers: { ssmHandler: new TestSSMHandler({ Token123: '123' }) },
-      mode: 'prod',
       owner: 'me',
       profile: 'default',
       region: 'eu-central-1',
       repository: 'test-repo',
+      stage: 'prod',
     }
     const pipeline = await new SeagullPipeline(props).createPipeline()
     const synthStack = pipeline.synthesizeStack('helloworld-ci')
