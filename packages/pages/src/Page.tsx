@@ -37,6 +37,8 @@ export abstract class Page<P = {}, S = {}> extends React.Component<
   P & IPageProps,
   S
 > {
+  static noScript = 'too early'
+
   /**
    * setup the current page in the browser
    */
