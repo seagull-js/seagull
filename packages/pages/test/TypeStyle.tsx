@@ -1,7 +1,7 @@
 import 'chai/register-should'
 import { suite, test } from 'mocha-typescript'
 import * as React from 'react'
-import { Page, render, style } from '../src'
+import { Helmet, Page, render, style } from '../src'
 
 class DemoPage extends Page {
   html() {
@@ -12,6 +12,14 @@ class DemoPage extends Page {
 
 @suite('TypeStyle')
 export class Test {
+  static before() {
+    Helmet.canUseDOM = false
+  }
+
+  static after() {
+    Helmet.canUseDOM = true
+  }
+
   @test
   async 'get a classname from typestyle and inject typestyle styles in the head'() {
     const html = render('', DemoPage, {})

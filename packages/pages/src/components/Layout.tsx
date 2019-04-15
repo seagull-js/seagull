@@ -8,6 +8,7 @@ export interface ILayoutProps {
   children: React.ReactNode
   pageBundle?: string
   styles?: string
+  noscript?: string
 }
 
 export class Layout extends React.Component<ILayoutProps> {
@@ -25,7 +26,10 @@ export class Layout extends React.Component<ILayoutProps> {
           {helmet ? helmet.script.toComponent() : ''}
         </head>
         <body>
-          <noscript title="noscript-the-one-and-only" />
+          <noscript
+            title="noscript-the-one-and-only"
+            dangerouslySetInnerHTML={{ __html: this.props.noscript || '' }}
+          />
           <div id="app">{this.props.children}</div>
           {this.props.data && (
             <script

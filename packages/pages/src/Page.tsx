@@ -3,6 +3,7 @@ import * as React from 'react'
 import { hydrate } from 'react-dom'
 import { getStyles, setStylesTarget } from 'typestyle'
 import { Helmet } from './helmet'
+import { NoScript } from './noScript'
 
 export type PageType = { new (...args: any[]): Page }
 

@@ -7,13 +7,18 @@ interface PropsType {
   children: string
 }
 
+let content = 'too early'
+
 class NoScript extends React.Component<PropsType, {}> {
   static propTypes = {
-    children: PropTypes.string,
     noscript: PropTypes.string,
   }
-  static peek: undefined
-  static rewind: undefined
+  static rewind() {
+    content = ''
+  }
+  static renderStatic() {
+    return content
+  }
   render() {
     return null
   }
@@ -23,19 +28,29 @@ const reducePropsToState = (noscriptTags: any[]) => {
   return noscriptTags.map(t => t.children).join('\r\n')
 }
 
-const handleStateChangeOnClient = (noscript: string) => {
+const handleStateChangeOnClient = (state: string) => {
   const nsTag = document.body.getElementsByTagName('noscript')[0]
   const nsTagInvalid = !nsTag || nsTag.title !== 'noscript-the-one-and-only'
   if (nsTagInvalid) {
     throw new Error('noscript-the-one-and-only tag is missing')
   }
-  nsTag.innerHTML = noscript
+  nsTag.innerHTML = state
+}
+
+const mapStateOnServer = (state: string) => {
+  content = state
+  return state
 }
 
 const NoScriptSideEffects = withSideEffect(
   reducePropsToState,
-  handleStateChangeOnClient
+  handleStateChangeOnClient,
+  mapStateOnServer
 )(NoScript)
+Object.assign(NoScriptSideEffects, {
+  renderStatic: NoScript.renderStatic,
+  rewind: NoScript.rewind,
+})
 
 export { NoScriptSideEffects as NoScript }
 export default NoScriptSideEffects
