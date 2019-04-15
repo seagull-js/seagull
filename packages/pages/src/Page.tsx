@@ -3,7 +3,6 @@ import * as React from 'react'
 import { hydrate } from 'react-dom'
 import { getStyles, setStylesTarget } from 'typestyle'
 import { Helmet } from './helmet'
-import { NoScript } from './noScript'
 
 export type PageType = { new (...args: any[]): Page }
 
@@ -38,6 +37,8 @@ export abstract class Page<P = {}, S = {}> extends React.Component<
   P & IPageProps,
   S
 > {
+  static noScript = 'too early'
+
   /**
    * setup the current page in the browser
    */

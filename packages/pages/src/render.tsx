@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { renderToString } from 'react-dom/server'
 import { Layout } from './components/Layout'
-import { NoScript } from './noScript'
 import { PageType } from './Page'
 
 export function render(pageBlob: string, Page: PageType, data: any) {
@@ -11,7 +10,7 @@ export function render(pageBlob: string, Page: PageType, data: any) {
     </Layout>
   )
   const helmet = (Page as any).helmetInstance().renderStatic()
-  const noscript = (NoScript as any).renderStatic()
+  const noscript = (Page as any).noScript
   const styles = (Page as any).getStyles()
   return (
     '<!DOCTYPE html>\n' +

@@ -27,7 +27,6 @@ export class Layout extends React.Component<ILayoutProps> {
         </head>
         <body>
           <noscript
-            title="noscript-the-one-and-only"
             dangerouslySetInnerHTML={{ __html: this.props.noscript || '' }}
           />
           <div id="app">{this.props.children}</div>

@@ -3,15 +3,14 @@ import 'chai/register-should'
 import { JSDOM } from 'jsdom'
 import { suite, test } from 'mocha-typescript'
 import * as React from 'react'
-import { Helmet, NoScript, Page, render } from '../src'
+import { Helmet, Page, render } from '../src'
+
+declare module 'jsdom'
 
 class NoScriptPage extends Page {
+  static noScript = 'Your javascript is disabled!'
   html() {
-    return (
-      <div>
-        <NoScript>Your javascript is disabled!</NoScript>
-      </div>
-    )
+    return <div />
   }
 }
 
@@ -29,9 +28,7 @@ export class Test {
   async 'adds string to noscript html'() {
     const html = render('', NoScriptPage, {})
     const { document } = new JSDOM(html).window
-    console.log('document', document)
     const el = document.getElementsByTagName('noscript')[0]
-    expect(el.title).to.equal('noscript-the-one-and-only')
     expect(el.innerHTML).to.be.a('string')
     expect(el.innerHTML).to.equal('Your javascript is disabled!')
   }
