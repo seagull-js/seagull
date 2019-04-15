@@ -10,11 +10,17 @@ import { PromiseResult } from 'aws-sdk/lib/request'
 import * as moment from 'moment'
 import { CWLSandbox } from './logging_sandbox'
 
+interface LogStreamName {
+  logStreamName?: string
+}
+
+interface CustomPutResponse extends LogStreamName, PutLogEventsResponse {}
+
 /**
  * Command to write log object to cloudwatch
  */
 export class WriteLog extends Command<
-  PromiseResult<PutLogEventsResponse, AWS.AWSError>
+  PromiseResult<CustomPutResponse, AWS.AWSError>
 > {
   params: PutLogEventsRequest
   CWL = new AWS.CloudWatchLogs({
