@@ -1,4 +1,5 @@
 import { BasicTest } from '@seagull/testing'
+import { expect } from 'chai'
 import 'chai/register-should'
 import { suite, test } from 'mocha-typescript'
 import { SeagullPipeline } from '../../src'
@@ -28,7 +29,15 @@ export class Test extends BasicTest {
     }
     const pipeline = await new SeagullPipeline(props).createPipeline()
     const synthStack = pipeline.synthesizeStack('helloworld-ci')
-    Object.keys(synthStack.template.Resources).length.should.be.equals(8)
+    Object.keys(synthStack.template.Resources).length.should.be.equals(11)
+    const pipelineKeys = Object.keys(synthStack.template.Resources).filter(
+      key =>
+        synthStack.template.Resources[key].Type ===
+        'AWS::CodePipeline::Pipeline'
+    )
+    expect(pipelineKeys.length).to.equal(1)
+    const codePipeline = synthStack.template.Resources[pipelineKeys[0]]
+    expect(codePipeline.Properties.Stages.length).to.equal(5)
   }
 }
 

@@ -102,8 +102,32 @@ export class SeagullPipeline {
       stage: this.stage,
     }
 
-    stack.addSourceStage('source', lib.getSourceConfig(stageConfigParams, 0))
-    stack.addBuildStage('build', lib.getBuildConfig(stageConfigParams, 1))
+    const sourceAction = stack.addSourceStage(
+      'source',
+      lib.getSourceConfig(stageConfigParams, 0)
+    )
+    stack.addTestStage(
+      'test',
+      lib.getTestConfig(stageConfigParams, 1, sourceAction.outputArtifact)
+    )
+    stack.addBuildStage(
+      'build',
+      lib.getBuildConfig(stageConfigParams, 2, sourceAction.outputArtifact)
+    )
+    const deployAction = stack.addDeployStage(
+      'deploy',
+      lib.getDeployConfig(stageConfigParams, 3, sourceAction.outputArtifact)
+    )
+    stack.addTestEnd2EndStage('end2end-test', {
+      ...lib.getTestEnd2EndConfig(
+        stageConfigParams,
+        4,
+        sourceAction.outputArtifact
+      ),
+      additionalInputArtifacts: [
+        deployAction.additionalOutputArtifact('cfurl'),
+      ],
+    })
     return pipelineApp
   }
 

@@ -120,7 +120,14 @@ export class SeagullStack extends Stack {
     const sourceName = `${this.id}-github-${name}`
     const { atIndex, branch, owner, pipeline, repo, oauthToken } = config
     const stage = pipeline.addStage(stageName, { placement: { atIndex } })
-    const stageConfig = { branch, oauthToken, owner, repo, stage }
+    const stageConfig = {
+      branch,
+      oauthToken,
+      outputArtifactName: name,
+      owner,
+      repo,
+      stage,
+    }
     return new GitHubSourceAction(this, sourceName, stageConfig)
   }
 
@@ -139,7 +146,105 @@ export class SeagullStack extends Stack {
     }
     const project = new CB.PipelineProject(this, projectName, projectConfig)
     const stage = pipeline.addStage(stageName, { placement: { atIndex } })
-    const stageConfig = { project, stage }
+    const stageConfig = {
+      inputArtifact: config.inputArtifact,
+      outputArtifactName: name,
+      project,
+      stage,
+    }
+    return new CB.PipelineBuildAction(this, buildName, stageConfig)
+  }
+
+  addTestStage(name: string, config: BuildStageConfig) {
+    const stageName = `${this.id}-stage-${name}`
+    const buildName = `${this.id}-code-${name}`
+    const projectName = `${this.id}-project-${name}`
+    const { atIndex, build, env, install, pipeline, postBuild, role } = config
+    const buildImage = CB.LinuxBuildImage.UBUNTU_14_04_NODEJS_8_11_0
+    const phases = { build, install, post_build: postBuild }
+    const projectConfig = {
+      buildSpec: { env, phases, version: '0.2' },
+      environment: { buildImage },
+      role,
+    }
+    const project = new CB.PipelineProject(this, projectName, projectConfig)
+    const stage = pipeline.addStage(stageName, { placement: { atIndex } })
+    const stageConfig = {
+      inputArtifact: config.inputArtifact,
+      outputArtifactName: name,
+      project,
+      stage,
+    }
+    return new CB.PipelineBuildAction(this, buildName, stageConfig)
+  }
+
+  addDeployStage(name: string, config: BuildStageConfig) {
+    const stageName = `${this.id}-stage-${name}`
+    const buildName = `${this.id}-code-${name}`
+    const projectName = `${this.id}-project-${name}`
+    const { atIndex, build, env, install, pipeline, postBuild, role } = config
+    const buildImage = CB.LinuxBuildImage.UBUNTU_14_04_NODEJS_8_11_0
+    const phases = { build, install, post_build: postBuild }
+    const projectConfig = {
+      buildSpec: {
+        artifacts: {
+          files: ['/tmp/cfurl.txt'],
+          name: 'cfurl',
+          'secondary-artifacts': {
+            [name]: {
+              files: '**/*',
+              name,
+            },
+            cfurl: {
+              files: ['/tmp/cfurl.txt'],
+              name: 'cfurl',
+            },
+          },
+        },
+        env,
+        phases,
+        version: '0.2',
+      },
+      environment: { buildImage },
+      role,
+    }
+    const project = new CB.PipelineProject(this, projectName, projectConfig)
+    const stage = pipeline.addStage(stageName, { placement: { atIndex } })
+    const stageConfig = {
+      additionalOutputArtifactNames: ['cfurl'],
+      inputArtifact: config.inputArtifact,
+      outputArtifactName: name,
+      project,
+      stage,
+    }
+    return new CB.PipelineBuildAction(this, buildName, stageConfig)
+  }
+
+  addTestEnd2EndStage(name: string, config: BuildStageConfig) {
+    const stageName = `${this.id}-stage-${name}`
+    const buildName = `${this.id}-code-${name}`
+    const projectName = `${this.id}-project-${name}`
+    const { atIndex, build, env, install, pipeline, postBuild, role } = config
+    const buildImage = CB.LinuxBuildImage.UBUNTU_14_04_NODEJS_8_11_0
+    const phases = { build, install, post_build: postBuild }
+    const projectConfig = {
+      buildSpec: {
+        env,
+        phases,
+        version: '0.2',
+      },
+      environment: { buildImage },
+      role,
+    }
+    const project = new CB.PipelineProject(this, projectName, projectConfig)
+    const stage = pipeline.addStage(stageName, { placement: { atIndex } })
+    const stageConfig = {
+      additionalInputArtifacts: config.additionalInputArtifacts,
+      inputArtifact: config.inputArtifact,
+      outputArtifactName: name,
+      project,
+      stage,
+    }
     return new CB.PipelineBuildAction(this, buildName, stageConfig)
   }
 
