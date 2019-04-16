@@ -116,7 +116,7 @@ export class SeagullStack extends Stack {
   }
 
   addSourceStage(name: string, config: SourceStageConfig) {
-    const stageName = `${this.id}-stage-${name}`
+    const stageName = name
     const sourceName = `${this.id}-github-${name}`
     const { atIndex, branch, owner, pipeline, repo, oauthToken } = config
     const stage = pipeline.addStage(stageName, { placement: { atIndex } })
@@ -132,7 +132,7 @@ export class SeagullStack extends Stack {
   }
 
   addBuildStage(name: string, config: BuildStageConfig) {
-    const stageName = `${this.id}-stage-${name}`
+    const stageName = name
     const buildName = `${this.id}-code-${name}`
     const projectName = `${this.id}-project-${name}`
     const { atIndex, build, env, install, pipeline, postBuild, role } = config
@@ -156,7 +156,7 @@ export class SeagullStack extends Stack {
   }
 
   addTestStage(name: string, config: BuildStageConfig) {
-    const stageName = `${this.id}-stage-${name}`
+    const stageName = name
     const buildName = `${this.id}-code-${name}`
     const projectName = `${this.id}-project-${name}`
     const { atIndex, build, env, install, pipeline, postBuild, role } = config
@@ -179,7 +179,7 @@ export class SeagullStack extends Stack {
   }
 
   addDeployStage(name: string, config: BuildStageConfig) {
-    const stageName = `${this.id}-stage-${name}`
+    const stageName = name
     const buildName = `${this.id}-code-${name}`
     const projectName = `${this.id}-project-${name}`
     const { atIndex, build, env, install, pipeline, postBuild, role } = config
@@ -221,7 +221,7 @@ export class SeagullStack extends Stack {
   }
 
   addTestEnd2EndStage(name: string, config: BuildStageConfig) {
-    const stageName = `${this.id}-stage-${name}`
+    const stageName = name
     const buildName = `${this.id}-code-${name}`
     const projectName = `${this.id}-project-${name}`
     const { atIndex, build, env, install, pipeline, postBuild, role } = config
