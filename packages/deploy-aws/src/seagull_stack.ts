@@ -133,7 +133,7 @@ export class SeagullStack extends Stack {
 
   addBuildStage(name: string, config: BuildStageConfig) {
     const stageName = name
-    const buildName = `${this.id}-code-${name}`
+    const buildName = name
     const projectName = `${this.id}-project-${name}`
     const { atIndex, build, env, install, pipeline, postBuild, role } = config
     const buildImage = CB.LinuxBuildImage.UBUNTU_14_04_NODEJS_8_11_0
@@ -157,7 +157,7 @@ export class SeagullStack extends Stack {
 
   addTestStage(name: string, config: BuildStageConfig) {
     const stageName = name
-    const buildName = `${this.id}-code-${name}`
+    const buildName = name
     const projectName = `${this.id}-project-${name}`
     const { atIndex, build, env, install, pipeline, postBuild, role } = config
     const buildImage = CB.LinuxBuildImage.UBUNTU_14_04_NODEJS_8_11_0
@@ -180,7 +180,7 @@ export class SeagullStack extends Stack {
 
   addDeployStage(name: string, config: BuildStageConfig) {
     const stageName = name
-    const buildName = `${this.id}-code-${name}`
+    const buildName = name
     const projectName = `${this.id}-project-${name}`
     const { atIndex, build, env, install, pipeline, postBuild, role } = config
     const buildImage = CB.LinuxBuildImage.UBUNTU_14_04_NODEJS_8_11_0
@@ -222,7 +222,7 @@ export class SeagullStack extends Stack {
 
   addTestEnd2EndStage(name: string, config: BuildStageConfig) {
     const stageName = name
-    const buildName = `${this.id}-code-${name}`
+    const buildName = name
     const projectName = `${this.id}-project-${name}`
     const { atIndex, build, env, install, pipeline, postBuild, role } = config
     const buildImage = CB.LinuxBuildImage.UBUNTU_14_04_NODEJS_8_11_0
