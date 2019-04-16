@@ -54,8 +54,7 @@ export class SeagullProject {
     const itemBucketName = await this.getBucketName()
     const actions: string[] = [
       'sts:AssumeRole',
-      'logs:CreateLogStream',
-      'logs:PutLogEvents',
+      'logs:*',
       'lambda:InvokeFunction',
       'lambda:InvokeAsync',
       'ses:*',
