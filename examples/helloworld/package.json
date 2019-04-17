@@ -7,7 +7,7 @@
   "scripts": {
     "build": "seagull-build",
     "dev": "seagull-dev",
-    "deploy": "seagull-deploy",
+    "deploy": "seagull-deploy-project",
     "diff": "seagull-diff",
     "pipeline": "seagull-deploy-pipeline",
     "start": "node dist/assets/backend/server.js",

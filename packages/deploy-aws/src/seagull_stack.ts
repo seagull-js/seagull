@@ -97,11 +97,14 @@ export class SeagullStack extends Stack {
     }
     const behaviors = [defaultBehavior]
     const customOriginSource = { domainName }
+    const loggingBucket = this.addS3(`${name}-logs`)
     const conf: CloudFrontWebDistributionProps = {
       aliasConfiguration: props.aliasConfig,
       comment: this.id,
       defaultRootObject: '',
-      loggingConfig: {},
+      loggingConfig: {
+        bucket: loggingBucket,
+      },
       originConfigs: [{ behaviors, customOriginSource, originPath }],
     }
     return new CF.CloudFrontWebDistribution(this, name, conf)
