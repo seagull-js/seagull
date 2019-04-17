@@ -80,7 +80,12 @@ export class SeagullProject {
     const env = await getEnv(name, this.appPath, this.stage)
     const lambda = app.stack.addLambda('lambda', this.appPath, role, env)
     const apiGW = app.stack.addUniversalApiGateway('apiGW', lambda, this.stage)
-    app.stack.addCloudfront('cloudfront', { apiGateway: apiGW, aliasConfig })
+    const logBucketName = `${name}-logs-${appProps.stackProps.env.account}`
+    app.stack.addCloudfront('cloudfront', {
+      aliasConfig,
+      apiGateway: apiGW,
+      logBucketName,
+    })
     const s3DeploymentNeeded = this.stage === 'prod' || this.branch === 'master'
     const importS3 = () => app.stack.importS3(itemBucketName, role)
     const addS3 = () => app.stack.addS3(itemBucketName, role)
