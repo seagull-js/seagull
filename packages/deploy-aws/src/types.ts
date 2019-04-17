@@ -76,4 +76,5 @@ export interface SourceStageConfig extends StageConfig {
 export interface CloudfrontProps {
   apiGateway: RestApi
   aliasConfig?: CF.AliasConfiguration
+  logBucketName?: string
 }
