@@ -77,10 +77,10 @@ export class SeagullProject {
     const app = new SeagullApp(appProps)
     const role = app.stack.addIAMRole('role', 'lambda.amazonaws.com', actions)
     app.role = role
-    const env = await getEnv(name, this.appPath, this.stage)
+    const logBucketName = `logs-${appProps.stackProps.env.account}`
+    const env = await getEnv(name, this.appPath, this.stage, logBucketName)
     const lambda = app.stack.addLambda('lambda', this.appPath, role, env)
     const apiGW = app.stack.addUniversalApiGateway('apiGW', lambda, this.stage)
-    const logBucketName = `logs-${appProps.stackProps.env.account}`
     app.stack.addCloudfront('cloudfront', {
       aliasConfig,
       apiGateway: apiGW,
@@ -174,9 +174,15 @@ async function buildCronJson(appPath: string) {
   return cronFile && cronFile !== '' ? JSON.parse(cronFile) : []
 }
 
-async function getEnv(name: string, appPath: string, stage: string) {
+async function getEnv(
+  name: string,
+  appPath: string,
+  stage: string,
+  logBucket: string
+) {
   const env: any = {
     APP: name,
+    LOG_BUCKET: `${name}-${logBucket}`,
     MODE: 'cloud',
     NODE_ENV: 'production',
     STAGE: stage,
