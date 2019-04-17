@@ -6,6 +6,8 @@
 
 ### Minor Changes
 
+- @seagull/deploy-aws -> log bucket creation + adding to environment
+
 ### Patch Changes
 
 ## 7.3.0 - 2019-04.12
