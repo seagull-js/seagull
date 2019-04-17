@@ -174,8 +174,7 @@ export class SeagullStack extends Stack {
   }
 
   getLogBucketConfig(name: string | undefined) {
-    const bucket =  name ? this.addS3(name) : false
+    const bucket = name ? this.addS3(name) : false
     return bucket ? { bucket } : {}
-    }
   }
 }
