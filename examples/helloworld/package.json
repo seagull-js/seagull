@@ -1,13 +1,13 @@
 {
   "name": "helloworld",
   "private": true,
-  "version": "9.0.2",
+  "version": "9.1.0",
   "description": "Helloworld example app using the Seagull Framework",
   "main": "index.js",
   "scripts": {
     "build": "seagull-build",
     "dev": "seagull-dev",
-    "deploy": "seagull-deploy",
+    "deploy": "seagull-deploy-project",
     "diff": "seagull-diff",
     "pipeline": "seagull-deploy-pipeline",
     "start": "node dist/assets/backend/server.js",
@@ -21,7 +21,7 @@
   "devDependencies": {
     "@seagull/build": "^9.0.1",
     "@seagull/commands-logging": "^9.0.1",
-    "@seagull/deploy-aws": "^9.0.2",
+    "@seagull/deploy-aws": "^9.1.0",
     "@seagull/libraries": "^6.0.0",
     "@seagull/test-e2e": "^9.0.1",
     "@seagull/test-pages": "^9.0.2",

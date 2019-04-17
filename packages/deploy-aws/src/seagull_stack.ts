@@ -97,11 +97,12 @@ export class SeagullStack extends Stack {
     }
     const behaviors = [defaultBehavior]
     const customOriginSource = { domainName }
+    const loggingConfig = this.getLogBucketConfig(props.logBucketName)
     const conf: CloudFrontWebDistributionProps = {
       aliasConfiguration: props.aliasConfig,
       comment: this.id,
       defaultRootObject: '',
-      loggingConfig: {},
+      loggingConfig,
       originConfigs: [{ behaviors, customOriginSource, originPath }],
     }
     return new CF.CloudFrontWebDistribution(this, name, conf)
@@ -170,5 +171,10 @@ export class SeagullStack extends Stack {
     const eventRule = new Events.EventRule(this, name, schedule)
     eventRule.addTarget(target, { jsonTemplate: `{"path":"${rule.path}"}` })
     return eventRule
+  }
+
+  getLogBucketConfig(name: string | undefined) {
+    const bucket = name ? this.addS3(name) : false
+    return bucket ? { bucket } : {}
   }
 }
