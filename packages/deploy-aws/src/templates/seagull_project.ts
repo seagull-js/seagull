@@ -80,7 +80,7 @@ export class SeagullProject {
     const env = await getEnv(name, this.appPath, this.stage)
     const lambda = app.stack.addLambda('lambda', this.appPath, role, env)
     const apiGW = app.stack.addUniversalApiGateway('apiGW', lambda, this.stage)
-    const logBucketName = `${name}-logs-${appProps.stackProps.env.account}`
+    const logBucketName = `logs-${appProps.stackProps.env.account}`
     app.stack.addCloudfront('cloudfront', {
       aliasConfig,
       apiGateway: apiGW,
