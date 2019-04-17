@@ -7,3 +7,6 @@ plugins:
   tslint:
     enabled: false
     config: tslint.json
+  duplication:
+    config:
+      count_threshold: 4
