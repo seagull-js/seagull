@@ -8,6 +8,7 @@ import { setCredsByProfile } from '../set_aws_credentials'
 import { Rule } from '../types'
 
 interface SeagullProjectProps {
+  account: string
   appPath: string
   branch: string
   stage: string
@@ -21,6 +22,7 @@ interface SeagullProjectProps {
 }
 
 export class SeagullProject {
+  account: string
   appPath: string
   branch: string
   stage: string
@@ -32,6 +34,7 @@ export class SeagullProject {
   sts: aws.STSHandler
 
   constructor(props: SeagullProjectProps) {
+    this.account = props.account
     this.appPath = props.appPath
     this.branch = props.branch
     this.stage = props.stage
@@ -50,7 +53,7 @@ export class SeagullProject {
     // preparations for deployment
     const name = this.getAppName()
     const sdk = new SDK({})
-    const account = await sdk.defaultAccount()
+    const account = this.account || (await sdk.defaultAccount())
     const itemBucketName = await this.getBucketName()
     const actions: string[] = [
       'sts:AssumeRole',
