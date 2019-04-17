@@ -25,7 +25,6 @@ export abstract class ServiceTest {
       this.injector.bind(injectable).toSelf()
     }
     this.beforeEach()
-    return 'key'
   }
 
   /** Implement your logic to run after each single test here!
