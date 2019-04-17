@@ -8,6 +8,12 @@ import { HttpBase } from './base'
  */
 @injectable()
 export class Http extends HttpBase {
+  /**
+   * node-fetch
+   * @see https://github.com/bitinn/node-fetch
+   * @param url request url
+   * @param init whatwg/fetch options
+   */
   async fetch(url: string, init?: RequestInit): Promise<Response> {
     return await fetch(url, init)
   }
