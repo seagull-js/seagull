@@ -87,23 +87,20 @@ function getInstall(params: StageConfigParams) {
   const upgradeNpm = addStateChangeToCmd('npm i -g npm')
   const runInstall = addStateChangeToCmd('npm ci')
   const commands = [curlCmd, upgradeNpm, checkState(), runInstall, checkState()]
-  return { commands, finally: [curlCmd] }
+  return getCommandConfig(params, commands)
 }
 
 function getBuild(params: StageConfigParams) {
-  const curlCmd = getCurlToSendTestResult(params.owner, params.repo, curlData)
   const runBuild = addStateChangeToCmd('npm run build')
-  return { commands: [runBuild, checkState()], finally: [curlCmd] }
+  return getCommandConfig(params, [runBuild])
 }
 
 function getTest(params: StageConfigParams) {
-  const curlCmd = getCurlToSendTestResult(params.owner, params.repo, curlData)
   const runTest = addStateChangeToCmd('npm run test')
-  return { commands: [runTest, checkState()], finally: [curlCmd] }
+  return getCommandConfig(params, [runTest])
 }
 
 function getTestEnd2End(params: StageConfigParams) {
-  const curlCmd = getCurlToSendTestResult(params.owner, params.repo, curlData)
   const commands = [
     'export CFURL="https://$(cat $CODEBUILD_SRC_DIR_cfurl/tmp/cfurl.txt;)"; export TARGET_URL=$CFURL',
     'echo "Cloudfront URL: $CFURL"',
@@ -111,20 +108,21 @@ function getTestEnd2End(params: StageConfigParams) {
     checkState(),
     `export PIPELINE_STATE="success";export PIPELINE_DESC="successful";`,
   ]
-  return { commands, finally: [curlCmd] }
+  return getCommandConfig(params, commands)
 }
 
 function getDeploy(params: StageConfigParams) {
+  const commands = [
+    addStateChangeToCmd('npm run deploy'),
+    checkState(),
+    sendDeploymentInfo(params.owner, params.repo),
+  ]
+  return getCommandConfig(params, commands)
+}
+
+function getCommandConfig(params: StageConfigParams, commands: string[]) {
   const curlCmd = getCurlToSendTestResult(params.owner, params.repo, curlData)
-  const runDeploy = addStateChangeToCmd('npm run deploy')
-  return {
-    commands: [
-      runDeploy,
-      checkState(),
-      sendDeploymentInfo(params.owner, params.repo),
-    ],
-    finally: [curlCmd],
-  }
+  return { commands, finally: [curlCmd] }
 }
 
 function sendDeploymentInfo(owner: string, name: string) {

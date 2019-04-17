@@ -64,6 +64,7 @@ export interface BuildStageConfig extends StageConfig {
   additionalInputArtifacts?: Artifact[]
   build: { commands: string[]; finally: string[] }
   install: { commands: string[]; finally: string[] }
+  outputArtifacts?: any
   postBuild?: { commands: string[]; finally?: string[] }
   role: IAM.Role
   env: { variables: { [key: string]: string } }
