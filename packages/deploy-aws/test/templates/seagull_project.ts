@@ -96,6 +96,7 @@ export class Test extends BasicTest {
     expect(lambdaFn.Properties).to.have.property('Environment')
     const expectedEnv = {
       APP: 'helloworld',
+      LOG_BUCKET: 'helloworld-logs-1234567890',
       MODE: 'cloud',
       NODE_ENV: 'production',
       STAGE: 'prod',
@@ -340,6 +341,7 @@ class TestSTSHandler extends Handlers.STSHandler {
 }
 
 const getTestProps = (appPath: string) => ({
+  account: '1234567890',
   appPath,
   branch: 'master',
   githubToken: 'Token123',
