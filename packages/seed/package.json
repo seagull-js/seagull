@@ -6,7 +6,7 @@
   "types": "dist/src/index.d.ts",
   "scripts": {
     "build": "rm -rf dist && tsc && npm run lint",
-    "test": "NODE_ENV=test tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
+    "test": "tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
     "test:watch": "npm run test -- --watch --reporter min",
     "lint": "tslint --project ./tsconfig.json --config ./tslint.json --fix './{src, test}/**/*.ts'",
     "docs": "rm -rf docs && typedoc --mode modules --ignoreCompilerErrors --excludeExternals --excludePrivate --excludeNotExported --out docs src"

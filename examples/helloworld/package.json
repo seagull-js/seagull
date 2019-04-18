@@ -12,7 +12,7 @@
     "pipeline": "seagull-deploy-pipeline",
     "start": "node dist/assets/backend/server.js",
     "test": "npm run test:unit",
-    "test:unit": "NODE_ENV=test mocha --opts test/mocha.opts",
+    "test:unit": "mocha --opts test/mocha.opts",
     "test:unit:watch": "npm run test:unit -- --watch --reporter min",
     "test:e2e": "seagull-e2e"
   },

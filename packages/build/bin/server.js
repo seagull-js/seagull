@@ -31,7 +31,7 @@ const opts = {
 }
 
 opts.mode ? (process.env.MODE = opts.mode) : null
-process.env.STAGE = opts.stage
+opts.stage ? (process.env.STAGE = opts.stage) : null
 process.env.NODE_ENV = opts.optimizeRuntime ? 'production' : 'development'
 
 const Ops = require('../dist/src/operators')
