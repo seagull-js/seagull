@@ -3,12 +3,13 @@ import * as React from 'react'
 import { HelmetData } from '../helmet'
 
 export interface ILayoutProps {
+  bodybegin?: any
+  bodyend?: any
   helmet?: HelmetData
   data?: any
   children: React.ReactNode
   pageBundle?: string
   styles?: string
-  noscript?: string
 }
 
 export class Layout extends React.Component<ILayoutProps> {
@@ -26,9 +27,7 @@ export class Layout extends React.Component<ILayoutProps> {
       </head>
     )
   }
-  noScript = (
-    <noscript dangerouslySetInnerHTML={{ __html: this.props.noscript || '' }} />
-  )
+
   initialState = this.props.data && (
     <script
       dangerouslySetInnerHTML={{
@@ -44,12 +43,13 @@ export class Layout extends React.Component<ILayoutProps> {
       <html prefix="og: http://ogp.me/ns#">
         {this.head}
         <body>
-          {this.noScript}
+          {this.props.bodybegin}
           <div id="app">{this.props.children}</div>
           {this.initialState}
           <script src="/vendor.js" data-no-instant />
           {this.pageBundle}
           <script>window.Page.default.bootstrap()</script>
+          {this.props.bodyend}
         </body>
       </html>
     )

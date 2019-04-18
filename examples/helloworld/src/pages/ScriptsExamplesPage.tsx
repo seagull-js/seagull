@@ -1,9 +1,27 @@
-import { Page } from '@seagull/pages'
+import { addToBodyTray, Page } from '@seagull/pages'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
 
+addToBodyTray(
+  'bodyBegin',
+  <>
+    <noscript>test</noscript>
+    <script>alert(1)</script>
+  </>,
+  0
+)
+
+addToBodyTray(
+  'bodyBegin',
+  <>
+    <noscript>test</noscript>
+    <script>alert(1)</script>
+  </>,
+  0
+)
+
+addToBodyTray('bodyEnd', <script>alert(2)</script>, 0)
 export default class ScriptsExamplesPage extends Page {
-  static noScript = 'Your javascript is disabled!'
   html() {
     // tslint:disable-next-line:no-console
     console.log('rendering on client:', typeof window !== 'undefined')
@@ -13,7 +31,6 @@ export default class ScriptsExamplesPage extends Page {
           <script src="/foo.js" defer />
           <script src="/bar.js" defer />
         </Helmet>
-        This is only visible while loading ...
       </div>
     )
   }
