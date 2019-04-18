@@ -1,12 +1,12 @@
 {
   "name": "@seagull/routes",
-  "version": "9.0.1",
+  "version": "9.0.2",
   "description": "Routing functionalities for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
     "build": "rm -rf dist && tsc",
-    "test": "NODE_ENV=test tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
+    "test": "tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
     "test:watch": "npm run test -- --watch --reporter min",
     "docs": "rm -rf docs && typedoc --mode modules --ignoreCompilerErrors --excludeExternals --excludePrivate --excludeNotExported --out docs src"
   },
@@ -34,7 +34,7 @@
   "devDependencies": {
     "@seagull/mock-process": "^9.0.1",
     "@seagull/mode": "^9.0.1",
-    "@seagull/pages": "^9.0.1",
+    "@seagull/pages": "^9.0.2",
     "@seagull/testing": "^9.0.1",
     "@seagull/tslint": "^9.0.1",
     "@types/express": "^4.16.0",

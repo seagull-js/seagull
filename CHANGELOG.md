@@ -8,6 +8,10 @@
 
 ### Patch Changes
 
+## 9.1.0 - 2019-04.17
+
+- @seagull/deploy-aws -> log bucket creation + adding to environment
+
 ## 7.3.0 - 2019-04.12
 
 - @seagull/libraries -> added types for logging

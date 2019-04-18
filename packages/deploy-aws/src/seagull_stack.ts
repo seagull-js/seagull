@@ -3,6 +3,7 @@ import { App, Secret, SecretParameter, Stack, StackProps } from '@aws-cdk/cdk'
 import { LambdaIntegration, RestApi } from '@aws-cdk/aws-apigateway'
 import * as CM from '@aws-cdk/aws-certificatemanager'
 import * as CF from '@aws-cdk/aws-cloudfront'
+import { CloudFrontWebDistributionProps } from '@aws-cdk/aws-cloudfront'
 import * as CB from '@aws-cdk/aws-codebuild'
 import { GitHubSourceAction, Pipeline } from '@aws-cdk/aws-codepipeline'
 import * as Events from '@aws-cdk/aws-events'
@@ -96,10 +97,12 @@ export class SeagullStack extends Stack {
     }
     const behaviors = [defaultBehavior]
     const customOriginSource = { domainName }
-    const conf = {
+    const loggingConfig = this.getLogBucketConfig(props.logBucketName)
+    const conf: CloudFrontWebDistributionProps = {
       aliasConfiguration: props.aliasConfig,
       comment: this.id,
       defaultRootObject: '',
+      loggingConfig,
       originConfigs: [{ behaviors, customOriginSource, originPath }],
     }
     return new CF.CloudFrontWebDistribution(this, name, conf)
@@ -168,5 +171,10 @@ export class SeagullStack extends Stack {
     const eventRule = new Events.EventRule(this, name, schedule)
     eventRule.addTarget(target, { jsonTemplate: `{"path":"${rule.path}"}` })
     return eventRule
+  }
+
+  getLogBucketConfig(name: string | undefined) {
+    const bucket = name ? this.addS3(name) : false
+    return bucket ? { bucket } : {}
   }
 }

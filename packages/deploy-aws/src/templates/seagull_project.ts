@@ -8,6 +8,7 @@ import { setCredsByProfile } from '../set_aws_credentials'
 import { Rule } from '../types'
 
 interface SeagullProjectProps {
+  account: string
   appPath: string
   branch: string
   stage: string
@@ -21,6 +22,7 @@ interface SeagullProjectProps {
 }
 
 export class SeagullProject {
+  account: string
   appPath: string
   branch: string
   stage: string
@@ -32,6 +34,7 @@ export class SeagullProject {
   sts: aws.STSHandler
 
   constructor(props: SeagullProjectProps) {
+    this.account = props.account
     this.appPath = props.appPath
     this.branch = props.branch
     this.stage = props.stage
@@ -50,12 +53,11 @@ export class SeagullProject {
     // preparations for deployment
     const name = this.getAppName()
     const sdk = new SDK({})
-    const account = await sdk.defaultAccount()
+    const account = this.account || (await sdk.defaultAccount())
     const itemBucketName = await this.getBucketName()
     const actions: string[] = [
       'sts:AssumeRole',
-      'logs:CreateLogStream',
-      'logs:PutLogEvents',
+      'logs:*',
       'lambda:InvokeFunction',
       'lambda:InvokeAsync',
       'ses:*',
@@ -78,10 +80,15 @@ export class SeagullProject {
     const app = new SeagullApp(appProps)
     const role = app.stack.addIAMRole('role', 'lambda.amazonaws.com', actions)
     app.role = role
-    const env = await getEnv(name, this.appPath, this.stage)
+    const logBucketName = `logs-${appProps.stackProps.env.account}`
+    const env = await getEnv(name, this.appPath, this.stage, logBucketName)
     const lambda = app.stack.addLambda('lambda', this.appPath, role, env)
     const apiGW = app.stack.addUniversalApiGateway('apiGW', lambda, this.stage)
-    app.stack.addCloudfront('cloudfront', { apiGateway: apiGW, aliasConfig })
+    app.stack.addCloudfront('cloudfront', {
+      aliasConfig,
+      apiGateway: apiGW,
+      logBucketName,
+    })
     const s3DeploymentNeeded = this.stage === 'prod' || this.branch === 'master'
     const importS3 = () => app.stack.importS3(itemBucketName, role)
     const addS3 = () => app.stack.addS3(itemBucketName, role)
@@ -170,9 +177,15 @@ async function buildCronJson(appPath: string) {
   return cronFile && cronFile !== '' ? JSON.parse(cronFile) : []
 }
 
-async function getEnv(name: string, appPath: string, stage: string) {
+async function getEnv(
+  name: string,
+  appPath: string,
+  stage: string,
+  logBucket: string
+) {
   const env: any = {
     APP: name,
+    LOG_BUCKET: `${name}-${logBucket}`,
     MODE: 'cloud',
     NODE_ENV: 'production',
     STAGE: stage,

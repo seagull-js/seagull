@@ -3,7 +3,7 @@ import { Stash } from './stash'
 
 const stash = new Stash()
 
-if (process.env.NODE_ENV === 'test') {
+if (process.env.STAGE === 'test') {
   ;(log as any).stream = stash
 }
 
