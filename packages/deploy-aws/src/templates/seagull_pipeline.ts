@@ -110,12 +110,24 @@ export class SeagullPipeline {
       'test',
       lib.getTestConfig(stageConfigParams, 1, sourceAction.outputArtifact)
     )
-    stack.addBuildActionStage(
-      'build',
-      lib.getBuildConfig(stageConfigParams, 2, sourceAction.outputArtifact)
-    )
+    const buildAction = stack.addBuildActionStage('build', {
+      ...lib.getBuildConfig(stageConfigParams, 2, sourceAction.outputArtifact),
+      outputArtifacts: {
+        'secondary-artifacts': {
+          build: {
+            files: '**/*',
+            name: 'build',
+          },
+          dist: {
+            files: ['dist/**/*'],
+            name: 'dist',
+          },
+        },
+      },
+    })
     const deployAction = stack.addBuildActionStage('deploy', {
       ...lib.getDeployConfig(stageConfigParams, 3, sourceAction.outputArtifact),
+      additionalInputArtifacts: [buildAction.additionalOutputArtifact('dist')],
       outputArtifacts: {
         'secondary-artifacts': {
           cfurl: {

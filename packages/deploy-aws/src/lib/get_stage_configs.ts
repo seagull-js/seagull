@@ -54,7 +54,7 @@ export function getDeployConfig(
 ) {
   return {
     ...getCommonConfig(params, index, inputArtifact),
-    build: getBuild(params),
+    // build: getBuild(params),
     postBuild: getDeploy(params),
   }
 }
@@ -107,6 +107,8 @@ function getTestEnd2End(params: StageConfigParams) {
 
 function getDeploy(params: StageConfigParams) {
   const commands = [
+    addStateChangeToCmd('cp -Rf $CODEBUILD_SRC_DIR_dist/dist dist'),
+    checkState(),
     addStateChangeToCmd('npm run deploy'),
     checkState(),
     sendDeploymentInfo(params.owner, params.repo),
