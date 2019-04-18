@@ -20,14 +20,8 @@ export function getBuildConfig(
   inputArtifact?: Artifact
 ) {
   return {
-    atIndex: index,
+    ...getCommonConfig(params, index, inputArtifact),
     build: getBuild(params),
-    env: getEnv(params),
-    inputArtifact,
-    install: getInstall(params),
-    pipeline: params.pipeline,
-    postBuild: { commands: [] },
-    role: params.role,
   }
 }
 
@@ -37,14 +31,8 @@ export function getTestConfig(
   inputArtifact?: Artifact
 ) {
   return {
-    atIndex: index,
-    build: { commands: [], finally: [] },
-    env: getEnv(params),
-    inputArtifact,
-    install: getInstall(params),
-    pipeline: params.pipeline,
+    ...getCommonConfig(params, index, inputArtifact),
     postBuild: getTest(params),
-    role: params.role,
   }
 }
 
@@ -54,14 +42,8 @@ export function getTestEnd2EndConfig(
   inputArtifact?: Artifact
 ) {
   return {
-    atIndex: index,
-    build: { commands: [], finally: [] },
-    env: getEnv(params),
-    inputArtifact,
-    install: getInstall(params),
-    pipeline: params.pipeline,
+    ...getCommonConfig(params, index, inputArtifact),
     postBuild: getTestEnd2End(params),
-    role: params.role,
   }
 }
 
@@ -71,13 +53,25 @@ export function getDeployConfig(
   inputArtifact?: Artifact
 ) {
   return {
-    atIndex: index,
+    ...getCommonConfig(params, index, inputArtifact),
     build: getBuild(params),
+    postBuild: getDeploy(params),
+  }
+}
+
+function getCommonConfig(
+  params: StageConfigParams,
+  index: number,
+  inputArtifact?: Artifact
+) {
+  return {
+    atIndex: index,
+    build: { commands: [], finally: [] },
     env: getEnv(params),
     inputArtifact,
     install: getInstall(params),
     pipeline: params.pipeline,
-    postBuild: getDeploy(params),
+    postBuild: { commands: [] },
     role: params.role,
   }
 }
