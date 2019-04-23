@@ -2,6 +2,7 @@ import { isString } from 'lodash'
 import * as React from 'react'
 import { hydrate } from 'react-dom'
 import { getStyles, setStylesTarget } from 'typestyle'
+import { getTray, TTray, TTrayItem } from './bodytray'
 import { Helmet } from './helmet'
 
 export type PageType = { new (...args: any[]): Page }
@@ -37,8 +38,6 @@ export abstract class Page<P = {}, S = {}> extends React.Component<
   P & IPageProps,
   S
 > {
-  static noScript = 'too early'
-
   /**
    * setup the current page in the browser
    */
@@ -54,6 +53,10 @@ export abstract class Page<P = {}, S = {}> extends React.Component<
    */
   static getStyles(): string {
     return getStyles()
+  }
+
+  static getTray(tray: TTray): TTrayItem {
+    return getTray(tray)
   }
 
   /**

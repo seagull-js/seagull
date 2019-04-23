@@ -10,17 +10,19 @@ export function render(pageBlob: string, Page: PageType, data: any) {
     </Layout>
   )
   const helmet = (Page as any).helmetInstance().renderStatic()
-  const noscript = (Page as any).noScript
   const styles = (Page as any).getStyles()
+  const bodybegin = (Page as any).getTray('bodyBegin')
+  const bodyend = (Page as any).getTray('bodyEnd')
   return (
     '<!DOCTYPE html>\n' +
     renderToString(
       <Layout
+        bodybegin={bodybegin}
+        bodyend={bodyend}
         helmet={helmet}
         data={data}
         pageBundle={pageBlob}
         styles={styles}
-        noscript={noscript}
       >
         <Page data={data} />
       </Layout>
