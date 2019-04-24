@@ -1,4 +1,4 @@
-import { FixtureStorage } from '@seagull/seed'
+import { FixtureStorage, SeedError } from '@seagull/seed'
 import { injectable } from 'inversify'
 import { RequestInit, Response } from 'node-fetch'
 import 'reflect-metadata'
@@ -14,10 +14,10 @@ export class HttpPure extends HttpBase {
     const seed = FixtureStorage.createByFetchParams<Fixture<any>>(url, init)
     const fixture = seed.get()
     if (!fixture) {
-      throw new Error('Http: fixture (seed) is missing.')
+      throw new SeedError('Http: fixture (seed) is missing.', seed)
     }
     if (seed.expired) {
-      throw new Error('Http: fixture (seed) is expired.')
+      throw new SeedError('Http: fixture (seed) is expired.', seed)
     }
     return createResponse(fixture)
   }

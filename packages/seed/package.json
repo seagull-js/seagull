@@ -32,6 +32,9 @@
     "url": "https://github.com/seagull-js/seagull/issues"
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
+  "dependencies": {
+    "@seagull/libraries": "^9.2.0"
+  },
   "devDependencies": {
     "@seagull/testing": "^9.2.0",
     "@seagull/tslint": "^9.0.1"

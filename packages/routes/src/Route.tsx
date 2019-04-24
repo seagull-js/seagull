@@ -1,4 +1,4 @@
-import { httpDiModule } from '@seagull/services-http'
+import { httpServicesModule } from '@seagull/services-http'
 import { Express, Request, Response } from 'express'
 import { ContainerModule } from 'inversify'
 import { HttpMethod } from '.'
@@ -62,7 +62,7 @@ export abstract class Route {
 
   private static async registerDependencies(ctx: RouteContext) {
     // bind all seagull injectables
-    ctx.injector.load(httpDiModule)
+    ctx.injector.load(httpServicesModule)
 
     // bind explicit injectables
     if (this.dependencies) {
