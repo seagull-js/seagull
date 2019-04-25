@@ -1,6 +1,6 @@
 {
   "name": "@seagull/routes",
-  "version": "9.2.0",
+  "version": "9.3.0",
   "description": "Routing functionalities for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",

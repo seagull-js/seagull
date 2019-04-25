@@ -96,7 +96,7 @@ export class Test extends BasicTest {
     expect(lambdaFn.Properties).to.have.property('Environment')
     const expectedEnv = {
       APP: 'helloworld',
-      LOG_BUCKET: 'helloworld-logs-1234567890',
+      LOG_BUCKET: 'eu-central-1-test-account-id-helloworld-master-logs',
       MODE: 'cloud',
       NODE_ENV: 'production',
       STAGE: 'prod',

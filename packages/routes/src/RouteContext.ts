@@ -57,6 +57,7 @@ export class RouteContext {
   // render a Page with data
   render(src: string | PageType, data: any) {
     const renderer: any = isString(src) ? this.renderUMD : this.renderPage
+    data = Object.assign(data, { path: this.request.url })
     const html = renderer(src, data)
     this.response.type('html')
     this.response.send(html)

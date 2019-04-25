@@ -70,7 +70,7 @@ function getCurlToSendTestResult(owner: string, name: string, data: string) {
   const curlParams = `?access_token=$ACCESS_TOKEN`
   const curlUrl = `"${curlDomain}${curlPath}${curlParams}"`
   const curlHeaders = `-H 'Content-Type: application/json'`
-  return `curl -g -X POST ${curlUrl} ${curlHeaders} ${data}`
+  return `curl -s -g -X POST ${curlUrl} ${curlHeaders} ${data} > /dev/null`
 }
 
 function getEnv(params: StageConfigParams) {

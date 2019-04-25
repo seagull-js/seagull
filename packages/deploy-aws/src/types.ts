@@ -1,8 +1,8 @@
 import { RestApi } from '@aws-cdk/aws-apigateway'
 import * as CF from '@aws-cdk/aws-cloudfront'
 import { Pipeline } from '@aws-cdk/aws-codepipeline'
-import { Role } from '@aws-cdk/aws-iam'
 import * as IAM from '@aws-cdk/aws-iam'
+import { Bucket } from '@aws-cdk/aws-s3'
 import { Secret, StackProps } from '@aws-cdk/cdk'
 import { SSMHandler } from './aws_sdk_handler'
 
@@ -38,7 +38,7 @@ export interface StageConfigParams {
   pipeline: Pipeline
   pipelineLink: string
   repo: string
-  role: Role
+  role: IAM.Role
   ssmSecret: { name: string; secret: Secret }
   stage: string
 }
@@ -76,5 +76,5 @@ export interface SourceStageConfig extends StageConfig {
 export interface CloudfrontProps {
   apiGateway: RestApi
   aliasConfig?: CF.AliasConfiguration
-  logBucketName?: string
+  logBucket?: Bucket
 }
