@@ -152,12 +152,15 @@ export class SeagullProject {
     const prefix = `${this.region}-${accountId}-`
     const branchName = addBranchName ? `-${this.branch}` : ''
     const suffix = `${this.stage !== 'prod' ? `-${this.stage}` : ''}`
+    const regex = /[^0-9A-Za-z-]/g
     // bucketnames should be between 3 and 63 characters,
     // therefore we have to cut a little at this point
     const limit = 62 - prefix.length - suffix.length - bucketUsage.length
     const projectAndBranch = `${projectName}${branchName}`.substring(0, limit)
-    const middlePart = `${projectAndBranch}-${bucketUsage}`
-    return `${prefix}${middlePart}${suffix}`.replace(/[^0-9A-Za-z-]/g, '')
+
+    const middlePart = `${projectAndBranch}-${bucketUsage}`.replace(regex, '')
+    const name = `${prefix}${middlePart}${suffix}`.toLowerCase()
+    return name
   }
 }
 

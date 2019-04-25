@@ -8,6 +8,14 @@
 
 ### Patch Changes
 
+## 9.3.2
+
+- @seagull/deploy-aws -> made s3Name lowercase
+
+## 9.3.1
+
+- @seagull/deploy-aws -> removed prohibited symbols from s3 name
+
 ## 9.3.0
 
 - @seagull/deploy-aws -> silenced the curl commands in pipeline
