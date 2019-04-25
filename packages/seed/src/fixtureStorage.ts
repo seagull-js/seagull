@@ -3,6 +3,7 @@ import * as fs from 'fs'
 import { outputJsonSync, pathExistsSync, readJsonSync } from 'fs-extra'
 import { RequestInit } from 'node-fetch'
 import { join } from 'path'
+import { SeedError } from './error'
 import { LocalConfig } from './localConfig'
 
 // tslint:disable-next-line:no-var-requires
@@ -13,11 +14,11 @@ require('ts-node')
  */
 export class FixtureStorage<T> {
   /**
-   * Date the fixture has been created (in case a fixture exists).
+   * Date the fixture has been modified for the last time.
    * @param uri Fixture uri
    */
-  get createdDate(): Date | undefined {
-    return pathExistsSync(this.path) ? fs.statSync(this.path).mtime : undefined
+  get modifiedDate(): Date | undefined {
+    return pathExistsSync(this.path) ? fs.statSync(this.path).ctime : undefined
   }
 
   get expired(): boolean {
@@ -29,8 +30,8 @@ export class FixtureStorage<T> {
       result.setDate(result.getDate() + days)
       return result
     }
-    const seedDate = this.createdDate!
-    const expireDate = addDays(seedDate, this.config.expiresInDays)
+    const modifiedDate = this.modifiedDate!
+    const expireDate = addDays(modifiedDate, this.config.expiresInDays)
     return (expireDate && expireDate.getTime() <= new Date().getTime()) || false
   }
 
