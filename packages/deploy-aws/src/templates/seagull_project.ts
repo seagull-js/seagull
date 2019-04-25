@@ -41,6 +41,7 @@ export class SeagullProject {
     this.profile = props.profile
     this.region = props.region
     this.pkgJson = require(`${this.appPath}/package.json`)
+    setCredsByProfile(this.profile)
     const propsACMHandler = props.handlers && props.handlers.acmHandler
     const propsCFHandler = props.handlers && props.handlers.cloudfrontHandler
     const propsSTSHandler = props.handlers && props.handlers.stsHandler
@@ -54,7 +55,8 @@ export class SeagullProject {
     const name = this.getAppName()
     const sdk = new SDK({})
     const account = this.account || (await sdk.defaultAccount())
-    const itemBucketName = await this.getBucketName()
+    const itemBucketName = await this.getBucketName('items')
+    const logBucketName = await this.getBucketName('logs', true)
     const actions: string[] = [
       'sts:AssumeRole',
       'logs:*',
@@ -80,15 +82,12 @@ export class SeagullProject {
     const app = new SeagullApp(appProps)
     const role = app.stack.addIAMRole('role', 'lambda.amazonaws.com', actions)
     app.role = role
-    const logBucketName = `logs-${appProps.stackProps.env.account}`
     const env = await getEnv(name, this.appPath, this.stage, logBucketName)
+    const logBucket = app.stack.addS3(logBucketName, role)
     const lambda = app.stack.addLambda('lambda', this.appPath, role, env)
     const apiGW = app.stack.addUniversalApiGateway('apiGW', lambda, this.stage)
-    app.stack.addCloudfront('cloudfront', {
-      aliasConfig,
-      apiGateway: apiGW,
-      logBucketName,
-    })
+    const cloudfrontConfig = { aliasConfig, apiGateway: apiGW, logBucket }
+    app.stack.addCloudfront('cloudfront', cloudfrontConfig)
     const s3DeploymentNeeded = this.stage === 'prod' || this.branch === 'master'
     const importS3 = () => app.stack.importS3(itemBucketName, role)
     const addS3 = () => app.stack.addS3(itemBucketName, role)
@@ -147,12 +146,18 @@ export class SeagullProject {
     !hasValidProfile && lib.noCredentialsSet()
   }
 
-  async getBucketName() {
+  async getBucketName(bucketUsage: string, addBranchName = false) {
+    const projectName = this.pkgJson.name
     const accountId = await aws.getAccountId(this.sts)
     const prefix = `${this.region}-${accountId}-`
-    const bucketName = `${require(`${this.appPath}/package.json`).name}-items`
+    const branchName = addBranchName ? `-${this.branch}` : ''
     const suffix = `${this.stage !== 'prod' ? `-${this.stage}` : ''}`
-    return `${prefix}${bucketName}${suffix}`
+    // bucketnames should be between 3 and 63 characters,
+    // therefore we have to cut a little at this point
+    const limit = 62 - prefix.length - suffix.length - bucketUsage.length
+    const projectAndBranch = `${projectName}${branchName}`.substring(0, limit)
+    const middlePart = `${projectAndBranch}-${bucketUsage}`
+    return `${prefix}${middlePart}${suffix}`
   }
 }
 
@@ -185,7 +190,7 @@ async function getEnv(
 ) {
   const env: any = {
     APP: name,
-    LOG_BUCKET: `${name}-${logBucket}`,
+    LOG_BUCKET: logBucket,
     MODE: 'cloud',
     NODE_ENV: 'production',
     STAGE: stage,

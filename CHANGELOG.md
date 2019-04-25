@@ -8,6 +8,13 @@
 
 ### Patch Changes
 
+## 9.3.0
+
+- @seagull/deploy-aws -> silenced the curl commands in pipeline
+- @seagull/deploy-aws -> fixed bug, where the log bucket name was not uniq enough to allow deployments per branch
+- @seagull/routes -> added request url to route render
+- @seagull/deploy-aws -> fixed cloudfront bug
+
 ## 9.1.0 - 2019-04.17
 
 - @seagull/deploy-aws -> log bucket creation + adding to environment

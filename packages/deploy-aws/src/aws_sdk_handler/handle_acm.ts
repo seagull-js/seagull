@@ -1,4 +1,4 @@
-import { ACM } from 'aws-sdk'
+import { ACM, config } from 'aws-sdk'
 
 import { findAliasConfig } from '../lib'
 
@@ -23,7 +23,8 @@ export class ACMHandler {
   private acm: ACM
 
   constructor() {
-    this.acm = new ACM({ region: 'us-east-1' })
+    const credentials = config.credentials
+    this.acm = new ACM({ credentials, region: 'us-east-1' })
   }
 
   async listCertificates() {
