@@ -22,6 +22,9 @@ export class FixtureStorage<T> {
   }
 
   get expired(): boolean {
+    if (!this.config.expiresInDays) {
+      return false
+    }
     const addDays = (date: Date, days?: number) => {
       if (typeof days !== 'number') {
         return undefined
@@ -30,8 +33,8 @@ export class FixtureStorage<T> {
       result.setDate(result.getDate() + days)
       return result
     }
-    const modifiedDate = this.modifiedDate!
-    const expireDate = addDays(modifiedDate, this.config.expiresInDays)
+    const expireDate = addDays(this.modifiedDate!, this.config.expiresInDays)
+    console.info('mod date', this.modifiedDate, expireDate)
     return (expireDate && expireDate.getTime() <= new Date().getTime()) || false
   }
 

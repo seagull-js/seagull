@@ -35,7 +35,7 @@ export class Test {
   @test
   @timeout(10000)
   async 'can get the config of a seed'() {
-    const fs = new FixtureStorage<string>('../seed/something', '.json')
+    const fs = new FixtureStorage<string>('../seed/somethingHooky', '.json')
     fs.set('asdf')
     expect(fs.config).to.be.an('object')
     expect(fs.config.hook!('asdf')).to.eq('qwer')
