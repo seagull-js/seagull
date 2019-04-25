@@ -24,12 +24,12 @@ export class Test {
   }
 
   @test
-  async 'can get the created date of a seed'() {
+  async 'can get the modified date of a seed'() {
     const fs = new FixtureStorage<string>('../seed/something', '.json')
     fs.set('asdf')
     const date = new Date()
-    expect(fs.createdDate).to.be.a('Date')
-    expect(fs.createdDate!.toString()).to.eq(date.toString())
+    expect(fs.modifiedDate).to.be.a('Date')
+    expect(fs.modifiedDate!.toString()).to.eq(date.toString())
   }
 
   @test
