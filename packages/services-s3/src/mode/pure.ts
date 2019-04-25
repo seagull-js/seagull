@@ -1,4 +1,3 @@
-import { ReadFile } from '@seagull/commands-s3/dist/src/read_file'
 import { IMode } from '@seagull/mode'
 import * as fs from 'fs'
 import { injectable } from 'inversify'

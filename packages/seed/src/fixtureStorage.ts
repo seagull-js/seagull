@@ -87,14 +87,28 @@ export class FixtureStorage<T> {
    * @param uri Fixture uri
    */
   get(): T {
-    return pathExistsSync(this.path) ? readJsonSync(this.path) : undefined
+    const fixture = pathExistsSync(this.path)
+      ? readJsonSync(this.path)
+      : undefined
+
+    if (!fixture) {
+      throw new SeedError('Http: fixture (seed) is missing.', this)
+    }
+    if (this.expired) {
+      throw new SeedError('Http: fixture (seed) is expired.', this)
+    }
+
+    return fixture
   }
 
   /**
    * Set fixture.
    * @param value Fixture value (response/file content)
    */
-  set(value: T | string) {
+  set(value: T) {
+    if (this.config.hook) {
+      value = this.config.hook(value)
+    }
     return outputJsonSync(this.path, value, { spaces: 2 })
   }
 

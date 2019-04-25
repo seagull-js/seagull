@@ -28,17 +28,13 @@ export class HttpSeed extends HttpBase {
 
     const res = await fetch(url, init)
 
-    let fixture: Fixture<any> = {
+    const fixture: Fixture<any> = {
       body: (await res.json()) || (await res.text()),
       options: {
         headers: res.headers,
         status: res.status,
         statusText: res.statusText,
       },
-    }
-
-    if (seed.config.hook) {
-      fixture = seed.config.hook(fixture)
     }
 
     seed.set(fixture)

@@ -1,10 +1,10 @@
 import { BasicTest } from '@seagull/testing'
 import { expect, use } from 'chai'
+import * as promisedChai from 'chai-as-promised'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as querystring from 'querystring'
 import { Http, HttpError } from '../src'
-import * as promisedChai from 'chai-as-promised'
 use(promisedChai)
 
 interface ExpectedResponse {
@@ -40,6 +40,6 @@ export class Test extends BasicTest {
     const method = 'undefined'
     const url = `${this.baseUrl}/${method}`
     const result = this.http.fetch(url)
-    expect(result).should.be.rejectedWith(HttpError)
+    expect(result).to.be.rejectedWith(HttpError)
   }
 }
