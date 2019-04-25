@@ -157,7 +157,7 @@ export class SeagullProject {
     const limit = 62 - prefix.length - suffix.length - bucketUsage.length
     const projectAndBranch = `${projectName}${branchName}`.substring(0, limit)
     const middlePart = `${projectAndBranch}-${bucketUsage}`
-    return `${prefix}${middlePart}${suffix}`
+    return `${prefix}${middlePart}${suffix}`.replace(/[^0-9A-Za-z-]/g, '')
   }
 }
 
