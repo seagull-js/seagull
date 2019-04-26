@@ -1,0 +1,9 @@
+{
+  "body": "",
+  "options": {
+    "headers": {},
+    "status": 404,
+    "statusText": "Not Found",
+    "url": "https://postman-echo.com/undefined"
+  }
+}

@@ -4,7 +4,7 @@ import * as promisedChai from 'chai-as-promised'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as querystring from 'querystring'
-import { Http, HttpError } from '../src'
+import { Http } from '../src'
 use(promisedChai)
 
 interface ExpectedResponse {
@@ -33,13 +33,5 @@ export class Test extends BasicTest {
     expect(result).to.be.an('object')
     expect(result.args).to.have.ownProperty('foo1')
     expect(result.args).to.have.ownProperty('foo2')
-  }
-
-  @test
-  async 'throws an HttpError'() {
-    const method = 'undefined'
-    const url = `${this.baseUrl}/${method}`
-    const result = this.http.fetch(url)
-    expect(result).to.be.rejectedWith(HttpError)
   }
 }

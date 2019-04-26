@@ -1,23 +1,30 @@
 import { BasicTest } from '@seagull/testing'
-import { expect } from 'chai'
-import 'chai/register-should'
+import { expect, use } from 'chai'
+import * as promisedChai from 'chai-as-promised'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as querystring from 'querystring'
-import { HttpSeed } from '../src/mode/seed'
+import { Http } from '../src/mode/cloud'
+use(promisedChai)
 
 @suite('Http::Base::Fetch')
 export class Test extends BasicTest {
-  http = new HttpSeed()
+  http = new Http()
   baseUrl = `https://postman-echo.com`
 
   @test
-  async 'throws error when url not set'() {
-    try {
-      const response = await this.http.fetch('')
-      expect(response).not.to.be.an('object') // should never be called
-    } catch (e) {
-      expect(e.message).to.be.equal('Only absolute URLs are supported')
-    }
+  async 'throws an error when url not set'() {
+    const request = this.http.fetch('')
+    await expect(request)
+      .to.eventually.to.rejectedWith(TypeError)
+      .and.have.property('message', 'Only absolute URLs are supported')
+  }
+
+  @test
+  async 'can get 404 response'() {
+    const method = 'undefined'
+    const url = `${this.baseUrl}/${method}`
+    const result = await this.http.fetch(url)
+    expect(result).to.have.property('status', 404)
   }
 
   @test
