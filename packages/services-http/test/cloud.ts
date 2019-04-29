@@ -1,11 +1,9 @@
 import { BasicTest } from '@seagull/testing'
 import { expect, use } from 'chai'
-import * as promisedChai from 'chai-as-promised'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as querystring from 'querystring'
 import { Http } from '../src'
-use(promisedChai)
 
 interface ExpectedResponse {
   args: {

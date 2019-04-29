@@ -15,7 +15,7 @@ export class Test extends BasicTest {
   async 'throws an error when url not set'() {
     const request = this.http.fetch('')
     await expect(request)
-      .to.eventually.to.rejectedWith(TypeError)
+      .to.eventually.be.rejectedWith(TypeError)
       .and.have.property('message', 'Only absolute URLs are supported')
   }
 

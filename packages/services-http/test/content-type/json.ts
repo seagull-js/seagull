@@ -23,7 +23,7 @@ export class Test extends BasicTest {
   async 'throws an error when url not set'() {
     const request = this.http.get('')
     await expect(request)
-      .to.eventually.to.rejectedWith(TypeError)
+      .to.eventually.be.rejectedWith(TypeError)
       .and.have.property('message', 'Only absolute URLs are supported')
   }
 
@@ -31,7 +31,7 @@ export class Test extends BasicTest {
   async 'throws an error when response is 404'() {
     const request = this.http.get(`${this.baseUrl}/undefined`)
     await expect(request)
-      .to.eventually.to.rejectedWith(HttpError)
+      .to.eventually.be.rejectedWith(HttpError)
       .and.have.property('message', 'Http error code 404: Not Found')
   }
 
