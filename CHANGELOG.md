@@ -8,6 +8,11 @@
 
 ### Patch Changes
 
+## 9.3.3
+
+- @seagull/seed -> fixture expiry changed to modified date
+- @seagull/libraries -> BasicError changed to specific JS Error class
+
 ## 9.3.2
 
 - @seagull/deploy-aws -> made s3Name lowercase
@@ -22,6 +27,10 @@
 - @seagull/deploy-aws -> fixed bug, where the log bucket name was not uniq enough to allow deployments per branch
 - @seagull/routes -> added request url to route render
 - @seagull/deploy-aws -> fixed cloudfront bug
+
+## 9.2.0 - 2019-04.18
+
+- @seagull/pages -> script/noscript body injection added
 
 ## 9.1.0 - 2019-04.17
 
