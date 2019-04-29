@@ -14,7 +14,7 @@ require('ts-node')
  */
 export class FixtureStorage<T> {
   /**
-   * Date the fixture has been modified for the last time.
+   * Date of the last modification of the fixture.
    * @param uri Fixture uri
    */
   get modifiedDate(): Date | undefined {
@@ -22,7 +22,7 @@ export class FixtureStorage<T> {
   }
 
   get expired(): boolean {
-    if (!this.config.expiresInDays) {
+    if (!this.config.expiresInDays || !this.modifiedDate) {
       return false
     }
     const addDays = (date: Date, days?: number) => {
@@ -33,8 +33,7 @@ export class FixtureStorage<T> {
       result.setDate(result.getDate() + days)
       return result
     }
-    const expireDate = addDays(this.modifiedDate!, this.config.expiresInDays)
-    console.info('mod date', this.modifiedDate, expireDate)
+    const expireDate = addDays(this.modifiedDate, this.config.expiresInDays)
     return (expireDate && expireDate.getTime() <= new Date().getTime()) || false
   }
 

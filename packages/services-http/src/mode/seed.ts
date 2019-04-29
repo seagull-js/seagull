@@ -19,10 +19,9 @@ export interface RequestException {
 export class HttpSeed extends HttpBase {
   async fetch(url: string, init?: RequestInit): Promise<Response> {
     const seed = FixtureStorage.createByFetchParams<Fixture<any>>(url, init)
-    let seedFixture
 
     try {
-      seedFixture = seed.get()
+      const seedFixture = seed.get()
       if (!seed.expired) {
         // seed exists => return seed
         return createResponse(seedFixture)
@@ -30,22 +29,18 @@ export class HttpSeed extends HttpBase {
     } catch (e) {
       // ignore
     }
-
-    const res = await fetch(url, init)
-    const body = await this.parseBody(res)
-
-    const fixture: Fixture<any> = {
-      body,
-      options: {
-        headers: res.headers,
-        status: res.status,
-        statusText: res.statusText,
-        url,
-      },
-    }
-
+    const fixture = await this.fetchFixture(url, init)
     seed.set(fixture)
     return createResponse(fixture)
+  }
+
+  private async fetchFixture(url: string, init?: RequestInit) {
+    const res = await fetch(url, init)
+    const body = await this.parseBody(res)
+    const { headers, status, statusText } = res
+    const options = { headers, status, statusText, url }
+    const fixture: Fixture<any> = { body, options }
+    return fixture
   }
 
   private async parseBody(res: Response): Promise<object | string> {
