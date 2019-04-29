@@ -32,12 +32,4 @@ export class Test extends BasicTest {
     expect(result.args).to.have.ownProperty('foo1')
     expect(result.args).to.have.ownProperty('foo2')
   }
-
-  @test
-  async 'throws an HttpError'() {
-    const method = 'undefined'
-    const url = `${this.baseUrl}/${method}`
-    const result = this.http.fetch(url)
-    await expect(result).to.be.rejectedWith(HttpError)
-  }
 }
