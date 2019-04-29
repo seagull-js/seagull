@@ -21,6 +21,7 @@ export class Test extends BasicTest {
               'Content-Type': 'text/html; charset=iso-8859-1',
             }),
             status: 200,
+            url: '',
           })
         )
       })

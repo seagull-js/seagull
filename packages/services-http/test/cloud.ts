@@ -1,5 +1,5 @@
 import { BasicTest } from '@seagull/testing'
-import { expect } from 'chai'
+import { expect, use } from 'chai'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as querystring from 'querystring'
@@ -11,6 +11,7 @@ interface ExpectedResponse {
     param2: string
   }
 }
+
 @suite('Http::Cloud::Fetch')
 export class Test extends BasicTest {
   http = new Http()

@@ -3,6 +3,7 @@ import * as fs from 'fs'
 import { outputJsonSync, pathExistsSync, readJsonSync } from 'fs-extra'
 import { RequestInit } from 'node-fetch'
 import { join } from 'path'
+import { SeedError } from './error'
 import { LocalConfig } from './localConfig'
 
 // tslint:disable-next-line:no-var-requires
@@ -13,14 +14,17 @@ require('ts-node')
  */
 export class FixtureStorage<T> {
   /**
-   * Date the fixture has been created (in case a fixture exists).
+   * Date the fixture has been modified for the last time.
    * @param uri Fixture uri
    */
-  get createdDate(): Date | undefined {
-    return pathExistsSync(this.path) ? fs.statSync(this.path).mtime : undefined
+  get modifiedDate(): Date | undefined {
+    return pathExistsSync(this.path) ? fs.statSync(this.path).ctime : undefined
   }
 
   get expired(): boolean {
+    if (!this.config.expiresInDays) {
+      return false
+    }
     const addDays = (date: Date, days?: number) => {
       if (typeof days !== 'number') {
         return undefined
@@ -29,8 +33,8 @@ export class FixtureStorage<T> {
       result.setDate(result.getDate() + days)
       return result
     }
-    const seedDate = this.createdDate!
-    const expireDate = addDays(seedDate, this.config.expiresInDays)
+    const expireDate = addDays(this.modifiedDate!, this.config.expiresInDays)
+    console.info('mod date', this.modifiedDate, expireDate)
     return (expireDate && expireDate.getTime() <= new Date().getTime()) || false
   }
 
@@ -86,14 +90,28 @@ export class FixtureStorage<T> {
    * @param uri Fixture uri
    */
   get(): T {
-    return pathExistsSync(this.path) ? readJsonSync(this.path) : undefined
+    const fixture = pathExistsSync(this.path)
+      ? readJsonSync(this.path)
+      : undefined
+
+    if (!fixture) {
+      throw new SeedError('Http: fixture (seed) is missing.', this)
+    }
+    if (this.expired) {
+      throw new SeedError('Http: fixture (seed) is expired.', this)
+    }
+
+    return fixture
   }
 
   /**
    * Set fixture.
    * @param value Fixture value (response/file content)
    */
-  set(value: T | string) {
+  set(value: T) {
+    if (this.config.hook) {
+      value = this.config.hook(value)
+    }
     return outputJsonSync(this.path, value, { spaces: 2 })
   }
 

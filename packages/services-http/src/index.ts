@@ -3,7 +3,7 @@ import { Http } from './mode/cloud'
 // types
 export { RequestInitBase, RequestInitGet } from './interface'
 export { RequestInit, Response } from 'node-fetch'
-export { HttpError } from './typings/http_error'
+export { HttpError } from './error'
 
 // services
 export { Http }
@@ -15,6 +15,7 @@ export { HttpSeed } from './mode/seed'
 export { HttpJson } from './content-type/http_json'
 
 // service container modules
+/** @deprecated */
 export { module as httpDiModule } from './module' // TODO: obsolete
 export { module as httpServicesModule } from './module'
 

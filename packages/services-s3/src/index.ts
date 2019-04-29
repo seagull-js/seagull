@@ -1,7 +1,7 @@
 import { S3 } from './mode/cloud'
 
 // types
-export { S3Error } from './typings/s3_error'
+export { S3Error } from './error'
 
 // services
 export { S3 }

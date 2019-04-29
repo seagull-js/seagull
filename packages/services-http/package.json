@@ -35,7 +35,7 @@
   "devDependencies": {
     "@seagull/testing": "^9.2.0",
     "@seagull/tslint": "^9.0.1",
-    "@types/node-fetch": "^2.1.6"
+    "@types/node-fetch": "^2.3.3"
   },
   "dependencies": {
     "@seagull/libraries": "^9.2.0",

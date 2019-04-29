@@ -17,6 +17,7 @@
   "options": {
     "headers": {},
     "status": 200,
-    "statusText": "OK"
+    "statusText": "OK",
+    "url": "https://postman-echo.com/get?foo1=bar1&foo2=bar2"
   }
 }

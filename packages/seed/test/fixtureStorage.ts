@@ -24,18 +24,18 @@ export class Test {
   }
 
   @test
-  async 'can get the created date of a seed'() {
+  async 'can get the modified date of a seed'() {
     const fs = new FixtureStorage<string>('../seed/something', '.json')
     fs.set('asdf')
     const date = new Date()
-    expect(fs.createdDate).to.be.a('Date')
-    expect(fs.createdDate!.toString()).to.eq(date.toString())
+    expect(fs.modifiedDate).to.be.a('Date')
+    expect(fs.modifiedDate!.toString()).to.eq(date.toString())
   }
 
   @test
   @timeout(10000)
   async 'can get the config of a seed'() {
-    const fs = new FixtureStorage<string>('../seed/something', '.json')
+    const fs = new FixtureStorage<string>('../seed/somethingHooky', '.json')
     fs.set('asdf')
     expect(fs.config).to.be.an('object')
     expect(fs.config.hook!('asdf')).to.eq('qwer')

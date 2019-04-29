@@ -13,12 +13,6 @@ export class HttpPure extends HttpBase {
   async fetch(url: string, init?: RequestInit): Promise<Response> {
     const seed = FixtureStorage.createByFetchParams<Fixture<any>>(url, init)
     const fixture = seed.get()
-    if (!fixture) {
-      throw new Error('Http: fixture (seed) is missing.')
-    }
-    if (seed.expired) {
-      throw new Error('Http: fixture (seed) is expired.')
-    }
     return createResponse(fixture)
   }
 }
