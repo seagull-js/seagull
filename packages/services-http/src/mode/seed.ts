@@ -32,13 +32,7 @@ export class HttpSeed extends HttpBase {
     }
 
     const res = await fetch(url, init)
-    let body = await res.textConverted()
-
-    try {
-      body = JSON.parse(body)
-    } catch (e) {
-      // ignore
-    }
+    const body = await this.parseBody(res)
 
     const fixture: Fixture<any> = {
       body,
@@ -51,7 +45,19 @@ export class HttpSeed extends HttpBase {
     }
 
     seed.set(fixture)
-
     return createResponse(fixture)
+  }
+
+  private async parseBody(res: Response): Promise<object | string> {
+    const body = await res.textConverted()
+    let parsedBody
+
+    try {
+      parsedBody = JSON.parse(body) as object
+    } catch (e) {
+      // ignore
+    }
+
+    return parsedBody || body
   }
 }
