@@ -18,7 +18,7 @@ export abstract class S3Base implements IS3 {
    * Lists all files of a S3 bucket
    * @param bucketName bucket name
    * @param filePath file path
-   * @throws {S3Error}
+   * @throws {S3Error} if an S3 error (e.g. NoSuchKey) occurs
    */
   async listFiles(bucketName: string, filePath?: string): Promise<string[]> {
     const cmd = new S3C.ListFiles(bucketName, filePath)
@@ -30,7 +30,7 @@ export abstract class S3Base implements IS3 {
    * Reads a file from a S3 bucket
    * @param bucketName bucket name
    * @param filePath file path
-   * @throws {S3Error}
+   * @throws {S3Error} if an S3 error (e.g. NoSuchKey) occurs
    */
   async readFile(bucketName: string, filePath: string): Promise<string> {
     const cmd = new S3C.ReadFile(bucketName, filePath)
@@ -43,7 +43,7 @@ export abstract class S3Base implements IS3 {
    * @param bucketName bucket name
    * @param filePath file path
    * @param content file content
-   * @throws {S3Error}
+   * @throws {S3Error} if an S3 error (e.g. NoSuchKey) occurs
    */
   async writeFile(
     bucketName: string,
@@ -55,6 +55,12 @@ export abstract class S3Base implements IS3 {
     return await this.handle(cmd.execute())
   }
 
+  /**
+   * Writes a couple of files to a S3 bucket \
+   * @param bucketName bucket name
+   * @param files list of (S3) file paths and contents
+   * @throws {S3Error} if an S3 error (e.g. NoSuchKey) occurs
+   */
   async writeFiles(
     bucketName: string,
     files: Array<{ path: string; content: string }>
@@ -71,7 +77,7 @@ export abstract class S3Base implements IS3 {
    * Deletes a file from a S3 bucket
    * @param bucketName bucket name
    * @param filePath file path
-   * @throws {S3Error}
+   * @throws {S3Error} if an S3 error (e.g. NoSuchKey) occurs
    */
   async deleteFile(
     bucketName: string,
