@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as querystring from 'querystring'
-import { Http, HttpError } from '../src'
+import { Http } from '../src'
 
 interface ExpectedResponse {
   args: {
