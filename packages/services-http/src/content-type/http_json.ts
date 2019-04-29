@@ -7,7 +7,6 @@ import { Http } from '../mode/cloud'
 
 /**
  * Http json client.
- * @throws {HttpError}
  */
 @injectable()
 export class HttpJson {
@@ -17,6 +16,7 @@ export class HttpJson {
    * HTTP GET request
    * @param url request url
    * @param init whatwg/fetch options
+   * @throws {HttpError} if an HTTP error (e.g. 404) occurs
    */
   async get<T>(url: string, init?: RequestInitGet): Promise<T> {
     return await this.handle(this.http.get(url, init))
@@ -26,6 +26,7 @@ export class HttpJson {
    * HTTP POST request
    * @param url request url
    * @param init whatwg/fetch options
+   * @throws {HttpError} if an HTTP error (e.g. 404) occurs
    */
   async post<T>(url: string, init?: RequestInitBase): Promise<T> {
     return await this.handle(this.http.post(url, init))
@@ -35,6 +36,7 @@ export class HttpJson {
    * HTTP PUT request
    * @param url request url
    * @param init whatwg/fetch options
+   * @throws {HttpError} if an HTTP error (e.g. 404) occurs
    */
   async put<T>(url: string, init?: RequestInitBase): Promise<T> {
     return await this.handle(this.http.put(url, init))
@@ -44,6 +46,7 @@ export class HttpJson {
    * HTTP DELETE request
    * @param url request url
    * @param init whatwg/fetch options
+   * @throws {HttpError} if an HTTP error (e.g. 404) occurs
    */
   async delete<T>(url: string, init?: RequestInitBase): Promise<T> {
     return await this.handle(this.http.delete(url, init))
