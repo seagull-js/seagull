@@ -36,7 +36,7 @@ function getInstall(params: StageConfigParams) {
 function getBuild(params: StageConfigParams) {
   const curlCmd = getCurlToSendTestResult(params.owner, params.repo, curlData)
   const commands = [
-    addStateChangeToCmd('npm run build'),
+    addStateChangeToCmd(`STAGE=${params.stage} npm run build`),
     checkState(),
     addStateChangeToCmd('npm run test'),
     checkState(),
