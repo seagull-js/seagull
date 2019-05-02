@@ -8,6 +8,10 @@
 
 ### Patch Changes
 
+## 9.3.4
+
+- @seagull/deploy-aws -> build stage fixed
+
 ## 9.3.3
 
 - @seagull/seed -> fixture expiry changed to modified date
