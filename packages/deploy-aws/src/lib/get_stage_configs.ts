@@ -36,7 +36,7 @@ function getInstall(params: StageConfigParams) {
 function getBuild(params: StageConfigParams) {
   const curlCmd = getCurlToSendTestResult(params.owner, params.repo, curlData)
   const commands = [
-    addStateChangeToCmd(`STAGE=${params.stage} npm run build`),
+    addStateChangeToCmd(`npm run build`),
     checkState(),
     addStateChangeToCmd('npm run test'),
     checkState(),
@@ -80,6 +80,7 @@ function getEnv(params: StageConfigParams) {
     DEPLOY_MODE: params.stage,
     PIPELINE_DESC: 'Bootstraping pipeline',
     PIPELINE_STATE: 'pending',
+    STAGE: params.stage,
     TARGET_URL: params.pipelineLink,
     TEST_PIPELINE_CONTEXT: 'continuous-integration/seagull',
   }

@@ -11,7 +11,11 @@ import * as IAM from '@aws-cdk/aws-iam'
 import { Code, Function as Lambda, Runtime } from '@aws-cdk/aws-lambda'
 import { LogGroup } from '@aws-cdk/aws-logs'
 import * as S3 from '@aws-cdk/aws-s3'
-import { getApiGatewayDomain, getApiGatewayPath } from './lib'
+import {
+  getApiGatewayDomain,
+  getApiGatewayPath,
+  mapEnvironmentVariables,
+} from './lib'
 import {
   BuildStageConfig,
   CloudfrontProps,
@@ -19,7 +23,6 @@ import {
   Rule,
   SourceStageConfig,
 } from './types'
-
 /**
  * The Seagull Stack - including convenience functions to add resources
  *
@@ -131,6 +134,7 @@ export class SeagullStack extends Stack {
     const projectConfig = {
       buildSpec: { env, phases, version: '0.2' },
       environment: { buildImage },
+      environmentVariables: mapEnvironmentVariables(env.variables),
       role,
     }
     const project = new CB.PipelineProject(this, projectName, projectConfig)
