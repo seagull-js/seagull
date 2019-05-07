@@ -22,7 +22,6 @@
     "@seagull/build": "^9.3.4",
     "@seagull/commands-logging": "^9.3.4",
     "@seagull/deploy-aws": "^9.3.4",
-    "@seagull/libraries": "^6.0.0",
     "@seagull/test-e2e": "^9.2.0",
     "@seagull/test-pages": "^9.3.3",
     "@seagull/tslint": "^9.0.1",

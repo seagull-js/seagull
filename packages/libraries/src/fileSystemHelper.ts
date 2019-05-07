@@ -38,22 +38,16 @@ export function listFilesRecursive(
 }
 
 export function getAppName() {
-  try {
-    const packageFile = require(`${process.cwd()}/package.json`)
-    if (packageFile) {
-      return packageFile.name
-    }
-  } catch (e) {
-    // no file found
+  if (process.env.APP) {
+    return process.env.APP
   }
 
-  const appName = process.env.APP
-
-  if (appName) {
-    return appName
-  } else {
-    throw new Error('NO APP NAME GIVEN')
+  const packageFile = require(`${process.cwd()}/package.json`)
+  if (packageFile) {
+    return packageFile.name
   }
+
+  throw new Error('NO APP NAME GIVEN')
 }
 
 const createFolderInPath = (
