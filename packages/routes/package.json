@@ -1,6 +1,6 @@
 {
   "name": "@seagull/routes",
-  "version": "9.3.4",
+  "version": "9.3.5",
   "description": "Routing functionalities for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -43,8 +43,8 @@
   },
   "dependencies": {
     "@seagull/commands-fs": "^9.3.3",
-    "@seagull/libraries": "^9.3.4",
-    "@seagull/services-http": "^9.3.4",
+    "@seagull/libraries": "^9.3.5",
+    "@seagull/services-http": "^9.3.5",
     "body-parser": "^1.18.3",
     "class-validator": "^0.9.1",
     "express": "^4.16.3",

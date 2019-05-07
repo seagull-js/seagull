@@ -1,6 +1,6 @@
 {
   "name": "@seagull/mock-s3",
-  "version": "9.3.4",
+  "version": "9.3.5",
   "description": "AWS S3 Mocking module for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -57,7 +57,7 @@
     ]
   },
   "dependencies": {
-    "@seagull/libraries": "^9.3.4",
+    "@seagull/libraries": "^9.3.5",
     "@seagull/mock": "^9.0.1",
     "@seagull/testing": "^9.3.3",
     "aws-sdk-mock": "^1.7.0"
