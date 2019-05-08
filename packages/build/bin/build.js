@@ -24,8 +24,8 @@ function getArgv(setting, def) {
 const opts = {
   mode: getArgv('--mode', process.env.MODE),
   stage: getArgv('--stage', process.env.STAGE),
-  compatible: getArgv('--compatible', false),
-  optimizeRuntime: getArgv('--optimize-runtime', false),
+  compatible: getArgv('--compatible', true),
+  optimizeRuntime: getArgv('--optimize-runtime', true),
   optimizeBundle: getArgv('--optimize-bundle', false),
   typeCheck: getArgv('--type-check', true),
 }
