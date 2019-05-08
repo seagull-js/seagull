@@ -1,7 +1,7 @@
 {
   "name": "helloworld",
   "private": true,
-  "version": "9.3.5",
+  "version": "9.3.6",
   "description": "Helloworld example app using the Seagull Framework",
   "main": "index.js",
   "scripts": {
@@ -19,9 +19,9 @@
   "author": "Maximilian Stroh <hisako1337@gmail.com>",
   "license": "LGPL-3.0",
   "devDependencies": {
-    "@seagull/build": "^9.3.5",
+    "@seagull/build": "^9.3.6",
     "@seagull/commands-logging": "^9.3.5",
-    "@seagull/deploy-aws": "^9.3.4",
+    "@seagull/deploy-aws": "^9.3.6",
     "@seagull/test-e2e": "^9.2.0",
     "@seagull/test-pages": "^9.3.3",
     "@seagull/tslint": "^9.0.1",
