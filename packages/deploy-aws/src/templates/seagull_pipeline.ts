@@ -101,56 +101,7 @@ export class SeagullPipeline {
       ssmSecret,
       stage: this.stage,
     }
-
-    const sourceAction = stack.addSourceStage(
-      'source',
-      lib.getSourceConfig(stageConfigParams, 0)
-    )
-    stack.addBuildActionStage(
-      'test',
-      lib.getTestConfig(stageConfigParams, 1, sourceAction.outputArtifact)
-    )
-    const buildAction = stack.addBuildActionStage('build', {
-      ...lib.getBuildConfig(stageConfigParams, 2, sourceAction.outputArtifact),
-      outputArtifacts: {
-        'secondary-artifacts': {
-          build: {
-            files: '**/*',
-            name: 'build',
-          },
-          dist: {
-            files: ['dist/**/*'],
-            name: 'dist',
-          },
-        },
-      },
-    })
-    const deployAction = stack.addBuildActionStage('deploy', {
-      ...lib.getDeployConfig(stageConfigParams, 3, sourceAction.outputArtifact),
-      additionalInputArtifacts: [buildAction.additionalOutputArtifact('dist')],
-      outputArtifacts: {
-        'secondary-artifacts': {
-          cfurl: {
-            files: ['/tmp/cfurl.txt'],
-            name: 'cfurl',
-          },
-          deploy: {
-            files: '**/*',
-            name: 'deploy',
-          },
-        },
-      },
-    })
-    stack.addBuildActionStage('end2end-test', {
-      ...lib.getTestEnd2EndConfig(
-        stageConfigParams,
-        4,
-        sourceAction.outputArtifact
-      ),
-      additionalInputArtifacts: [
-        deployAction.additionalOutputArtifact('cfurl'),
-      ],
-    })
+    lib.addPipelineStages(stack, stageConfigParams)
     return pipelineApp
   }
 

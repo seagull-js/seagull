@@ -1,4 +1,5 @@
 export * from './add_env_from_file'
+export * from './build_pipeline'
 export * from './find_alias_config'
 export * from './get_github_creds'
 export * from './get_stage_configs'
