@@ -4,6 +4,8 @@
 
 ### Breaking Changes
 
+- @seagull/deploy-aws -> each pipeline step has its own stage now
+
 ### Minor Changes
 
 ### Patch Changes
