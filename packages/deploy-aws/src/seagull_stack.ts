@@ -116,31 +116,41 @@ export class SeagullStack extends Stack {
   }
 
   addSourceStage(name: string, config: SourceStageConfig) {
-    const stageName = `${this.id}-stage-${name}`
+    const stageName = name
     const sourceName = `${this.id}-github-${name}`
     const { atIndex, branch, owner, pipeline, repo, oauthToken } = config
     const stage = pipeline.addStage(stageName, { placement: { atIndex } })
-    const stageConfig = { branch, oauthToken, owner, repo, stage }
+    const stageConfig = {
+      branch,
+      oauthToken,
+      outputArtifactName: name,
+      owner,
+      repo,
+      stage,
+    }
     return new GitHubSourceAction(this, sourceName, stageConfig)
   }
 
-  addBuildStage(name: string, config: BuildStageConfig) {
-    const stageName = `${this.id}-stage-${name}`
-    const buildName = `${this.id}-code-${name}`
+  addBuildActionStage(name: string, config: BuildStageConfig) {
+    const stageName = name
     const projectName = `${this.id}-project-${name}`
-    const { atIndex, build, env, install, pipeline, postBuild, role } = config
-    const buildImage = CB.LinuxBuildImage.UBUNTU_14_04_NODEJS_8_11_0
-    const phases = { build, install, post_build: postBuild }
-    const projectConfig = {
-      buildSpec: { env, phases, version: '0.2' },
-      environment: { buildImage },
-      environmentVariables: mapEnvironmentVariables(env.variables),
-      role,
-    }
+    const { atIndex, pipeline } = config
+    const projectConfig = this.createProjectConfig(config)
+    const additionalOutputArtifactNames = this.getAdditionalOutputArtifactNames(
+      name,
+      config
+    )
     const project = new CB.PipelineProject(this, projectName, projectConfig)
     const stage = pipeline.addStage(stageName, { placement: { atIndex } })
-    const stageConfig = { project, stage }
-    return new CB.PipelineBuildAction(this, buildName, stageConfig)
+    const stageConfig = {
+      additionalInputArtifacts: config.additionalInputArtifacts,
+      additionalOutputArtifactNames,
+      inputArtifact: config.inputArtifact,
+      outputArtifactName: name,
+      project,
+      stage,
+    }
+    return new CB.PipelineBuildAction(this, name, stageConfig)
   }
 
   addSecretParam(name: string, ssmParameter: string) {
@@ -174,5 +184,39 @@ export class SeagullStack extends Stack {
     const eventRule = new Events.EventRule(this, name, schedule)
     eventRule.addTarget(target, { jsonTemplate: `{"path":"${rule.path}"}` })
     return eventRule
+  }
+
+  getLogBucketConfig(name: string | undefined) {
+    const bucket = name ? this.addS3(name) : false
+    return bucket ? { bucket } : {}
+  }
+
+  private createProjectConfig(config: BuildStageConfig) {
+    const { build, env, install, postBuild, role } = config
+    const buildImage = CB.LinuxBuildImage.UBUNTU_14_04_NODEJS_8_11_0
+    const phases = { build, install, post_build: postBuild }
+    return {
+      buildSpec: {
+        artifacts: config.outputArtifacts,
+        env,
+        phases,
+        version: '0.2',
+      },
+      environment: { buildImage },
+      environmentVariables: mapEnvironmentVariables(env.variables),
+      role,
+    }
+  }
+
+  private getAdditionalOutputArtifactNames(
+    name: string,
+    config: BuildStageConfig
+  ): string[] {
+    if (config.outputArtifacts) {
+      return Object.keys(config.outputArtifacts['secondary-artifacts'])
+        .filter(key => key !== name)
+        .map(key => config.outputArtifacts['secondary-artifacts'][key].name)
+    }
+    return []
   }
 }

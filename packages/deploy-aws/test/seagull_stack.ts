@@ -214,7 +214,7 @@ export class Test extends BasicTest {
       postBuild: { commands: ['npm run test'], finally: [] },
       role,
     }
-    stack.addBuildStage(buildName, buildConfig)
+    stack.addBuildActionStage(buildName, buildConfig)
     const synth = app.synthesizeStack(stackName)
     const resources = Object.keys(synth.template.Resources)
     const metadata = Object.keys(synth.metadata)

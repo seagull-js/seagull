@@ -5,6 +5,7 @@ import * as IAM from '@aws-cdk/aws-iam'
 import { Bucket } from '@aws-cdk/aws-s3'
 import { Secret, StackProps } from '@aws-cdk/cdk'
 import { SSMHandler } from './aws_sdk_handler'
+import { Artifact } from '@aws-cdk/aws-codepipeline-api'
 
 export type Keymap = { [key: string]: string }
 
@@ -56,11 +57,14 @@ export interface Rule {
 export interface StageConfig {
   atIndex: number
   pipeline: Pipeline
+  inputArtifact?: Artifact
 }
 
 export interface BuildStageConfig extends StageConfig {
+  additionalInputArtifacts?: Artifact[]
   build: { commands: string[]; finally: string[] }
   install: { commands: string[]; finally: string[] }
+  outputArtifacts?: any
   postBuild?: { commands: string[]; finally?: string[] }
   role: IAM.Role
   env: { variables: { [key: string]: string } }

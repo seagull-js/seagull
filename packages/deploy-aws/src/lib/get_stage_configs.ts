@@ -1,3 +1,4 @@
+import { Artifact } from '@aws-cdk/aws-codepipeline-api'
 import { StageConfigParams } from '../types'
 
 const curlData = `-d '{ "state": "'$PIPELINE_STATE'", "target_url": "'$TARGET_URL'", "description": "'"$PIPELINE_DESC"' - Seagull Test CI", "context": "'$TEST_PIPELINE_CONTEXT'"}'`
@@ -13,11 +14,61 @@ export function getSourceConfig(params: StageConfigParams, index: number) {
   }
 }
 
-export function getBuildConfig(params: StageConfigParams, index: number) {
+export function getBuildConfig(
+  params: StageConfigParams,
+  index: number,
+  inputArtifact?: Artifact
+) {
+  return {
+    ...getCommonConfig(params, index, inputArtifact),
+    build: getBuild(params),
+  }
+}
+
+export function getTestConfig(
+  params: StageConfigParams,
+  index: number,
+  inputArtifact?: Artifact
+) {
+  return {
+    ...getCommonConfig(params, index, inputArtifact),
+    postBuild: getTest(params),
+  }
+}
+
+export function getTestEnd2EndConfig(
+  params: StageConfigParams,
+  index: number,
+  inputArtifact?: Artifact
+) {
+  return {
+    ...getCommonConfig(params, index, inputArtifact),
+    postBuild: getTestEnd2End(params),
+  }
+}
+
+export function getDeployConfig(
+  params: StageConfigParams,
+  index: number,
+  inputArtifact?: Artifact
+) {
+  return {
+    ...getCommonConfig(params, index, inputArtifact),
+    // build: getBuild(params),
+    postBuild: getDeploy(params),
+  }
+}
+
+function getCommonConfig(
+  params: StageConfigParams,
+  index: number,
+  inputArtifact?: Artifact
+) {
   return {
     atIndex: index,
-    build: getBuild(params),
+    build: { commands: [], finally: [] },
     env: getEnv(params),
+    inputArtifact,
     install: getInstall(params),
     pipeline: params.pipeline,
     postBuild: { commands: [] },
@@ -30,24 +81,43 @@ function getInstall(params: StageConfigParams) {
   const upgradeNpm = addStateChangeToCmd('npm i -g npm')
   const runInstall = addStateChangeToCmd('npm ci')
   const commands = [curlCmd, upgradeNpm, checkState(), runInstall, checkState()]
-  return { commands, finally: [curlCmd] }
+  return getCommandConfig(params, commands)
 }
 
 function getBuild(params: StageConfigParams) {
-  const curlCmd = getCurlToSendTestResult(params.owner, params.repo, curlData)
+  const runBuild = addStateChangeToCmd('npm run build')
+  return getCommandConfig(params, [runBuild])
+}
+
+function getTest(params: StageConfigParams) {
+  const runTest = addStateChangeToCmd('npm run test')
+  return getCommandConfig(params, [runTest])
+}
+
+function getTestEnd2End(params: StageConfigParams) {
   const commands = [
-    addStateChangeToCmd(`npm run build`),
-    checkState(),
-    addStateChangeToCmd('npm run test'),
-    checkState(),
-    addStateChangeToCmd('npm run deploy'),
-    checkState(),
-    'export CFURL="https://$(cat /tmp/cfurl.txt;)"; export TARGET_URL=$CFURL',
-    sendDeploymentInfo(params.owner, params.repo),
+    'export CFURL="https://$(cat $CODEBUILD_SRC_DIR_cfurl/tmp/cfurl.txt;)"; export TARGET_URL=$CFURL',
+    'echo "Cloudfront URL: $CFURL"',
     addStateChangeToCmd(`npm run test:e2e`),
     checkState(),
     `export PIPELINE_STATE="success";export PIPELINE_DESC="successful";`,
   ]
+  return getCommandConfig(params, commands)
+}
+
+function getDeploy(params: StageConfigParams) {
+  const commands = [
+    addStateChangeToCmd('cp -Rf $CODEBUILD_SRC_DIR_dist/dist dist'),
+    checkState(),
+    addStateChangeToCmd('npm run deploy'),
+    checkState(),
+    sendDeploymentInfo(params.owner, params.repo),
+  ]
+  return getCommandConfig(params, commands)
+}
+
+function getCommandConfig(params: StageConfigParams, commands: string[]) {
+  const curlCmd = getCurlToSendTestResult(params.owner, params.repo, curlData)
   return { commands, finally: [curlCmd] }
 }
 

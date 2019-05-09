@@ -101,9 +101,7 @@ export class SeagullPipeline {
       ssmSecret,
       stage: this.stage,
     }
-
-    stack.addSourceStage('source', lib.getSourceConfig(stageConfigParams, 0))
-    stack.addBuildStage('build', lib.getBuildConfig(stageConfigParams, 1))
+    lib.addPipelineStages(stack, stageConfigParams)
     return pipelineApp
   }
 
