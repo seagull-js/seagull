@@ -6,6 +6,9 @@
     "build": "lerna run build",
     "changes": "lerna changed",
     "publish": "lerna publish",
+    "publish:patch": "lerna publish patch --yes --force-publish",
+    "publish:minor": "lerna publish minor --yes --force-publish",
+    "publish:major": "lerna publish major --yes --force-publish",
     "test": "lerna run test --parallel",
     "test:watch": "lerna run test:watch --parallel"
   },
