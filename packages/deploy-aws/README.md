@@ -83,7 +83,7 @@ To implement any kind of CI you can create a AWS Pipeline with seagull. Just use
 `GITHUB_SSM_PARAMETER`
 
 - default: `undefined`
-- the name of the oAuthToken in SSM
+- the name of the OAuthToken in SSM
 
 `GITHUB_OAUTH`
 
