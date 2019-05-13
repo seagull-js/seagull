@@ -4,11 +4,13 @@
 
 ### Breaking Changes
 
-- @seagull/deploy-aws -> each pipeline step has its own stage now
-
 ### Minor Changes
 
 ### Patch Changes
+
+## 10.0.0
+
+- @seagull/deploy-aws -> each pipeline step has its own stage now
 
 ## 9.3.4
 
