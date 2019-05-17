@@ -1,6 +1,6 @@
 {
   "name": "@seagull/soap",
-  "version": "10.0.0",
+  "version": "10.0.1",
   "description": "A soap module for the seagull framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -33,8 +33,8 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/testing": "^10.0.0",
-    "@seagull/tslint": "^10.0.0"
+    "@seagull/testing": "^10.0.1",
+    "@seagull/tslint": "^10.0.1"
   },
   "dependencies": {
     "crypto": "^1.0.1",
