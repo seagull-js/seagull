@@ -83,6 +83,12 @@ export class Test extends BasicTest {
   @test
   async 'adds the right lambda'() {
     const props = getTestProps(this.appPath)
+    const customDotEnv = new FS.WriteFile(
+      `${this.appPath}/.env.prod`,
+      `FOO=bar
+    QUX="17 * 2"`
+    )
+    await customDotEnv.execute()
 
     const project = await new SeagullProject(props).createSeagullApp()
     const synthStack = project.synthesizeStack('helloworld')
@@ -96,12 +102,15 @@ export class Test extends BasicTest {
     expect(lambdaFn.Properties).to.have.property('Environment')
     const expectedEnv = {
       APP: 'helloworld',
+      FOO: 'bar',
       LOG_BUCKET: 'eu-central-1-test-account-id-helloworld-master-logs',
       MODE: 'cloud',
       NODE_ENV: 'production',
+      QUX: '17 * 2',
       STAGE: 'prod',
     }
     expect(lambdaFn.Properties.Environment.Variables).to.deep.equal(expectedEnv)
+    await new FS.DeleteFile(`${this.appPath}/.env.prod`).execute()
   }
 
   @test

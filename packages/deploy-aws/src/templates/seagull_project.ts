@@ -1,6 +1,8 @@
 import { FS } from '@seagull/commands-fs'
 import { SDK } from 'aws-cdk'
+import * as dotenv from 'dotenv'
 import 'ts-node/register'
+import * as util from 'util'
 import * as aws from '../aws_sdk_handler'
 import * as lib from '../lib'
 import { ProvideAssetFolder } from '../provide_asset_folder'
@@ -201,5 +203,9 @@ async function getEnv(
   }
   const configPath = `${appPath}/.env.${stage}`
   const config: string = await new FS.ReadFile(configPath).execute()
-  return lib.addEnvFromFile(env, config)
+  const configEnv = dotenv.parse(config)
+  return {
+    ...env,
+    ...configEnv,
+  }
 }
