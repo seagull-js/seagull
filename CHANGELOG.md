@@ -8,6 +8,10 @@
 
 ### Patch Changes
 
+## 10.0.2
+
+- @seagull/deploy-aws -> spaces are now allowed when describing env variables
+
 ## 10.0.0
 
 - @seagull/deploy-aws -> each pipeline step has its own stage now
