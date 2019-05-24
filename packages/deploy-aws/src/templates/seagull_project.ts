@@ -68,6 +68,7 @@ export class SeagullProject {
       'ses:*',
       's3:*',
       'events:*',
+      'cloudwatch:*',
     ]
     const aliasConfig = await aws.checkForAliasConfig(this.pkgJson, this.acm)
     const appProps = {
