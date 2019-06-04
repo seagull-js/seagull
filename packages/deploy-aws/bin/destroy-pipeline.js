@@ -12,6 +12,15 @@ const projectOptions = require('./_project-options')
 
 process.env.AWS_REGION = options.region
 
+if (projectOptions.branch === 'master') {
+  // TODO: check confirmation
+  const confirmed = false
+  if (!confirmed) {
+    exit(1)
+    return
+  }
+}
+
 const project = new SeagullProject(projectOptions)
 project
   .destroyProject()
