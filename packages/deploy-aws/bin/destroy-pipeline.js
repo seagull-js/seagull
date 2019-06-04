@@ -10,7 +10,7 @@ const {
 const pipelineOptions = require('./_pipeline-options')
 const projectOptions = require('./_project-options')
 
-process.env.AWS_REGION = options.region
+process.env.AWS_REGION = pipelineOptions.region
 
 if (projectOptions.branch === 'master') {
   // TODO: check confirmation
