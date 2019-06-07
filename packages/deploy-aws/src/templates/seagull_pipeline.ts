@@ -57,7 +57,7 @@ export class SeagullPipeline {
     ]
   }
 
-  async createPipeline() {
+  async createPipeline(): Promise<SeagullApp> {
     setCredsByProfile(this.profile)
     // preparations for deployment
     const isTest = this.stage === 'test'
