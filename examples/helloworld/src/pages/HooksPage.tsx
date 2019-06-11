@@ -3,11 +3,7 @@ import * as React from 'react'
 
 export default class HookPage extends Page {
   html() {
-    return (
-      <NoSsr>
-        <HookTest />
-      </NoSsr>
-    )
+    return <HookTest />
   }
 }
 
