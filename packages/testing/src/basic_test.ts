@@ -30,7 +30,7 @@ export abstract class BasicTest {
    */
   after() {
     this.mocks.reverse().forEach(mock => mock.deactivate())
-    this.beforeEach()
+    this.afterEach()
   }
 
   /** Implement your logic to run after each single test here!
