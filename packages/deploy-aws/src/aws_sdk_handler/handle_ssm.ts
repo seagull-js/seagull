@@ -1,6 +1,7 @@
 import { Secret } from '@aws-cdk/cdk'
 import { config, SSM } from 'aws-sdk'
 
+import { GlobalConfigInstance } from 'aws-sdk/lib/config';
 import * as lib from '../lib'
 import { TokenParams } from '../types'
 
@@ -22,11 +23,12 @@ export async function handleSSMSecret(params: TokenParams) {
 }
 
 export class SSMHandler {
-  private ssm: SSM
+  // tslint:disable-next-line: variable-name
+  private _ssm: SSM | undefined
+  private config: GlobalConfigInstance
 
   constructor() {
-    const { credentials, region } = config
-    this.ssm = new SSM({ credentials, region })
+    this.config = config
   }
 
   async getParameter(ssmName: string) {
@@ -39,5 +41,15 @@ export class SSMHandler {
     const type = 'SecureString'
     const params = { Name: name, Overwrite: true, Type: type, Value: value }
     await this.ssm.putParameter(params).promise()
+  }
+
+
+  private get ssm(): SSM {
+    if (this._ssm) {
+      return this._ssm
+    }
+    const { credentials, region } = this.config
+    this._ssm = new SSM({ credentials, region })
+    return this._ssm
   }
 }

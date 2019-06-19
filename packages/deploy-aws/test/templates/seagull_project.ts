@@ -1,3 +1,4 @@
+import { expect as awsExpect, matchTemplate } from '@aws-cdk/assert'
 import { PolicyStatement, Role } from '@aws-cdk/aws-iam'
 import { FS } from '@seagull/commands-fs'
 import { BasicTest } from '@seagull/testing'
@@ -57,6 +58,18 @@ export class Test extends BasicTest {
 
     Object.keys(synthStack.template.Resources).length.should.be.above(1)
   }
+
+  @test
+  async 'creates all necessary stack resources'() {
+    const props = getTestProps(this.appPath)
+
+    const project = await new SeagullProject(props).createSeagullApp()
+    const synthStack = project.synthesizeStack('helloworld')
+    awsExpect(synthStack).to(
+      matchTemplate(require('./fixtures/helloworld-project'))
+    )
+  }
+
 
   @test
   async 'assigns a default role to role property of SeagullApp'() {

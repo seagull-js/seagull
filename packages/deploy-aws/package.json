@@ -50,6 +50,7 @@
     "mock-require": "^3.0.2"
   },
   "dependencies": {
+    "@aws-cdk/assert": "^0.21.0",
     "@aws-cdk/aws-apigateway": "^0.21.0",
     "@aws-cdk/aws-cloudfront": "^0.21.0",
     "@aws-cdk/aws-codebuild": "^0.21.0",
