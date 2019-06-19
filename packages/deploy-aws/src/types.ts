@@ -1,11 +1,11 @@
 import { RestApi } from '@aws-cdk/aws-apigateway'
 import * as CF from '@aws-cdk/aws-cloudfront'
 import { Pipeline } from '@aws-cdk/aws-codepipeline'
+import { Artifact, StagePlacement } from '@aws-cdk/aws-codepipeline'
 import * as IAM from '@aws-cdk/aws-iam'
 import { Bucket } from '@aws-cdk/aws-s3'
-import { Secret, StackProps } from '@aws-cdk/cdk'
+import { SecretValue, StackProps } from '@aws-cdk/cdk'
 import { SSMHandler } from './aws_sdk_handler'
-import { Artifact } from '@aws-cdk/aws-codepipeline-api'
 
 export type Keymap = { [key: string]: string }
 
@@ -40,7 +40,7 @@ export interface StageConfigParams {
   pipelineLink: string
   repo: string
   role: IAM.Role
-  ssmSecret: { name: string; secret: Secret }
+  ssmSecret: { name: string; secret: SecretValue }
   stage: string
 }
 
@@ -55,15 +55,17 @@ export interface Rule {
 }
 
 export interface StageConfig {
-  atIndex: number
+  placement?: StagePlacement
   pipeline: Pipeline
-  inputArtifact?: Artifact
+  output: Artifact
 }
 
 export interface BuildStageConfig extends StageConfig {
   additionalInputArtifacts?: Artifact[]
   build: { commands: string[]; finally: string[] }
+  inputArtifact: Artifact
   install: { commands: string[]; finally: string[] }
+  extraOutputs?: Artifact[]
   outputArtifacts?: any
   postBuild?: { commands: string[]; finally?: string[] }
   role: IAM.Role
@@ -74,7 +76,7 @@ export interface SourceStageConfig extends StageConfig {
   branch: string
   owner: string
   repo: string
-  oauthToken: Secret
+  oauthToken: SecretValue
 }
 
 export interface CloudfrontProps {

@@ -28,8 +28,8 @@ export class Test extends BasicTest {
       stage: 'prod',
     }
     const pipeline = await new SeagullPipeline(props).createPipeline()
-    const synthStack = pipeline.synthesizeStack('helloworld-ci')
-    expect(Object.keys(synthStack.template.Resources).length).to.be.equals(11)
+    const synthStack = pipeline.run().getStack('helloworld-ci')
+    expect(Object.keys(synthStack.template.Resources).length).to.equal(12)
     const pipelineKeys = Object.keys(synthStack.template.Resources).filter(
       key =>
         synthStack.template.Resources[key].Type ===
@@ -54,7 +54,7 @@ export class Test extends BasicTest {
       stage: 'prod',
     }
     const pipeline = await new SeagullPipeline(props).createPipeline()
-    const synthStack = pipeline.synthesizeStack('helloworld-ci')
+    const synthStack = pipeline.run().getStack('helloworld-ci')
     awsExpect(synthStack).to(
       matchTemplate(require('./fixtures/helloworld-ci-pipeline'))
     )

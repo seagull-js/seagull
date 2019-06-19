@@ -181,8 +181,8 @@
         "Timeout": 300
       },
       "DependsOn": [
-        "helloworldrole8C327E0D",
-        "helloworldroleDefaultPolicyD1ABDDA3"
+        "helloworldroleDefaultPolicyD1ABDDA3",
+        "helloworldrole8C327E0D"
       ]
     },
     "helloworldlambdaApiPermissionGET19CD57D1": {
@@ -190,7 +190,7 @@
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
-          "Ref": "helloworldlambda8E9EECAC"
+          "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
         },
         "Principal": "apigateway.amazonaws.com",
         "SourceArn": {
@@ -201,15 +201,7 @@
               {
                 "Ref": "AWS::Partition"
               },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":",
+              ":execute-api:eu-central-1:1234567890:",
               {
                 "Ref": "helloworldapiGW689F3CA5"
               },
@@ -228,7 +220,7 @@
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
-          "Ref": "helloworldlambda8E9EECAC"
+          "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
         },
         "Principal": "apigateway.amazonaws.com",
         "SourceArn": {
@@ -239,15 +231,7 @@
               {
                 "Ref": "AWS::Partition"
               },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":",
+              ":execute-api:eu-central-1:1234567890:",
               {
                 "Ref": "helloworldapiGW689F3CA5"
               },
@@ -262,7 +246,7 @@
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
-          "Ref": "helloworldlambda8E9EECAC"
+          "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
         },
         "Principal": "apigateway.amazonaws.com",
         "SourceArn": {
@@ -273,15 +257,7 @@
               {
                 "Ref": "AWS::Partition"
               },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":",
+              ":execute-api:eu-central-1:1234567890:",
               {
                 "Ref": "helloworldapiGW689F3CA5"
               },
@@ -300,7 +276,7 @@
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
-          "Ref": "helloworldlambda8E9EECAC"
+          "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
         },
         "Principal": "apigateway.amazonaws.com",
         "SourceArn": {
@@ -311,15 +287,7 @@
               {
                 "Ref": "AWS::Partition"
               },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":",
+              ":execute-api:eu-central-1:1234567890:",
               {
                 "Ref": "helloworldapiGW689F3CA5"
               },
@@ -334,7 +302,7 @@
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
-          "Ref": "helloworldlambda8E9EECAC"
+          "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
         },
         "Principal": "apigateway.amazonaws.com",
         "SourceArn": {
@@ -345,15 +313,7 @@
               {
                 "Ref": "AWS::Partition"
               },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":",
+              ":execute-api:eu-central-1:1234567890:",
               {
                 "Ref": "helloworldapiGW689F3CA5"
               },
@@ -372,7 +332,7 @@
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
-          "Ref": "helloworldlambda8E9EECAC"
+          "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
         },
         "Principal": "apigateway.amazonaws.com",
         "SourceArn": {
@@ -383,15 +343,7 @@
               {
                 "Ref": "AWS::Partition"
               },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":",
+              ":execute-api:eu-central-1:1234567890:",
               {
                 "Ref": "helloworldapiGW689F3CA5"
               },
@@ -406,7 +358,7 @@
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
-          "Ref": "helloworldlambda8E9EECAC"
+          "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
         },
         "Principal": "apigateway.amazonaws.com",
         "SourceArn": {
@@ -417,15 +369,7 @@
               {
                 "Ref": "AWS::Partition"
               },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":",
+              ":execute-api:eu-central-1:1234567890:",
               {
                 "Ref": "helloworldapiGW689F3CA5"
               },
@@ -444,7 +388,7 @@
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
-          "Ref": "helloworldlambda8E9EECAC"
+          "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
         },
         "Principal": "apigateway.amazonaws.com",
         "SourceArn": {
@@ -455,15 +399,7 @@
               {
                 "Ref": "AWS::Partition"
               },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":",
+              ":execute-api:eu-central-1:1234567890:",
               {
                 "Ref": "helloworldapiGW689F3CA5"
               },
@@ -478,7 +414,7 @@
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
-          "Ref": "helloworldlambda8E9EECAC"
+          "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
         },
         "Principal": "apigateway.amazonaws.com",
         "SourceArn": {
@@ -489,15 +425,7 @@
               {
                 "Ref": "AWS::Partition"
               },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":",
+              ":execute-api:eu-central-1:1234567890:",
               {
                 "Ref": "helloworldapiGW689F3CA5"
               },
@@ -516,7 +444,7 @@
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
-          "Ref": "helloworldlambda8E9EECAC"
+          "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
         },
         "Principal": "apigateway.amazonaws.com",
         "SourceArn": {
@@ -527,15 +455,7 @@
               {
                 "Ref": "AWS::Partition"
               },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":",
+              ":execute-api:eu-central-1:1234567890:",
               {
                 "Ref": "helloworldapiGW689F3CA5"
               },
@@ -550,7 +470,7 @@
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
-          "Ref": "helloworldlambda8E9EECAC"
+          "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
         },
         "Principal": "apigateway.amazonaws.com",
         "SourceArn": {
@@ -561,15 +481,7 @@
               {
                 "Ref": "AWS::Partition"
               },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":",
+              ":execute-api:eu-central-1:1234567890:",
               {
                 "Ref": "helloworldapiGW689F3CA5"
               },
@@ -588,7 +500,7 @@
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
-          "Ref": "helloworldlambda8E9EECAC"
+          "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
         },
         "Principal": "apigateway.amazonaws.com",
         "SourceArn": {
@@ -599,15 +511,7 @@
               {
                 "Ref": "AWS::Partition"
               },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":",
+              ":execute-api:eu-central-1:1234567890:",
               {
                 "Ref": "helloworldapiGW689F3CA5"
               },
@@ -624,7 +528,7 @@
         "Name": "helloworld-apiGW"
       }
     },
-    "helloworldapiGWDeployment72150E400b5526b199b19cbe5a5bf254ce25978f": {
+    "helloworldapiGWDeployment72150E40ddbb54205d835e68c7a82660b751a849": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -633,13 +537,13 @@
         "Description": "Automatically created by the RestApi construct"
       },
       "DependsOn": [
-        "helloworldapiGWanyCFA467DC",
-        "helloworldapiGWGET96146300",
-        "helloworldapiGWPOSTBDC34730",
-        "helloworldapiGWDELETE1877FDF4",
+        "helloworldapiGWanyDELETEFC6A68AC",
         "helloworldapiGWanyGETA957E014",
         "helloworldapiGWanyPOST833371CB",
-        "helloworldapiGWanyDELETEFC6A68AC"
+        "helloworldapiGWanyCFA467DC",
+        "helloworldapiGWDELETE1877FDF4",
+        "helloworldapiGWGET96146300",
+        "helloworldapiGWPOSTBDC34730"
       ]
     },
     "helloworldapiGWDeploymentStageprodFB9CE86D": {
@@ -649,7 +553,7 @@
           "Ref": "helloworldapiGW689F3CA5"
         },
         "DeploymentId": {
-          "Ref": "helloworldapiGWDeployment72150E400b5526b199b19cbe5a5bf254ce25978f"
+          "Ref": "helloworldapiGWDeployment72150E40ddbb54205d835e68c7a82660b751a849"
         },
         "StageName": "prod"
       }
@@ -663,7 +567,17 @@
               "Action": "sts:AssumeRole",
               "Effect": "Allow",
               "Principal": {
-                "Service": "apigateway.amazonaws.com"
+                "Service": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "apigateway.",
+                      {
+                        "Ref": "AWS::URLSuffix"
+                      }
+                    ]
+                  ]
+                }
               }
             }
           ],
@@ -728,11 +642,7 @@
                 {
                   "Ref": "AWS::Partition"
                 },
-                ":apigateway:",
-                {
-                  "Ref": "AWS::Region"
-                },
-                ":lambda:path/2015-03-31/functions/",
+                ":apigateway:eu-central-1:lambda:path/2015-03-31/functions/",
                 {
                   "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
                 },
@@ -765,11 +675,7 @@
                 {
                   "Ref": "AWS::Partition"
                 },
-                ":apigateway:",
-                {
-                  "Ref": "AWS::Region"
-                },
-                ":lambda:path/2015-03-31/functions/",
+                ":apigateway:eu-central-1:lambda:path/2015-03-31/functions/",
                 {
                   "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
                 },
@@ -802,11 +708,7 @@
                 {
                   "Ref": "AWS::Partition"
                 },
-                ":apigateway:",
-                {
-                  "Ref": "AWS::Region"
-                },
-                ":lambda:path/2015-03-31/functions/",
+                ":apigateway:eu-central-1:lambda:path/2015-03-31/functions/",
                 {
                   "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
                 },
@@ -839,11 +741,7 @@
                 {
                   "Ref": "AWS::Partition"
                 },
-                ":apigateway:",
-                {
-                  "Ref": "AWS::Region"
-                },
-                ":lambda:path/2015-03-31/functions/",
+                ":apigateway:eu-central-1:lambda:path/2015-03-31/functions/",
                 {
                   "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
                 },
@@ -876,11 +774,7 @@
                 {
                   "Ref": "AWS::Partition"
                 },
-                ":apigateway:",
-                {
-                  "Ref": "AWS::Region"
-                },
-                ":lambda:path/2015-03-31/functions/",
+                ":apigateway:eu-central-1:lambda:path/2015-03-31/functions/",
                 {
                   "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
                 },
@@ -913,11 +807,7 @@
                 {
                   "Ref": "AWS::Partition"
                 },
-                ":apigateway:",
-                {
-                  "Ref": "AWS::Region"
-                },
-                ":lambda:path/2015-03-31/functions/",
+                ":apigateway:eu-central-1:lambda:path/2015-03-31/functions/",
                 {
                   "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
                 },
@@ -961,7 +851,7 @@
             "Bucket": {
               "Fn::GetAtt": [
                 "helloworldeucentral1testaccountidhelloworldmasterlogs353CCB2B",
-                "DomainName"
+                "RegionalDomainName"
               ]
             },
             "IncludeCookies": false
@@ -983,11 +873,10 @@
                     {
                       "Ref": "helloworldapiGW689F3CA5"
                     },
-                    ".execute-api.",
+                    ".execute-api.eu-central-1.",
                     {
-                      "Ref": "AWS::Region"
-                    },
-                    ".amazonaws.com"
+                      "Ref": "AWS::URLSuffix"
+                    }
                   ]
                 ]
               },
@@ -1040,6 +929,10 @@
     "helloworldlambdaCodeS3VersionKey2B24B69A": {
       "Type": "String",
       "Description": "S3 key for asset version \"helloworld/helloworld-lambda/Code\""
+    },
+    "helloworldlambdaCodeArtifactHash977CB142": {
+      "Type": "String",
+      "Description": "Artifact hash for asset \"helloworld/helloworld-lambda/Code\""
     }
   },
   "Outputs": {
@@ -1052,20 +945,17 @@
             {
               "Ref": "helloworldapiGW689F3CA5"
             },
-            ".execute-api.",
+            ".execute-api.eu-central-1.",
             {
-              "Ref": "AWS::Region"
+              "Ref": "AWS::URLSuffix"
             },
-            ".amazonaws.com/",
+            "/",
             {
               "Ref": "helloworldapiGWDeploymentStageprodFB9CE86D"
             },
             "/"
           ]
         ]
-      },
-      "Export": {
-        "Name": "helloworld:helloworldapiGWEndpoint2753D94E"
       }
     }
   }

@@ -89,7 +89,7 @@ export class SeagullPipeline {
     }
     const gitData = lib.getGitData(gitDataProps)
     const pipelineDomain = `https://${this.region}.console.aws.amazon.com`
-    const pipelinePath = `/codesuite/codepipeline/pipelines/${pipeline.id}/view`
+    const pipelinePath = `/codesuite/codepipeline/pipelines/${pipeline.node.id}/view`
     const pipelineLink = `${pipelineDomain}${pipelinePath}`
     const stageConfigParams = {
       branch: gitData.branch,

@@ -1,11 +1,9 @@
-import { App, Secret } from '@aws-cdk/cdk'
-
+import { Artifact } from '@aws-cdk/aws-codepipeline';
+import { App, SecretValue } from '@aws-cdk/cdk'
 import { BasicTest } from '@seagull/testing'
+import { expect } from 'chai'
 import 'chai/register-should'
 import { suite, test } from 'mocha-typescript'
-
-import { PolicyStatement } from '@aws-cdk/aws-iam'
-import { find } from 'lodash'
 import { SeagullStack } from '../src'
 import { isInList } from './test-helper/template_searching'
 
@@ -25,7 +23,7 @@ export class Test extends BasicTest {
     const stackProps = { env: { account: '123456', region: 'my-region-1' } }
     // tslint:disable-next-line:no-unused-expression
     new SeagullStack(app, stackName, stackProps)
-    const synth = app.synthesizeStack(stackName)
+    const synth = app.run().getStack(stackName)
     synth.name.should.be.equal(stackName)
     synth.environment.account.should.be.equals('123456')
     synth.environment.region.should.be.equals('my-region-1')
@@ -39,9 +37,9 @@ export class Test extends BasicTest {
     // tslint:disable-next-line:no-unused-expression
     const stack = new SeagullStack(app, stackName)
     stack.addLogGroup(logGroupName)
-    const synth = app.synthesizeStack(stackName)
+    const synth = app.run().getStack(stackName)
     const resources = Object.keys(synth.template.Resources)
-    const metadata = Object.keys(synth.metadata)
+    const metadata = Object.keys(synth.manifest.metadata!)
     const stackNameNoDash = stackName.replace(/-/g, '')
     const logGroupNameNoDash = logGroupName.replace(/-/g, '')
     const logInTemp = isInList(resources, logGroupNameNoDash, stackNameNoDash)
@@ -57,9 +55,9 @@ export class Test extends BasicTest {
     const app = new App()
     const stack = new SeagullStack(app, stackName)
     stack.addIAMRole(roleName, 'lambda.amazonaws.com', ['action1', 'action2'])
-    const synth = app.synthesizeStack(stackName)
+    const synth = app.run().getStack(stackName)
     const resources = Object.keys(synth.template.Resources)
-    const metadata = Object.keys(synth.metadata)
+    const metadata = Object.keys(synth.manifest.metadata!)
     const stackNoDash = stackName.replace(/-/g, '')
     const roleNoDash = roleName.replace(/-/g, '')
     const defPolicy = 'DefaultPolicy'
@@ -76,9 +74,9 @@ export class Test extends BasicTest {
     const app = new App()
     const stack = new SeagullStack(app, stackName)
     stack.addS3(s3Name)
-    const synth = app.synthesizeStack(stackName)
+    const synth = app.run().getStack(stackName)
     const resources = Object.keys(synth.template.Resources)
-    const metadata = Object.keys(synth.metadata)
+    const metadata = Object.keys(synth.manifest.metadata!)
     const stackNameNoDash = stackName.replace(/-/g, '')
     const s3NameNoDash = s3Name.replace(/-/g, '')
     const s3InTemp = isInList(resources, s3NameNoDash, stackNameNoDash)
@@ -96,9 +94,9 @@ export class Test extends BasicTest {
     const stack = new SeagullStack(app, stackName)
     const role = stack.addIAMRole(roleName, 'lambda.amazonaws.com', [])
     stack.addS3(s3Name, role)
-    const synth = app.synthesizeStack(stackName)
+    const synth = app.run().getStack(stackName)
     const resources = Object.keys(synth.template.Resources)
-    const metadata = Object.keys(synth.metadata)
+    const metadata = Object.keys(synth.manifest.metadata!)
     const stackNoDash = stackName.replace(/-/g, '')
     const s3NameNoDash = s3Name.replace(/-/g, '')
     const roleNoDash = roleName.replace(/-/g, '')
@@ -122,9 +120,9 @@ export class Test extends BasicTest {
     const stack = new SeagullStack(app, stackName)
     const role = stack.addIAMRole(roleName, 'lambda.amazonaws.com', [])
     stack.addLambda(lambdaName, './test_data', role, {})
-    const synth = app.synthesizeStack(stackName)
+    const synth = app.run().getStack(stackName)
     const resources = Object.keys(synth.template.Resources)
-    const metadata = Object.keys(synth.metadata)
+    const metadata = Object.keys(synth.manifest.metadata!)
     const stackNoDash = stackName.replace(/-/g, '')
     const lambdaNameNoDash = lambdaName.replace(/-/g, '')
     const roleNoDash = roleName.replace(/-/g, '')
@@ -150,9 +148,9 @@ export class Test extends BasicTest {
     const role = stack.addIAMRole(roleName, 'lambda.amazonaws.com', [])
     const lambda = stack.addLambda(lambdaName, './test_data', role, {})
     stack.addUniversalApiGateway(apiGatewayName, lambda, 'prod')
-    const synth = app.synthesizeStack(stackName)
+    const synth = app.run().getStack(stackName)
     const resources = Object.keys(synth.template.Resources)
-    const metadata = Object.keys(synth.metadata)
+    const metadata = Object.keys(synth.manifest.metadata!)
     const stackNoDash = stackName.replace(/-/g, '')
     const gatewayNameNoDash = apiGatewayName.replace(/-/g, '')
     const gatewayInTemp = isInList(resources, gatewayNameNoDash, stackNoDash)
@@ -174,9 +172,9 @@ export class Test extends BasicTest {
     const lambda = stack.addLambda(lambdaName, './test_data', role, {})
     const apiGW = stack.addUniversalApiGateway(apiGatewayName, lambda, 'prod')
     stack.addCloudfront(cloudfrontName, { apiGateway: apiGW })
-    const synth = app.synthesizeStack(stackName)
+    const synth = app.run().getStack(stackName)
     const resources = Object.keys(synth.template.Resources)
-    const metadata = Object.keys(synth.metadata)
+    const metadata = Object.keys(synth.manifest.metadata!)
     const stackNoDash = stackName.replace(/-/g, '')
     const cloudfrontNameNoDash = cloudfrontName.replace(/-/g, '')
     const cloudfrInTemp = isInList(resources, cloudfrontNameNoDash, stackNoDash)
@@ -196,28 +194,33 @@ export class Test extends BasicTest {
     const stack = new SeagullStack(app, stackName)
     const role = stack.addIAMRole(roleName, 'codebuild.amazonaws.com', [])
     const pipeline = stack.addPipeline(pipelineName)
+    const sourceOutput = new Artifact('source')
     const sourceConfig = {
       atIndex: 0,
       branch: 'master',
-      oauthToken: new Secret('12345678'),
+      oauthToken: new SecretValue('12345678'),
+      output: sourceOutput,
       owner: 'me',
       pipeline,
       repo: 'test-project',
     }
-    stack.addSourceStage(sourceName, sourceConfig)
+    const source = stack.addSourceStage(sourceName, sourceConfig)
+    const buildOutput = new Artifact('out')
     const buildConfig = {
-      atIndex: 1,
       build: { commands: ['echo "start build"'], finally: [] },
       env: { variables: {} },
+      inputArtifact: sourceOutput,
       install: { commands: ['npm i'], finally: [] },
+      output: buildOutput,
       pipeline,
+      placement: { justAfter: source },
       postBuild: { commands: ['npm run test'], finally: [] },
       role,
     }
     stack.addBuildActionStage(buildName, buildConfig)
-    const synth = app.synthesizeStack(stackName)
+    const synth = app.run().getStack(stackName)
     const resources = Object.keys(synth.template.Resources)
-    const metadata = Object.keys(synth.metadata)
+    const metadata = Object.keys(synth.manifest.metadata!)
     const stackNoDash = stackName.replace(/-/g, '')
     const pipelineNameNoDash = pipelineName.replace(/-/g, '')
     const sourceNameNoDash = sourceName.replace(/-/g, '')
@@ -243,13 +246,15 @@ export class Test extends BasicTest {
     const app = new App()
     const stack = new SeagullStack(app, stackName)
     stack.addSecretParam(secretName, 'my-secret-key')
-    const secretNameNoDash = secretName.replace(/-/g, '')
-    const synth = app.synthesizeStack(stackName)
-    const parameters = Object.keys(synth.template.Parameters)
-    const metadata = Object.keys(synth.metadata)
-    const secretInParameters = isInList(parameters, secretNameNoDash)
-    const secretMeta = isInList(metadata, secretName, stackName)
-    secretInParameters.should.be.equals(true)
-    secretMeta.should.be.equals(true)
+    const synth = app.run().getStack(stackName)
+    const parameters: Resource[] = Object.keys(synth.template.Resources)
+      .map(key => synth.template.Resources[key])
+      .filter(value => value.Type === 'AWS::SSM::Parameter')
+    expect(parameters.length).to.equal(1)
+    expect(parameters[0].Properties.Value).to.equal('my-secret-key')
   }
+}
+
+interface Resource {
+  Properties: { [key: string]: any }
 }

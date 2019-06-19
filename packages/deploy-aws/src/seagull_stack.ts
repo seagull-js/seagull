@@ -1,11 +1,13 @@
-import { App, Secret, SecretParameter, Stack, StackProps } from '@aws-cdk/cdk'
+import { IParameter, StringParameter } from '@aws-cdk/aws-ssm'
+import { App, Stack, StackProps } from '@aws-cdk/cdk'
 
 import { LambdaIntegration, RestApi } from '@aws-cdk/aws-apigateway'
 import * as CM from '@aws-cdk/aws-certificatemanager'
 import * as CF from '@aws-cdk/aws-cloudfront'
 import { CloudFrontWebDistributionProps } from '@aws-cdk/aws-cloudfront'
 import * as CB from '@aws-cdk/aws-codebuild'
-import { GitHubSourceAction, Pipeline } from '@aws-cdk/aws-codepipeline'
+import { Pipeline } from '@aws-cdk/aws-codepipeline'
+import { CodeBuildAction, GitHubSourceAction } from '@aws-cdk/aws-codepipeline-actions'
 import * as Events from '@aws-cdk/aws-events'
 import * as IAM from '@aws-cdk/aws-iam'
 import { Code, Function as Lambda, Runtime } from '@aws-cdk/aws-lambda'
@@ -36,19 +38,19 @@ export class SeagullStack extends Stack {
   addLogGroup(logGroupName: string) {
     const retentionDays = Infinity
     const props = { logGroupName, retentionDays, retainLogGroup: false }
-    return new LogGroup(this, `${this.id}-${logGroupName}`, props)
+    return new LogGroup(this, `${this.name}-${logGroupName}`, props)
   }
 
   addS3(bucketName: string, role?: IAM.IPrincipal) {
     const s3Props = { bucketName }
-    const bucket = new S3.Bucket(this, `${this.id}-${bucketName}`, s3Props)
+    const bucket = new S3.Bucket(this, `${this.name}-${bucketName}`, s3Props)
     // tslint:disable-next-line:no-unused-expression
     role && bucket.grantReadWrite(role)
     return bucket
   }
 
   addLambda(name: string, folder: string, role: IAM.Role, env: Keymap) {
-    const lambdaName = `${this.id}-${name}`
+    const lambdaName = `${this.name}-${name}`
     const conf = {
       code: Code.asset(`${folder}/.seagull/deploy`),
       description: 'universal route',
@@ -64,7 +66,7 @@ export class SeagullStack extends Stack {
   }
 
   addUniversalApiGateway(apiGWName: string, lambda: Lambda, stageName: string) {
-    const name = `${this.id}-${apiGWName}`
+    const name = `${this.name}-${apiGWName}`
     const defaultIntegration = new LambdaIntegration(lambda)
     const conf = { binaryMediaTypes: ['*/*'], deployOptions: { stageName } }
     const apiGateway = new RestApi(this, name, conf)
@@ -79,7 +81,7 @@ export class SeagullStack extends Stack {
   }
 
   addIAMRole(roleName: string, principleName: string, actions: string[]) {
-    const name = `${this.id}-${roleName}`
+    const name = `${this.name}-${roleName}`
     const roleParams = { assumedBy: new IAM.ServicePrincipal(principleName) }
     const role = new IAM.Role(this, name, roleParams)
     const policyStatement = new IAM.PolicyStatement()
@@ -89,7 +91,7 @@ export class SeagullStack extends Stack {
   }
 
   addCloudfront(cfdName: string, props: CloudfrontProps) {
-    const name = `${this.id}-${cfdName}`
+    const name = `${this.name}-${cfdName}`
     const domainName = getApiGatewayDomain(props.apiGateway.url)
     const originPath = getApiGatewayPath(props.apiGateway.url)
     const defaultBehavior = {
@@ -102,7 +104,7 @@ export class SeagullStack extends Stack {
     const customOriginSource = { domainName }
     const conf: CloudFrontWebDistributionProps = {
       aliasConfiguration: props.aliasConfig,
-      comment: this.id,
+      comment: this.name,
       defaultRootObject: '',
       loggingConfig: props.logBucket ? { bucket: props.logBucket } : {},
       originConfigs: [{ behaviors, customOriginSource, originPath }],
@@ -110,52 +112,53 @@ export class SeagullStack extends Stack {
     return new CF.CloudFrontWebDistribution(this, name, conf)
   }
 
-  addPipeline(pipelineName: string) {
-    const name = `${this.id}-${pipelineName}`
+  addPipeline(pipelineName: string): Pipeline {
+    const name = `${this.name}-${pipelineName}`
     return new Pipeline(this, name, { pipelineName: name })
   }
 
   addSourceStage(name: string, config: SourceStageConfig) {
     const stageName = name
-    const sourceName = `${this.id}-github-${name}`
-    const { atIndex, branch, owner, pipeline, repo, oauthToken } = config
-    const stage = pipeline.addStage(stageName, { placement: { atIndex } })
+    const sourceName = `${this.name}-github-${name}`
+    const { placement, branch, owner, pipeline, repo, oauthToken, output } = config
+    const stage = pipeline.addStage({ name: stageName, placement })
     const stageConfig = {
+      actionName: sourceName,
       branch,
       oauthToken,
-      outputArtifactName: name,
+      output,
       owner,
       repo,
       stage,
     }
-    return new GitHubSourceAction(this, sourceName, stageConfig)
+    stage.addAction(new GitHubSourceAction(stageConfig))
+    return stage
   }
 
   addBuildActionStage(name: string, config: BuildStageConfig) {
     const stageName = name
-    const projectName = `${this.id}-project-${name}`
-    const { atIndex, pipeline } = config
+    const projectName = `${this.name}-project-${name}`
+    const { inputArtifact: input, placement, pipeline, extraOutputs, output } = config
     const projectConfig = this.createProjectConfig(config)
-    const additionalOutputArtifactNames = this.getAdditionalOutputArtifactNames(
-      name,
-      config
-    )
     const project = new CB.PipelineProject(this, projectName, projectConfig)
-    const stage = pipeline.addStage(stageName, { placement: { atIndex } })
+    const stage = pipeline.addStage({ name: stageName, placement })
     const stageConfig = {
-      additionalInputArtifacts: config.additionalInputArtifacts,
-      additionalOutputArtifactNames,
-      inputArtifact: config.inputArtifact,
-      outputArtifactName: name,
+      actionName: stageName,
+      extraInputs: config.additionalInputArtifacts,
+      extraOutputs,
+      input,
+      name: stageName,
+      output,
       project,
       stage,
     }
-    return new CB.PipelineBuildAction(this, name, stageConfig)
+    stage.addAction(new CodeBuildAction(stageConfig))
+    return stage
   }
 
-  addSecretParam(name: string, ssmParameter: string) {
-    const secretConfig = { ssmParameter }
-    return new SecretParameter(this, name, secretConfig)
+  addSecretParam(name: string, ssmParameter: string): IParameter {
+    const secretConfig = { stringValue: ssmParameter }
+    return new StringParameter(this, name, secretConfig)
   }
 
   addNewCert(name: string, domains: string[]) {
@@ -163,26 +166,26 @@ export class SeagullStack extends Stack {
     const altNames = domains.slice(1)
     const subjectAlternativeNames = altNames.length > 0 ? altNames : undefined
     const props: CM.CertificateProps = { domainName, subjectAlternativeNames }
-    return new CM.Certificate(this, `${this.id}-${name}`, props)
+    return new CM.Certificate(this, `${this.name}-${name}`, props)
   }
 
   importS3(bucketName: string, role?: IAM.IPrincipal) {
-    const name = `${this.id}-${bucketName}`
+    const name = `${this.name}-${bucketName}`
     const bucketArn = `arn:aws:s3:::${bucketName}`
-    const bucket = S3.Bucket.import(this, name, { bucketArn })
+    const bucket = S3.Bucket.fromBucketArn(this, name, bucketArn)
     // tslint:disable-next-line:no-unused-expression
     role && bucket.grantReadWrite(role)
     return bucket
   }
 
-  addEventRule(rule: Rule, target: Events.IEventRuleTarget) {
+  addEventRule(rule: Rule, target: Events.IRuleTarget) {
     const name = rule.path.split('/').pop() || 'rootPath'
     const schedule = {
       scheduleExpression: rule.cron,
     }
 
-    const eventRule = new Events.EventRule(this, name, schedule)
-    eventRule.addTarget(target, { jsonTemplate: `{"path":"${rule.path}"}` })
+    const eventRule = new Events.Rule(this, name, schedule)
+    eventRule.addTarget(target)
     return eventRule
   }
 
@@ -206,17 +209,5 @@ export class SeagullStack extends Stack {
       environmentVariables: mapEnvironmentVariables(env.variables),
       role,
     }
-  }
-
-  private getAdditionalOutputArtifactNames(
-    name: string,
-    config: BuildStageConfig
-  ): string[] {
-    if (config.outputArtifacts) {
-      return Object.keys(config.outputArtifacts['secondary-artifacts'])
-        .filter(key => key !== name)
-        .map(key => config.outputArtifacts['secondary-artifacts'][key].name)
-    }
-    return []
   }
 }

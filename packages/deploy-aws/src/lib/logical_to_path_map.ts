@@ -1,9 +1,12 @@
-import { MetadataEntry, SynthesizedStack } from '@aws-cdk/cx-api'
+import { CloudArtifact, MetadataEntry } from '@aws-cdk/cx-api'
 import { Keymap as PathMap } from '../types'
 
-export function createLogicalToPathMap(stack: SynthesizedStack) {
+export function createLogicalToPathMap(stack: CloudArtifact) {
   const map: PathMap = {}
-  const data = stack.metadata
+  const data = stack.manifest.metadata
+  if (!data) {
+    return map
+  }
   const dataKeys = Object.keys(data)
   dataKeys.forEach(key => data[key].forEach(entry => addEntry(map, entry, key)))
   return map

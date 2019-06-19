@@ -1,4 +1,4 @@
-import { Secret } from '@aws-cdk/cdk'
+import { SecretValue } from '@aws-cdk/cdk'
 import { config, SSM } from 'aws-sdk'
 
 import { GlobalConfigInstance } from 'aws-sdk/lib/config';
@@ -14,12 +14,12 @@ export async function handleSSMSecret(params: TokenParams) {
   const { ssmHandler, tokenName, token } = params
   if (tokenName === undefined) {
     lib.noGithubTokenFound()
-    return { name: 'noToken', secret: new Secret('') }
+    return { name: 'noToken', secret: new SecretValue('') }
   }
   // tslint:disable-next-line:no-unused-expression
   token && (await ssmHandler.createParameter(tokenName, token))
   const value = await ssmHandler.getParameter(tokenName)
-  return { name: tokenName, secret: new Secret(value) }
+  return { name: tokenName, secret: new SecretValue(value) }
 }
 
 export class SSMHandler {

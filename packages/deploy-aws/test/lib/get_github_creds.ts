@@ -1,4 +1,3 @@
-import { Secret, SecretParameter } from '@aws-cdk/cdk'
 import 'chai/register-should'
 import { suite, test } from 'mocha-typescript'
 

@@ -16,7 +16,7 @@ export class Test extends BasicTest {
   async 'can create empty LogicalToPathMap for empty stack'() {
     const projectName = 'test-project'
     const app = new SeagullApp({ projectName })
-    const synthStack = app.synthesizeStack(projectName)
+    const synthStack = app.run().getStack(projectName)
     const map = createLogicalToPathMap(synthStack)
     const mapExistsAndIsEmpty = map && Object.keys(map).length === 0
     mapExistsAndIsEmpty.should.be.equals(true)
@@ -28,7 +28,7 @@ export class Test extends BasicTest {
     const logGroupName = 'test-log'
     const app = new SeagullApp({ projectName })
     app.stack.addLogGroup(logGroupName)
-    const synthStack = app.synthesizeStack(projectName)
+    const synthStack = app.run().getStack(projectName)
     const map = createLogicalToPathMap(synthStack)
     const mapEntry = map[Object.keys(map)[0]]
     mapEntry.indexOf(projectName).should.be.above(-1)

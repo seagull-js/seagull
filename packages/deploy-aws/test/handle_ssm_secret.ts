@@ -23,7 +23,7 @@ export class Test extends BasicTest {
     const params = { ssmHandler, token: '123', tokenName: 'testToken' }
     const ssmSecret = await handleSSMSecret(params)
     expect(ssmSecret.name).to.be.equals('testToken')
-    expect(ssmSecret.secret.resolve()).to.be.equals('123')
+    expect(ssmSecret.secret.toString()).to.be.equals('123')
   }
 
   async 'can set a SSMSecret via existing token'() {
@@ -31,7 +31,7 @@ export class Test extends BasicTest {
     const params = { ssmHandler: handler, tokenName: 'testToken' }
     const ssmSecret = await handleSSMSecret(params)
     expect(ssmSecret.name).to.be.equals('testToken')
-    expect(ssmSecret.secret.resolve()).to.be.equals('abc')
+    expect(ssmSecret.secret.toString()).to.be.equals('abc')
   }
 
   @test
@@ -40,7 +40,7 @@ export class Test extends BasicTest {
     const params = { ssmHandler, token: '123', tokenName: 'testToken' }
     const ssmSecret = await handleSSMSecret(params)
     expect(ssmSecret.name).to.be.equals('testToken')
-    expect(ssmSecret.secret.resolve()).to.be.equals('123')
+    expect(ssmSecret.secret.toString()).to.be.equals('123')
   }
 
   @test
@@ -49,7 +49,7 @@ export class Test extends BasicTest {
     const params = { ssmHandler }
     const ssmSecret = await handleSSMSecret(params)
     expect(ssmSecret.name).to.be.equals('noToken')
-    expect(ssmSecret.secret.resolve()).to.be.equals('')
+    expect(ssmSecret.secret.toString()).to.be.equals('')
   }
 }
 
