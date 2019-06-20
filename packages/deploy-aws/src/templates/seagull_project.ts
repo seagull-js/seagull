@@ -104,7 +104,7 @@ export class SeagullProject {
       addAssets: true,
       appPath: this.appPath,
       itemsBucket: await this.getBucketName('items'),
-      projectName: name,
+      projectName: this.getAppName(),
       stackProps: { env: { account, region: this.region } },
     }
     return new SeagullApp(appProps)
