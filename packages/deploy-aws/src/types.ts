@@ -38,6 +38,7 @@ export interface StageConfigParams {
   owner: string
   pipeline: Pipeline
   pipelineLink: string
+  poll: boolean
   repo: string
   role: IAM.Role
   ssmSecret: { name: string; secret: Secret }
@@ -73,6 +74,7 @@ export interface BuildStageConfig extends StageConfig {
 export interface SourceStageConfig extends StageConfig {
   branch: string
   owner: string
+  poll: boolean
   repo: string
   oauthToken: Secret
 }

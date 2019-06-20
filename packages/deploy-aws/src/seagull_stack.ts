@@ -118,13 +118,14 @@ export class SeagullStack extends Stack {
   addSourceStage(name: string, config: SourceStageConfig) {
     const stageName = name
     const sourceName = `${this.id}-github-${name}`
-    const { atIndex, branch, owner, pipeline, repo, oauthToken } = config
+    const { atIndex, branch, owner, pipeline, poll, repo, oauthToken } = config
     const stage = pipeline.addStage(stageName, { placement: { atIndex } })
     const stageConfig = {
       branch,
       oauthToken,
       outputArtifactName: name,
       owner,
+      pollForSourceChanges: poll,
       repo,
       stage,
     }
