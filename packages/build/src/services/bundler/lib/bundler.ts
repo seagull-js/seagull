@@ -5,7 +5,12 @@ import { join, resolve } from 'path'
 import * as sts from 'stream-string'
 import * as wify from 'watchify'
 import { getCacheRef } from './cache'
-import { addBabelTransform, addEnvify, addUglifyify } from './transforms'
+import {
+  addBabelTransform,
+  addEnvify,
+  addPageRenderExport,
+  addUglifyify,
+} from './transforms'
 
 export class BrowserLibraryBundle {
   /** which packages should be bundle */
@@ -25,7 +30,7 @@ export class BrowserLibraryBundle {
   bfyInstance = (opts: bfy.Options) => bfy(opts).require(this.packages as any)
 }
 
-export class IsomorphicAppBundle {
+export class BrowserPageBundle {
   /** where to read a file from */
   srcFile: string
   /** where to write a bundle file to */
@@ -38,6 +43,30 @@ export class IsomorphicAppBundle {
   compatible: boolean = false
   /** minimizing etc? */
   optimized: boolean = false
+
+  constructor(srcFile: string, dstFile: string) {
+    this.srcFile = srcFile
+    this.dstFile = dstFile
+  }
+
+  bfyInstance = (opts: bfy.Options) =>
+    bfy(this.srcFile, { opts, ...{ standalone: this.export } })
+}
+export class ServerPageBundle {
+  /** where to read a file from */
+  srcFile: string
+  /** where to write a bundle file to */
+  dstFile: string
+  /** exposed module variable */
+  export: string = 'Page'
+  /** which npm packages to ignore */
+  excludes = [] as string[]
+  /** ie11 etc. -> babel */
+  compatible: boolean = false
+  /** minimizing etc? */
+  optimized: boolean = false
+  /** custom transforms */
+  transforms = [addPageRenderExport]
 
   constructor(srcFile: string, dstFile: string) {
     this.srcFile = srcFile
@@ -71,7 +100,8 @@ export class Bundler {
   /** browserify instance */
   private bfy!: bfy.BrowserifyObject
   private bundlerType:
-    | IsomorphicAppBundle
+    | BrowserPageBundle
+    | ServerPageBundle
     | BrowserLibraryBundle
     | NodeAppBundle
 
@@ -114,6 +144,7 @@ export class Bundler {
     this.addExcludes()
     this.addCompatible()
     addEnvify(this.bfy)
+    this.addCustomTransformers()
     this.addOptimizations()
     this.addWatchMode()
   }
@@ -139,6 +170,12 @@ export class Bundler {
       return
     }
     addUglifyify(this.bfy)
+  }
+
+  private addCustomTransformers() {
+    // tslint:disable-next-line: no-unused-expression
+    'transforms' in this.bundlerType &&
+      this.bundlerType.transforms.forEach(t => t(this.bfy))
   }
 
   private addWatchMode() {

@@ -68,8 +68,8 @@ export class RouteContext {
     const pagePathServer = pagePath.replace('.js', '-server.js')
     const pageBlob = fs.readFileSync(pagePath, 'utf-8')
     const pageBlobServer = fs.readFileSync(pagePathServer, 'utf-8')
-    const page = rfs(pageBlobServer).default as PageType
-    return render(pageBlob, page, data)
+    const renderPageBundle = rfs(pageBlobServer).__renderPage as any
+    return renderPageBundle(pageBlob, data)
   }
 
   private renderPage(pageSource: PageType, data: any) {

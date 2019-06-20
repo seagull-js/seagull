@@ -1,6 +1,6 @@
 import { join } from 'path'
 import { LogEvent, OutputServiceEvents, ServiceEventBus } from '..'
-import { Bundler, IsomorphicAppBundle } from './lib/bundler'
+import { Bundler, BrowserPageBundle } from './lib/bundler'
 
 export const BundleBrowserPageEvent = Symbol('Start BrowserPage Bundling')
 export const BundledBrowserPageEvent = Symbol('BrowserPage got Bundled event')
@@ -33,7 +33,7 @@ export class BrowserPageBundleService {
 
   private createBundler() {
     const { src, dst } = this.bundlerPaths()
-    const bundle = new IsomorphicAppBundle(src, dst)
+    const bundle = new BrowserPageBundle(src, dst)
     bundle.optimized = this.config.optimized
     bundle.compatible = this.config.compatible
     bundle.excludes = this.config.excludes
