@@ -1,6 +1,6 @@
 import { join } from 'path'
 import { LogEvent, OutputServiceEvents, ServiceEventBus } from '..'
-import { Bundler, IsomorphicAppBundle } from './lib/bundler'
+import { Bundler, ServerPageBundle } from './lib/bundler'
 
 export const BundleBackendPageEvent = Symbol('Start BackendPage Bundling')
 export const BundledBackendPageEvent = Symbol('BackendPage got Bundled event')
@@ -30,7 +30,7 @@ export class BackendPageBundleService {
 
   private createBundler() {
     const { src, dst } = this.bundlerPaths()
-    const bundle = new IsomorphicAppBundle(src, dst)
+    const bundle = new ServerPageBundle(src, dst)
     bundle.optimized = this.config.optimized
     this.bundler = new Bundler(
       bundle,

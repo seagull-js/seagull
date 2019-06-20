@@ -8,6 +8,10 @@
 
 ### Patch Changes
 
+## 10.3.2
+
+- @seagull/pages -> react hooks fixed
+
 ## 10.0.2
 
 - @seagull/deploy-aws -> spaces are now allowed when describing env variables
