@@ -1,76 +1,96 @@
-import { Artifact } from '@aws-cdk/aws-codepipeline-api'
-import { StageConfigParams } from '../types'
+import { Artifact, StagePlacement } from '@aws-cdk/aws-codepipeline'
+import { BuildStageConfig, StageConfigParams } from '../types'
 
 const curlData = `-d '{ "state": "'$PIPELINE_STATE'", "target_url": "'$TARGET_URL'", "description": "'"$PIPELINE_DESC"' - Seagull Test CI", "context": "'$TEST_PIPELINE_CONTEXT'"}'`
 
-export function getSourceConfig(params: StageConfigParams, index: number) {
+export interface BuildStageConfigInputParams {
+  params: StageConfigParams,
+  placement: StagePlacement,
+  inputArtifact: Artifact,
+  outputArtifact: Artifact,
+  extraOutputArtifacts?: Artifact[]
+}
+
+export function getSourceConfig(params: StageConfigParams, outputArtifact: Artifact) {
   return {
-    atIndex: index,
     branch: params.branch,
     oauthToken: params.ssmSecret.secret,
+    output: outputArtifact,
     owner: params.owner,
     pipeline: params.pipeline,
     repo: params.repo,
   }
 }
 
-export function getBuildConfig(
-  params: StageConfigParams,
-  index: number,
-  inputArtifact?: Artifact
-) {
+export function getBuildConfig({
+  params,
+  placement,
+  inputArtifact,
+  outputArtifact,
+  extraOutputArtifacts,
+}: BuildStageConfigInputParams): BuildStageConfig {
   return {
-    ...getCommonConfig(params, index, inputArtifact),
+    ...getCommonConfig({ params, placement, inputArtifact, outputArtifact, extraOutputArtifacts }),
     build: getBuild(params),
   }
 }
 
-export function getTestConfig(
-  params: StageConfigParams,
-  index: number,
-  inputArtifact?: Artifact
-) {
+export function getTestConfig({
+  params,
+  placement,
+  inputArtifact,
+  outputArtifact,
+  extraOutputArtifacts,
+}: BuildStageConfigInputParams): BuildStageConfig {
   return {
-    ...getCommonConfig(params, index, inputArtifact),
+    ...getCommonConfig({ params, placement, inputArtifact, outputArtifact, extraOutputArtifacts }),
     postBuild: getTest(params),
   }
 }
 
-export function getTestEnd2EndConfig(
-  params: StageConfigParams,
-  index: number,
-  inputArtifact?: Artifact
-) {
+export function getTestEnd2EndConfig({
+  params,
+  placement,
+  inputArtifact,
+  outputArtifact,
+  extraOutputArtifacts,
+}: BuildStageConfigInputParams): BuildStageConfig {
   return {
-    ...getCommonConfig(params, index, inputArtifact),
+    ...getCommonConfig({ params, placement, inputArtifact, outputArtifact, extraOutputArtifacts }),
     postBuild: getTestEnd2End(params),
   }
 }
 
-export function getDeployConfig(
-  params: StageConfigParams,
-  index: number,
-  inputArtifact?: Artifact
-) {
+export function getDeployConfig({
+  params,
+  placement,
+  inputArtifact,
+  outputArtifact,
+  extraOutputArtifacts,
+}: BuildStageConfigInputParams): BuildStageConfig {
   return {
-    ...getCommonConfig(params, index, inputArtifact),
+    ...getCommonConfig({ params, placement, inputArtifact, outputArtifact, extraOutputArtifacts }),
     // build: getBuild(params),
     postBuild: getDeploy(params),
   }
 }
 
-function getCommonConfig(
-  params: StageConfigParams,
-  index: number,
-  inputArtifact?: Artifact
-) {
+function getCommonConfig({
+  params,
+  placement,
+  inputArtifact,
+  outputArtifact,
+  extraOutputArtifacts,
+}: BuildStageConfigInputParams): BuildStageConfig {
   return {
-    atIndex: index,
     build: { commands: [], finally: [] },
     env: getEnv(params),
+    extraOutputs: extraOutputArtifacts,
     inputArtifact,
     install: getInstall(params),
+    output: outputArtifact,
     pipeline: params.pipeline,
+    placement,
     postBuild: { commands: [] },
     role: params.role,
   }

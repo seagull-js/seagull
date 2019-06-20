@@ -1,8 +1,9 @@
+import { RuleTargetInput } from '@aws-cdk/aws-events';
+import { LambdaFunction } from '@aws-cdk/aws-events-targets'
 import { FS } from '@seagull/commands-fs'
 import { SDK } from 'aws-cdk'
 import * as dotenv from 'dotenv'
 import 'ts-node/register'
-import * as util from 'util'
 import * as aws from '../aws_sdk_handler'
 import * as lib from '../lib'
 import { ProvideAssetFolder } from '../provide_asset_folder'
@@ -100,7 +101,10 @@ export class SeagullProject {
     app.stack.addLogGroup(`/${name}/data-log`)
     const addCrons = this.stage === 'prod' || this.branch === 'master'
     const cronJson = addCrons ? await buildCronJson(this.appPath) : []
-    const addRule = (rule: Rule) => app.stack.addEventRule(rule, lambda)
+    const addRule = (rule: Rule) => {
+      const lambdaTarget = new LambdaFunction(lambda, { event: RuleTargetInput.fromEventPath(rule.path) })
+      app.stack.addEventRule(rule, lambdaTarget)
+    }
     cronJson.forEach(addRule)
 
     return app

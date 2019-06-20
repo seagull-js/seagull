@@ -1,3 +1,4 @@
+import { expect as awsExpect, matchTemplate } from '@aws-cdk/assert'
 import { PolicyStatement, Role } from '@aws-cdk/aws-iam'
 import { FS } from '@seagull/commands-fs'
 import { BasicTest } from '@seagull/testing'
@@ -53,10 +54,22 @@ export class Test extends BasicTest {
     const props = getTestProps(this.appPath)
 
     const project = await new SeagullProject(props).createSeagullApp()
-    const synthStack = project.synthesizeStack('helloworld')
+    const synthStack = project.run().getStack('helloworld')
 
     Object.keys(synthStack.template.Resources).length.should.be.above(1)
   }
+
+  @test
+  async 'creates all necessary stack resources'() {
+    const props = getTestProps(this.appPath)
+
+    const project = await new SeagullProject(props).createSeagullApp()
+    const synthStack = project.run().getStack('helloworld')
+    awsExpect(synthStack).to(
+      matchTemplate(require('./fixtures/helloworld-project'))
+    )
+  }
+
 
   @test
   async 'assigns a default role to role property of SeagullApp'() {
@@ -74,7 +87,7 @@ export class Test extends BasicTest {
     const app = await new SeagullProject(props).createSeagullApp()
     const stmt = new PolicyStatement().addAllResources().addAction('action3')
     app.role!.addToPolicy(stmt)
-    const synth = app.synthesizeStack('helloworld')
+    const synth = app.run().getStack('helloworld')
     const newPolicyCriterion = resourceHasNewAction('action3')
     const hasNewPolicy = !!find(synth.template.Resources, newPolicyCriterion)
     hasNewPolicy.should.be.equal(true)
@@ -91,7 +104,7 @@ export class Test extends BasicTest {
     await customDotEnv.execute()
 
     const project = await new SeagullProject(props).createSeagullApp()
-    const synthStack = project.synthesizeStack('helloworld')
+    const synthStack = project.run().getStack('helloworld')
 
     const lambdaFnKey = Object.keys(synthStack.template.Resources).filter(
       key => synthStack.template.Resources[key].Type === 'AWS::Lambda::Function'
@@ -122,10 +135,10 @@ export class Test extends BasicTest {
     const app = await project.createSeagullApp()
     const stackName = 'helloworld'
     await project.customizeStack(app)
-    const synthStack = app.synthesizeStack(stackName)
+    const synthStack = app.run().getStack(stackName)
 
     const resources = Object.keys(synthStack.template.Resources)
-    const metadata = Object.keys(synthStack.metadata)
+    const metadata = Object.keys(synthStack.manifest.metadata!)
     const stackNameNoDash = stackName.replace(/-/g, '')
     const s3NameNoDash = s3Name.replace(/-/g, '')
     const s3InTemp = isInList(resources, s3NameNoDash, stackNameNoDash)
@@ -155,10 +168,10 @@ export class Test extends BasicTest {
     const app = await project.createSeagullApp()
     const stackName = 'helloworld'
     await project.customizeStack(app)
-    const synthStack = app.synthesizeStack(stackName)
+    const synthStack = app.run().getStack(stackName)
 
     const resources = Object.keys(synthStack.template.Resources)
-    const metadata = Object.keys(synthStack.metadata)
+    const metadata = Object.keys(synthStack.manifest.metadata!)
     const stackNameNoDash = stackName.replace(/-/g, '')
     const s3NameNoDash = s3Name.replace(/-/g, '')
     const s3InTemp = isInList(resources, s3NameNoDash, stackNameNoDash)
@@ -241,9 +254,9 @@ export class Test extends BasicTest {
 
     await project.deployProject()
 
-    const synthStack = app!.synthesizeStack(stackName)
+    const synthStack = app!.run().getStack(stackName)
     const resources = Object.keys(synthStack.template.Resources)
-    const metadata = Object.keys(synthStack.metadata)
+    const metadata = Object.keys(synthStack.manifest.metadata!)
     const stackNameNoDash = stackName.replace(/-/g, '')
     const s3NameNoDash = s3Name.replace(/-/g, '')
     const s3InTemp = isInList(resources, s3NameNoDash, stackNameNoDash)
@@ -290,9 +303,9 @@ export class Test extends BasicTest {
 
     await project.diffProject()
 
-    const synthStack = app!.synthesizeStack(stackName)
+    const synthStack = app!.run().getStack(stackName)
     const resources = Object.keys(synthStack.template.Resources)
-    const metadata = Object.keys(synthStack.metadata)
+    const metadata = Object.keys(synthStack.manifest.metadata!)
     const stackNameNoDash = stackName.replace(/-/g, '')
     const s3NameNoDash = s3Name.replace(/-/g, '')
     const s3InTemp = isInList(resources, s3NameNoDash, stackNameNoDash)

@@ -18,7 +18,7 @@ export class Test extends BasicTest {
     const projectName = 'test'
     const props = { projectName }
     const app = new SeagullApp(props)
-    const synth = app.synthesizeStack(projectName)
+    const synth = app.run().getStack(projectName)
     // tslint:disable-next-line:no-console
     synth.name.should.be.equals(projectName)
   }

@@ -21,24 +21,24 @@ export class SeagullApp extends App {
 
   async deployStack() {
     const sdk = new cdk.SDK({})
-    const synthStack = this.synthesizeStack(this.projectName)
+    const synthStack = this.run().getStack(this.projectName)
     const env = synthStack.environment
-    await cdk.bootstrapEnvironment(env, sdk, 'CDKToolkit', undefined)
+    await cdk.bootstrapEnvironment(env, sdk, 'CDKToolkit', undefined, undefined)
     const toolkitInfo = await cdk.loadToolkitInfo(env, sdk, 'CDKToolkit')
     await cdk.deployStack({ sdk, stack: synthStack, toolkitInfo })
   }
 
   async destroyStack() {
     const sdk = new cdk.SDK({})
-    const synthStack = this.synthesizeStack(this.projectName)
+    const synthStack = this.run().getStack(this.projectName)
     const env = synthStack.environment
-    await cdk.bootstrapEnvironment(env, sdk, 'CDKToolkit', undefined)
+    await cdk.bootstrapEnvironment(env, sdk, 'CDKToolkit', undefined, undefined)
     await cdk.destroyStack({ sdk, stack: synthStack })
   }
 
   async diffStack() {
     const sdk = new cdk.SDK({})
-    const synthStack = this.synthesizeStack(this.projectName)
+    const synthStack = this.run().getStack(this.projectName)
     const cfn = await sdk.cloudFormation(synthStack.environment, 0)
     const templateData = { StackName: synthStack.name }
     const template = await cfn.getTemplate(templateData).promise()

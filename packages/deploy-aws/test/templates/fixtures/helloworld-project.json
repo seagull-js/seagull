@@ -1,0 +1,962 @@
+{
+  "Resources": {
+    "helloworldrole8C327E0D": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      }
+    },
+    "helloworldroleDefaultPolicyD1ABDDA3": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "sts:AssumeRole",
+                "logs:*",
+                "lambda:InvokeFunction",
+                "lambda:InvokeAsync",
+                "ses:*",
+                "s3:*",
+                "events:*",
+                "cloudwatch:*"
+              ],
+              "Effect": "Allow",
+              "Resource": "*"
+            },
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+                "s3:PutObject*",
+                "s3:Abort*"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "helloworldeucentral1testaccountidhelloworldmasterlogs353CCB2B",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "helloworldeucentral1testaccountidhelloworldmasterlogs353CCB2B",
+                          "Arn"
+                        ]
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+                "s3:PutObject*",
+                "s3:Abort*"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "helloworldeucentral1testaccountidhelloworlditems12A3080B",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "helloworldeucentral1testaccountidhelloworlditems12A3080B",
+                          "Arn"
+                        ]
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ]
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "helloworldroleDefaultPolicyD1ABDDA3",
+        "Roles": [
+          {
+            "Ref": "helloworldrole8C327E0D"
+          }
+        ]
+      }
+    },
+    "helloworldeucentral1testaccountidhelloworldmasterlogs353CCB2B": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketName": "eu-central-1-test-account-id-helloworld-master-logs"
+      },
+      "DeletionPolicy": "Retain"
+    },
+    "helloworldlambda8E9EECAC": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "helloworldlambdaCodeS3BucketB9F03973"
+          },
+          "S3Key": {
+            "Fn::Join": [
+              "",
+              [
+                {
+                  "Fn::Select": [
+                    0,
+                    {
+                      "Fn::Split": [
+                        "||",
+                        {
+                          "Ref": "helloworldlambdaCodeS3VersionKey2B24B69A"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "Fn::Select": [
+                    1,
+                    {
+                      "Fn::Split": [
+                        "||",
+                        {
+                          "Ref": "helloworldlambdaCodeS3VersionKey2B24B69A"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            ]
+          }
+        },
+        "Handler": "dist/assets/backend/lambda.handler",
+        "Role": {
+          "Fn::GetAtt": ["helloworldrole8C327E0D", "Arn"]
+        },
+        "Runtime": "nodejs8.10",
+        "Description": "universal route",
+        "Environment": {
+          "Variables": {
+            "APP": "helloworld",
+            "LOG_BUCKET": "eu-central-1-test-account-id-helloworld-master-logs",
+            "MODE": "cloud",
+            "NODE_ENV": "production",
+            "STAGE": "prod"
+          }
+        },
+        "FunctionName": "helloworld-lambda-handler",
+        "MemorySize": 1536,
+        "Timeout": 300
+      },
+      "DependsOn": [
+        "helloworldroleDefaultPolicyD1ABDDA3",
+        "helloworldrole8C327E0D"
+      ]
+    },
+    "helloworldlambdaApiPermissionGET19CD57D1": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:eu-central-1:1234567890:",
+              {
+                "Ref": "helloworldapiGW689F3CA5"
+              },
+              "/",
+              {
+                "Ref": "helloworldapiGWDeploymentStageprodFB9CE86D"
+              },
+              "/GET/"
+            ]
+          ]
+        }
+      }
+    },
+    "helloworldlambdaApiPermissionTestGETA8AC39B9": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:eu-central-1:1234567890:",
+              {
+                "Ref": "helloworldapiGW689F3CA5"
+              },
+              "/test-invoke-stage/GET/"
+            ]
+          ]
+        }
+      }
+    },
+    "helloworldlambdaApiPermissionPOSTC7A708E0": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:eu-central-1:1234567890:",
+              {
+                "Ref": "helloworldapiGW689F3CA5"
+              },
+              "/",
+              {
+                "Ref": "helloworldapiGWDeploymentStageprodFB9CE86D"
+              },
+              "/POST/"
+            ]
+          ]
+        }
+      }
+    },
+    "helloworldlambdaApiPermissionTestPOSTAD688922": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:eu-central-1:1234567890:",
+              {
+                "Ref": "helloworldapiGW689F3CA5"
+              },
+              "/test-invoke-stage/POST/"
+            ]
+          ]
+        }
+      }
+    },
+    "helloworldlambdaApiPermissionDELETEAB8D8EE2": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:eu-central-1:1234567890:",
+              {
+                "Ref": "helloworldapiGW689F3CA5"
+              },
+              "/",
+              {
+                "Ref": "helloworldapiGWDeploymentStageprodFB9CE86D"
+              },
+              "/DELETE/"
+            ]
+          ]
+        }
+      }
+    },
+    "helloworldlambdaApiPermissionTestDELETE73E712E6": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:eu-central-1:1234567890:",
+              {
+                "Ref": "helloworldapiGW689F3CA5"
+              },
+              "/test-invoke-stage/DELETE/"
+            ]
+          ]
+        }
+      }
+    },
+    "helloworldlambdaApiPermissionGETany618567F7": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:eu-central-1:1234567890:",
+              {
+                "Ref": "helloworldapiGW689F3CA5"
+              },
+              "/",
+              {
+                "Ref": "helloworldapiGWDeploymentStageprodFB9CE86D"
+              },
+              "/GET/{any+}"
+            ]
+          ]
+        }
+      }
+    },
+    "helloworldlambdaApiPermissionTestGETany2067CBE5": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:eu-central-1:1234567890:",
+              {
+                "Ref": "helloworldapiGW689F3CA5"
+              },
+              "/test-invoke-stage/GET/{any+}"
+            ]
+          ]
+        }
+      }
+    },
+    "helloworldlambdaApiPermissionPOSTanyB1F6000C": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:eu-central-1:1234567890:",
+              {
+                "Ref": "helloworldapiGW689F3CA5"
+              },
+              "/",
+              {
+                "Ref": "helloworldapiGWDeploymentStageprodFB9CE86D"
+              },
+              "/POST/{any+}"
+            ]
+          ]
+        }
+      }
+    },
+    "helloworldlambdaApiPermissionTestPOSTany928C9B59": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:eu-central-1:1234567890:",
+              {
+                "Ref": "helloworldapiGW689F3CA5"
+              },
+              "/test-invoke-stage/POST/{any+}"
+            ]
+          ]
+        }
+      }
+    },
+    "helloworldlambdaApiPermissionDELETEany968DA0AF": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:eu-central-1:1234567890:",
+              {
+                "Ref": "helloworldapiGW689F3CA5"
+              },
+              "/",
+              {
+                "Ref": "helloworldapiGWDeploymentStageprodFB9CE86D"
+              },
+              "/DELETE/{any+}"
+            ]
+          ]
+        }
+      }
+    },
+    "helloworldlambdaApiPermissionTestDELETEany73588353": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:eu-central-1:1234567890:",
+              {
+                "Ref": "helloworldapiGW689F3CA5"
+              },
+              "/test-invoke-stage/DELETE/{any+}"
+            ]
+          ]
+        }
+      }
+    },
+    "helloworldapiGW689F3CA5": {
+      "Type": "AWS::ApiGateway::RestApi",
+      "Properties": {
+        "BinaryMediaTypes": ["*/*"],
+        "Name": "helloworld-apiGW"
+      }
+    },
+    "helloworldapiGWDeployment72150E40ddbb54205d835e68c7a82660b751a849": {
+      "Type": "AWS::ApiGateway::Deployment",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "helloworldapiGW689F3CA5"
+        },
+        "Description": "Automatically created by the RestApi construct"
+      },
+      "DependsOn": [
+        "helloworldapiGWanyDELETEFC6A68AC",
+        "helloworldapiGWanyGETA957E014",
+        "helloworldapiGWanyPOST833371CB",
+        "helloworldapiGWanyCFA467DC",
+        "helloworldapiGWDELETE1877FDF4",
+        "helloworldapiGWGET96146300",
+        "helloworldapiGWPOSTBDC34730"
+      ]
+    },
+    "helloworldapiGWDeploymentStageprodFB9CE86D": {
+      "Type": "AWS::ApiGateway::Stage",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "helloworldapiGW689F3CA5"
+        },
+        "DeploymentId": {
+          "Ref": "helloworldapiGWDeployment72150E40ddbb54205d835e68c7a82660b751a849"
+        },
+        "StageName": "prod"
+      }
+    },
+    "helloworldapiGWCloudWatchRole4363D260": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "apigateway.",
+                      {
+                        "Ref": "AWS::URLSuffix"
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "helloworldapiGWAccount332B316B": {
+      "Type": "AWS::ApiGateway::Account",
+      "Properties": {
+        "CloudWatchRoleArn": {
+          "Fn::GetAtt": ["helloworldapiGWCloudWatchRole4363D260", "Arn"]
+        }
+      },
+      "DependsOn": ["helloworldapiGW689F3CA5"]
+    },
+    "helloworldapiGWanyCFA467DC": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": ["helloworldapiGW689F3CA5", "RootResourceId"]
+        },
+        "PathPart": "{any+}",
+        "RestApiId": {
+          "Ref": "helloworldapiGW689F3CA5"
+        }
+      }
+    },
+    "helloworldapiGWanyGETA957E014": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "ResourceId": {
+          "Ref": "helloworldapiGWanyCFA467DC"
+        },
+        "RestApiId": {
+          "Ref": "helloworldapiGW689F3CA5"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:eu-central-1:lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        }
+      }
+    },
+    "helloworldapiGWanyPOST833371CB": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "ResourceId": {
+          "Ref": "helloworldapiGWanyCFA467DC"
+        },
+        "RestApiId": {
+          "Ref": "helloworldapiGW689F3CA5"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:eu-central-1:lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        }
+      }
+    },
+    "helloworldapiGWanyDELETEFC6A68AC": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "DELETE",
+        "ResourceId": {
+          "Ref": "helloworldapiGWanyCFA467DC"
+        },
+        "RestApiId": {
+          "Ref": "helloworldapiGW689F3CA5"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:eu-central-1:lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        }
+      }
+    },
+    "helloworldapiGWGET96146300": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "ResourceId": {
+          "Fn::GetAtt": ["helloworldapiGW689F3CA5", "RootResourceId"]
+        },
+        "RestApiId": {
+          "Ref": "helloworldapiGW689F3CA5"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:eu-central-1:lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        }
+      }
+    },
+    "helloworldapiGWPOSTBDC34730": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "ResourceId": {
+          "Fn::GetAtt": ["helloworldapiGW689F3CA5", "RootResourceId"]
+        },
+        "RestApiId": {
+          "Ref": "helloworldapiGW689F3CA5"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:eu-central-1:lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        }
+      }
+    },
+    "helloworldapiGWDELETE1877FDF4": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "DELETE",
+        "ResourceId": {
+          "Fn::GetAtt": ["helloworldapiGW689F3CA5", "RootResourceId"]
+        },
+        "RestApiId": {
+          "Ref": "helloworldapiGW689F3CA5"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:eu-central-1:lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": ["helloworldlambda8E9EECAC", "Arn"]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        }
+      }
+    },
+    "helloworldcloudfrontCFDistributionE56D8699": {
+      "Type": "AWS::CloudFront::Distribution",
+      "Properties": {
+        "DistributionConfig": {
+          "CacheBehaviors": [],
+          "Comment": "helloworld",
+          "DefaultCacheBehavior": {
+            "AllowedMethods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "PATCH",
+              "POST",
+              "PUT"
+            ],
+            "CachedMethods": ["GET", "HEAD"],
+            "Compress": true,
+            "ForwardedValues": {
+              "Headers": ["authorization"],
+              "QueryString": true
+            },
+            "TargetOriginId": "origin1",
+            "ViewerProtocolPolicy": "redirect-to-https"
+          },
+          "DefaultRootObject": "",
+          "Enabled": true,
+          "HttpVersion": "http2",
+          "IPV6Enabled": true,
+          "Logging": {
+            "Bucket": {
+              "Fn::GetAtt": [
+                "helloworldeucentral1testaccountidhelloworldmasterlogs353CCB2B",
+                "RegionalDomainName"
+              ]
+            },
+            "IncludeCookies": false
+          },
+          "Origins": [
+            {
+              "CustomOriginConfig": {
+                "HTTPPort": 80,
+                "HTTPSPort": 443,
+                "OriginKeepaliveTimeout": 5,
+                "OriginProtocolPolicy": "https-only",
+                "OriginReadTimeout": 30,
+                "OriginSSLProtocols": ["TLSv1.2"]
+              },
+              "DomainName": {
+                "Fn::Join": [
+                  "",
+                  [
+                    {
+                      "Ref": "helloworldapiGW689F3CA5"
+                    },
+                    ".execute-api.eu-central-1.",
+                    {
+                      "Ref": "AWS::URLSuffix"
+                    }
+                  ]
+                ]
+              },
+              "Id": "origin1",
+              "OriginPath": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "/",
+                    {
+                      "Ref": "helloworldapiGWDeploymentStageprodFB9CE86D"
+                    }
+                  ]
+                ]
+              }
+            }
+          ],
+          "PriceClass": "PriceClass_100",
+          "ViewerCertificate": {
+            "CloudFrontDefaultCertificate": true
+          }
+        }
+      }
+    },
+    "helloworldeucentral1testaccountidhelloworlditems12A3080B": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketName": "eu-central-1-test-account-id-helloworld-items"
+      },
+      "DeletionPolicy": "Retain"
+    },
+    "helloworldawslambdahelloworldlambdahandler167FE865": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/helloworld-lambda-handler"
+      }
+    },
+    "helloworldhelloworlddatalog1B60649B": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/helloworld/data-log"
+      }
+    }
+  },
+  "Parameters": {
+    "helloworldlambdaCodeS3BucketB9F03973": {
+      "Type": "String",
+      "Description": "S3 bucket for asset \"helloworld/helloworld-lambda/Code\""
+    },
+    "helloworldlambdaCodeS3VersionKey2B24B69A": {
+      "Type": "String",
+      "Description": "S3 key for asset version \"helloworld/helloworld-lambda/Code\""
+    },
+    "helloworldlambdaCodeArtifactHash977CB142": {
+      "Type": "String",
+      "Description": "Artifact hash for asset \"helloworld/helloworld-lambda/Code\""
+    }
+  },
+  "Outputs": {
+    "helloworldapiGWEndpoint2753D94E": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "helloworldapiGW689F3CA5"
+            },
+            ".execute-api.eu-central-1.",
+            {
+              "Ref": "AWS::URLSuffix"
+            },
+            "/",
+            {
+              "Ref": "helloworldapiGWDeploymentStageprodFB9CE86D"
+            },
+            "/"
+          ]
+        ]
+      }
+    }
+  }
+}

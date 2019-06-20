@@ -1,0 +1,1021 @@
+{
+  "Resources": {
+    "helloworldciroleFACAEE50": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "codebuild.",
+                      {
+                        "Ref": "AWS::URLSuffix"
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      }
+    },
+    "helloworldciroleDefaultPolicy38D001FE": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "cloudformation:*",
+                "cloudfront:*",
+                "iam:*",
+                "s3:*",
+                "ssm:GetParameters",
+                "apigateway:*",
+                "lambda:*",
+                "logs:*",
+                "events:*"
+              ],
+              "Effect": "Allow",
+              "Resource": "*"
+            },
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":logs:eu-central-1:",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":log-group:/aws/codebuild/",
+                      {
+                        "Ref": "helloworldciprojecttestB7A87A00"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":logs:eu-central-1:",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":log-group:/aws/codebuild/",
+                      {
+                        "Ref": "helloworldciprojecttestB7A87A00"
+                      },
+                      ":*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+                "s3:PutObject*",
+                "s3:Abort*"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "helloworldcipipelineArtifactsBucketFF0E5486",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "helloworldcipipelineArtifactsBucketFF0E5486",
+                          "Arn"
+                        ]
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:DescribeKey",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "helloworldcipipelineArtifactsBucketEncryptionKey8FF02345",
+                  "Arn"
+                ]
+              }
+            },
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":logs:eu-central-1:",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":log-group:/aws/codebuild/",
+                      {
+                        "Ref": "helloworldciprojectbuild31C7DC3F"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":logs:eu-central-1:",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":log-group:/aws/codebuild/",
+                      {
+                        "Ref": "helloworldciprojectbuild31C7DC3F"
+                      },
+                      ":*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":logs:eu-central-1:",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":log-group:/aws/codebuild/",
+                      {
+                        "Ref": "helloworldciprojectdeploy0CFC5A92"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":logs:eu-central-1:",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":log-group:/aws/codebuild/",
+                      {
+                        "Ref": "helloworldciprojectdeploy0CFC5A92"
+                      },
+                      ":*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":logs:eu-central-1:",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":log-group:/aws/codebuild/",
+                      {
+                        "Ref": "helloworldciprojectend2endtest5E0D27D7"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":logs:eu-central-1:",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":log-group:/aws/codebuild/",
+                      {
+                        "Ref": "helloworldciprojectend2endtest5E0D27D7"
+                      },
+                      ":*"
+                    ]
+                  ]
+                }
+              ]
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "helloworldciroleDefaultPolicy38D001FE",
+        "Roles": [
+          {
+            "Ref": "helloworldciroleFACAEE50"
+          }
+        ]
+      }
+    },
+    "helloworldcipipelineArtifactsBucketEncryptionKey8FF02345": {
+      "Type": "AWS::KMS::Key",
+      "Properties": {
+        "KeyPolicy": {
+          "Statement": [
+            {
+              "Action": [
+                "kms:Create*",
+                "kms:Describe*",
+                "kms:Enable*",
+                "kms:List*",
+                "kms:Put*",
+                "kms:Update*",
+                "kms:Revoke*",
+                "kms:Disable*",
+                "kms:Get*",
+                "kms:Delete*",
+                "kms:ScheduleKeyDeletion",
+                "kms:CancelKeyDeletion"
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":iam::",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":root"
+                    ]
+                  ]
+                }
+              },
+              "Resource": "*"
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:DescribeKey",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*"
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::GetAtt": [
+                    "helloworldcipipelineRole8BB01222",
+                    "Arn"
+                  ]
+                }
+              },
+              "Resource": "*"
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:DescribeKey",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*"
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::GetAtt": [
+                    "helloworldciroleFACAEE50",
+                    "Arn"
+                  ]
+                }
+              },
+              "Resource": "*"
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "DeletionPolicy": "Retain"
+    },
+    "helloworldcipipelineArtifactsBucketFF0E5486": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "KMSMasterKeyID": {
+                  "Fn::GetAtt": [
+                    "helloworldcipipelineArtifactsBucketEncryptionKey8FF02345",
+                    "Arn"
+                  ]
+                },
+                "SSEAlgorithm": "aws:kms"
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Retain"
+    },
+    "helloworldcipipelineRole8BB01222": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "codepipeline.",
+                      {
+                        "Ref": "AWS::URLSuffix"
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      }
+    },
+    "helloworldcipipelineRoleDefaultPolicyD1FB163D": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+                "s3:PutObject*",
+                "s3:Abort*"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "helloworldcipipelineArtifactsBucketFF0E5486",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "helloworldcipipelineArtifactsBucketFF0E5486",
+                          "Arn"
+                        ]
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:DescribeKey",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "helloworldcipipelineArtifactsBucketEncryptionKey8FF02345",
+                  "Arn"
+                ]
+              }
+            },
+            {
+              "Action": [
+                "codebuild:BatchGetBuilds",
+                "codebuild:StartBuild",
+                "codebuild:StopBuild"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "helloworldciprojecttestB7A87A00",
+                  "Arn"
+                ]
+              }
+            },
+            {
+              "Action": [
+                "codebuild:BatchGetBuilds",
+                "codebuild:StartBuild",
+                "codebuild:StopBuild"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "helloworldciprojectbuild31C7DC3F",
+                  "Arn"
+                ]
+              }
+            },
+            {
+              "Action": [
+                "codebuild:BatchGetBuilds",
+                "codebuild:StartBuild",
+                "codebuild:StopBuild"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "helloworldciprojectdeploy0CFC5A92",
+                  "Arn"
+                ]
+              }
+            },
+            {
+              "Action": [
+                "codebuild:BatchGetBuilds",
+                "codebuild:StartBuild",
+                "codebuild:StopBuild"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "helloworldciprojectend2endtest5E0D27D7",
+                  "Arn"
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "helloworldcipipelineRoleDefaultPolicyD1FB163D",
+        "Roles": [
+          {
+            "Ref": "helloworldcipipelineRole8BB01222"
+          }
+        ]
+      }
+    },
+    "helloworldcipipeline5801B693": {
+      "Type": "AWS::CodePipeline::Pipeline",
+      "Properties": {
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "helloworldcipipelineRole8BB01222",
+            "Arn"
+          ]
+        },
+        "Stages": [
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Source",
+                  "Owner": "ThirdParty",
+                  "Provider": "GitHub",
+                  "Version": "1"
+                },
+                "Configuration": {
+                  "Owner": "me",
+                  "Repo": "test-repo",
+                  "Branch": "master",
+                  "OAuthToken": "Token123",
+                  "PollForSourceChanges": false
+                },
+                "InputArtifacts": [],
+                "Name": "helloworld-ci-github-source",
+                "OutputArtifacts": [
+                  {
+                    "Name": "source"
+                  }
+                ],
+                "RunOrder": 1
+              }
+            ],
+            "Name": "source"
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1"
+                },
+                "Configuration": {
+                  "ProjectName": {
+                    "Ref": "helloworldciprojecttestB7A87A00"
+                  }
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "source"
+                  }
+                ],
+                "Name": "test",
+                "OutputArtifacts": [
+                  {
+                    "Name": "test"
+                  }
+                ],
+                "RunOrder": 1
+              }
+            ],
+            "Name": "test"
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1"
+                },
+                "Configuration": {
+                  "ProjectName": {
+                    "Ref": "helloworldciprojectbuild31C7DC3F"
+                  }
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "source"
+                  }
+                ],
+                "Name": "build",
+                "OutputArtifacts": [
+                  {
+                    "Name": "build"
+                  },
+                  {
+                    "Name": "dist"
+                  }
+                ],
+                "RunOrder": 1
+              }
+            ],
+            "Name": "build"
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1"
+                },
+                "Configuration": {
+                  "ProjectName": {
+                    "Ref": "helloworldciprojectdeploy0CFC5A92"
+                  },
+                  "PrimarySource": "source"
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "source"
+                  },
+                  {
+                    "Name": "dist"
+                  }
+                ],
+                "Name": "deploy",
+                "OutputArtifacts": [
+                  {
+                    "Name": "deploy"
+                  },
+                  {
+                    "Name": "cfurl"
+                  }
+                ],
+                "RunOrder": 1
+              }
+            ],
+            "Name": "deploy"
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1"
+                },
+                "Configuration": {
+                  "ProjectName": {
+                    "Ref": "helloworldciprojectend2endtest5E0D27D7"
+                  },
+                  "PrimarySource": "source"
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "source"
+                  },
+                  {
+                    "Name": "cfurl"
+                  }
+                ],
+                "Name": "end2end-test",
+                "OutputArtifacts": [
+                  {
+                    "Name": "end2end-test"
+                  }
+                ],
+                "RunOrder": 1
+              }
+            ],
+            "Name": "end2end-test"
+          }
+        ],
+        "ArtifactStore": {
+          "EncryptionKey": {
+            "Id": {
+              "Fn::GetAtt": [
+                "helloworldcipipelineArtifactsBucketEncryptionKey8FF02345",
+                "Arn"
+              ]
+            },
+            "Type": "KMS"
+          },
+          "Location": {
+            "Ref": "helloworldcipipelineArtifactsBucketFF0E5486"
+          },
+          "Type": "S3"
+        },
+        "Name": "helloworld-ci-pipeline"
+      },
+      "DependsOn": [
+        "helloworldcipipelineRoleDefaultPolicyD1FB163D",
+        "helloworldcipipelineRole8BB01222"
+      ]
+    },
+    "helloworldcipipelinesourcehelloworldcigithubsourceWebhookResource3C32B555": {
+      "Type": "AWS::CodePipeline::Webhook",
+      "Properties": {
+        "Authentication": "GITHUB_HMAC",
+        "AuthenticationConfiguration": {
+          "SecretToken": "Token123"
+        },
+        "Filters": [
+          {
+            "JsonPath": "$.ref",
+            "MatchEquals": "refs/heads/{Branch}"
+          }
+        ],
+        "TargetAction": "helloworld-ci-github-source",
+        "TargetPipeline": {
+          "Ref": "helloworldcipipeline5801B693"
+        },
+        "TargetPipelineVersion": 1,
+        "RegisterWithThirdParty": true
+      }
+    },
+    "helloworldciprojecttestB7A87A00": {
+      "Type": "AWS::CodeBuild::Project",
+      "Properties": {
+        "Artifacts": {
+          "Type": "CODEPIPELINE"
+        },
+        "Environment": {
+          "ComputeType": "BUILD_GENERAL1_SMALL",
+          "EnvironmentVariables": [
+            {
+              "Name": "BRANCH_NAME",
+              "Type": "PLAINTEXT",
+              "Value": "master"
+            },
+            {
+              "Name": "DEPLOY_MODE",
+              "Type": "PLAINTEXT",
+              "Value": "prod"
+            },
+            {
+              "Name": "PIPELINE_DESC",
+              "Type": "PLAINTEXT",
+              "Value": "Bootstraping pipeline"
+            },
+            {
+              "Name": "PIPELINE_STATE",
+              "Type": "PLAINTEXT",
+              "Value": "pending"
+            },
+            {
+              "Name": "STAGE",
+              "Type": "PLAINTEXT",
+              "Value": "prod"
+            },
+            {
+              "Name": "TARGET_URL",
+              "Type": "PLAINTEXT",
+              "Value": "https://eu-central-1.console.aws.amazon.com/codesuite/codepipeline/pipelines/helloworld-ci-pipeline/view"
+            },
+            {
+              "Name": "TEST_PIPELINE_CONTEXT",
+              "Type": "PLAINTEXT",
+              "Value": "continuous-integration/seagull"
+            }
+          ],
+          "Image": "aws/codebuild/nodejs:8.11.0",
+          "PrivilegedMode": false,
+          "Type": "LINUX_CONTAINER"
+        },
+        "ServiceRole": {
+          "Fn::GetAtt": [
+            "helloworldciroleFACAEE50",
+            "Arn"
+          ]
+        },
+        "Source": {
+          "BuildSpec": "{\n  \"env\": {\n    \"parameter-store\": {\n      \"ACCESS_TOKEN\": \"helloworld-ci-github\"\n    },\n    \"variables\": {\n      \"BRANCH_NAME\": \"master\",\n      \"DEPLOY_MODE\": \"prod\",\n      \"PIPELINE_DESC\": \"Bootstraping pipeline\",\n      \"PIPELINE_STATE\": \"pending\",\n      \"STAGE\": \"prod\",\n      \"TARGET_URL\": \"https://eu-central-1.console.aws.amazon.com/codesuite/codepipeline/pipelines/helloworld-ci-pipeline/view\",\n      \"TEST_PIPELINE_CONTEXT\": \"continuous-integration/seagull\"\n    }\n  },\n  \"phases\": {\n    \"build\": {\n      \"commands\": [],\n      \"finally\": []\n    },\n    \"install\": {\n      \"commands\": [\n        \"curl -s -g -X POST \\\"https://api.github.com/repos/me/test-repo/statuses/$CODEBUILD_RESOLVED_SOURCE_VERSION?access_token=$ACCESS_TOKEN\\\" -H 'Content-Type: application/json' -d '{ \\\"state\\\": \\\"'$PIPELINE_STATE'\\\", \\\"target_url\\\": \\\"'$TARGET_URL'\\\", \\\"description\\\": \\\"'\\\"$PIPELINE_DESC\\\"' - Seagull Test CI\\\", \\\"context\\\": \\\"'$TEST_PIPELINE_CONTEXT'\\\"}' > /dev/null\",\n        \"export PIPELINE_DESC='npm i -g npm'; if npm i -g npm; then echo \\\"success at npm i -g npm!\\\"; else export PIPELINE_STATE=\\\"failure\\\"; fi\",\n        \"if [ \\\"$PIPELINE_STATE\\\" = \\\"failure\\\" ]; then exit 1; fi\",\n        \"export PIPELINE_DESC='npm ci'; if npm ci; then echo \\\"success at npm ci!\\\"; else export PIPELINE_STATE=\\\"failure\\\"; fi\",\n        \"if [ \\\"$PIPELINE_STATE\\\" = \\\"failure\\\" ]; then exit 1; fi\"\n      ],\n      \"finally\": [\n        \"curl -s -g -X POST \\\"https://api.github.com/repos/me/test-repo/statuses/$CODEBUILD_RESOLVED_SOURCE_VERSION?access_token=$ACCESS_TOKEN\\\" -H 'Content-Type: application/json' -d '{ \\\"state\\\": \\\"'$PIPELINE_STATE'\\\", \\\"target_url\\\": \\\"'$TARGET_URL'\\\", \\\"description\\\": \\\"'\\\"$PIPELINE_DESC\\\"' - Seagull Test CI\\\", \\\"context\\\": \\\"'$TEST_PIPELINE_CONTEXT'\\\"}' > /dev/null\"\n      ]\n    },\n    \"post_build\": {\n      \"commands\": [\n        \"export PIPELINE_DESC='npm run test'; if npm run test; then echo \\\"success at npm run test!\\\"; else export PIPELINE_STATE=\\\"failure\\\"; fi\"\n      ],\n      \"finally\": [\n        \"curl -s -g -X POST \\\"https://api.github.com/repos/me/test-repo/statuses/$CODEBUILD_RESOLVED_SOURCE_VERSION?access_token=$ACCESS_TOKEN\\\" -H 'Content-Type: application/json' -d '{ \\\"state\\\": \\\"'$PIPELINE_STATE'\\\", \\\"target_url\\\": \\\"'$TARGET_URL'\\\", \\\"description\\\": \\\"'\\\"$PIPELINE_DESC\\\"' - Seagull Test CI\\\", \\\"context\\\": \\\"'$TEST_PIPELINE_CONTEXT'\\\"}' > /dev/null\"\n      ]\n    }\n  },\n  \"version\": \"0.2\"\n}",
+          "Type": "CODEPIPELINE"
+        }
+      }
+    },
+    "helloworldciprojectbuild31C7DC3F": {
+      "Type": "AWS::CodeBuild::Project",
+      "Properties": {
+        "Artifacts": {
+          "Type": "CODEPIPELINE"
+        },
+        "Environment": {
+          "ComputeType": "BUILD_GENERAL1_SMALL",
+          "EnvironmentVariables": [
+            {
+              "Name": "BRANCH_NAME",
+              "Type": "PLAINTEXT",
+              "Value": "master"
+            },
+            {
+              "Name": "DEPLOY_MODE",
+              "Type": "PLAINTEXT",
+              "Value": "prod"
+            },
+            {
+              "Name": "PIPELINE_DESC",
+              "Type": "PLAINTEXT",
+              "Value": "Bootstraping pipeline"
+            },
+            {
+              "Name": "PIPELINE_STATE",
+              "Type": "PLAINTEXT",
+              "Value": "pending"
+            },
+            {
+              "Name": "STAGE",
+              "Type": "PLAINTEXT",
+              "Value": "prod"
+            },
+            {
+              "Name": "TARGET_URL",
+              "Type": "PLAINTEXT",
+              "Value": "https://eu-central-1.console.aws.amazon.com/codesuite/codepipeline/pipelines/helloworld-ci-pipeline/view"
+            },
+            {
+              "Name": "TEST_PIPELINE_CONTEXT",
+              "Type": "PLAINTEXT",
+              "Value": "continuous-integration/seagull"
+            }
+          ],
+          "Image": "aws/codebuild/nodejs:8.11.0",
+          "PrivilegedMode": false,
+          "Type": "LINUX_CONTAINER"
+        },
+        "ServiceRole": {
+          "Fn::GetAtt": [
+            "helloworldciroleFACAEE50",
+            "Arn"
+          ]
+        },
+        "Source": {
+          "BuildSpec": "{\n  \"artifacts\": {\n    \"secondary-artifacts\": {\n      \"build\": {\n        \"files\": \"**/*\",\n        \"name\": \"build\"\n      },\n      \"dist\": {\n        \"files\": [\n          \"dist/**/*\"\n        ],\n        \"name\": \"dist\"\n      }\n    }\n  },\n  \"env\": {\n    \"parameter-store\": {\n      \"ACCESS_TOKEN\": \"helloworld-ci-github\"\n    },\n    \"variables\": {\n      \"BRANCH_NAME\": \"master\",\n      \"DEPLOY_MODE\": \"prod\",\n      \"PIPELINE_DESC\": \"Bootstraping pipeline\",\n      \"PIPELINE_STATE\": \"pending\",\n      \"STAGE\": \"prod\",\n      \"TARGET_URL\": \"https://eu-central-1.console.aws.amazon.com/codesuite/codepipeline/pipelines/helloworld-ci-pipeline/view\",\n      \"TEST_PIPELINE_CONTEXT\": \"continuous-integration/seagull\"\n    }\n  },\n  \"phases\": {\n    \"build\": {\n      \"commands\": [\n        \"export PIPELINE_DESC='npm run build'; if npm run build; then echo \\\"success at npm run build!\\\"; else export PIPELINE_STATE=\\\"failure\\\"; fi\"\n      ],\n      \"finally\": [\n        \"curl -s -g -X POST \\\"https://api.github.com/repos/me/test-repo/statuses/$CODEBUILD_RESOLVED_SOURCE_VERSION?access_token=$ACCESS_TOKEN\\\" -H 'Content-Type: application/json' -d '{ \\\"state\\\": \\\"'$PIPELINE_STATE'\\\", \\\"target_url\\\": \\\"'$TARGET_URL'\\\", \\\"description\\\": \\\"'\\\"$PIPELINE_DESC\\\"' - Seagull Test CI\\\", \\\"context\\\": \\\"'$TEST_PIPELINE_CONTEXT'\\\"}' > /dev/null\"\n      ]\n    },\n    \"install\": {\n      \"commands\": [\n        \"curl -s -g -X POST \\\"https://api.github.com/repos/me/test-repo/statuses/$CODEBUILD_RESOLVED_SOURCE_VERSION?access_token=$ACCESS_TOKEN\\\" -H 'Content-Type: application/json' -d '{ \\\"state\\\": \\\"'$PIPELINE_STATE'\\\", \\\"target_url\\\": \\\"'$TARGET_URL'\\\", \\\"description\\\": \\\"'\\\"$PIPELINE_DESC\\\"' - Seagull Test CI\\\", \\\"context\\\": \\\"'$TEST_PIPELINE_CONTEXT'\\\"}' > /dev/null\",\n        \"export PIPELINE_DESC='npm i -g npm'; if npm i -g npm; then echo \\\"success at npm i -g npm!\\\"; else export PIPELINE_STATE=\\\"failure\\\"; fi\",\n        \"if [ \\\"$PIPELINE_STATE\\\" = \\\"failure\\\" ]; then exit 1; fi\",\n        \"export PIPELINE_DESC='npm ci'; if npm ci; then echo \\\"success at npm ci!\\\"; else export PIPELINE_STATE=\\\"failure\\\"; fi\",\n        \"if [ \\\"$PIPELINE_STATE\\\" = \\\"failure\\\" ]; then exit 1; fi\"\n      ],\n      \"finally\": [\n        \"curl -s -g -X POST \\\"https://api.github.com/repos/me/test-repo/statuses/$CODEBUILD_RESOLVED_SOURCE_VERSION?access_token=$ACCESS_TOKEN\\\" -H 'Content-Type: application/json' -d '{ \\\"state\\\": \\\"'$PIPELINE_STATE'\\\", \\\"target_url\\\": \\\"'$TARGET_URL'\\\", \\\"description\\\": \\\"'\\\"$PIPELINE_DESC\\\"' - Seagull Test CI\\\", \\\"context\\\": \\\"'$TEST_PIPELINE_CONTEXT'\\\"}' > /dev/null\"\n      ]\n    },\n    \"post_build\": {\n      \"commands\": []\n    }\n  },\n  \"version\": \"0.2\"\n}",
+          "Type": "CODEPIPELINE"
+        }
+      }
+    },
+    "helloworldciprojectdeploy0CFC5A92": {
+      "Type": "AWS::CodeBuild::Project",
+      "Properties": {
+        "Artifacts": {
+          "Type": "CODEPIPELINE"
+        },
+        "Environment": {
+          "ComputeType": "BUILD_GENERAL1_SMALL",
+          "EnvironmentVariables": [
+            {
+              "Name": "BRANCH_NAME",
+              "Type": "PLAINTEXT",
+              "Value": "master"
+            },
+            {
+              "Name": "DEPLOY_MODE",
+              "Type": "PLAINTEXT",
+              "Value": "prod"
+            },
+            {
+              "Name": "PIPELINE_DESC",
+              "Type": "PLAINTEXT",
+              "Value": "Bootstraping pipeline"
+            },
+            {
+              "Name": "PIPELINE_STATE",
+              "Type": "PLAINTEXT",
+              "Value": "pending"
+            },
+            {
+              "Name": "STAGE",
+              "Type": "PLAINTEXT",
+              "Value": "prod"
+            },
+            {
+              "Name": "TARGET_URL",
+              "Type": "PLAINTEXT",
+              "Value": "https://eu-central-1.console.aws.amazon.com/codesuite/codepipeline/pipelines/helloworld-ci-pipeline/view"
+            },
+            {
+              "Name": "TEST_PIPELINE_CONTEXT",
+              "Type": "PLAINTEXT",
+              "Value": "continuous-integration/seagull"
+            }
+          ],
+          "Image": "aws/codebuild/nodejs:8.11.0",
+          "PrivilegedMode": false,
+          "Type": "LINUX_CONTAINER"
+        },
+        "ServiceRole": {
+          "Fn::GetAtt": [
+            "helloworldciroleFACAEE50",
+            "Arn"
+          ]
+        },
+        "Source": {
+          "BuildSpec": "{\n  \"artifacts\": {\n    \"secondary-artifacts\": {\n      \"cfurl\": {\n        \"files\": [\n          \"/tmp/cfurl.txt\"\n        ],\n        \"name\": \"cfurl\"\n      },\n      \"deploy\": {\n        \"files\": \"**/*\",\n        \"name\": \"deploy\"\n      }\n    }\n  },\n  \"env\": {\n    \"parameter-store\": {\n      \"ACCESS_TOKEN\": \"helloworld-ci-github\"\n    },\n    \"variables\": {\n      \"BRANCH_NAME\": \"master\",\n      \"DEPLOY_MODE\": \"prod\",\n      \"PIPELINE_DESC\": \"Bootstraping pipeline\",\n      \"PIPELINE_STATE\": \"pending\",\n      \"STAGE\": \"prod\",\n      \"TARGET_URL\": \"https://eu-central-1.console.aws.amazon.com/codesuite/codepipeline/pipelines/helloworld-ci-pipeline/view\",\n      \"TEST_PIPELINE_CONTEXT\": \"continuous-integration/seagull\"\n    }\n  },\n  \"phases\": {\n    \"build\": {\n      \"commands\": [],\n      \"finally\": []\n    },\n    \"install\": {\n      \"commands\": [\n        \"curl -s -g -X POST \\\"https://api.github.com/repos/me/test-repo/statuses/$CODEBUILD_RESOLVED_SOURCE_VERSION?access_token=$ACCESS_TOKEN\\\" -H 'Content-Type: application/json' -d '{ \\\"state\\\": \\\"'$PIPELINE_STATE'\\\", \\\"target_url\\\": \\\"'$TARGET_URL'\\\", \\\"description\\\": \\\"'\\\"$PIPELINE_DESC\\\"' - Seagull Test CI\\\", \\\"context\\\": \\\"'$TEST_PIPELINE_CONTEXT'\\\"}' > /dev/null\",\n        \"export PIPELINE_DESC='npm i -g npm'; if npm i -g npm; then echo \\\"success at npm i -g npm!\\\"; else export PIPELINE_STATE=\\\"failure\\\"; fi\",\n        \"if [ \\\"$PIPELINE_STATE\\\" = \\\"failure\\\" ]; then exit 1; fi\",\n        \"export PIPELINE_DESC='npm ci'; if npm ci; then echo \\\"success at npm ci!\\\"; else export PIPELINE_STATE=\\\"failure\\\"; fi\",\n        \"if [ \\\"$PIPELINE_STATE\\\" = \\\"failure\\\" ]; then exit 1; fi\"\n      ],\n      \"finally\": [\n        \"curl -s -g -X POST \\\"https://api.github.com/repos/me/test-repo/statuses/$CODEBUILD_RESOLVED_SOURCE_VERSION?access_token=$ACCESS_TOKEN\\\" -H 'Content-Type: application/json' -d '{ \\\"state\\\": \\\"'$PIPELINE_STATE'\\\", \\\"target_url\\\": \\\"'$TARGET_URL'\\\", \\\"description\\\": \\\"'\\\"$PIPELINE_DESC\\\"' - Seagull Test CI\\\", \\\"context\\\": \\\"'$TEST_PIPELINE_CONTEXT'\\\"}' > /dev/null\"\n      ]\n    },\n    \"post_build\": {\n      \"commands\": [\n        \"export PIPELINE_DESC='cp -Rf $CODEBUILD_SRC_DIR_dist/dist dist'; if cp -Rf $CODEBUILD_SRC_DIR_dist/dist dist; then echo \\\"success at cp -Rf $CODEBUILD_SRC_DIR_dist/dist dist!\\\"; else export PIPELINE_STATE=\\\"failure\\\"; fi\",\n        \"if [ \\\"$PIPELINE_STATE\\\" = \\\"failure\\\" ]; then exit 1; fi\",\n        \"export PIPELINE_DESC='npm run deploy'; if npm run deploy; then echo \\\"success at npm run deploy!\\\"; else export PIPELINE_STATE=\\\"failure\\\"; fi\",\n        \"if [ \\\"$PIPELINE_STATE\\\" = \\\"failure\\\" ]; then exit 1; fi\",\n        \"curl -s -g -X POST \\\"https://api.github.com/repos/me/test-repo/statuses/$CODEBUILD_RESOLVED_SOURCE_VERSION?access_token=$ACCESS_TOKEN\\\" -H 'Content-Type: application/json' -d '{ \\\"state\\\": \\\"success\\\", \\\"target_url\\\": \\\"'\\\"https://$(cat /tmp/cfurl.txt)\\\"'\\\", \\\"description\\\": \\\"repository was successfully deployed\\\", \\\"context\\\": \\\"continuous-integration/seagull-deployment\\\"}' > /dev/null\"\n      ],\n      \"finally\": [\n        \"curl -s -g -X POST \\\"https://api.github.com/repos/me/test-repo/statuses/$CODEBUILD_RESOLVED_SOURCE_VERSION?access_token=$ACCESS_TOKEN\\\" -H 'Content-Type: application/json' -d '{ \\\"state\\\": \\\"'$PIPELINE_STATE'\\\", \\\"target_url\\\": \\\"'$TARGET_URL'\\\", \\\"description\\\": \\\"'\\\"$PIPELINE_DESC\\\"' - Seagull Test CI\\\", \\\"context\\\": \\\"'$TEST_PIPELINE_CONTEXT'\\\"}' > /dev/null\"\n      ]\n    }\n  },\n  \"version\": \"0.2\"\n}",
+          "Type": "CODEPIPELINE"
+        }
+      }
+    },
+    "helloworldciprojectend2endtest5E0D27D7": {
+      "Type": "AWS::CodeBuild::Project",
+      "Properties": {
+        "Artifacts": {
+          "Type": "CODEPIPELINE"
+        },
+        "Environment": {
+          "ComputeType": "BUILD_GENERAL1_SMALL",
+          "EnvironmentVariables": [
+            {
+              "Name": "BRANCH_NAME",
+              "Type": "PLAINTEXT",
+              "Value": "master"
+            },
+            {
+              "Name": "DEPLOY_MODE",
+              "Type": "PLAINTEXT",
+              "Value": "prod"
+            },
+            {
+              "Name": "PIPELINE_DESC",
+              "Type": "PLAINTEXT",
+              "Value": "Bootstraping pipeline"
+            },
+            {
+              "Name": "PIPELINE_STATE",
+              "Type": "PLAINTEXT",
+              "Value": "pending"
+            },
+            {
+              "Name": "STAGE",
+              "Type": "PLAINTEXT",
+              "Value": "prod"
+            },
+            {
+              "Name": "TARGET_URL",
+              "Type": "PLAINTEXT",
+              "Value": "https://eu-central-1.console.aws.amazon.com/codesuite/codepipeline/pipelines/helloworld-ci-pipeline/view"
+            },
+            {
+              "Name": "TEST_PIPELINE_CONTEXT",
+              "Type": "PLAINTEXT",
+              "Value": "continuous-integration/seagull"
+            }
+          ],
+          "Image": "aws/codebuild/nodejs:8.11.0",
+          "PrivilegedMode": false,
+          "Type": "LINUX_CONTAINER"
+        },
+        "ServiceRole": {
+          "Fn::GetAtt": [
+            "helloworldciroleFACAEE50",
+            "Arn"
+          ]
+        },
+        "Source": {
+          "BuildSpec": "{\n  \"env\": {\n    \"parameter-store\": {\n      \"ACCESS_TOKEN\": \"helloworld-ci-github\"\n    },\n    \"variables\": {\n      \"BRANCH_NAME\": \"master\",\n      \"DEPLOY_MODE\": \"prod\",\n      \"PIPELINE_DESC\": \"Bootstraping pipeline\",\n      \"PIPELINE_STATE\": \"pending\",\n      \"STAGE\": \"prod\",\n      \"TARGET_URL\": \"https://eu-central-1.console.aws.amazon.com/codesuite/codepipeline/pipelines/helloworld-ci-pipeline/view\",\n      \"TEST_PIPELINE_CONTEXT\": \"continuous-integration/seagull\"\n    }\n  },\n  \"phases\": {\n    \"build\": {\n      \"commands\": [],\n      \"finally\": []\n    },\n    \"install\": {\n      \"commands\": [\n        \"curl -s -g -X POST \\\"https://api.github.com/repos/me/test-repo/statuses/$CODEBUILD_RESOLVED_SOURCE_VERSION?access_token=$ACCESS_TOKEN\\\" -H 'Content-Type: application/json' -d '{ \\\"state\\\": \\\"'$PIPELINE_STATE'\\\", \\\"target_url\\\": \\\"'$TARGET_URL'\\\", \\\"description\\\": \\\"'\\\"$PIPELINE_DESC\\\"' - Seagull Test CI\\\", \\\"context\\\": \\\"'$TEST_PIPELINE_CONTEXT'\\\"}' > /dev/null\",\n        \"export PIPELINE_DESC='npm i -g npm'; if npm i -g npm; then echo \\\"success at npm i -g npm!\\\"; else export PIPELINE_STATE=\\\"failure\\\"; fi\",\n        \"if [ \\\"$PIPELINE_STATE\\\" = \\\"failure\\\" ]; then exit 1; fi\",\n        \"export PIPELINE_DESC='npm ci'; if npm ci; then echo \\\"success at npm ci!\\\"; else export PIPELINE_STATE=\\\"failure\\\"; fi\",\n        \"if [ \\\"$PIPELINE_STATE\\\" = \\\"failure\\\" ]; then exit 1; fi\"\n      ],\n      \"finally\": [\n        \"curl -s -g -X POST \\\"https://api.github.com/repos/me/test-repo/statuses/$CODEBUILD_RESOLVED_SOURCE_VERSION?access_token=$ACCESS_TOKEN\\\" -H 'Content-Type: application/json' -d '{ \\\"state\\\": \\\"'$PIPELINE_STATE'\\\", \\\"target_url\\\": \\\"'$TARGET_URL'\\\", \\\"description\\\": \\\"'\\\"$PIPELINE_DESC\\\"' - Seagull Test CI\\\", \\\"context\\\": \\\"'$TEST_PIPELINE_CONTEXT'\\\"}' > /dev/null\"\n      ]\n    },\n    \"post_build\": {\n      \"commands\": [\n        \"export CFURL=\\\"https://$(cat $CODEBUILD_SRC_DIR_cfurl/tmp/cfurl.txt;)\\\"; export TARGET_URL=$CFURL\",\n        \"echo \\\"Cloudfront URL: $CFURL\\\"\",\n        \"export PIPELINE_DESC='npm run test:e2e'; if npm run test:e2e; then echo \\\"success at npm run test:e2e!\\\"; else export PIPELINE_STATE=\\\"failure\\\"; fi\",\n        \"if [ \\\"$PIPELINE_STATE\\\" = \\\"failure\\\" ]; then exit 1; fi\",\n        \"export PIPELINE_STATE=\\\"success\\\";export PIPELINE_DESC=\\\"successful\\\";\"\n      ],\n      \"finally\": [\n        \"curl -s -g -X POST \\\"https://api.github.com/repos/me/test-repo/statuses/$CODEBUILD_RESOLVED_SOURCE_VERSION?access_token=$ACCESS_TOKEN\\\" -H 'Content-Type: application/json' -d '{ \\\"state\\\": \\\"'$PIPELINE_STATE'\\\", \\\"target_url\\\": \\\"'$TARGET_URL'\\\", \\\"description\\\": \\\"'\\\"$PIPELINE_DESC\\\"' - Seagull Test CI\\\", \\\"context\\\": \\\"'$TEST_PIPELINE_CONTEXT'\\\"}' > /dev/null\"\n      ]\n    }\n  },\n  \"version\": \"0.2\"\n}",
+          "Type": "CODEPIPELINE"
+        }
+      }
+    }
+  }
+}
