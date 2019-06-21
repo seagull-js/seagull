@@ -10,7 +10,9 @@ export function getSourceConfig(params: StageConfigParams, index: number) {
     oauthToken: params.ssmSecret.secret,
     owner: params.owner,
     pipeline: params.pipeline,
+    poll: params.poll,
     repo: params.repo,
+
   }
 }
 

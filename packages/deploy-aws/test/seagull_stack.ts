@@ -202,6 +202,7 @@ export class Test extends BasicTest {
       oauthToken: new Secret('12345678'),
       owner: 'me',
       pipeline,
+      poll: false,
       repo: 'test-project',
     }
     stack.addSourceStage(sourceName, sourceConfig)

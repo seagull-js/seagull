@@ -56,8 +56,6 @@ export class SeagullProject {
   async createSeagullApp() {
     // preparations for deployment
     const name = this.getAppName()
-    const sdk = new SDK({})
-    const account = this.account || (await sdk.defaultAccount())
     const itemBucketName = await this.getBucketName('items')
     const logBucketName = await this.getBucketName('logs', true)
     const actions: string[] = [
@@ -71,19 +69,13 @@ export class SeagullProject {
       'cloudwatch:*',
     ]
     const aliasConfig = await aws.checkForAliasConfig(this.pkgJson, this.acm)
-    const appProps = {
-      addAssets: true,
-      appPath: this.appPath,
-      itemsBucket: itemBucketName,
-      projectName: name,
-      stackProps: { env: { account, region: this.region } },
-    }
+
 
     // create the asset folder
     await addResources(this.appPath, itemBucketName)
 
     // construct the stack and the app
-    const app = new SeagullApp(appProps)
+    const app = await this.createBareApp()
     const role = app.stack.addIAMRole('role', 'lambda.amazonaws.com', actions)
     app.role = role
     const env = await getEnv(name, this.appPath, this.stage, logBucketName)
@@ -104,6 +96,18 @@ export class SeagullProject {
     cronJson.forEach(addRule)
 
     return app
+  }
+
+  async createBareApp() {
+    const account = this.account || (await new SDK({}).defaultAccount())
+    const appProps = {
+      addAssets: true,
+      appPath: this.appPath,
+      itemsBucket: await this.getBucketName('items'),
+      projectName: this.getAppName(),
+      stackProps: { env: { account, region: this.region } },
+    }
+    return new SeagullApp(appProps)
   }
 
   async customizeStack(app: SeagullApp) {
@@ -134,7 +138,7 @@ export class SeagullProject {
 
   async destroyProject() {
     this.validate()
-    const app = await this.createSeagullApp()
+    const app = await this.createBareApp()
     await app.destroyStack()
   }
 

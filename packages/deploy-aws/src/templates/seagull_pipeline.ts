@@ -3,11 +3,13 @@ import { handleSSMSecret, SSMHandler } from '../aws_sdk_handler'
 import * as lib from '../lib'
 import { SeagullApp } from '../seagull_app'
 import { setCredsByProfile } from '../set_aws_credentials'
+import { StageConfigParams } from '../types';
 
 interface SeagullPipelineProps {
   appPath: string
   branch: string
   githubToken?: string
+  poll: boolean,
   profile: string
   owner?: string
   region: string
@@ -23,6 +25,7 @@ export class SeagullPipeline {
   appPath: string
   branch: string
   owner?: string
+  poll: boolean
   profile: string
   region: string
   repository?: string
@@ -36,6 +39,7 @@ export class SeagullPipeline {
     this.appPath = props.appPath
     this.branch = props.branch
     this.stage = props.stage
+    this.poll = props.poll
     this.profile = props.profile
     this.owner = props.owner
     this.region = props.region
@@ -91,11 +95,12 @@ export class SeagullPipeline {
     const pipelineDomain = `https://${this.region}.console.aws.amazon.com`
     const pipelinePath = `/codesuite/codepipeline/pipelines/${pipeline.id}/view`
     const pipelineLink = `${pipelineDomain}${pipelinePath}`
-    const stageConfigParams = {
+    const stageConfigParams: StageConfigParams = {
       branch: gitData.branch,
       owner: gitData.owner,
       pipeline,
       pipelineLink,
+      poll: this.poll,
       repo: gitData.repo,
       role,
       ssmSecret,
