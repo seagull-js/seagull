@@ -8,6 +8,11 @@
 
 ### Patch Changes
 
+## 10.5.0
+
+- @seagull/deploy-aws -> seagull-destroy-pipeline does not need a seagull-build to run correctly
+- @seagull/deploy-aws -> seagull-create-pipeline allows now to use polling for github sources, when USE_POLL=true is set. This allows to avoid the webhooks problem
+
 ## 10.3.2
 
 - @seagull/pages -> react hooks fixed
