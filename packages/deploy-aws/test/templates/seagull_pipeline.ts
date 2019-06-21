@@ -22,6 +22,7 @@ export class Test extends BasicTest {
       githubToken: 'Token123',
       handlers: { ssmHandler: new TestSSMHandler({ Token123: '123' }) },
       owner: 'me',
+      poll: false,
       profile: 'default',
       region: 'eu-central-1',
       repository: 'test-repo',
