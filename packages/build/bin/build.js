@@ -26,7 +26,7 @@ const opts = {
   stage: getArgv('--stage', process.env.STAGE),
   compatible: getArgv('--compatible', true),
   optimizeRuntime: getArgv('--optimize-runtime', true),
-  optimizeBundle: getArgv('--optimize-bundle', false),
+  optimizeBundle: getArgv('--optimize-bundle', true),
   typeCheck: getArgv('--type-check', true),
 }
 
