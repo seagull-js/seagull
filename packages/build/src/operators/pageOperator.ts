@@ -6,6 +6,7 @@ import { Operator, Wiring } from './operator'
 export class PageOperator extends Operator {
   static StartEvent = Symbol('Page Operator start Event')
   pages: PageService[] = []
+  backlog: string[] = []
   bundled = new Set<string>()
   bundleTimer?: [number, number]
   config: Partial<PageService['config']> = {}
@@ -19,17 +20,20 @@ export class PageOperator extends Operator {
 
   bundleAll = () => {
     this.bundleTimer = process.hrtime()
-    listPages(process.cwd()).map(this.handleBundleRequested)
+    listPages(process.cwd()).forEach(this.addPage)
+    this.bundleNext()
   }
   addPage = (page: string) =>
-    this.pages.push(new PageService(this, { page, ...this.config }))
+    this.pages.push(new PageService(this, { page, ...this.config })) &&
+    this.backlog.push(page)
 
-  handleBundleRequested = (page: string) =>
-    this.addPage(page) && this.emit(E.BundlePageEvent, page)
+  handleBundleRequested = (page: string) => this.emit(E.BundlePageEvent, page)
+  bundleNext = () => this.handleBundleRequested(this.backlog.pop()!)
 
   handleBundled = (page: string) => {
     this.bundled.add(page)
     if (this.bundled.size !== this.pages.length) {
+      this.bundleNext()
       return
     }
     this.parent!.emit(PageOperator.DoneEvent)
