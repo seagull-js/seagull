@@ -8,6 +8,10 @@
 
 ### Patch Changes
 
+## 10.6.0
+
+- @seagull/build -> made build sequential, because it ran into a memory problem
+
 ## 10.5.0
 
 - @seagull/deploy-aws -> seagull-destroy-pipeline does not need a seagull-build to run correctly
