@@ -1,6 +1,6 @@
 {
   "name": "@seagull/services-s3",
-  "version": "10.5.0",
+  "version": "10.6.0",
   "description": "S3 services for the seagull framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -32,15 +32,15 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/testing": "^10.5.0",
-    "@seagull/tslint": "^10.5.0"
+    "@seagull/testing": "^10.6.0",
+    "@seagull/tslint": "^10.6.0"
   },
   "dependencies": {
-    "@seagull/commands": "^10.5.0",
-    "@seagull/commands-s3": "^10.5.0",
-    "@seagull/libraries": "^10.5.0",
-    "@seagull/mode": "^10.5.0",
-    "@seagull/seed": "^10.5.0",
+    "@seagull/commands": "^10.6.0",
+    "@seagull/commands-s3": "^10.6.0",
+    "@seagull/libraries": "^10.6.0",
+    "@seagull/mode": "^10.6.0",
+    "@seagull/seed": "^10.6.0",
     "inversify": "^5.0.1",
     "reflect-metadata": "^0.1.13"
   },
