@@ -79,7 +79,7 @@ export class SeagullProject {
     const role = app.stack.addIAMRole('role', 'lambda.amazonaws.com', actions)
     app.role = role
     const env = await getEnv(name, this.appPath, this.stage, logBucketName)
-    const logBucket = app.stack.addS3(logBucketName, role)
+    const logBucket = app.stack.addS3(logBucketName, role, false)
     const lambda = app.stack.addLambda('lambda', this.appPath, role, env)
     const apiGW = app.stack.addUniversalApiGateway('apiGW', lambda, this.stage)
     const cloudfrontConfig = { aliasConfig, apiGateway: apiGW, logBucket }

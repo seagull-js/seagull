@@ -8,6 +8,11 @@
 
 ### Patch Changes
 
+## 10.7.0
+
+- @seagull/deploy-aws -> addS3 bucket allwos now to set the removal policy
+- @seagull/deploy-aws -> the datalog S3 will now be destroyed with the stack instead of kept
+
 ## 10.6.0
 
 - @seagull/build -> made build sequential, because it ran into a memory problem

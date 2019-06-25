@@ -1,4 +1,10 @@
-import { App, Secret, SecretParameter, Stack, StackProps } from '@aws-cdk/cdk'
+import {
+  App,
+  SecretParameter,
+  Stack,
+  StackProps,
+  RemovalPolicy as RemPolicy
+} from '@aws-cdk/cdk'
 
 import { LambdaIntegration, RestApi } from '@aws-cdk/aws-apigateway'
 import * as CM from '@aws-cdk/aws-certificatemanager'
@@ -39,8 +45,9 @@ export class SeagullStack extends Stack {
     return new LogGroup(this, `${this.id}-${logGroupName}`, props)
   }
 
-  addS3(bucketName: string, role?: IAM.IPrincipal) {
-    const s3Props = { bucketName }
+  addS3(bucketName: string, role?: IAM.IPrincipal, keepBucket = true) {
+    const removalPolicy = keepBucket ? RemPolicy.Orphan : RemPolicy.Destroy
+    const s3Props = { bucketName, removalPolicy }
     const bucket = new S3.Bucket(this, `${this.id}-${bucketName}`, s3Props)
     // tslint:disable-next-line:no-unused-expression
     role && bucket.grantReadWrite(role)
