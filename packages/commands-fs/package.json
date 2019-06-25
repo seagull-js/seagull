@@ -1,6 +1,6 @@
 {
   "name": "@seagull/commands-fs",
-  "version": "10.6.0",
+  "version": "10.7.0",
   "description": "FS commands for the seagull framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -32,13 +32,13 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/testing": "^10.6.0",
-    "@seagull/tslint": "^10.6.0"
+    "@seagull/testing": "^10.7.0",
+    "@seagull/tslint": "^10.7.0"
   },
   "dependencies": {
-    "@seagull/commands": "^10.6.0",
-    "@seagull/mock-fs": "^10.6.0",
-    "@seagull/sandbox": "^10.6.0"
+    "@seagull/commands": "^10.7.0",
+    "@seagull/mock-fs": "^10.7.0",
+    "@seagull/sandbox": "^10.7.0"
   },
   "nyc": {
     "extension": [
