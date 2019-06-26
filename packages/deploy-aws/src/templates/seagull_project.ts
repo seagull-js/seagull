@@ -3,12 +3,12 @@ import { SDK } from 'aws-cdk'
 import * as dotenv from 'dotenv'
 import 'ts-node/register'
 import * as aws from '../aws_sdk_handler'
+import { emptyBucket, S3Handler } from '../aws_sdk_handler';
 import * as lib from '../lib'
 import { ProvideAssetFolder } from '../provide_asset_folder'
 import { SeagullApp } from '../seagull_app'
 import { setCredsByProfile } from '../set_aws_credentials'
 import { Rule } from '../types'
-import { emptyBucket, S3Handler } from '../aws_sdk_handler';
 
 interface SeagullProjectProps {
   account: string
@@ -140,7 +140,6 @@ export class SeagullProject {
     this.validate()
     const app = await this.createBareApp()
     const logBucket = await this.getBucketName('logs', true)
-    console.log('Try to flush the bucket ', logBucket)
     await emptyBucket(new S3Handler(), logBucket)
     await app.destroyStack()
   }

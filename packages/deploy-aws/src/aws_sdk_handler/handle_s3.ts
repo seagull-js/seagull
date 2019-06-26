@@ -17,8 +17,6 @@ export class S3Handler {
         const params: any = { Bucket: bucketName }
         let truncated = true
         while (truncated) {
-            console.log(`'${bucketName}'`)
-            console.log(`'eu-central-1-293530623146-unicorn-330-test-qa-logs-test'`)
             const response = await this.s3.listObjectsV2(params).promise()
             params.ContinuationToken = response.NextContinuationToken
             truncated = !!response.IsTruncated

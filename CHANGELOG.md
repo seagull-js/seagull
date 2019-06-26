@@ -8,6 +8,10 @@
 
 ### Patch Changes
 
+## 10.7.1
+
+- @seagull/deploy-aws -> the log bucket is now flushed before trying to delete it
+
 ## 10.7.0
 
 - @seagull/deploy-aws -> addS3 bucket allwos now to set the removal policy
