@@ -16,7 +16,6 @@ export class ServerBundleService {
   bus: ServiceEventBus<ServerBundleServiceEvents>
   bundler!: Bundler
   config = {
-    optimized: false,
     watch: false,
   }
   constructor(
@@ -31,7 +30,6 @@ export class ServerBundleService {
   private createBundler() {
     const { src, dst } = this.bundlerPaths()
     const bundle = new NodeAppBundle(src, dst)
-    bundle.optimized = this.config.optimized
 
     this.bundler = new Bundler(
       bundle,

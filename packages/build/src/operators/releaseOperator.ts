@@ -52,8 +52,8 @@ export class ReleaseOperator extends Operator {
     this.addCodeGeneratorService({ release: true })
     this.addCompileService({ watch: false, fast })
     this.addVendorBundleService({ optimized, compatible })
-    this.addLambdaBackendService({ optimized, watch: false })
-    this.addServerBackendService({ optimized, watch: false })
+    this.addLambdaBackendService({ watch: false })
+    this.addServerBackendService({ watch: false })
     this.addOutputService()
   }
   addPageOperator = () => new PageOperator(this, this.config)
