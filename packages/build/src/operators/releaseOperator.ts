@@ -13,7 +13,7 @@ export class ReleaseOperator extends Operator {
     { once: E.GeneratedCodeEvent, emit: PageOperator.StartEvent },
     { once: E.GeneratedCodeEvent, emit: E.BundleVendorEvent },
     { once: PageOperator.DoneEvent, emit: E.BundleLambdaEvent },
-    { once: PageOperator.DoneEvent, emit: E.BundleServerEvent },
+    { once: E.BundledLambdaEvent, emit: E.BundleServerEvent },
   ]
   config = {
     compatible: true,
