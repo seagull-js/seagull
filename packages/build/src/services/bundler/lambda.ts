@@ -28,7 +28,7 @@ export class LambdaBundleService {
   }
   private createBundler() {
     const { src, dst } = this.bundlerPaths()
-    const bundle = new NodeAppBundle(src, dst)
+    const bundle = new NodeAppBundle(src, dst, ['aws-sdk'])
     this.bundler = new Bundler(
       bundle,
       this.handleBundled,
