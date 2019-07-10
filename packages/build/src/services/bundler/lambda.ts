@@ -16,7 +16,6 @@ export class LambdaBundleService {
   bus: ServiceEventBus<LambdaBundleServiceEvents>
   bundler!: Bundler
   config = {
-    optimized: false,
     watch: false,
   }
   constructor(
@@ -30,7 +29,6 @@ export class LambdaBundleService {
   private createBundler() {
     const { src, dst } = this.bundlerPaths()
     const bundle = new NodeAppBundle(src, dst)
-    bundle.optimized = this.config.optimized
     this.bundler = new Bundler(
       bundle,
       this.handleBundled,

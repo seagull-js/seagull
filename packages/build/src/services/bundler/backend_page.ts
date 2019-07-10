@@ -15,7 +15,6 @@ export class BackendPageBundleService {
   bus: ServiceEventBus<BackendPageBundleServiceEvents>
   bundler!: Bundler
   config = {
-    optimized: false,
     page: '',
     watch: true,
   }
@@ -31,7 +30,6 @@ export class BackendPageBundleService {
   private createBundler() {
     const { src, dst } = this.bundlerPaths()
     const bundle = new ServerPageBundle(src, dst)
-    bundle.optimized = this.config.optimized
     this.bundler = new Bundler(
       bundle,
       this.handleBundled,

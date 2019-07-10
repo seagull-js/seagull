@@ -1,4 +1,4 @@
-import { Route, RouteContext, HttpMethod } from '@seagull/routes'
+import { HttpMethod, Route, RouteContext } from '@seagull/routes'
 import { Term } from '../../items/index'
 
 export default class extends Route {
