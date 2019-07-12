@@ -60,6 +60,7 @@ export class ReleaseOperator extends Operator {
 
   waitForDone = () =>
     Promise.all([
+      this.promisifyEmitOnce(PageOperator.DoneEvent),
       this.promisifyEmitOnce(E.BundledVendorEvent),
       this.promisifyEmitOnce(E.BundledLambdaEvent),
       this.promisifyEmitOnce(E.BundledServerEvent),
