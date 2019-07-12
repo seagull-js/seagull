@@ -1,4 +1,5 @@
 import { ChildProcess, fork } from 'child_process'
+import * as onExit from 'signal-exit'
 import {
   BrowserLibraryBundle,
   BrowserPageBundle,
@@ -27,6 +28,7 @@ export class BundleWorker {
     const path = require.resolve('./lib/bundlerscript')
     const BUNDLER_ARGS = JSON.stringify({ config, type, watch: this.watch })
     this.bundler = fork(path, [], { env: { BUNDLER_ARGS } })
+    onExit(this.shutdown)
     return this
   }
   connect(handleBundled: BundleEvent, handleError: ErrorEvent) {
@@ -38,4 +40,5 @@ export class BundleWorker {
 
   setWatchMode = (watch = true) => void (this.watch = watch) || this
   bundle = () => this.bundler.send({ call: 'bundle' })
+  shutdown = () => this.bundler.kill()
 }
