@@ -1,6 +1,6 @@
 import { join } from 'path'
 import { LogEvent, OutputServiceEvents, ServiceEventBus } from '../'
-import { Bundler, NodeAppBundle } from './lib/bundler'
+import { BundleWorker } from './worker'
 
 export const BundleServerEvent = Symbol('Start backend Bundling')
 export const BundledServerEvent = Symbol('Server got Bundled event')
@@ -14,7 +14,7 @@ export interface ServerBundleServiceEvents extends OutputServiceEvents {
 
 export class ServerBundleService {
   bus: ServiceEventBus<ServerBundleServiceEvents>
-  bundler!: Bundler
+  bundler!: BundleWorker
   config = {
     watch: false,
   }
@@ -29,14 +29,10 @@ export class ServerBundleService {
   }
   private createBundler() {
     const { src, dst } = this.bundlerPaths()
-    const bundle = new NodeAppBundle(src, dst)
-
-    this.bundler = new Bundler(
-      bundle,
-      this.handleBundled,
-      this.handleError,
-      this.config.watch
-    )
+    this.bundler = new BundleWorker()
+      .setWatchMode(this.config.watch)
+      .configure('NodeAppBundle', { dstFile: dst, srcFile: src })
+      .connect(this.handleBundled, this.handleError)
   }
   private bundlerPaths() {
     const cwd = process.cwd()

@@ -22,6 +22,7 @@ export class PageOperator extends Operator {
     this.bundleTimer = process.hrtime()
     listPages(process.cwd()).forEach(this.addPage)
     this.bundleNext()
+    this.bundleNext()
   }
   addPage = (page: string) =>
     this.pages.push(new PageService(this, { page, ...this.config })) &&

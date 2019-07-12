@@ -12,8 +12,8 @@ export class ReleaseOperator extends Operator {
     { once: E.CompiledEvent, emit: E.GenerateCodeEvent },
     { once: E.GeneratedCodeEvent, emit: PageOperator.StartEvent },
     { once: E.GeneratedCodeEvent, emit: E.BundleVendorEvent },
-    { once: PageOperator.DoneEvent, emit: E.BundleLambdaEvent },
-    { once: E.BundledLambdaEvent, emit: E.BundleServerEvent },
+    { once: E.GeneratedCodeEvent, emit: E.BundleLambdaEvent },
+    { once: E.GeneratedCodeEvent, emit: E.BundleServerEvent },
   ]
   config = {
     compatible: true,

@@ -1,6 +1,6 @@
 import { join } from 'path'
 import { LogEvent, OutputServiceEvents, ServiceEventBus } from '..'
-import { Bundler, BrowserPageBundle } from './lib/bundler'
+import { BundleWorker } from './worker'
 
 export const BundleBrowserPageEvent = Symbol('Start BrowserPage Bundling')
 export const BundledBrowserPageEvent = Symbol('BrowserPage got Bundled event')
@@ -14,7 +14,7 @@ export interface BrowserPageBundleServiceEvents extends OutputServiceEvents {
 
 export class BrowserPageBundleService {
   bus: ServiceEventBus<BrowserPageBundleServiceEvents>
-  bundler!: Bundler
+  bundler!: BundleWorker
   config = {
     compatible: false,
     excludes: ['react', 'react-dom', 'react-helmet', 'lodash', 'typestyle'],
@@ -33,17 +33,17 @@ export class BrowserPageBundleService {
 
   private createBundler() {
     const { src, dst } = this.bundlerPaths()
-    const bundle = new BrowserPageBundle(src, dst)
-    bundle.optimized = this.config.optimized
-    bundle.compatible = this.config.compatible
-    bundle.excludes = this.config.excludes
-
-    this.bundler = new Bundler(
-      bundle,
-      this.handleBundled,
-      this.handleError,
-      this.config.watch
-    )
+    const config = {
+      compatible: this.config.compatible,
+      dstFile: dst,
+      excludes: this.config.excludes,
+      optimized: this.config.optimized,
+      srcFile: src,
+    }
+    this.bundler = new BundleWorker()
+      .setWatchMode(this.config.watch)
+      .configure('BrowserPageBundle', config)
+      .connect(this.handleBundled, this.handleError)
   }
   private bundlerPaths() {
     const dist = join(process.cwd(), 'dist')
