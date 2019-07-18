@@ -3,7 +3,7 @@ import { SDK } from 'aws-cdk'
 import * as dotenv from 'dotenv'
 import 'ts-node/register'
 import * as aws from '../aws_sdk_handler'
-import { emptyBucket, S3Handler } from '../aws_sdk_handler';
+import { emptyBucket, S3Handler } from '../aws_sdk_handler'
 import * as lib from '../lib'
 import { ProvideAssetFolder } from '../provide_asset_folder'
 import { SeagullApp } from '../seagull_app'
