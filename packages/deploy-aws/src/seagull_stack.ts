@@ -1,9 +1,9 @@
 import {
   App,
+  RemovalPolicy as RemPolicy,
   SecretParameter,
   Stack,
   StackProps,
-  RemovalPolicy as RemPolicy
 } from '@aws-cdk/cdk'
 
 import { LambdaIntegration, RestApi } from '@aws-cdk/aws-apigateway'
@@ -105,14 +105,43 @@ export class SeagullStack extends Stack {
       forwardedValues: { headers: ['authorization'], queryString: true },
       isDefaultBehavior: true,
     }
+
+    const errorBehavior = {
+      allowedMethods: CF.CloudFrontAllowedMethods.ALL,
+      compress: true,
+      forwardedValues: { headers: ['authorization'], queryString: true },
+      isDefaultBehavior: false,
+    }
+
     const behaviors = [defaultBehavior]
     const customOriginSource = { domainName }
+
+    const s3OriginConfig: CF.S3OriginConfig = {
+      s3BucketSource: props.errorBucket,
+    }
+
+    const errorPageConfig: CF.SourceConfiguration = {
+      behaviors: [errorBehavior],
+      s3OriginSource: s3OriginConfig,
+    }
+
     const conf: CloudFrontWebDistributionProps = {
       aliasConfiguration: props.aliasConfig,
       comment: this.id,
       defaultRootObject: '',
+      errorConfigurations: [
+        {
+          errorCachingMinTtl: 60,
+          errorCode: 500,
+          responseCode: 500,
+          responsePagePath: 'error.html',
+        },
+      ],
       loggingConfig: props.logBucket ? { bucket: props.logBucket } : {},
-      originConfigs: [{ behaviors, customOriginSource, originPath }],
+      originConfigs: [
+        { behaviors, customOriginSource, originPath },
+        errorPageConfig,
+      ],
     }
     return new CF.CloudFrontWebDistribution(this, name, conf)
   }

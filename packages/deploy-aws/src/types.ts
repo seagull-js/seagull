@@ -1,11 +1,11 @@
 import { RestApi } from '@aws-cdk/aws-apigateway'
 import * as CF from '@aws-cdk/aws-cloudfront'
 import { Pipeline } from '@aws-cdk/aws-codepipeline'
+import { Artifact } from '@aws-cdk/aws-codepipeline-api'
 import * as IAM from '@aws-cdk/aws-iam'
 import { Bucket } from '@aws-cdk/aws-s3'
 import { Secret, StackProps } from '@aws-cdk/cdk'
 import { SSMHandler } from './aws_sdk_handler'
-import { Artifact } from '@aws-cdk/aws-codepipeline-api'
 
 export type Keymap = { [key: string]: string }
 
@@ -83,4 +83,5 @@ export interface CloudfrontProps {
   apiGateway: RestApi
   aliasConfig?: CF.AliasConfiguration
   logBucket?: Bucket
+  errorBucket: Bucket
 }
