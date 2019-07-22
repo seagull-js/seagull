@@ -111,7 +111,11 @@ export class SeagullStack extends Stack {
 
     const errorPageConfig = props.errorBucket
       ? this.getErrorPageConfig(props.errorBucket)
-      : { behaviors: [] }
+      : undefined
+
+    const originConfigurations = errorPageConfig
+      ? [{ behaviors, customOriginSource, originPath }, errorPageConfig]
+      : [{ behaviors, customOriginSource, originPath }]
 
     const conf: CloudFrontWebDistributionProps = {
       aliasConfiguration: props.aliasConfig,
@@ -122,14 +126,11 @@ export class SeagullStack extends Stack {
           errorCachingMinTtl: 60,
           errorCode: 500,
           responseCode: 500,
-          responsePagePath: 'error.html',
+          responsePagePath: '/error.html',
         },
       ],
       loggingConfig: props.logBucket ? { bucket: props.logBucket } : {},
-      originConfigs: [
-        { behaviors, customOriginSource, originPath },
-        errorPageConfig,
-      ],
+      originConfigs: originConfigurations,
     }
     return new CF.CloudFrontWebDistribution(this, name, conf)
   }
@@ -139,12 +140,13 @@ export class SeagullStack extends Stack {
     return new Pipeline(this, name, { pipelineName: name })
   }
 
-  getErrorPageConfig(bucket: S3.Bucket) {
-    const errorBehavior = {
+  getErrorPageConfig(bucket: S3.Bucket): CF.SourceConfiguration {
+    const errorBehavior: CF.Behavior = {
       allowedMethods: CF.CloudFrontAllowedMethods.ALL,
       compress: true,
       forwardedValues: { headers: ['authorization'], queryString: true },
       isDefaultBehavior: false,
+      pathPattern: '/error',
     }
 
     const s3OriginConfig: CF.S3OriginConfig = {
