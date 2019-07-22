@@ -146,7 +146,7 @@ export class SeagullStack extends Stack {
       compress: true,
       forwardedValues: { headers: ['authorization'], queryString: true },
       isDefaultBehavior: false,
-      pathPattern: '/error',
+      pathPattern: '/error*',
     }
 
     const s3OriginConfig: CF.S3OriginConfig = {

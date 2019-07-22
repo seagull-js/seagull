@@ -81,6 +81,7 @@ export class SeagullProject {
     const env = await getEnv(name, this.appPath, this.stage, logBucketName)
     const logBucket = app.stack.addS3(logBucketName, role, false)
     const errorBucket = app.stack.addS3(errorBucketName, role, false)
+    errorBucket.grantPublicAccess()
     const lambda = app.stack.addLambda('lambda', this.appPath, role, env)
     const apiGW = app.stack.addUniversalApiGateway('apiGW', lambda, this.stage)
     const cloudfrontConfig = {
