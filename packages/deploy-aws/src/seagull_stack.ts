@@ -106,24 +106,12 @@ export class SeagullStack extends Stack {
       isDefaultBehavior: true,
     }
 
-    const errorBehavior = {
-      allowedMethods: CF.CloudFrontAllowedMethods.ALL,
-      compress: true,
-      forwardedValues: { headers: ['authorization'], queryString: true },
-      isDefaultBehavior: false,
-    }
-
     const behaviors = [defaultBehavior]
     const customOriginSource = { domainName }
 
-    const s3OriginConfig: CF.S3OriginConfig = {
-      s3BucketSource: props.errorBucket,
-    }
-
-    const errorPageConfig: CF.SourceConfiguration = {
-      behaviors: [errorBehavior],
-      s3OriginSource: s3OriginConfig,
-    }
+    const errorPageConfig = props.errorBucket
+      ? this.getErrorPageConfig(props.errorBucket)
+      : { behaviors: [] }
 
     const conf: CloudFrontWebDistributionProps = {
       aliasConfiguration: props.aliasConfig,
@@ -149,6 +137,26 @@ export class SeagullStack extends Stack {
   addPipeline(pipelineName: string) {
     const name = `${this.id}-${pipelineName}`
     return new Pipeline(this, name, { pipelineName: name })
+  }
+
+  getErrorPageConfig(bucket: S3.Bucket) {
+    const errorBehavior = {
+      allowedMethods: CF.CloudFrontAllowedMethods.ALL,
+      compress: true,
+      forwardedValues: { headers: ['authorization'], queryString: true },
+      isDefaultBehavior: false,
+    }
+
+    const s3OriginConfig: CF.S3OriginConfig = {
+      s3BucketSource: bucket,
+    }
+
+    const errorPageConfig: CF.SourceConfiguration = {
+      behaviors: [errorBehavior],
+      s3OriginSource: s3OriginConfig,
+    }
+
+    return errorPageConfig
   }
 
   addSourceStage(name: string, config: SourceStageConfig) {
