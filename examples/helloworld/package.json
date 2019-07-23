@@ -43,9 +43,17 @@
     "lodash": "^4.17.5",
     "mobx": "^4",
     "mobx-react": "^5.4.3",
-    "serverless-http": "^1.8.0"
+    "serverless-http": "^1.8.0",
+    "react-chartjs-2": "^2.7.6",
+    "chart.js": "^2.8.0"
   },
   "seagull": {
     "domains": []
+  },
+  "vendorBundleIncludes": {
+    "add": [
+      "lodash/isEqual",
+      "lodash/keyBy"
+    ]
   }
 }

@@ -11,13 +11,40 @@ export interface VendorBundleServiceEvents extends OutputServiceEvents {
   [BundleVendorErrorEvent]: () => void
 }
 
+const includesDefault = [
+  'react',
+  'react-dom',
+  'react-helmet',
+  'lodash',
+  'typestyle',
+]
+
 export class VendorBundleService {
+  static get includes() {
+    const json = require(`${process.cwd()}/package.json`)
+    if (!json || !json.vendorBundleIncludes) {
+      return includesDefault
+    }
+    if (Array.isArray(json.vendorBundleIncludes)) {
+      return json.vendorBundleIncludes
+    }
+    const add = json.vendorBundleIncludes.add as string[] | undefined
+    const remove = json.vendorBundleIncludes.remove as string[] | undefined
+    const includesSet = new Set<string>(includesDefault)
+    if (Array.isArray(add)) {
+      add.forEach(a => includesSet.add(a))
+    }
+    if (Array.isArray(remove)) {
+      remove.forEach(r => includesSet.delete(r))
+    }
+    return Array.from(includesSet)
+  }
   bus: ServiceEventBus<VendorBundleServiceEvents>
   bundler!: Bundler
   config = {
     compatible: false,
     optimized: false,
-    packages: ['react', 'react-dom', 'react-helmet', 'lodash', 'typestyle'],
+    packages: VendorBundleService.includes,
   }
   constructor(
     bus: VendorBundleService['bus'],
@@ -27,6 +54,7 @@ export class VendorBundleService {
     this.bus = bus.on(BundleVendorEvent, this.handleStartBundling)
     this.createBundler()
   }
+
   private createBundler() {
     const dstFile = join(process.cwd(), 'dist', 'assets', 'static', 'vendor.js')
     const bundle = new BrowserLibraryBundle(this.config.packages, dstFile)

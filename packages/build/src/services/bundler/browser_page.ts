@@ -1,6 +1,11 @@
 import { join } from 'path'
-import { LogEvent, OutputServiceEvents, ServiceEventBus } from '..'
-import { Bundler, BrowserPageBundle } from './lib/bundler'
+import {
+  LogEvent,
+  OutputServiceEvents,
+  ServiceEventBus,
+  VendorBundleService,
+} from '..'
+import { BrowserPageBundle, Bundler } from './lib/bundler'
 
 export const BundleBrowserPageEvent = Symbol('Start BrowserPage Bundling')
 export const BundledBrowserPageEvent = Symbol('BrowserPage got Bundled event')
@@ -17,7 +22,7 @@ export class BrowserPageBundleService {
   bundler!: Bundler
   config = {
     compatible: false,
-    excludes: ['react', 'react-dom', 'react-helmet', 'lodash', 'typestyle'],
+    excludes: VendorBundleService.includes,
     optimized: false,
     page: '',
     watch: true,

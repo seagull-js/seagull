@@ -42,3 +42,29 @@ This tool will produce the following structure, given a target `folder` path:
 - `${folder}/pages` - mirroring of the original /pages structure
   - `${folder}/pages/${pageName}.js` - self-contained UMD-bundle of a Page
 - `${folder}/static` - web root for static files, like favicon, ...
+
+### Vendor.js
+
+The web root for static files contains a `vendor.js` file, which bundles global dependencies for pages. The seagull default global dependencies can be altered by adding a new entry to the `package.json` of the seagull project:
+
+````json
+{
+  ...,
+  "vendorBundleIncludes": {
+    "add": [
+      "someGlobalDependency",
+      "somesubDependency/forExample",
+      "lodash/isEqual"
+    ],
+    "remove": [
+      "somethingThatShouldBeInAllPages"
+    ]
+  }
+}
+````
+
+A relevant case is the inclusion of sub-files of dependencies, like specific `lodash` functions via the following syntax:
+````javascript
+include isEqual from 'lodash/isEqual'
+````
+ These are not included by the default seagull global vendor dependencies.
