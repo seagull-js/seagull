@@ -21,23 +21,24 @@ const includesDefault = [
 
 export class VendorBundleService {
   static get includes() {
-    const json = require(`${process.cwd()}/package.json`)
-    if (!json || !json.vendorBundleIncludes) {
+    try {
+      const json = require(`${process.cwd()}/package.json`)
+      if (Array.isArray(json.vendorBundleIncludes)) {
+        return json.vendorBundleIncludes
+      }
+      const add = json.vendorBundleIncludes.add as string[] | undefined
+      const remove = json.vendorBundleIncludes.remove as string[] | undefined
+      const includesSet = new Set<string>(includesDefault)
+      if (Array.isArray(add)) {
+        add.forEach(a => includesSet.add(a))
+      }
+      if (Array.isArray(remove)) {
+        remove.forEach(r => includesSet.delete(r))
+      }
+      return Array.from(includesSet)
+    } catch (e) {
       return includesDefault
     }
-    if (Array.isArray(json.vendorBundleIncludes)) {
-      return json.vendorBundleIncludes
-    }
-    const add = json.vendorBundleIncludes.add as string[] | undefined
-    const remove = json.vendorBundleIncludes.remove as string[] | undefined
-    const includesSet = new Set<string>(includesDefault)
-    if (Array.isArray(add)) {
-      add.forEach(a => includesSet.add(a))
-    }
-    if (Array.isArray(remove)) {
-      remove.forEach(r => includesSet.delete(r))
-    }
-    return Array.from(includesSet)
   }
   bus: ServiceEventBus<VendorBundleServiceEvents>
   bundler!: Bundler
