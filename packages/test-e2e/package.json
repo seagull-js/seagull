@@ -1,6 +1,6 @@
 {
   "name": "@seagull/test-e2e",
-  "version": "11.0.0",
+  "version": "11.1.0",
   "description": "A e2e test runner using cucumber and zombie",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -35,7 +35,7 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/tslint": "^11.0.0"
+    "@seagull/tslint": "^11.1.0"
   },
   "dependencies": {
     "@types/cucumber": "^4.0.4",
