@@ -8,6 +8,10 @@
 
 ### Patch Changes
 
+## 11.1.0
+
+- @seagull/build -> added customizability option for vendor bundle includes via seagull-project package.json entry 'seagull' > 'vendorBundleIncludes'
+
 ## 10.7.1
 
 - @seagull/deploy-aws -> the log bucket is now flushed before trying to delete it
