@@ -8,7 +8,7 @@
 
 ### Patch Changes
 
-## 11.1.0
+## 11.2.0
 
 - @seagull/build -> added customizability option for vendor bundle includes via seagull-project package.json entry 'seagull' > 'vendorBundleIncludes'
 
