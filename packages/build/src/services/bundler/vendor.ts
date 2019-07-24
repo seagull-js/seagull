@@ -1,52 +1,25 @@
 import { join } from 'path'
 import { LogEvent, OutputServiceEvents, ServiceEventBus } from '../'
+import { getVendorBundleIncludes } from '../../lib/project'
 import { BrowserLibraryBundle, Bundler } from './lib/bundler'
 
 export const BundleVendorEvent = Symbol('Start Vendor Bundling Event')
 export const BundledVendorEvent = Symbol('A Vendor Bundle got Bundled')
 export const BundleVendorErrorEvent = Symbol('Error on bundling')
+
 export interface VendorBundleServiceEvents extends OutputServiceEvents {
   [BundleVendorEvent]: VendorBundleService['handleStartBundling']
   [BundledVendorEvent]: () => void
   [BundleVendorErrorEvent]: () => void
 }
 
-const includesDefault = [
-  'react',
-  'react-dom',
-  'react-helmet',
-  'lodash',
-  'typestyle',
-]
-
 export class VendorBundleService {
-  static get includes() {
-    try {
-      const json = require(`${process.cwd()}/package.json`)
-      const includes = json.seagull.vendorBundleIncludes
-      if (Array.isArray(includes)) {
-        return includes
-      }
-      const add = includes.add as string[] | undefined
-      const remove = includes.remove as string[] | undefined
-      const includesSet = new Set<string>(includesDefault)
-      if (Array.isArray(add)) {
-        add.forEach(a => includesSet.add(a))
-      }
-      if (Array.isArray(remove)) {
-        remove.forEach(r => includesSet.delete(r))
-      }
-      return Array.from(includesSet)
-    } catch (e) {
-      return includesDefault
-    }
-  }
   bus: ServiceEventBus<VendorBundleServiceEvents>
   bundler!: Bundler
   config = {
     compatible: false,
     optimized: false,
-    packages: VendorBundleService.includes,
+    packages: getVendorBundleIncludes(),
   }
   constructor(
     bus: VendorBundleService['bus'],
