@@ -50,16 +50,19 @@ The web root for static files contains a `vendor.js` file, which bundles global 
 ````json
 {
   ...,
-  "vendorBundleIncludes": {
-    "add": [
-      "someGlobalDependency",
-      "somesubDependency/forExample",
-      "lodash/isEqual"
-    ],
-    "remove": [
-      "somethingThatShouldBeInAllPages"
-    ]
-  }
+  "seagull": {
+    ...,
+    "vendorBundleIncludes": {
+      "add": [
+        "someGlobalDependency",
+        "somesubDependency/forExample",
+        "lodash/isEqual"
+      ],
+      "remove": [
+        "somethingThatShouldBeInAllPages"
+      ]
+    }
+  }  
 }
 ````
 

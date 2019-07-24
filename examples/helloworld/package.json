@@ -48,12 +48,12 @@
     "chart.js": "^2.8.0"
   },
   "seagull": {
-    "domains": []
-  },
-  "vendorBundleIncludes": {
-    "add": [
-      "lodash/isEqual",
-      "lodash/keyBy"
-    ]
+    "domains": [],
+    "vendorBundleIncludes": {
+      "add": [
+        "lodash/isEqual",
+        "lodash/keyBy"
+      ]
+    }
   }
 }

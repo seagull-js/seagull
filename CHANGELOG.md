@@ -10,7 +10,7 @@
 
 ## 11.1.0
 
-- @seagull/build -> added customizability option for vendor bundle includes via seagull-project package.json entry 'vendorBundleIncludes'
+- @seagull/build -> added customizability option for vendor bundle includes via seagull-project package.json entry 'seagull' > 'vendorBundleIncludes'
 
 ## 10.7.1
 

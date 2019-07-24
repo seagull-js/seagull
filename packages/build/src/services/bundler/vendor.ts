@@ -23,11 +23,12 @@ export class VendorBundleService {
   static get includes() {
     try {
       const json = require(`${process.cwd()}/package.json`)
-      if (Array.isArray(json.vendorBundleIncludes)) {
-        return json.vendorBundleIncludes
+      const includes = json.seagull.vendorBundleIncludes
+      if (Array.isArray(includes)) {
+        return includes
       }
-      const add = json.vendorBundleIncludes.add as string[] | undefined
-      const remove = json.vendorBundleIncludes.remove as string[] | undefined
+      const add = includes.add as string[] | undefined
+      const remove = includes.remove as string[] | undefined
       const includesSet = new Set<string>(includesDefault)
       if (Array.isArray(add)) {
         add.forEach(a => includesSet.add(a))
