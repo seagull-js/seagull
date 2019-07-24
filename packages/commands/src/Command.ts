@@ -1,4 +1,4 @@
-import { Mode } from '@seagull/mode'
+import { IMode, Mode } from '@seagull/mode'
 /**
  * The Basic interface for implementing the Command-Pattern. Commands are
  * responsible for performing code with side-effects. Benefits over raw
@@ -15,7 +15,7 @@ export abstract class Command<
   /**
    * The mode the command runs in, defaults to the global singleton
    */
-  mode = Mode
+  mode: Readonly<IMode> = { environment: Mode.environment }
 
   /**
    * Users of this command will call this method so put your side effects implementation here. Provided a implementation for all modes exist this could be just: return this.executeHandler()
