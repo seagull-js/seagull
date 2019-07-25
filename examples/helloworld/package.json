@@ -1,7 +1,7 @@
 {
   "name": "helloworld",
   "private": true,
-  "version": "11.4.0",
+  "version": "11.5.0",
   "description": "Helloworld example app using the Seagull Framework",
   "main": "index.js",
   "scripts": {
