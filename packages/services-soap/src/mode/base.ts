@@ -2,7 +2,8 @@ import * as crypto from 'crypto'
 import { injectable } from 'inversify'
 import 'reflect-metadata'
 import * as soap from 'soap'
-export * from 'soap'
+import { ClientOptions, Credentials } from '..'
+
 // hidden global singleton
 const soapClients: { [key: string]: any } = {}
 
@@ -21,8 +22,6 @@ const createSoapClient = async (wsdlURI: string, opts?: soap.IOptions) => {
   return soapClients[hash]
 }
 
-export type Credentials = { username: string; password: string }
-
 export const makeAuthOptions = ({ username, password }: Credentials) => {
   const credString = username + ':' + password
   const Authorization = `Basic ${new Buffer(credString).toString('base64')}`
@@ -33,18 +32,10 @@ export const setSecurity = (client: soap.Client, credentials: Credentials) => {
   const { username, password } = credentials
   client.setSecurity(new soap.BasicAuthSecurity(username, password))
 }
-export interface ClientOptions {
-  /** Where can I find the WSDL? Could be a file path or a URI */
-  wsdlPath: string
-  /** If set, an Authorization Header is sent when requesting the client */
-  credentials?: Credentials
-  /** If the actual endpoint differs from the WSDL path, assign a URI to this
-   * Property */
-  endpoint?: string
-}
+
 @injectable()
-export class SoapClientSupplier {
-  async getClient<T extends soap.Client>({
+export class SoapClientSupplierBase {
+  protected async getClientInternal<T extends soap.Client>({
     wsdlPath,
     credentials,
     endpoint,
