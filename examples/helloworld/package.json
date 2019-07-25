@@ -1,7 +1,7 @@
 {
   "name": "helloworld",
   "private": true,
-  "version": "10.7.2",
+  "version": "11.4.0",
   "description": "Helloworld example app using the Seagull Framework",
   "main": "index.js",
   "scripts": {
@@ -19,12 +19,12 @@
   "author": "Maximilian Stroh <hisako1337@gmail.com>",
   "license": "LGPL-3.0",
   "devDependencies": {
-    "@seagull/build": "^10.7.2",
-    "@seagull/commands-logging": "^10.7.1",
-    "@seagull/deploy-aws": "^10.7.1",
-    "@seagull/test-e2e": "^10.7.1",
-    "@seagull/test-pages": "^10.7.1",
-    "@seagull/tslint": "^10.7.1",
+    "@seagull/build": "^11.4.0",
+    "@seagull/commands-logging": "^11.4.0",
+    "@seagull/deploy-aws": "^11.4.0",
+    "@seagull/test-e2e": "^11.4.0",
+    "@seagull/test-pages": "^11.4.0",
+    "@seagull/tslint": "^11.4.0",
     "@types/lodash": "^4.14.123",
     "@types/node": "^8.10",
     "jsdom": "^13.0.0",
@@ -35,17 +35,25 @@
     "typescript": "^3.4.1"
   },
   "dependencies": {
-    "@seagull/libraries": "^10.7.1",
-    "@seagull/pages": "^10.7.1",
-    "@seagull/plugin-items": "^10.7.1",
-    "@seagull/routes": "^10.7.1",
+    "@seagull/libraries": "^11.4.0",
+    "@seagull/pages": "^11.4.0",
+    "@seagull/plugin-items": "^11.4.0",
+    "@seagull/routes": "^11.4.0",
+    "chart.js": "^2.8.0",
     "instantclick": "^3.1.0-2",
     "lodash": "^4.17.5",
     "mobx": "^4",
     "mobx-react": "^5.4.3",
+    "react-chartjs-2": "^2.7.6",
     "serverless-http": "^1.8.0"
   },
   "seagull": {
-    "domains": []
+    "domains": [],
+    "vendorBundleIncludes": {
+      "add": [
+        "lodash/isEqual",
+        "lodash/keyBy"
+      ]
+    }
   }
 }

@@ -43,3 +43,33 @@ const getRelativePageName = (appFolder: string, filePath: string) => {
   const srcFolder = pagesSourceFolder(appFolder)
   return filePath.replace(srcFolder, '').replace(/\.tsx?$/, '')
 }
+
+const defaultVendorBundleIncludes = [
+  'react',
+  'react-dom',
+  'react-helmet',
+  'lodash',
+  'typestyle',
+]
+
+export const getVendorBundleIncludes = () => {
+  try {
+    const json = require(`${process.cwd()}/package.json`)
+    const includes = json.seagull.vendorBundleIncludes
+    if (Array.isArray(includes)) {
+      return includes
+    }
+    const add = includes.add as string[] | undefined
+    const remove = includes.remove as string[] | undefined
+    const includesSet = new Set<string>(defaultVendorBundleIncludes)
+    if (Array.isArray(add)) {
+      add.forEach(a => includesSet.add(a))
+    }
+    if (Array.isArray(remove)) {
+      remove.forEach(r => includesSet.delete(r))
+    }
+    return Array.from(includesSet)
+  } catch (e) {
+    return defaultVendorBundleIncludes
+  }
+}

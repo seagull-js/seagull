@@ -84,12 +84,14 @@ export class NodeAppBundle {
   dstFile: string
   /** exposed module variable */
   export: string = 'default'
+  excludes = [] as string[]
   /** minimizing etc? */
   optimized: boolean = false
 
-  constructor(srcFile: string, dstFile: string) {
+  constructor(srcFile: string, dstFile: string, excludes = [] as string[]) {
     this.srcFile = srcFile
     this.dstFile = dstFile
+    this.excludes = excludes
   }
 
   bfyInstance = (opts: bfy.Options) =>
