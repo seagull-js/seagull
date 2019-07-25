@@ -99,12 +99,7 @@ export class SeagullStack extends Stack {
     const name = `${this.id}-${cfdName}`
     const domainName = getApiGatewayDomain(props.apiGateway.url)
     const originPath = getApiGatewayPath(props.apiGateway.url)
-    const defaultBehavior = {
-      allowedMethods: CF.CloudFrontAllowedMethods.ALL,
-      compress: true,
-      forwardedValues: { headers: ['authorization'], queryString: true },
-      isDefaultBehavior: true,
-    }
+    const defaultBehavior = this.getDefaultBehavior()
 
     const behaviors = [defaultBehavior]
     const customOriginSource = { domainName }
@@ -117,18 +112,13 @@ export class SeagullStack extends Stack {
       ? [{ behaviors, customOriginSource, originPath }, errorPageConfig]
       : [{ behaviors, customOriginSource, originPath }]
 
+    const errorConfig = this.getErrorConfig(500, 500, '/error.html', 60)
+
     const conf: CloudFrontWebDistributionProps = {
       aliasConfiguration: props.aliasConfig,
       comment: this.id,
       defaultRootObject: '',
-      errorConfigurations: [
-        {
-          errorCachingMinTtl: 60,
-          errorCode: 500,
-          responseCode: 500,
-          responsePagePath: '/error.html',
-        },
-      ],
+      errorConfigurations: [errorConfig],
       loggingConfig: props.logBucket ? { bucket: props.logBucket } : {},
       originConfigs: originConfigurations,
     }
@@ -159,6 +149,29 @@ export class SeagullStack extends Stack {
     }
 
     return errorPageConfig
+  }
+
+  getDefaultBehavior() {
+    return {
+      allowedMethods: CF.CloudFrontAllowedMethods.ALL,
+      compress: true,
+      forwardedValues: { headers: ['authorization'], queryString: true },
+      isDefaultBehavior: true,
+    }
+  }
+
+  getErrorConfig(
+    code: number,
+    responseCode: number,
+    responsePagePath: string,
+    cachingTtl: number
+  ) {
+    return {
+      errorCachingMinTtl: cachingTtl,
+      errorCode: code,
+      responseCode,
+      responsePagePath,
+    }
   }
 
   addSourceStage(name: string, config: SourceStageConfig) {
