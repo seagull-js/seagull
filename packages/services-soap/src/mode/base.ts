@@ -4,24 +4,6 @@ import 'reflect-metadata'
 import * as soap from 'soap'
 import { ClientOptions, Credentials } from '..'
 
-// hidden global singleton
-const soapClients: { [key: string]: any } = {}
-
-const createHash = (...args: any) => {
-  return crypto
-    .createHash('md5')
-    .update(JSON.stringify(args))
-    .digest('hex')
-}
-
-// use singleton to avoid unnecessary async client creations
-const createSoapClient = async (wsdlURI: string, opts?: soap.IOptions) => {
-  const hash = createHash(wsdlURI, opts)
-  soapClients[hash] =
-    soapClients[hash] || (await soap.createClientAsync(wsdlURI, opts))
-  return soapClients[hash]
-}
-
 export const makeAuthOptions = ({ username, password }: Credentials) => {
   const credString = username + ':' + password
   const Authorization = `Basic ${new Buffer(credString).toString('base64')}`
@@ -43,7 +25,7 @@ export class SoapClientSupplierBase {
     const authOptions = credentials ? makeAuthOptions(credentials) : {}
     const defaultOptions = { rejectUnauthorized: false, strictSSL: false }
     const options = { endpoint: wsdlPath, ...defaultOptions, ...authOptions }
-    const client: T = await createSoapClient(wsdlPath, options)
+    const client: T = await soap.createClientAsync(wsdlPath, options)
     client.setEndpoint(endpoint || wsdlPath)
     // tslint:disable-next-line:no-unused-expression
     credentials && setSecurity(client, credentials)
