@@ -1,5 +1,5 @@
 {
-  "name": "@seagull/soap",
+  "name": "@seagull/services-soap",
   "version": "11.4.0",
   "description": "A soap module for the seagull framework",
   "main": "dist/src/index.js",
@@ -33,6 +33,8 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
+    "@seagull/mode": "^11.4.0",
+    "@seagull/seed": "^11.4.0",
     "@seagull/testing": "^11.4.0",
     "@seagull/tslint": "^11.4.0"
   },

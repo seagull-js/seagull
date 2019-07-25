@@ -1,4 +1,4 @@
-import { Fixture, FixtureStorage } from '@seagull/seed'
+import { FixtureStorage } from '@seagull/seed'
 import { injectable } from 'inversify'
 import 'reflect-metadata'
 import * as soap from 'soap'
