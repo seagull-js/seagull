@@ -1,6 +1,6 @@
-import * as crypto from 'crypto'
+// tslint:disable:no-unused-expression
 import { injectable } from 'inversify'
-import { flatMap } from 'lodash'
+import * as _ from 'lodash'
 import 'reflect-metadata'
 import * as soap from 'soap'
 import { ClientOptions, Credentials } from '..'
@@ -16,12 +16,39 @@ export const setSecurity = (client: soap.Client, credentials: Credentials) => {
   client.setSecurity(new soap.BasicAuthSecurity(username, password))
 }
 
-export const getAsyncMethods = (client: soap.Client) => {
+export const getWsdlAsyncMethods = (client: soap.Client) => {
   const { bindings } = client.wsdl.definitions
-  return flatMap(bindings, b =>
+  return _.flatMap(bindings, b =>
     Object.keys(b.topElements).map(meth => `${meth}Async`)
   )
 }
+
+export type ClientFunction = (args: any) => Promise<any>
+
+export type ClientProxyFunction = (
+  fnc: ClientFunction,
+  name: string,
+  args: any
+) => Promise<any>
+
+/**
+ * Creates a proxy for a SOAP client.
+ * @param client The SOAP client
+ * @param proxyFunction The proxy function encapsulation
+ */
+export const createProxy = <T extends soap.Client>(
+  client: T,
+  proxyFunction: ClientProxyFunction
+) => {
+  const asyncMeths = getWsdlAsyncMethods(client)
+  asyncMeths.forEach(name => {
+    const original = client[name]
+    ;(client as soap.Client)[name] = async (args: any) =>
+      await proxyFunction(original as ClientFunction, name, args)
+  })
+  return client
+}
+
 @injectable()
 export class SoapClientSupplierBase {
   protected async getClientInternal<T extends soap.Client>({
@@ -34,7 +61,6 @@ export class SoapClientSupplierBase {
     const options = { endpoint: wsdlPath, ...defaultOptions, ...authOptions }
     const client: T = await soap.createClientAsync(wsdlPath, options)
     client.setEndpoint(endpoint || wsdlPath)
-    // tslint:disable-next-line:no-unused-expression
     credentials && setSecurity(client, credentials)
     return client
   }

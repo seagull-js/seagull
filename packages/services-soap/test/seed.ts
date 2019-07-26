@@ -30,7 +30,7 @@ export class Test extends BasicTest {
   basePath = 'www.dneonline.com/calculator.asmx'
   baseUrl = `${this.protocol}://${this.basePath}`
   wsdlUrl = `${this.baseUrl}?wsdl`
-  functionHash = '88aa5822b9b0dd3ef5b00f2e0c75424f'
+  functionHash = '15e66e975bb36c02ae5b4afc5a5d9ec7'
 
   @test
   async 'can get seed fixture'() {
@@ -53,7 +53,7 @@ export class Test extends BasicTest {
     const seedResponse = await seedClient.AddAsync(params)
     expect(seedResponse[0].AddResult).to.eq(8)
 
-    expect(fs.existsSync(path)).to.be.true
+    expect(fs.existsSync(path), 'fixture file not found').to.be.true
 
     // get fixture
     const pureClient = await this.soapPure.getClient<ExpectedClient>({

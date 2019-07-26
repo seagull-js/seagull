@@ -1,21 +1,19 @@
 import { FixtureStorage } from '@seagull/seed'
 import { injectable } from 'inversify'
-import fetch from 'node-fetch'
 import 'reflect-metadata'
 import * as soap from 'soap'
-import { ClientOptions, Credentials } from '..'
-import { getAsyncMethods, SoapClientSupplierBase } from './base'
+import { ClientOptions } from '..'
+import { ClientFunction, createProxy, SoapClientSupplierBase } from './base'
 
-const replaceMethod = (client: soap.Client, meth: string, wsdlPath: string) => {
-  client[meth] = async (...params: any) =>
-    FixtureStorage.createByUrl(`${wsdlPath}/${meth}`, params).get()
+const purifyClient = async <T extends soap.Client>(
+  client: T,
+  wsdlPath: string
+) => {
+  const purify = async (fnc: ClientFunction, name: string, args: any) =>
+    FixtureStorage.createByUrl(`${wsdlPath}/${name}`, args).get()
+  return await createProxy(client, purify)
 }
 
-const purifyClient = (client: soap.Client, wsdlPath: string) => {
-  const asyncMeths: string[] = getAsyncMethods(client)
-  asyncMeths.forEach(meth => replaceMethod(client, meth, wsdlPath))
-  return client
-}
 /**
  * Soap client supplier seed mode implementation.
  */
@@ -25,8 +23,8 @@ export class SoapClientSupplierPure extends SoapClientSupplierBase {
     const wsdlPath = `seed/${options.wsdlPath}.wsdl`.replace('://', '/')
     const endpoint = options.endpoint || options.wsdlPath
     const opts = { endpoint, wsdlPath, credentials: options.credentials }
-    const client = await this.getClientInternal(opts)
+    const client = await this.getClientInternal<T>(opts)
     // TODO: replace client generated functions with adapter doint the request and replacing the fixture
-    return purifyClient(client, options.wsdlPath) as T
+    return purifyClient<T>(client, options.wsdlPath)
   }
 }

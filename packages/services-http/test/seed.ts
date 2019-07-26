@@ -44,7 +44,7 @@ export class Test extends BasicTest {
     expect(seedResponse.args).to.have.ownProperty('foo1')
     expect(seedResponse.args).to.have.ownProperty('foo2')
 
-    expect(fs.existsSync(path)).to.be.true
+    expect(fs.existsSync(path), 'fixture file not found').to.be.true
 
     // get fixture
     const pureResponse = (await (await this.httpPure.fetch(
