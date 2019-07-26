@@ -6,6 +6,7 @@ import 'reflect-metadata'
 import * as soap from 'soap'
 import { ClientOptions, Credentials } from '..'
 import { SoapClientSupplierBase } from './base'
+
 const makeAuthHeader = (credentials: Credentials) => {
   const { username, password } = credentials
   const base64Creds = new Buffer(username + ':' + password).toString('base64')
@@ -27,11 +28,11 @@ const seedifyClient = (client: soap.Client, wsdlPath: string) => {
     Object.keys(b.topElements).map(meth => `${meth}Async`)
   )
   asyncMeths.forEach(meth => {
-    const originalFunction = client[meth] as (r: any) => any
-    client[meth] = async (req: any) => {
+    const originalFunction = client[meth] as (...params: any[]) => any
+    client[meth] = async (...params: any) => {
       const mSeed = new FixtureStorage(`${wsdlPath}/${meth}`, '.json')
-      const resp = await originalFunction(req)
-      mSeed.set(resp)
+      const resp = await originalFunction(...params)
+      mSeed.set(resp, params)
       return resp
     }
   })
