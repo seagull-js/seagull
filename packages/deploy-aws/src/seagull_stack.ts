@@ -1,9 +1,9 @@
 import {
   App,
+  RemovalPolicy as RemPolicy,
   SecretParameter,
   Stack,
   StackProps,
-  RemovalPolicy as RemPolicy
 } from '@aws-cdk/cdk'
 
 import { LambdaIntegration, RestApi } from '@aws-cdk/aws-apigateway'
@@ -22,6 +22,9 @@ import {
   getApiGatewayPath,
   mapEnvironmentVariables,
 } from './lib'
+
+import { compact } from 'lodash'
+
 import {
   BuildStageConfig,
   CloudfrontProps,
@@ -99,20 +102,27 @@ export class SeagullStack extends Stack {
     const name = `${this.id}-${cfdName}`
     const domainName = getApiGatewayDomain(props.apiGateway.url)
     const originPath = getApiGatewayPath(props.apiGateway.url)
-    const defaultBehavior = {
-      allowedMethods: CF.CloudFrontAllowedMethods.ALL,
-      compress: true,
-      forwardedValues: { headers: ['authorization'], queryString: true },
-      isDefaultBehavior: true,
-    }
-    const behaviors = [defaultBehavior]
+
+    const behaviors = [this.getDefaultBehavior()]
     const customOriginSource = { domainName }
+
+    const errorPageConfig =
+      props.errorBucket && this.getErrorPageConfig(props.errorBucket)
+
+    const originConfigurations = compact([
+      { behaviors, customOriginSource, originPath },
+      errorPageConfig,
+    ])
+
+    const errorConfig = this.getErrorConfig(500, 500, '/error.html', 60)
+
     const conf: CloudFrontWebDistributionProps = {
       aliasConfiguration: props.aliasConfig,
       comment: this.id,
       defaultRootObject: '',
+      errorConfigurations: [errorConfig],
       loggingConfig: props.logBucket ? { bucket: props.logBucket } : {},
-      originConfigs: [{ behaviors, customOriginSource, originPath }],
+      originConfigs: originConfigurations,
     }
     return new CF.CloudFrontWebDistribution(this, name, conf)
   }
@@ -120,6 +130,50 @@ export class SeagullStack extends Stack {
   addPipeline(pipelineName: string) {
     const name = `${this.id}-${pipelineName}`
     return new Pipeline(this, name, { pipelineName: name })
+  }
+
+  getErrorPageConfig(bucket: S3.Bucket): CF.SourceConfiguration {
+    const errorBehavior: CF.Behavior = {
+      allowedMethods: CF.CloudFrontAllowedMethods.ALL,
+      compress: true,
+      forwardedValues: { headers: ['authorization'], queryString: true },
+      isDefaultBehavior: false,
+      pathPattern: '/error*',
+    }
+
+    const s3OriginConfig: CF.S3OriginConfig = {
+      s3BucketSource: bucket,
+    }
+
+    const errorPageConfig: CF.SourceConfiguration = {
+      behaviors: [errorBehavior],
+      s3OriginSource: s3OriginConfig,
+    }
+
+    return errorPageConfig
+  }
+
+  getDefaultBehavior() {
+    return {
+      allowedMethods: CF.CloudFrontAllowedMethods.ALL,
+      compress: true,
+      forwardedValues: { headers: ['authorization'], queryString: true },
+      isDefaultBehavior: true,
+    }
+  }
+
+  getErrorConfig(
+    code: number,
+    responseCode: number,
+    responsePagePath: string,
+    cachingTtl: number
+  ) {
+    return {
+      errorCachingMinTtl: cachingTtl,
+      errorCode: code,
+      responseCode,
+      responsePagePath,
+    }
   }
 
   addSourceStage(name: string, config: SourceStageConfig) {
