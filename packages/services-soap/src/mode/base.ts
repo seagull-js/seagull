@@ -61,16 +61,14 @@ export const createProxy = <T extends soap.Client>(
     const clientAsBase = client as soap.Client
     clientAsBase[name] = async (args: any) => {
       const array: SoapResponseArray = await proxyFunction(original, name, args)
-      if (Array.isArray(array)) {
-        const response = array[0]
+      const response = Array.isArray(array) ? array[0] : array
+      if (false) {
         // note: safe because XML element names cannot start with the letters xml
         response.xmlRequest = array[1]
         response.xmlHeaders = array[2]
         response.xmlResponse = array[3]
-        return response
-      } else {
-        return array
       }
+      return response
     }
   })
   return client
