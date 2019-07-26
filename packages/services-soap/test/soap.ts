@@ -1,11 +1,9 @@
 import { expect } from 'chai'
 import { suite, test, timeout } from 'mocha-typescript'
 import { BasicAuthSecurity } from 'soap'
-import { ClientOptions } from '../src'
 import { SoapClientSupplier } from '../src/mode/cloud'
 import { SoapClientSupplierSeed } from '../src/mode/seed'
 
-// tslint:disable-next-line:no-var-requires
 @suite('SOAP::IBE')
 class SoapClientSupplierTest {
   @test
@@ -16,21 +14,6 @@ class SoapClientSupplierTest {
     expect(client).to.haveOwnProperty('sayHello')
     expect(client).to.haveOwnProperty('sayHelloAsync')
     expect(client.endpoint).to.be.equal(clientOptions.wsdlPath)
-  }
-  @timeout(50000)
-  @test
-  async 'Seeding works'() {
-    const clientProvider = new SoapClientSupplierSeed()
-    const clientOptions = {
-      credentials: { username: 'proxyuser', password: '4kmLfk2j4?' },
-      wsdlPath: 'https://test-pluto.cruise-api.aida.de/ibe/engine/v2?wsdl',
-    }
-    const client = await clientProvider.getClient(clientOptions)
-    console.info(
-      await (client.findStationsAsync as (a: any) => Promise<any>)({
-        findStationsRequest: { name: 'Münch' },
-      })
-    )
   }
 
   @test
