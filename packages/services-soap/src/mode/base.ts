@@ -5,6 +5,29 @@ import 'reflect-metadata'
 import * as soap from 'soap'
 import { ClientOptions, Credentials } from '..'
 
+export type ClientFunction = (args: any) => Promise<any>
+
+export type ClientProxyFunction = (
+  fnc: ClientFunction,
+  name: string,
+  args: any
+) => Promise<any>
+
+/**
+ * SoapResponse is a javascript array containing result, rawResponse,
+ * soapheader, and rawRequest
+ */
+type SoapResponseArray = [
+  /** result */
+  any,
+  /** rawResponse */
+  string,
+  /** soapheader */
+  any,
+  /** rawRequest */
+  string
+]
+
 export const makeAuthOptions = ({ username, password }: Credentials) => {
   const credString = username + ':' + password
   const Authorization = `Basic ${new Buffer(credString).toString('base64')}`
@@ -19,17 +42,9 @@ export const setSecurity = (client: soap.Client, credentials: Credentials) => {
 export const getWsdlAsyncMethods = (client: soap.Client) => {
   const { bindings } = client.wsdl.definitions
   return _.flatMap(bindings, b =>
-    Object.keys(b.topElements).map(meth => `${meth}Async`)
+    Object.keys(b.methods).map(name => `${name}Async`)
   )
 }
-
-export type ClientFunction = (args: any) => Promise<any>
-
-export type ClientProxyFunction = (
-  fnc: ClientFunction,
-  name: string,
-  args: any
-) => Promise<any>
 
 /**
  * Creates a proxy for a SOAP client.
@@ -42,9 +57,21 @@ export const createProxy = <T extends soap.Client>(
 ) => {
   const asyncMeths = getWsdlAsyncMethods(client)
   asyncMeths.forEach(name => {
-    const original = client[name]
-    ;(client as soap.Client)[name] = async (args: any) =>
-      await proxyFunction(original as ClientFunction, name, args)
+    const original = client[name] as ClientFunction
+    const clientAsBase = client as soap.Client
+    clientAsBase[name] = async (args: any) => {
+      const array: SoapResponseArray = await proxyFunction(original, name, args)
+      if (Array.isArray(array)) {
+        const response = array[0]
+        // note: safe because XML element names cannot start with the letters xml
+        response.xmlRequest = array[1]
+        response.xmlHeaders = array[2]
+        response.xmlResponse = array[3]
+        return response
+      } else {
+        return array
+      }
+    }
   })
   return client
 }

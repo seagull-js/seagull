@@ -8,14 +8,7 @@ import { Client } from 'soap'
 import { SoapClientSupplierPure } from '../src/mode/pure'
 import { SoapClientSupplierSeed } from '../src/mode/seed'
 
-type ExpectedResponse = [
-  {
-    AddResult: number
-  },
-  string,
-  undefined,
-  string
-]
+type ExpectedResponse = { AddResult: number }
 
 interface ExpectedClient extends Client {
   AddAsync: (x: any) => Promise<ExpectedResponse>
@@ -51,7 +44,7 @@ export class Test extends BasicTest {
       wsdlPath: this.wsdlUrl,
     })
     const seedResponse = await seedClient.AddAsync(params)
-    expect(seedResponse[0].AddResult).to.eq(8)
+    expect(seedResponse.AddResult).to.eq(8)
 
     expect(fs.existsSync(path), 'fixture file not found').to.be.true
 
@@ -61,6 +54,6 @@ export class Test extends BasicTest {
     })
 
     const pureResponse = await pureClient.AddAsync(params)
-    expect(pureResponse[0].AddResult).to.eq(8)
+    expect(pureResponse.AddResult).to.eq(8)
   }
 }

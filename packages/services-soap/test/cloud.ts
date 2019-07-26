@@ -10,14 +10,7 @@ interface ExpectedClient extends Client {
   AddAsync: (x: any) => Promise<ExpectedResponse>
 }
 
-type ExpectedResponse = [
-  {
-    AddResult: number
-  },
-  string,
-  undefined,
-  string
-]
+type ExpectedResponse = { AddResult: number }
 
 // TODO: Mock outgoing test requests via Http-Mock like yakbak
 @suite('Soap::Cloud::Fetch')
@@ -43,6 +36,6 @@ export class Test extends BasicTest {
       wsdlPath: this.wsdlUrl,
     })
     const seedResponse = await seedClient.AddAsync(params)
-    expect(seedResponse[0].AddResult).to.eq(8)
+    expect(seedResponse.AddResult).to.eq(8)
   }
 }

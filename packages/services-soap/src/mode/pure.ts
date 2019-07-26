@@ -24,7 +24,7 @@ export class SoapClientSupplierPure extends SoapClientSupplierBase {
     const endpoint = options.endpoint || options.wsdlPath
     const opts = { endpoint, wsdlPath, credentials: options.credentials }
     const client = await this.getClientInternal<T>(opts)
-    // TODO: replace client generated functions with adapter doint the request and replacing the fixture
-    return purifyClient<T>(client, options.wsdlPath)
+    const pureClient = await purifyClient<T>(client, options.wsdlPath)
+    return pureClient
   }
 }

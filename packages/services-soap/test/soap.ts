@@ -4,7 +4,7 @@ import { BasicAuthSecurity } from 'soap'
 import { SoapClientSupplier } from '../src/mode/cloud'
 import { SoapClientSupplierSeed } from '../src/mode/seed'
 
-@suite('SOAP::IBE')
+@suite('SOAP::SOAP')
 class SoapClientSupplierTest {
   @test
   async 'returns a soap client'() {

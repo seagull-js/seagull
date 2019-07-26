@@ -44,7 +44,7 @@ export class SoapClientSupplierSeed extends SoapClientSupplierBase {
     const seed = FixtureStorage.createByWsdlUrl(options.wsdlPath)
     seed.set(wsdl)
     const client = await this.getClientInternal<T>(options)
-    // TODO: replace client generated functions with adapter doint the request and replacing the fixture
-    return await seedifyClient<T>(client, options.wsdlPath)
+    const seedClient = await seedifyClient<T>(client, options.wsdlPath)
+    return seedClient
   }
 }
