@@ -46,12 +46,7 @@ const seedifyClient = (client: soap.Client, wsdlPath: string) => {
 export class SoapClientSupplierSeed extends SoapClientSupplierBase {
   async getClient<T extends soap.Client>(options: ClientOptions): Promise<T> {
     const wsdl = await fetchWSDL(options)
-    const seed = new FixtureStorage(
-      options.wsdlPath
-        .replace('http://', 'http/')
-        .replace('https://', 'https/'),
-      '.wsdl'
-    )
+    const seed = FixtureStorage.createByWsdlUrl(options.wsdlPath)
     seed.set(wsdl)
     const client = await this.getClientInternal(options)
     // TODO: replace client generated functions with adapter doint the request and replacing the fixture

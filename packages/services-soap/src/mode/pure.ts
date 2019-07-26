@@ -23,7 +23,9 @@ const purifyClient = (client: soap.Client, wsdlPath: string) => {
 export class SoapClientSupplierPure extends SoapClientSupplierBase {
   async getClient<T extends soap.Client>(options: ClientOptions): Promise<T> {
     const wsdlPath = `seed/${options.wsdlPath}.wsdl`.replace('://', '/')
-    const client = await this.getClientInternal({ ...options, wsdlPath })
+    const endpoint = options.endpoint || options.wsdlPath
+    const opts = { endpoint, wsdlPath, credentials: options.credentials }
+    const client = await this.getClientInternal(opts)
     // TODO: replace client generated functions with adapter doint the request and replacing the fixture
     return purifyClient(client, options.wsdlPath) as T
   }

@@ -1,1 +1,196 @@
-"<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<wsdl:definitions xmlns:soap=\"http://schemas.xmlsoap.org/wsdl/soap/\" xmlns:tm=\"http://microsoft.com/wsdl/mime/textMatching/\" xmlns:soapenc=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:mime=\"http://schemas.xmlsoap.org/wsdl/mime/\" xmlns:tns=\"http://tempuri.org/\" xmlns:s=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://schemas.xmlsoap.org/wsdl/soap12/\" xmlns:http=\"http://schemas.xmlsoap.org/wsdl/http/\" targetNamespace=\"http://tempuri.org/\" xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\">\r\n  <wsdl:types>\r\n    <s:schema elementFormDefault=\"qualified\" targetNamespace=\"http://tempuri.org/\">\r\n      <s:element name=\"Add\">\r\n        <s:complexType>\r\n          <s:sequence>\r\n            <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"intA\" type=\"s:int\" />\r\n            <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"intB\" type=\"s:int\" />\r\n          </s:sequence>\r\n        </s:complexType>\r\n      </s:element>\r\n      <s:element name=\"AddResponse\">\r\n        <s:complexType>\r\n          <s:sequence>\r\n            <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"AddResult\" type=\"s:int\" />\r\n          </s:sequence>\r\n        </s:complexType>\r\n      </s:element>\r\n      <s:element name=\"Subtract\">\r\n        <s:complexType>\r\n          <s:sequence>\r\n            <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"intA\" type=\"s:int\" />\r\n            <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"intB\" type=\"s:int\" />\r\n          </s:sequence>\r\n        </s:complexType>\r\n      </s:element>\r\n      <s:element name=\"SubtractResponse\">\r\n        <s:complexType>\r\n          <s:sequence>\r\n            <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"SubtractResult\" type=\"s:int\" />\r\n          </s:sequence>\r\n        </s:complexType>\r\n      </s:element>\r\n      <s:element name=\"Multiply\">\r\n        <s:complexType>\r\n          <s:sequence>\r\n            <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"intA\" type=\"s:int\" />\r\n            <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"intB\" type=\"s:int\" />\r\n          </s:sequence>\r\n        </s:complexType>\r\n      </s:element>\r\n      <s:element name=\"MultiplyResponse\">\r\n        <s:complexType>\r\n          <s:sequence>\r\n            <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"MultiplyResult\" type=\"s:int\" />\r\n          </s:sequence>\r\n        </s:complexType>\r\n      </s:element>\r\n      <s:element name=\"Divide\">\r\n        <s:complexType>\r\n          <s:sequence>\r\n            <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"intA\" type=\"s:int\" />\r\n            <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"intB\" type=\"s:int\" />\r\n          </s:sequence>\r\n        </s:complexType>\r\n      </s:element>\r\n      <s:element name=\"DivideResponse\">\r\n        <s:complexType>\r\n          <s:sequence>\r\n            <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"DivideResult\" type=\"s:int\" />\r\n          </s:sequence>\r\n        </s:complexType>\r\n      </s:element>\r\n    </s:schema>\r\n  </wsdl:types>\r\n  <wsdl:message name=\"AddSoapIn\">\r\n    <wsdl:part name=\"parameters\" element=\"tns:Add\" />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"AddSoapOut\">\r\n    <wsdl:part name=\"parameters\" element=\"tns:AddResponse\" />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"SubtractSoapIn\">\r\n    <wsdl:part name=\"parameters\" element=\"tns:Subtract\" />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"SubtractSoapOut\">\r\n    <wsdl:part name=\"parameters\" element=\"tns:SubtractResponse\" />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"MultiplySoapIn\">\r\n    <wsdl:part name=\"parameters\" element=\"tns:Multiply\" />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"MultiplySoapOut\">\r\n    <wsdl:part name=\"parameters\" element=\"tns:MultiplyResponse\" />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"DivideSoapIn\">\r\n    <wsdl:part name=\"parameters\" element=\"tns:Divide\" />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"DivideSoapOut\">\r\n    <wsdl:part name=\"parameters\" element=\"tns:DivideResponse\" />\r\n  </wsdl:message>\r\n  <wsdl:portType name=\"CalculatorSoap\">\r\n    <wsdl:operation name=\"Add\">\r\n      <wsdl:documentation xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\">Adds two integers. This is a test WebService. ©DNE Online</wsdl:documentation>\r\n      <wsdl:input message=\"tns:AddSoapIn\" />\r\n      <wsdl:output message=\"tns:AddSoapOut\" />\r\n    </wsdl:operation>\r\n    <wsdl:operation name=\"Subtract\">\r\n      <wsdl:input message=\"tns:SubtractSoapIn\" />\r\n      <wsdl:output message=\"tns:SubtractSoapOut\" />\r\n    </wsdl:operation>\r\n    <wsdl:operation name=\"Multiply\">\r\n      <wsdl:input message=\"tns:MultiplySoapIn\" />\r\n      <wsdl:output message=\"tns:MultiplySoapOut\" />\r\n    </wsdl:operation>\r\n    <wsdl:operation name=\"Divide\">\r\n      <wsdl:input message=\"tns:DivideSoapIn\" />\r\n      <wsdl:output message=\"tns:DivideSoapOut\" />\r\n    </wsdl:operation>\r\n  </wsdl:portType>\r\n  <wsdl:binding name=\"CalculatorSoap\" type=\"tns:CalculatorSoap\">\r\n    <soap:binding transport=\"http://schemas.xmlsoap.org/soap/http\" />\r\n    <wsdl:operation name=\"Add\">\r\n      <soap:operation soapAction=\"http://tempuri.org/Add\" style=\"document\" />\r\n      <wsdl:input>\r\n        <soap:body use=\"literal\" />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\n        <soap:body use=\"literal\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n    <wsdl:operation name=\"Subtract\">\r\n      <soap:operation soapAction=\"http://tempuri.org/Subtract\" style=\"document\" />\r\n      <wsdl:input>\r\n        <soap:body use=\"literal\" />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\n        <soap:body use=\"literal\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n    <wsdl:operation name=\"Multiply\">\r\n      <soap:operation soapAction=\"http://tempuri.org/Multiply\" style=\"document\" />\r\n      <wsdl:input>\r\n        <soap:body use=\"literal\" />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\n        <soap:body use=\"literal\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n    <wsdl:operation name=\"Divide\">\r\n      <soap:operation soapAction=\"http://tempuri.org/Divide\" style=\"document\" />\r\n      <wsdl:input>\r\n        <soap:body use=\"literal\" />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\n        <soap:body use=\"literal\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n  </wsdl:binding>\r\n  <wsdl:binding name=\"CalculatorSoap12\" type=\"tns:CalculatorSoap\">\r\n    <soap12:binding transport=\"http://schemas.xmlsoap.org/soap/http\" />\r\n    <wsdl:operation name=\"Add\">\r\n      <soap12:operation soapAction=\"http://tempuri.org/Add\" style=\"document\" />\r\n      <wsdl:input>\r\n        <soap12:body use=\"literal\" />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\n        <soap12:body use=\"literal\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n    <wsdl:operation name=\"Subtract\">\r\n      <soap12:operation soapAction=\"http://tempuri.org/Subtract\" style=\"document\" />\r\n      <wsdl:input>\r\n        <soap12:body use=\"literal\" />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\n        <soap12:body use=\"literal\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n    <wsdl:operation name=\"Multiply\">\r\n      <soap12:operation soapAction=\"http://tempuri.org/Multiply\" style=\"document\" />\r\n      <wsdl:input>\r\n        <soap12:body use=\"literal\" />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\n        <soap12:body use=\"literal\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n    <wsdl:operation name=\"Divide\">\r\n      <soap12:operation soapAction=\"http://tempuri.org/Divide\" style=\"document\" />\r\n      <wsdl:input>\r\n        <soap12:body use=\"literal\" />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\n        <soap12:body use=\"literal\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n  </wsdl:binding>\r\n  <wsdl:service name=\"Calculator\">\r\n    <wsdl:port name=\"CalculatorSoap\" binding=\"tns:CalculatorSoap\">\r\n      <soap:address location=\"http://www.dneonline.com/calculator.asmx\" />\r\n    </wsdl:port>\r\n    <wsdl:port name=\"CalculatorSoap12\" binding=\"tns:CalculatorSoap12\">\r\n      <soap12:address location=\"http://www.dneonline.com/calculator.asmx\" />\r\n    </wsdl:port>\r\n  </wsdl:service>\r\n</wsdl:definitions>"
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="Add">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="intA" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="intB" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="AddResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Subtract">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="intA" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="intB" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SubtractResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="SubtractResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Multiply">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="intA" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="intB" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MultiplyResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="MultiplyResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Divide">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="intA" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="intB" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DivideResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="DivideResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="AddSoapIn">
+    <wsdl:part name="parameters" element="tns:Add" />
+  </wsdl:message>
+  <wsdl:message name="AddSoapOut">
+    <wsdl:part name="parameters" element="tns:AddResponse" />
+  </wsdl:message>
+  <wsdl:message name="SubtractSoapIn">
+    <wsdl:part name="parameters" element="tns:Subtract" />
+  </wsdl:message>
+  <wsdl:message name="SubtractSoapOut">
+    <wsdl:part name="parameters" element="tns:SubtractResponse" />
+  </wsdl:message>
+  <wsdl:message name="MultiplySoapIn">
+    <wsdl:part name="parameters" element="tns:Multiply" />
+  </wsdl:message>
+  <wsdl:message name="MultiplySoapOut">
+    <wsdl:part name="parameters" element="tns:MultiplyResponse" />
+  </wsdl:message>
+  <wsdl:message name="DivideSoapIn">
+    <wsdl:part name="parameters" element="tns:Divide" />
+  </wsdl:message>
+  <wsdl:message name="DivideSoapOut">
+    <wsdl:part name="parameters" element="tns:DivideResponse" />
+  </wsdl:message>
+  <wsdl:portType name="CalculatorSoap">
+    <wsdl:operation name="Add">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Adds two integers. This is a test WebService. ©DNE Online</wsdl:documentation>
+      <wsdl:input message="tns:AddSoapIn" />
+      <wsdl:output message="tns:AddSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Subtract">
+      <wsdl:input message="tns:SubtractSoapIn" />
+      <wsdl:output message="tns:SubtractSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Multiply">
+      <wsdl:input message="tns:MultiplySoapIn" />
+      <wsdl:output message="tns:MultiplySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Divide">
+      <wsdl:input message="tns:DivideSoapIn" />
+      <wsdl:output message="tns:DivideSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CalculatorSoap" type="tns:CalculatorSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Add">
+      <soap:operation soapAction="http://tempuri.org/Add" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Subtract">
+      <soap:operation soapAction="http://tempuri.org/Subtract" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Multiply">
+      <soap:operation soapAction="http://tempuri.org/Multiply" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Divide">
+      <soap:operation soapAction="http://tempuri.org/Divide" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="CalculatorSoap12" type="tns:CalculatorSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Add">
+      <soap12:operation soapAction="http://tempuri.org/Add" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Subtract">
+      <soap12:operation soapAction="http://tempuri.org/Subtract" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Multiply">
+      <soap12:operation soapAction="http://tempuri.org/Multiply" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Divide">
+      <soap12:operation soapAction="http://tempuri.org/Divide" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Calculator">
+    <wsdl:port name="CalculatorSoap" binding="tns:CalculatorSoap">
+      <soap:address location="http://www.dneonline.com/calculator.asmx" />
+    </wsdl:port>
+    <wsdl:port name="CalculatorSoap12" binding="tns:CalculatorSoap12">
+      <soap12:address location="http://www.dneonline.com/calculator.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

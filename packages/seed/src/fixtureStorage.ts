@@ -1,6 +1,12 @@
 import * as crypto from 'crypto'
 import * as fs from 'fs'
-import { outputJsonSync, pathExistsSync, readJsonSync } from 'fs-extra'
+import {
+  outputFileSync,
+  outputJsonSync,
+  pathExistsSync,
+  readFileSync,
+  readJsonSync,
+} from 'fs-extra'
 import { RequestInit } from 'node-fetch'
 import { join } from 'path'
 import { SeedError } from './error'
@@ -60,12 +66,19 @@ export class FixtureStorage<T> {
    * @param init The request configuration.
    */
   static createByUrl<T>(url: string, params?: any): FixtureStorage<T> {
-    url = url.replace('http://', 'http/')
-    url = url.replace('https://', 'https/')
+    const path = url.replace('://', '/')
     return new FixtureStorage(
-      `${url}/${params ? this.hash(JSON.stringify(params)) : 'default'}`,
+      `${path}/${params ? this.hash(JSON.stringify(params)) : 'default'}`,
       `.json`
     )
+  }
+
+  /**
+   * Alternate constructor to create a seed fixtureStorage by wsdl url.
+   * @param url The request url.
+   */
+  static createByWsdlUrl<T>(url: string): FixtureStorage<T> {
+    return new FixtureStorage(`${url.replace('://', '/')}`, `.wsdl`)
   }
 
   private static hash(key: string) {
@@ -86,9 +99,7 @@ export class FixtureStorage<T> {
    * @param uri Fixture uri
    */
   get(): T {
-    const fixture = pathExistsSync(this.path)
-      ? readJsonSync(this.path)
-      : undefined
+    const fixture = pathExistsSync(this.path) && this.fs.read(this.path)
 
     if (!fixture) {
       throw new SeedError('Http: fixture (seed) is missing.', this)
@@ -100,6 +111,20 @@ export class FixtureStorage<T> {
     return fixture
   }
 
+  private get fs() {
+    const jsonOpts = { spaces: 2 }
+    switch (this.fileExtension) {
+      case '.wsdl':
+      case '.xml':
+        return { save: outputFileSync, read: readFileSync }
+      default:
+        return {
+          read: readJsonSync,
+          save: (path: string, val: any) => outputJsonSync(path, val, jsonOpts),
+        }
+    }
+  }
+
   /**
    * Set fixture.
    * @param value Fixture value (response/file content)
@@ -108,7 +133,7 @@ export class FixtureStorage<T> {
     if (this.config.hook) {
       value = this.config.hook(value)
     }
-    return outputJsonSync(this.path, value, { spaces: 2 })
+    return this.fs.save(this.path, value)
   }
 
   private getConfigRecursive(
