@@ -4,6 +4,7 @@ import * as _ from 'lodash'
 import 'reflect-metadata'
 import * as soap from 'soap'
 import { ClientOptions, Credentials } from '..'
+import { config } from '../config'
 
 export type ClientFunction = (args: any) => Promise<any>
 
@@ -62,7 +63,7 @@ export const createProxy = <T extends soap.Client>(
     clientAsBase[name] = async (args: any) => {
       const array: SoapResponseArray = await proxyFunction(original, name, args)
       const response = Array.isArray(array) ? array[0] : array
-      if (false) {
+      if (config.debug) {
         // note: safe because XML element names cannot start with the letters xml
         response.xmlRequest = array[1]
         response.xmlHeaders = array[2]

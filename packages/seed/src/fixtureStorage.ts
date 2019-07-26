@@ -7,7 +7,6 @@ import {
   readFileSync,
   readJsonSync,
 } from 'fs-extra'
-import { RequestInit } from 'node-fetch'
 import { join } from 'path'
 import { SeedError } from './error'
 import { LocalConfig } from './localConfig'
