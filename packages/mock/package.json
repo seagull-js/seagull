@@ -1,6 +1,6 @@
 {
   "name": "@seagull/mock",
-  "version": "11.5.0",
+  "version": "11.4.0",
   "description": "General mock abstractions for the Seagull Framework",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

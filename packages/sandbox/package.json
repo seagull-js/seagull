@@ -1,6 +1,6 @@
 {
   "name": "@seagull/sandbox",
-  "version": "11.5.0",
+  "version": "11.4.0",
   "description": "Sandbox registry for the seagull framework. Gathering side effects",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
