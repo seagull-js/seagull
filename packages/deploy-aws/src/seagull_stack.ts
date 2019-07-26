@@ -102,9 +102,8 @@ export class SeagullStack extends Stack {
     const name = `${this.id}-${cfdName}`
     const domainName = getApiGatewayDomain(props.apiGateway.url)
     const originPath = getApiGatewayPath(props.apiGateway.url)
-    const defaultBehavior = this.getDefaultBehavior()
 
-    const behaviors = [defaultBehavior]
+    const behaviors = [this.getDefaultBehavior()]
     const customOriginSource = { domainName }
 
     const errorPageConfig =
