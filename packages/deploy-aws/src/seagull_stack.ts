@@ -104,9 +104,8 @@ export class SeagullStack extends Stack {
     const behaviors = [defaultBehavior]
     const customOriginSource = { domainName }
 
-    const errorPageConfig = props.errorBucket
-      ? this.getErrorPageConfig(props.errorBucket)
-      : undefined
+    const errorPageConfig =
+      props.errorBucket && this.getErrorPageConfig(props.errorBucket)
 
     const originConfigurations = errorPageConfig
       ? [{ behaviors, customOriginSource, originPath }, errorPageConfig]
