@@ -59,14 +59,11 @@ export class FixtureStorage<T> {
    * @param url The request url.
    * @param init The request configuration.
    */
-  static createByFetchParams<T>(
-    url: string,
-    init?: RequestInit
-  ): FixtureStorage<T> {
+  static createByUrl<T>(url: string, params?: any): FixtureStorage<T> {
     url = url.replace('http://', 'http/')
     url = url.replace('https://', 'https/')
     return new FixtureStorage(
-      `${url}/${init ? this.hash(JSON.stringify(init)) : 'default'}`,
+      `${url}/${params ? this.hash(JSON.stringify(params)) : 'default'}`,
       `.json`
     )
   }

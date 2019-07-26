@@ -30,9 +30,9 @@ const seedifyClient = (client: soap.Client, wsdlPath: string) => {
   asyncMeths.forEach(meth => {
     const originalFunction = client[meth] as (...params: any[]) => any
     client[meth] = async (...params: any) => {
-      const mSeed = new FixtureStorage(`${wsdlPath}/${meth}`, '.json')
+      const mSeed = FixtureStorage.createByUrl(`${wsdlPath}/${meth}`, params)
       const resp = await originalFunction(...params)
-      mSeed.set(resp, params)
+      mSeed.set(resp)
       return resp
     }
   })

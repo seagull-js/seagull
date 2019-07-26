@@ -13,7 +13,7 @@ export class SoapClientSupplierPure extends SoapClientSupplierBase {
   getClient<T extends soap.Client>(options: ClientOptions): Promise<T> {
     const client = this.getClientInternal(options)
     // TODO: replace client generated functions with adapter doing something like:
-    // const seed = FixtureStorage.createByFetchParams<Fixture<any>>(url, init)
+    // const seed = FixtureStorage.createByUrl<Fixture<any>>(url, init)
     // const fixture = seed.get()
     throw new Error('not implemented')
   }
