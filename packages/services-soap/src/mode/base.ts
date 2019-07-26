@@ -1,5 +1,6 @@
 import * as crypto from 'crypto'
 import { injectable } from 'inversify'
+import { flatMap } from 'lodash'
 import 'reflect-metadata'
 import * as soap from 'soap'
 import { ClientOptions, Credentials } from '..'
@@ -15,6 +16,12 @@ export const setSecurity = (client: soap.Client, credentials: Credentials) => {
   client.setSecurity(new soap.BasicAuthSecurity(username, password))
 }
 
+export const getAsyncMethods = (client: soap.Client) => {
+  const { bindings } = client.wsdl.definitions
+  return flatMap(bindings, b =>
+    Object.keys(b.topElements).map(meth => `${meth}Async`)
+  )
+}
 @injectable()
 export class SoapClientSupplierBase {
   protected async getClientInternal<T extends soap.Client>({

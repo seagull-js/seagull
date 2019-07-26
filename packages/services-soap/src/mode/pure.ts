@@ -1,22 +1,14 @@
 import { FixtureStorage } from '@seagull/seed'
 import { injectable } from 'inversify'
-import { flatMap, map } from 'lodash'
 import fetch from 'node-fetch'
 import 'reflect-metadata'
 import * as soap from 'soap'
 import { ClientOptions, Credentials } from '..'
-import { SoapClientSupplierBase } from './base'
+import { getAsyncMethods, SoapClientSupplierBase } from './base'
 
 const replaceMethod = (client: soap.Client, meth: string, wsdlPath: string) => {
   client[meth] = async (...params: any) =>
-    FixtureStorage.createByFetchParams(`${wsdlPath}/${meth}`, params).get()
-}
-
-const getAsyncMethods = (client: soap.Client) => {
-  const { bindings } = client.wsdl.definitions
-  return flatMap(bindings, b =>
-    Object.keys(b.topElements).map(meth => `${meth}Async`)
-  )
+    FixtureStorage.createByUrl(`${wsdlPath}/${meth}`, params).get()
 }
 
 const purifyClient = (client: soap.Client, wsdlPath: string) => {
