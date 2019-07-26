@@ -19,6 +19,7 @@ type ExpectedResponse = [
   string
 ]
 
+// TODO: Mock outgoing test requests via Http-Mock like yakbak
 @suite('Soap::Cloud::Fetch')
 export class Test extends BasicTest {
   soap = new SoapClientSupplier()
