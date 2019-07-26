@@ -1,3 +1,4 @@
+// tslint:disable: no-unused-expression
 import { BasicTest } from '@seagull/testing'
 import { expect } from 'chai'
 import 'chai/register-should'
@@ -42,6 +43,8 @@ export class Test extends BasicTest {
     expect(seedResponse).to.be.an('object')
     expect(seedResponse.args).to.have.ownProperty('foo1')
     expect(seedResponse.args).to.have.ownProperty('foo2')
+
+    expect(fs.existsSync(path)).to.be.true
 
     // get fixture
     const pureResponse = (await (await this.httpPure.fetch(

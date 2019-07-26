@@ -1,3 +1,4 @@
+// tslint:disable: no-unused-expression
 import { BasicTest } from '@seagull/testing'
 import { expect } from 'chai'
 import 'chai/register-should'
@@ -25,13 +26,18 @@ interface ExpectedClient extends Client {
 export class Test extends BasicTest {
   soapSeed = new SoapClientSupplierSeed()
   soapPure = new SoapClientSupplierPure()
-  baseUrl = 'http://www.dneonline.com/calculator.asmx'
+  protocol = 'http'
+  basePath = 'www.dneonline.com/calculator.asmx'
+  baseUrl = `${this.protocol}://${this.basePath}`
   wsdlUrl = `${this.baseUrl}?wsdl`
+  functionHash = '88aa5822b9b0dd3ef5b00f2e0c75424f'
 
   @test
   async 'can get seed fixture'() {
     // delete old fixture
-    const path = './seed/https/www.dneonline.com/calculator.asmx?'
+    const path = `./seed/${this.protocol}/${this.basePath}?wsdl/AddAsync/${
+      this.functionHash
+    }.json`
     if (fs.existsSync(path)) {
       fs.unlinkSync(path)
     }
@@ -49,6 +55,8 @@ export class Test extends BasicTest {
     const seedResponse = await seedClient.AddAsync(params)
     expect(seedResponse[0].AddResult).to.eq(8)
     console.info('step3')
+
+    expect(fs.existsSync(path)).to.be.true
 
     // get fixture
     const pureClient = await this.soapPure.getClient<ExpectedClient>({
