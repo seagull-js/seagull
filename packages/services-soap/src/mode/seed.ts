@@ -5,7 +5,7 @@ import fetch from 'node-fetch'
 import 'reflect-metadata'
 import * as soap from 'soap'
 import { ClientOptions, Credentials } from '..'
-import { SoapClientSupplierBase } from './base'
+import { getAsyncMethods, SoapClientSupplierBase } from './base'
 
 const makeAuthHeader = (credentials: Credentials) => {
   const { username, password } = credentials
@@ -19,23 +19,22 @@ const fetchWSDL = async (options: ClientOptions, fetchFun = fetch) => {
   const headers = creds ? makeAuthHeader(creds) : {}
   const credentials = creds ? 'include' : undefined
   const init = { credentials, headers, method: 'GET', mode: 'cors' }
-  console.info(init)
   return (await fetchFun(options.wsdlPath, init)).text()
 }
 
+const replaceMethod = (client: soap.Client, meth: string, wsdlPath: string) => {
+  const originalFunction = client[meth] as (...params: any[]) => any
+  client[meth] = async (...params: any) => {
+    const seed = FixtureStorage.createByUrl(`${wsdlPath}/${meth}`, params)
+    const resp = await originalFunction(...params)
+    seed.set(resp)
+    return resp
+  }
+}
+
 const seedifyClient = (client: soap.Client, wsdlPath: string) => {
-  const asyncMeths: string[] = flatMap(client.wsdl.definitions.bindings, b =>
-    Object.keys(b.topElements).map(meth => `${meth}Async`)
-  )
-  asyncMeths.forEach(meth => {
-    const originalFunction = client[meth] as (...params: any[]) => any
-    client[meth] = async (...params: any) => {
-      const mSeed = FixtureStorage.createByUrl(`${wsdlPath}/${meth}`, params)
-      const resp = await originalFunction(...params)
-      mSeed.set(resp)
-      return resp
-    }
-  })
+  const asyncMeths: string[] = getAsyncMethods(client)
+  asyncMeths.forEach(meth => replaceMethod(client, meth, wsdlPath))
   return client
 }
 

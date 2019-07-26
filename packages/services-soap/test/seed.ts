@@ -47,14 +47,11 @@ export class Test extends BasicTest {
       intA: 3,
       intB: 5,
     }
-    console.info('step1')
     const seedClient = await this.soapSeed.getClient<ExpectedClient>({
       wsdlPath: this.wsdlUrl,
     })
-    console.info('step2')
     const seedResponse = await seedClient.AddAsync(params)
     expect(seedResponse[0].AddResult).to.eq(8)
-    console.info('step3')
 
     expect(fs.existsSync(path)).to.be.true
 
@@ -63,7 +60,6 @@ export class Test extends BasicTest {
       wsdlPath: this.wsdlUrl,
     })
 
-    console.info('step4')
     const pureResponse = await pureClient.AddAsync(params)
     expect(pureResponse[0].AddResult).to.eq(8)
   }
