@@ -22,6 +22,9 @@ import {
   getApiGatewayPath,
   mapEnvironmentVariables,
 } from './lib'
+
+import { compact } from 'lodash'
+
 import {
   BuildStageConfig,
   CloudfrontProps,
@@ -107,9 +110,10 @@ export class SeagullStack extends Stack {
     const errorPageConfig =
       props.errorBucket && this.getErrorPageConfig(props.errorBucket)
 
-    const originConfigurations = errorPageConfig
-      ? [{ behaviors, customOriginSource, originPath }, errorPageConfig]
-      : [{ behaviors, customOriginSource, originPath }]
+    const originConfigurations = compact([
+      { behaviors, customOriginSource, originPath },
+      errorPageConfig,
+    ])
 
     const errorConfig = this.getErrorConfig(500, 500, '/error.html', 60)
 
