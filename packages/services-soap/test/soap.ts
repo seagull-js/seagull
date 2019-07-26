@@ -1,11 +1,9 @@
 import { expect } from 'chai'
 import { suite, test, timeout } from 'mocha-typescript'
 import { BasicAuthSecurity } from 'soap'
-import { ClientOptions } from '../src'
 import { SoapClientSupplier } from '../src/mode/cloud'
 import { SoapClientSupplierSeed } from '../src/mode/seed'
 
-// tslint:disable-next-line:no-var-requires
 @suite('SOAP::IBE')
 class SoapClientSupplierTest {
   @test
