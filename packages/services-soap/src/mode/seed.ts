@@ -7,18 +7,35 @@ import * as soap from 'soap'
 import { ClientOptions, Credentials } from '..'
 import { SoapClientSupplierBase } from './base'
 const makeAuthHeader = (credentials: Credentials) => {
-  const { username, password } = { username: '', password: '' }
+  const { username, password } = credentials
   const base64Creds = new Buffer(username + ':' + password).toString('base64')
   const Authorization = `Basic ${base64Creds}`
   return { Authorization }
 }
 
-const fetchWSDL = async (options: ClientOptions) => {
+const fetchWSDL = async (options: ClientOptions, fetchFun = fetch) => {
   const creds = options.credentials
   const headers = creds ? makeAuthHeader(creds) : {}
   const credentials = creds ? 'include' : undefined
   const init = { credentials, headers, method: 'GET', mode: 'cors' }
-  return (await fetch(options.wsdlPath, init)).text()
+  console.info(init)
+  return (await fetchFun(options.wsdlPath, init)).text()
+}
+
+const seedifyClient = (client: soap.Client, wsdlPath: string) => {
+  const asyncMeths: string[] = flatMap(client.wsdl.definitions.bindings, b =>
+    Object.keys(b.topElements).map(meth => `${meth}Async`)
+  )
+  asyncMeths.forEach(meth => {
+    const originalFunction = client[meth] as (r: any) => any
+    client[meth] = async (req: any) => {
+      const mSeed = new FixtureStorage(`${wsdlPath}/${meth}`, '.json')
+      const resp = await originalFunction(req)
+      mSeed.set(resp)
+      return resp
+    }
+  })
+  return client
 }
 /**
  * Soap client supplier seed mode implementation.
@@ -35,19 +52,7 @@ export class SoapClientSupplierSeed extends SoapClientSupplierBase {
     )
     seed.set(wsdl)
     const client = await this.getClientInternal(options)
-    const asyncMeths: string[] = flatMap(client.wsdl.definitions.bindings, b =>
-      Object.keys(b.topElements).map(meth => `${meth}Async`)
-    )
-    asyncMeths.forEach(meth => {
-      const originalFunction = client[meth] as (r: any) => any
-      client[meth] = async req => {
-        const mSeed = new FixtureStorage(`${options.wsdlPath}/${meth}`, '.json')
-        const resp = await originalFunction(req)
-        mSeed.set(resp)
-        return resp
-      }
-    })
     // TODO: replace client generated functions with adapter doint the request and replacing the fixture
-    return client as T
+    return seedifyClient(client, options.wsdlPath) as T
   }
 }
