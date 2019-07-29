@@ -33,6 +33,7 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
+    "@seagull/libraries": "10.7.1",
     "@seagull/mode": "^11.4.0",
     "@seagull/seed": "^11.4.0",
     "@seagull/testing": "^11.4.0",

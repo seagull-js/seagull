@@ -5,6 +5,7 @@ import 'reflect-metadata'
 import * as soap from 'soap'
 import { ClientOptions, Credentials } from '..'
 import { config } from '../config'
+import { SoapError } from '../error'
 
 export type ClientFunction = (args: any) => Promise<any>
 
@@ -47,6 +48,27 @@ export const getWsdlAsyncMethods = (client: soap.Client) => {
   )
 }
 
+const proxifyClient = <T extends soap.Client>(
+  client: T,
+  name: string,
+  proxyFunction: ClientProxyFunction
+) => {
+  const original = client[name] as ClientFunction
+  const clientAsBase = client as soap.Client
+  // note: hard to flatten because the async proxy function uses scope variables
+  clientAsBase[name] = async (args: any) => {
+    const array: SoapResponseArray = await proxyFunction(original, name, args)
+    const response = Array.isArray(array) ? array[0] : array
+    if (config.debug) {
+      // note: safe because XML element names cannot start with the letters xml
+      response.xmlRequest = array[1]
+      response.xmlHeaders = array[2]
+      response.xmlResponse = array[3]
+    }
+    return response
+  }
+}
+
 /**
  * Creates a proxy for a SOAP client.
  * @param client The SOAP client
@@ -57,26 +79,19 @@ export const createProxy = <T extends soap.Client>(
   proxyFunction: ClientProxyFunction
 ) => {
   const asyncMeths = getWsdlAsyncMethods(client)
-  asyncMeths.forEach(name => {
-    const original = client[name] as ClientFunction
-    const clientAsBase = client as soap.Client
-    clientAsBase[name] = async (args: any) => {
-      const array: SoapResponseArray = await proxyFunction(original, name, args)
-      const response = Array.isArray(array) ? array[0] : array
-      if (config.debug) {
-        // note: safe because XML element names cannot start with the letters xml
-        response.xmlRequest = array[1]
-        response.xmlHeaders = array[2]
-        response.xmlResponse = array[3]
-      }
-      return response
-    }
-  })
+  asyncMeths.forEach(name => proxifyClient(client, name, proxyFunction))
   return client
 }
 
+/**
+ * Base SOAP client supplier.
+ */
 @injectable()
 export class SoapClientSupplierBase {
+  /**
+   * Creates a SOAP client using [node-soap](https://github.com/vpulim/node-soap).
+   * @param param0 client options
+   */
   protected async getClientInternal<T extends soap.Client>({
     wsdlPath,
     credentials,

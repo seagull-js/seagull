@@ -14,7 +14,7 @@ interface ExpectedResponse {
   }
 }
 
-@suite('Http::Json')
+@suite('Http::ContentType::Json')
 export class Test extends BasicTest {
   http = new HttpJson(new HttpSeed())
   baseUrl = `https://postman-echo.com`

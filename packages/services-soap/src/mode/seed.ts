@@ -4,6 +4,7 @@ import fetch from 'node-fetch'
 import 'reflect-metadata'
 import * as soap from 'soap'
 import { ClientOptions, Credentials } from '..'
+import { SoapError } from '../error'
 import { ClientFunction, createProxy, SoapClientSupplierBase } from './base'
 
 const makeAuthHeader = (credentials: Credentials) => {
@@ -39,12 +40,21 @@ const seedifyClient = async <T extends soap.Client>(
  */
 @injectable()
 export class SoapClientSupplierSeed extends SoapClientSupplierBase {
+  /**
+   * Creates a SOAP seed mode client.
+   * @param options client options
+   * @throws {SoapError} when unable to create the SOAP client
+   */
   async getClient<T extends soap.Client>(options: ClientOptions): Promise<T> {
-    const wsdl = await fetchWsdl(options)
-    const seed = FixtureStorage.createByWsdlUrl(options.wsdlPath)
-    seed.set(wsdl)
-    const client = await this.getClientInternal<T>(options)
-    const seedClient = await seedifyClient<T>(client, options.wsdlPath)
-    return seedClient
+    try {
+      const wsdl = await fetchWsdl(options)
+      const seed = FixtureStorage.createByWsdlUrl(options.wsdlPath)
+      seed.set(wsdl)
+      const client = await this.getClientInternal<T>(options)
+      const seedClient = await seedifyClient<T>(client, options.wsdlPath)
+      return seedClient
+    } catch (e) {
+      throw new SoapError('Unable to create the SOAP seed mode client', e)
+    }
   }
 }

@@ -5,8 +5,8 @@ import 'chai/register-should'
 import * as fs from 'fs'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as querystring from 'querystring'
-import { HttpPure } from '../src/mode/pure'
-import { HttpSeed } from '../src/mode/seed'
+import { HttpPure } from '../../src/mode/pure'
+import { HttpSeed } from '../../src/mode/seed'
 
 interface ExpectedResponse {
   args: {
@@ -15,7 +15,7 @@ interface ExpectedResponse {
   }
 }
 
-@suite('Http::Seed::Request')
+@suite('Http::Mode::Seed')
 export class Test extends BasicTest {
   httpSeed = new HttpSeed()
   httpPure = new HttpPure()

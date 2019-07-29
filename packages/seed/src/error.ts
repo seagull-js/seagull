@@ -5,7 +5,7 @@ export class SeedError extends BasicError {
   /**
    * Creates a new seed error
    * @param message human readable error message
-   * @param seed seed fixture storage
+   * @param seed inner error or error details
    */
   constructor(message: string, public seed: FixtureStorage<any> | any) {
     super('SeedError', message)

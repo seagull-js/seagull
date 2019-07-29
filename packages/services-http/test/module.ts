@@ -10,7 +10,7 @@ import { HttpPure } from '../src/mode/pure'
 import { HttpSeed } from '../src/mode/seed'
 import { module } from '../src/module'
 
-@suite('Http::Module::Fetch')
+@suite('Http::Module')
 export class Test extends BasicTest {
   static injector = new Container()
   static before() {

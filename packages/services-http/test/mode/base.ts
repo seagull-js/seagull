@@ -3,10 +3,10 @@ import { expect, use } from 'chai'
 import * as promisedChai from 'chai-as-promised'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as querystring from 'querystring'
-import { Http } from '../src/mode/cloud'
+import { Http } from '../../src/mode/cloud'
 use(promisedChai)
 
-@suite('Http::Base::Fetch')
+@suite('Http::Mode::Base')
 export class Test extends BasicTest {
   http = new Http()
   baseUrl = `https://postman-echo.com`

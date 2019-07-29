@@ -2,6 +2,7 @@ import { injectable } from 'inversify'
 import 'reflect-metadata'
 import * as soap from 'soap'
 import { ClientOptions } from '..'
+import { SoapError } from '../error'
 import { ClientFunction, createProxy, SoapClientSupplierBase } from './base'
 
 /**
@@ -9,10 +10,25 @@ import { ClientFunction, createProxy, SoapClientSupplierBase } from './base'
  */
 @injectable()
 export class SoapClientSupplier extends SoapClientSupplierBase {
+  /**
+   * Creates a SOAP cloud mode client.
+   * @param options client options
+   * @throws {SoapError} when unable to create the SOAP client
+   */
   async getClient<T extends soap.Client>(options: ClientOptions): Promise<T> {
-    const client = await this.getClientInternal<T>(options)
-    const cloudify = (fnc: ClientFunction, name: string, args: any) => fnc(args)
-    const cloudClient = await createProxy<T>(client, cloudify)
-    return cloudClient
+    try {
+      const client = await this.getClientInternal<T>(options)
+      const cloudify = (fnc: ClientFunction, _: string, args: any) => {
+        try {
+          return fnc(args)
+        } catch (e) {
+          throw new SoapError(`Error calling function '${name}'.`, e)
+        }
+      }
+      const cloudClient = await createProxy<T>(client, cloudify)
+      return cloudClient
+    } catch (e) {
+      throw new SoapError('Unable to create cloud mode client', e)
+    }
   }
 }
