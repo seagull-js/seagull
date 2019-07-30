@@ -3,7 +3,7 @@ import {
   SecretParameter,
   Stack,
   StackProps,
-  RemovalPolicy as RemPolicy
+  RemovalPolicy as RemPolicy,
 } from '@aws-cdk/cdk'
 
 import { LambdaIntegration, RestApi } from '@aws-cdk/aws-apigateway'
