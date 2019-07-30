@@ -1,9 +1,9 @@
 import {
   App,
+  RemovalPolicy as RemPolicy,
   SecretParameter,
   Stack,
   StackProps,
-  RemovalPolicy as RemPolicy,
 } from '@aws-cdk/cdk'
 
 import { LambdaIntegration, RestApi } from '@aws-cdk/aws-apigateway'
