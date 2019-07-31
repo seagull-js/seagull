@@ -3,15 +3,14 @@
   "private": true,
   "scripts": {
     "bootstrap": "lerna bootstrap --hoist",
-    "build": "npm run dummy && lerna run build --stream",
+    "build": "lerna run build --stream",
     "changes": "lerna changed",
     "publish": "lerna publish --force-publish",
     "publish:patch": "lerna publish patch --yes --force-publish",
     "publish:minor": "lerna publish minor --yes --force-publish",
     "publish:major": "lerna publish major --yes --force-publish",
     "test": "lerna run test --parallel",
-    "test:watch": "lerna run test:watch --parallel",
-    "dummy": "echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p"
+    "test:watch": "lerna run test:watch --parallel"
   },
   "devDependencies": {
     "@types/chai": "^4.1.3",
