@@ -3,13 +3,14 @@ import { handleSSMSecret, SSMHandler } from '../aws_sdk_handler'
 import * as lib from '../lib'
 import { SeagullApp } from '../seagull_app'
 import { setCredsByProfile } from '../set_aws_credentials'
-import { StageConfigParams } from '../types';
+import { StageConfigParams } from '../types'
 
 interface SeagullPipelineProps {
   appPath: string
   branch: string
+  computeTypeSize: 'SMALL' | 'MEDIUM' | 'LARGE'
   githubToken?: string
-  poll: boolean,
+  poll: boolean
   profile: string
   owner?: string
   region: string
@@ -24,6 +25,7 @@ interface SeagullPipelineProps {
 export class SeagullPipeline {
   appPath: string
   branch: string
+  computeTypeSize: 'SMALL' | 'MEDIUM' | 'LARGE'
   owner?: string
   poll: boolean
   profile: string
@@ -38,6 +40,7 @@ export class SeagullPipeline {
   constructor(props: SeagullPipelineProps) {
     this.appPath = props.appPath
     this.branch = props.branch
+    this.computeTypeSize = props.computeTypeSize
     this.stage = props.stage
     this.poll = props.poll
     this.profile = props.profile
@@ -97,6 +100,7 @@ export class SeagullPipeline {
     const pipelineLink = `${pipelineDomain}${pipelinePath}`
     const stageConfigParams: StageConfigParams = {
       branch: gitData.branch,
+      computeTypeSize: this.computeTypeSize,
       owner: gitData.owner,
       pipeline,
       pipelineLink,

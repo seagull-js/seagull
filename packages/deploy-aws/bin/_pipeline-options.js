@@ -11,4 +11,5 @@ module.exports = {
   region: process.env.AWS_REGION || 'eu-central-1',
   repository: process.env.GITHUB_REPO,
   ssmParameter: process.env.GITHUB_SSM_PARAMETER,
+  computeTypeSize: process.env.COMPUTE_TYPE_SIZE || 'SMALL',
 }
