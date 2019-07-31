@@ -21,11 +21,21 @@ type VariantOptions<type extends BundlerVariants> = ConstructorParameters<
   typeof bundlerVariants[type]
 >[0]
 
+const bundlerScriptPath = () => {
+  const localPath = './lib/bundlerscript'
+  const jsDistPath = '../../../dist/src/services/bundler/lib/bundlerscript'
+  try {
+    return require.resolve(jsDistPath)
+  } catch {
+    return require.resolve(localPath)
+  }
+}
+
 export class BundleWorker {
   private bundler!: ChildProcess
   private watch = false
   configure<T extends BundlerVariants>(type: T, config: VariantOptions<T>) {
-    const path = require.resolve('./lib/bundlerscript')
+    const path = bundlerScriptPath()
     const BUNDLER_ARGS = JSON.stringify({ config, type, watch: this.watch })
     this.bundler = fork(path, [], { env: { BUNDLER_ARGS } })
     onExit(this.shutdown)
