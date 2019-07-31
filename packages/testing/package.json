@@ -33,13 +33,15 @@
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
     "@seagull/tslint": "^12.0.0",
-    "@types/lodash": "^4.14.123",
+    "@types/lodash": "^4.14.136",
     "aws-sdk": "*"
   },
   "dependencies": {
     "@seagull/mock": "^12.0.0",
     "@seagull/mode": "^12.0.0",
-    "@seagull/sandbox": "^12.0.0"
+    "@seagull/sandbox": "^12.0.0",
+    "@seagull/seed": "^12.0.0",
+    "inversify": "^5.0.1"
   },
   "peerDependencies": {
     "aws-sdk": "*"

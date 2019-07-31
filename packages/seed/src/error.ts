@@ -1,5 +1,5 @@
 import { BasicError } from '@seagull/libraries'
-import { FixtureStorage } from './fixtureStorage'
+import { FixtureStorage } from './fixture-storage'
 
 export class SeedError extends BasicError {
   /**

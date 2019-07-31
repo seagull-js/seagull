@@ -21,7 +21,7 @@ export class Test extends BasicTest {
 
   @test
   async 'can get 404 response'() {
-    const method = 'undefined'
+    const method = 'something-non-existing'
     const url = `${this.baseUrl}/${method}`
     const result = await this.http.fetch(url)
     expect(result).to.have.property('status', 404)

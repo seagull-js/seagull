@@ -16,17 +16,14 @@ interface ExpectedResponse {
 export class Test extends BasicTest {
   http = new Http()
   baseUrl = `https://postman-echo.com`
+  method = 'get'
+  params = { foo1: 'bar1', foo2: 'bar2' }
+  url = `${this.baseUrl}/${this.method}?${querystring.stringify(this.params)}`
 
   @test
   async 'can get json'() {
-    const method = 'get'
-    const params = {
-      foo1: 'bar1',
-      foo2: 'bar2',
-    }
-    const url = `${this.baseUrl}/${method}?${querystring.stringify(params)}`
     const result = (await (await this.http.fetch(
-      url
+      this.url
     )).json()) as ExpectedResponse
     expect(result).to.be.an('object')
     expect(result.args).to.have.ownProperty('foo1')

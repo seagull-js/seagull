@@ -1,4 +1,5 @@
 // tslint:disable:no-unused-expression
+import { SeedableService } from '@seagull/seed'
 import { injectable } from 'inversify'
 import * as _ from 'lodash'
 import 'reflect-metadata'
@@ -87,7 +88,7 @@ export const createProxy = <T extends soap.Client>(
  * Base SOAP client supplier.
  */
 @injectable()
-export class SoapClientSupplierBase {
+export class SoapClientSupplierBase extends SeedableService {
   /**
    * Creates a SOAP client using [node-soap](https://github.com/vpulim/node-soap).
    * @param param0 client options

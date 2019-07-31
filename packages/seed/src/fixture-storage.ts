@@ -9,7 +9,8 @@ import {
 } from 'fs-extra'
 import { join } from 'path'
 import { SeedError } from './error'
-import { LocalConfig } from './localConfig'
+import { LocalConfig } from './local-config'
+import { TestScope } from './testScope'
 
 // tslint:disable-next-line:no-var-requires
 require('ts-node')
@@ -56,7 +57,9 @@ export class FixtureStorage<T> {
   }
 
   private get path() {
-    return join('seed', this.uri + (this.fileExtension || ''))
+    const scopedPath = `${this.uri}${this.testScope ? this.testScope.path : ''}`
+    const path = join('seed', `${scopedPath}${this.fileExtension || ''}`)
+    return path
   }
 
   /**
@@ -64,11 +67,16 @@ export class FixtureStorage<T> {
    * @param url The request url.
    * @param init The request configuration.
    */
-  static createByUrl<T>(url: string, params?: any): FixtureStorage<T> {
+  static createByUrl<T>(
+    url: string,
+    params?: any,
+    testScope?: TestScope
+  ): FixtureStorage<T> {
     const path = url.replace('://', '/')
     return new FixtureStorage(
       `${path}/${params ? this.hash(JSON.stringify(params)) : 'default'}`,
-      `.json`
+      `.json`,
+      testScope
     )
   }
 
@@ -91,7 +99,11 @@ export class FixtureStorage<T> {
    * Creates a new seed fixtureStorage for managing seed fixtures.
    * @param uri Fixture uri
    */
-  constructor(public uri: string, public fileExtension?: string) {}
+  constructor(
+    readonly uri: string,
+    readonly fileExtension?: string,
+    readonly testScope?: TestScope
+  ) {}
 
   /**
    * Get fixture.
@@ -101,12 +113,14 @@ export class FixtureStorage<T> {
     const fixture = pathExistsSync(this.path) && this.fs.read(this.path)
 
     if (!fixture) {
-      throw new SeedError('Http: fixture (seed) is missing.', this)
+      throw new SeedError('Fixture (seed) is missing.', this)
     }
     if (this.expired) {
-      throw new SeedError('Http: fixture (seed) is expired.', this)
+      throw new SeedError('Fixture (seed) is expired.', this)
     }
-
+    if (this.testScope) {
+      this.testScope.callIndex += 1
+    }
     return fixture
   }
 
@@ -132,7 +146,10 @@ export class FixtureStorage<T> {
     if (this.config.hook) {
       value = this.config.hook(value)
     }
-    return this.fs.save(this.path, value)
+    this.fs.save(this.path, value)
+    if (this.testScope) {
+      this.testScope.callIndex += 1
+    }
   }
 
   private getConfigRecursive(
