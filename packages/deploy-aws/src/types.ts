@@ -85,4 +85,5 @@ export interface CloudfrontProps {
   apiGateway: RestApi
   aliasConfig?: CF.AliasConfiguration
   logBucket?: Bucket
+  errorBucket?: Bucket
 }

@@ -1,10 +1,12 @@
 import { join } from 'path'
 import { LogEvent, OutputServiceEvents, ServiceEventBus } from '../'
+import { getVendorBundleIncludes } from '../../lib/project'
 import { BundleWorker } from './worker'
 
 export const BundleVendorEvent = Symbol('Start Vendor Bundling Event')
 export const BundledVendorEvent = Symbol('A Vendor Bundle got Bundled')
 export const BundleVendorErrorEvent = Symbol('Error on bundling')
+
 export interface VendorBundleServiceEvents extends OutputServiceEvents {
   [BundleVendorEvent]: VendorBundleService['handleStartBundling']
   [BundledVendorEvent]: () => void
@@ -17,7 +19,7 @@ export class VendorBundleService {
   config = {
     compatible: false,
     optimized: false,
-    packages: ['react', 'react-dom', 'react-helmet', 'lodash', 'typestyle'],
+    packages: getVendorBundleIncludes(),
   }
   constructor(
     bus: VendorBundleService['bus'],
@@ -27,6 +29,7 @@ export class VendorBundleService {
     this.bus = bus.on(BundleVendorEvent, this.handleStartBundling)
     this.createBundler()
   }
+
   private createBundler() {
     const dstFile = join(process.cwd(), 'dist', 'assets', 'static', 'vendor.js')
     const { compatible, optimized, packages } = this.config

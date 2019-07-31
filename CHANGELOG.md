@@ -8,6 +8,19 @@
 
 ### Patch Changes
 
+## 12.0.0
+
+- seagull/deploy-aws -> added S3 bucket for error pages
+- seagull/deploy-aws -> for internal server errors, a custom page from error bucket is shown
+
+## 11.3.0/11.4.0
+
+- no changes
+
+## 11.2.0
+
+- @seagull/build -> added customizability option for vendor bundle includes via seagull-project package.json entry 'seagull' > 'vendorBundleIncludes'
+
 ## 10.7.1
 
 - @seagull/deploy-aws -> the log bucket is now flushed before trying to delete it

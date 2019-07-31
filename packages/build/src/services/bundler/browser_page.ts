@@ -1,5 +1,6 @@
 import { join } from 'path'
 import { LogEvent, OutputServiceEvents, ServiceEventBus } from '..'
+import { getVendorBundleIncludes } from '../../lib/project'
 import { BundleWorker } from './worker'
 
 export const BundleBrowserPageEvent = Symbol('Start BrowserPage Bundling')
@@ -17,7 +18,7 @@ export class BrowserPageBundleService {
   bundler!: BundleWorker
   config = {
     compatible: false,
-    excludes: ['react', 'react-dom', 'react-helmet', 'lodash', 'typestyle'],
+    excludes: getVendorBundleIncludes(),
     optimized: false,
     page: '',
     watch: true,

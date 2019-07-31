@@ -3,7 +3,7 @@ import { SDK } from 'aws-cdk'
 import * as dotenv from 'dotenv'
 import 'ts-node/register'
 import * as aws from '../aws_sdk_handler'
-import { emptyBucket, S3Handler } from '../aws_sdk_handler';
+import { emptyBucket, S3Handler } from '../aws_sdk_handler'
 import * as lib from '../lib'
 import { ProvideAssetFolder } from '../provide_asset_folder'
 import { SeagullApp } from '../seagull_app'
@@ -58,6 +58,7 @@ export class SeagullProject {
     const name = this.getAppName()
     const itemBucketName = await this.getBucketName('items')
     const logBucketName = await this.getBucketName('logs', true)
+    const errorBucketName = await this.getBucketName('error')
     const actions: string[] = [
       'sts:AssumeRole',
       'logs:*',
@@ -70,7 +71,6 @@ export class SeagullProject {
     ]
     const aliasConfig = await aws.checkForAliasConfig(this.pkgJson, this.acm)
 
-
     // create the asset folder
     await addResources(this.appPath, itemBucketName)
 
@@ -80,9 +80,16 @@ export class SeagullProject {
     app.role = role
     const env = await getEnv(name, this.appPath, this.stage, logBucketName)
     const logBucket = app.stack.addS3(logBucketName, role, false)
+    const errorBucket = app.stack.addS3(errorBucketName, role, false)
+    errorBucket.grantPublicAccess()
     const lambda = app.stack.addLambda('lambda', this.appPath, role, env)
     const apiGW = app.stack.addUniversalApiGateway('apiGW', lambda, this.stage)
-    const cloudfrontConfig = { aliasConfig, apiGateway: apiGW, logBucket }
+    const cloudfrontConfig = {
+      aliasConfig,
+      apiGateway: apiGW,
+      errorBucket,
+      logBucket,
+    }
     app.stack.addCloudfront('cloudfront', cloudfrontConfig)
     const s3DeploymentNeeded = this.stage === 'prod' || this.branch === 'master'
     const importS3 = () => app.stack.importS3(itemBucketName, role)
