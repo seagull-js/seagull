@@ -19,6 +19,7 @@ export class Test extends BasicTest {
     const props = {
       appPath: `${process.cwd()}/test_data`,
       branch: 'master',
+      computeTypeSize: 'SMALL' as 'SMALL',
       githubToken: 'Token123',
       handlers: { ssmHandler: new TestSSMHandler({ Token123: '123' }) },
       owner: 'me',
