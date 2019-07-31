@@ -8,6 +8,12 @@
 
 ### Patch Changes
 
+## 13.0.0
+
+- seagull/seed -> renamed to services-seed
+- seagull/services-seed -> seed creation for soap requests
+- seagull/testing -> seed creation with multiple states via ServiceTest (services-http/-soap)
+
 ## 12.0.0
 
 - seagull/deploy-aws -> added S3 bucket for error pages
