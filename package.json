@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "bootstrap": "lerna bootstrap --hoist",
-    "build": "lerna run build",
+    "build": "lerna run build --stream",
     "changes": "lerna changed",
     "publish": "lerna publish --force-publish",
     "publish:patch": "lerna publish patch --yes --force-publish",
