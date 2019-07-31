@@ -31,7 +31,6 @@ export class Test extends BasicTest {
     })
     const params = { intA: 3, intB: 5 }
     const seedResponse = await seedClient.AddAsync(params)
-
     expect(seedResponse.AddResult).to.eq(8)
   }
 }

@@ -6,7 +6,6 @@ import 'reflect-metadata'
 import * as soap from 'soap'
 import { ClientOptions, Credentials } from '..'
 import { config } from '../config'
-import { SoapError } from '../error'
 
 export type ClientFunction = (args: any) => Promise<any>
 
@@ -44,9 +43,12 @@ export const setSecurity = (client: soap.Client, credentials: Credentials) => {
 
 export const getWsdlAsyncMethods = (client: soap.Client) => {
   const { bindings } = client.wsdl.definitions
-  return _.flatMap(bindings, b =>
+  const functionNames = _.flatMap(bindings, b =>
     Object.keys(b.methods).map(name => `${name}Async`)
   )
+  // note: node-soap actually combines all port definitions like this
+  const uniqFunctionNames = _.uniq(functionNames)
+  return uniqFunctionNames
 }
 
 const proxifyClient = <T extends soap.Client>(
@@ -57,8 +59,8 @@ const proxifyClient = <T extends soap.Client>(
   const original = client[name] as ClientFunction
   const clientAsBase = client as soap.Client
   // note: hard to flatten because the async proxy function uses scope variables
-  clientAsBase[name] = async (args: any) => {
-    const array: SoapResponseArray = await proxyFunction(original, name, args)
+  const genericProxyFunction = async (args: any) => {
+    const array: SoapResponseArray = await original(args)
     const response = Array.isArray(array) ? array[0] : array
     if (config.debug) {
       // note: safe because XML element names cannot start with the letters xml
@@ -68,6 +70,8 @@ const proxifyClient = <T extends soap.Client>(
     }
     return response
   }
+  clientAsBase[name] = async args =>
+    proxyFunction(genericProxyFunction, name, args)
 }
 
 /**
