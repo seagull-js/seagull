@@ -5,15 +5,14 @@ import { expect, use } from 'chai'
 import * as promisedChai from 'chai-as-promised'
 import * as fs from 'fs'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
-import { Client } from 'soap'
+import { ISoapClient, ISoapResponse } from '../../src'
 import { SoapClientSupplierPure } from '../../src/mode/pure'
 use(promisedChai)
 
-interface ExpectedClient extends Client {
+type ExpectedResponse = { AddResult: number } & ISoapResponse
+type ExpectedClient = ISoapClient & {
   AddAsync: (x: any) => Promise<ExpectedResponse>
 }
-
-type ExpectedResponse = { AddResult: number }
 
 @suite('Soap::Pure')
 export class Test extends BasicTest {

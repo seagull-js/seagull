@@ -3,9 +3,8 @@ import { SeedableService } from '@seagull/seed'
 import { injectable } from 'inversify'
 import * as _ from 'lodash'
 import 'reflect-metadata'
-import * as soap from 'soap'
-import { ClientOptions, Credentials } from '..'
-import { config } from '../config'
+import { BasicAuthSecurity, createClientAsync } from 'soap'
+import { ClientOptions, Credentials, ISoapClient } from '..'
 
 export type ClientFunction = (args: any) => Promise<any>
 
@@ -22,11 +21,11 @@ export type ClientProxyFunction = (
 type SoapResponseArray = [
   /** result */
   any,
-  /** rawResponse */
+  /** raw response */
   string,
-  /** soapheader */
+  /** soap header */
   any,
-  /** rawRequest */
+  /** raw request */
   string
 ]
 
@@ -36,12 +35,12 @@ export const makeAuthOptions = ({ username, password }: Credentials) => {
   return { wsdl_headers: { Authorization } }
 }
 
-export const setSecurity = (client: soap.Client, credentials: Credentials) => {
+export const setSecurity = (client: ISoapClient, credentials: Credentials) => {
   const { username, password } = credentials
-  client.setSecurity(new soap.BasicAuthSecurity(username, password))
+  client.setSecurity(new BasicAuthSecurity(username, password))
 }
 
-export const getWsdlAsyncMethods = (client: soap.Client) => {
+export const getWsdlAsyncMethods = (client: ISoapClient) => {
   const { bindings } = client.wsdl.definitions
   const functionNames = _.flatMap(bindings, b =>
     Object.keys(b.methods).map(name => `${name}Async`)
@@ -51,23 +50,21 @@ export const getWsdlAsyncMethods = (client: soap.Client) => {
   return uniqFunctionNames
 }
 
-const proxifyClient = <T extends soap.Client>(
+const proxifyClient = <T extends ISoapClient>(
   client: T,
   name: string,
   proxyFunction: ClientProxyFunction
 ) => {
   const original = client[name] as ClientFunction
-  const clientAsBase = client as soap.Client
+  const clientAsBase = client as ISoapClient
   // note: hard to flatten because the async proxy function uses scope variables
   const genericProxyFunction = async (args: any) => {
     const array: SoapResponseArray = await original(args)
     const response = Array.isArray(array) ? array[0] : array
-    if (config.debug) {
-      // note: safe because XML element names cannot start with the letters xml
-      response.xmlRequest = array[1]
-      response.xmlHeaders = array[2]
-      response.xmlResponse = array[3]
-    }
+    // note: safe because XML element names cannot start with the letters xml
+    response.xmlRequest = array[1]
+    response.xmlHeaders = array[2]
+    response.xmlResponse = array[3]
     return response
   }
   clientAsBase[name] = async args =>
@@ -79,7 +76,7 @@ const proxifyClient = <T extends soap.Client>(
  * @param client The SOAP client
  * @param proxyFunction The proxy function encapsulation
  */
-export const createProxy = <T extends soap.Client>(
+export const createProxy = <T extends ISoapClient>(
   client: T,
   proxyFunction: ClientProxyFunction
 ) => {
@@ -88,26 +85,22 @@ export const createProxy = <T extends soap.Client>(
   return client
 }
 
+export const getClientInternal = async <T extends ISoapClient>({
+  wsdlPath,
+  credentials,
+  endpoint,
+}: ClientOptions): Promise<T> => {
+  const authOptions = credentials ? makeAuthOptions(credentials) : {}
+  const defaultOptions = { rejectUnauthorized: false, strictSSL: false }
+  const options = { endpoint: wsdlPath, ...defaultOptions, ...authOptions }
+  const client: T = await createClientAsync(wsdlPath, options)
+  client.setEndpoint(endpoint || wsdlPath)
+  credentials && setSecurity(client, credentials)
+  return client
+}
+
 /**
  * Base SOAP client supplier.
  */
 @injectable()
-export class SoapClientSupplierBase extends SeedableService {
-  /**
-   * Creates a SOAP client using [node-soap](https://github.com/vpulim/node-soap).
-   * @param param0 client options
-   */
-  protected async getClientInternal<T extends soap.Client>({
-    wsdlPath,
-    credentials,
-    endpoint,
-  }: ClientOptions): Promise<T> {
-    const authOptions = credentials ? makeAuthOptions(credentials) : {}
-    const defaultOptions = { rejectUnauthorized: false, strictSSL: false }
-    const options = { endpoint: wsdlPath, ...defaultOptions, ...authOptions }
-    const client: T = await soap.createClientAsync(wsdlPath, options)
-    client.setEndpoint(endpoint || wsdlPath)
-    credentials && setSecurity(client, credentials)
-    return client
-  }
-}
+export class SoapClientSupplierBase extends SeedableService {}

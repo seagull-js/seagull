@@ -3,15 +3,13 @@ import { ServiceTest } from '@seagull/testing'
 import { expect } from 'chai'
 import * as fs from 'fs'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
-import * as querystring from 'querystring'
 import * as rimraf from 'rimraf'
-import { Client } from 'soap'
+import { ISoapClient, ISoapResponse } from '../../src'
 import { SoapClientSupplierPure } from '../../src/mode/pure'
 import { SoapClientSupplierSeed } from '../../src/mode/seed'
 
-type ExpectedResponse = { AddResult: number }
-
-interface ExpectedClient extends Client {
+type ExpectedResponse = { AddResult: number } & ISoapResponse
+type ExpectedClient = ISoapClient & {
   AddAsync: (x: any) => Promise<ExpectedResponse>
 }
 

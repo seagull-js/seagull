@@ -1,7 +1,7 @@
 import { BasicTest } from '@seagull/testing'
 import { expect } from 'chai'
 import { only, skip, slow, suite, test, timeout } from 'mocha-typescript'
-import { BasicAuthSecurity, Client } from 'soap'
+import { BasicAuthSecurity } from 'soap'
 import { SoapClientSupplier } from '../../src/mode/cloud'
 
 // TODO: Mock outgoing test requests via Http-Mock like yakbak

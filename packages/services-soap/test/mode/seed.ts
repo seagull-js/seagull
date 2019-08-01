@@ -2,17 +2,15 @@
 import { BasicTest } from '@seagull/testing'
 import { expect, use } from 'chai'
 import * as promisedChai from 'chai-as-promised'
-import 'chai/register-should'
 import * as fs from 'fs'
 import { only, skip, slow, suite, test, timeout } from 'mocha-typescript'
-import { Client } from 'soap'
+import { ISoapClient, ISoapResponse } from '../../src'
 import { SoapClientSupplierPure } from '../../src/mode/pure'
 import { SoapClientSupplierSeed } from '../../src/mode/seed'
 use(promisedChai)
 
-type ExpectedResponse = { AddResult: number }
-
-interface ExpectedClient extends Client {
+type ExpectedResponse = { AddResult: number } & ISoapResponse
+type ExpectedClient = ISoapClient & {
   AddAsync: (x: any) => Promise<ExpectedResponse>
 }
 

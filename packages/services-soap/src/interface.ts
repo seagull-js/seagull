@@ -1,4 +1,4 @@
-import * as soap from 'soap'
+import { Client } from 'soap'
 
 export type Credentials = { username: string; password: string }
 
@@ -13,9 +13,17 @@ export interface ClientOptions {
 }
 
 export interface ISoapClientSupplier {
-  getClient<T extends soap.Client>({
+  getClient<T extends ISoapClient>({
     wsdlPath,
     credentials,
     endpoint,
   }: ClientOptions): Promise<T>
+}
+
+export type ISoapClient = Client
+
+export interface ISoapResponse {
+  xmlHeaders: { [key: string]: string }
+  xmlRequest: string
+  xmlResponse: string
 }

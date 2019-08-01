@@ -2,14 +2,13 @@ import { BasicTest } from '@seagull/testing'
 import { expect } from 'chai'
 import * as fs from 'fs'
 import { only, skip, slow, suite, test, timeout } from 'mocha-typescript'
-import { BasicAuthSecurity, Client } from 'soap'
+import { ISoapClient, ISoapResponse } from '../../src'
 import { SoapClientSupplier } from '../../src/mode/cloud'
 
-interface ExpectedClient extends Client {
+type ExpectedResponse = { AddResult: number } & ISoapResponse
+type ExpectedClient = ISoapClient & {
   AddAsync: (x: any) => Promise<ExpectedResponse>
 }
-
-type ExpectedResponse = { AddResult: number }
 
 // TODO: Mock outgoing test requests via Http-Mock like yakbak
 @suite('Soap::Mode::Cloud')

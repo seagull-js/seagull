@@ -1,10 +1,14 @@
 import { FixtureStorage } from '@seagull/seed'
 import { injectable } from 'inversify'
 import 'reflect-metadata'
-import * as soap from 'soap'
-import { ClientOptions } from '..'
+import { ClientOptions, ISoapClient } from '..'
 import { SoapError } from '../error'
-import { ClientFunction, createProxy, SoapClientSupplierBase } from './base'
+import {
+  ClientFunction,
+  createProxy,
+  getClientInternal,
+  SoapClientSupplierBase,
+} from './base'
 
 /**
  * Soap client supplier seed mode implementation.
@@ -16,12 +20,12 @@ export class SoapClientSupplierPure extends SoapClientSupplierBase {
    * @param options client options
    * @throws {SoapError} when unable to create the SOAP client
    */
-  async getClient<T extends soap.Client>(options: ClientOptions): Promise<T> {
+  async getClient<T extends ISoapClient>(options: ClientOptions): Promise<T> {
     try {
       const wsdlPath = `seed/${options.wsdlPath}.wsdl`.replace('://', '/')
       const endpoint = options.endpoint || options.wsdlPath
       const opts = { endpoint, wsdlPath, credentials: options.credentials }
-      const client = await this.getClientInternal<T>(opts)
+      const client = await getClientInternal<T>(opts)
       const pureClient = await this.purifyClient<T>(client, options.wsdlPath)
       return pureClient
     } catch (e) {
@@ -29,7 +33,7 @@ export class SoapClientSupplierPure extends SoapClientSupplierBase {
     }
   }
 
-  private async purifyClient<T extends soap.Client>(
+  private async purifyClient<T extends ISoapClient>(
     client: T,
     wsdlPath: string
   ) {
