@@ -8,6 +8,7 @@ import { StageConfigParams } from '../types'
 interface SeagullPipelineProps {
   appPath: string
   branch: string
+  buildWorkers: 1 | 2 | 3 | 4
   computeTypeSize: 'SMALL' | 'MEDIUM' | 'LARGE'
   githubToken?: string
   poll: boolean
@@ -36,6 +37,7 @@ export class SeagullPipeline {
   stage: string
   githubToken?: string
   actions: string[]
+  buildWorkers: 1 | 2 | 3 | 4
 
   constructor(props: SeagullPipelineProps) {
     this.appPath = props.appPath
@@ -49,6 +51,7 @@ export class SeagullPipeline {
     this.repository = props.repository
     this.ssmParam = props.ssmParameter
     this.githubToken = props.githubToken
+    this.buildWorkers = props.buildWorkers
     const propsSSMHandler = props.handlers && props.handlers.ssmHandler
     this.ssm = propsSSMHandler || new SSMHandler()
     this.actions = [
@@ -100,6 +103,7 @@ export class SeagullPipeline {
     const pipelineLink = `${pipelineDomain}${pipelinePath}`
     const stageConfigParams: StageConfigParams = {
       branch: gitData.branch,
+      buildWorkers: this.buildWorkers,
       computeTypeSize: this.computeTypeSize,
       owner: gitData.owner,
       pipeline,

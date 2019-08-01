@@ -8,17 +8,18 @@ import {
   getTestEnd2EndConfig,
 } from './get_stage_configs'
 
-const buildActionOutputArtifacts = {
-  'secondary-artifacts': {
-    build: {
-      files: '**/*',
-      name: 'build',
-    },
-    dist: {
-      files: ['dist/**/*'],
-      name: 'dist',
-    },
-  },
+const buildActionOutputArtifacts = (workers: number) => {
+  const artifacts = {} as any
+  ;[...Array(workers).keys()].forEach(i => {
+    const build = `build${i}`
+    const dist = `dist${i}`
+    artifacts[build] = { files: ['dist/**/*'], name: build }
+    artifacts[dist] = { files: ['dist/**/*'], name: dist }
+  })
+  return {
+    'primary-artifacts': {},
+    'secondary-artifacts': artifacts,
+  }
 }
 
 const deployActionOutputArtifacts = {
@@ -42,20 +43,26 @@ export function addPipelineStages(
     'source',
     getSourceConfig(params, 0)
   )
-  stack.addBuildActionStage(
+  stack.addGenericBuildActionStage(
     'test',
     getTestConfig(params, 1, sourceAction.outputArtifact)
   )
-  const buildAction = stack.addBuildActionStage('build', {
+
+  const buildActions = stack.addBuildActionStage('build', {
     ...getBuildConfig(params, 2, sourceAction.outputArtifact),
-    outputArtifacts: buildActionOutputArtifacts,
+    outputArtifacts: buildActionOutputArtifacts(params.buildWorkers),
   })
-  const deployAction = stack.addBuildActionStage('deploy', {
+
+  const deployInput = buildActions.map((a, i) =>
+    a.additionalOutputArtifact(`dist${i}`)
+  )
+
+  const deployAction = stack.addDeployActionStage('deploy', {
     ...getDeployConfig(params, 3, sourceAction.outputArtifact),
-    additionalInputArtifacts: [buildAction.additionalOutputArtifact('dist')],
+    additionalInputArtifacts: deployInput,
     outputArtifacts: deployActionOutputArtifacts,
   })
-  stack.addBuildActionStage('end2end-test', {
+  stack.addGenericBuildActionStage('end2end-test', {
     ...getTestEnd2EndConfig(params, 4, sourceAction.outputArtifact),
     additionalInputArtifacts: [deployAction.additionalOutputArtifact('cfurl')],
   })

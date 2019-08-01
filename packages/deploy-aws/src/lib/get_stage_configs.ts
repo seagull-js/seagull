@@ -108,8 +108,11 @@ function getTestEnd2End(params: StageConfigParams) {
 }
 
 function getDeploy(params: StageConfigParams) {
+  const mergeCommands = [...Array(params.buildWorkers).keys()].map(i =>
+    addStateChangeToCmd(`cp -Rf $CODEBUILD_SRC_DIR_dist${i}/dist dist`)
+  )
   const commands = [
-    addStateChangeToCmd('cp -Rf $CODEBUILD_SRC_DIR_dist/dist dist'),
+    ...mergeCommands,
     checkState(),
     addStateChangeToCmd('npm run deploy'),
     checkState(),

@@ -19,6 +19,7 @@ export class Test extends BasicTest {
     const props = {
       appPath: `${process.cwd()}/test_data`,
       branch: 'master',
+      buildWorkers: 1 as const,
       computeTypeSize: 'SMALL' as const,
       githubToken: 'Token123',
       handlers: { ssmHandler: new TestSSMHandler({ Token123: '123' }) },
@@ -31,7 +32,7 @@ export class Test extends BasicTest {
     }
     const pipeline = await new SeagullPipeline(props).createPipeline()
     const synthStack = pipeline.synthesizeStack('helloworld-ci')
-    Object.keys(synthStack.template.Resources).length.should.be.equals(11)
+    Object.keys(synthStack.template.Resources).length.should.be.equals(14)
     const pipelineKeys = Object.keys(synthStack.template.Resources).filter(
       key =>
         synthStack.template.Resources[key].Type ===
