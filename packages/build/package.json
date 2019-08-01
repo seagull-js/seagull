@@ -71,9 +71,9 @@
     "stoppable": "1.0.5",
     "stream-string": "^2.0.1",
     "through2": "^3.0.1",
-    "uglify-js": "^3.5.3",
     "uglifyify": "^5.0.1",
-    "watchify": "^3.11.1"
+    "watchify": "^3.11.1",
+    "signal-exit": "3.0.2"
   },
   "peerDependencies": {
     "typescript": "*"

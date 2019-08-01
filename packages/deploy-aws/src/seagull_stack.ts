@@ -254,9 +254,14 @@ export class SeagullStack extends Stack {
   }
 
   private createProjectConfig(config: BuildStageConfig) {
+    const allowedComputeTypeSizes = ['SMALL', 'MEDIUM', 'LARGE']
     const { build, env, install, postBuild, role } = config
     const buildImage = CB.LinuxBuildImage.UBUNTU_14_04_NODEJS_8_11_0
+    const computeType = allowedComputeTypeSizes.includes(config.computeTypeSize)
+      ? `BUILD_GENERAL1_${config.computeTypeSize}`
+      : CB.ComputeType.Small
     const phases = { build, install, post_build: postBuild }
+
     return {
       buildSpec: {
         artifacts: config.outputArtifacts,
@@ -264,10 +269,10 @@ export class SeagullStack extends Stack {
         phases,
         version: '0.2',
       },
-      environment: { buildImage },
+      environment: { buildImage, computeType },
       environmentVariables: mapEnvironmentVariables(env.variables),
       role,
-    }
+    } as CB.ProjectProps
   }
 
   private getAdditionalOutputArtifactNames(

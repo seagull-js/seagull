@@ -12,7 +12,6 @@ export function getSourceConfig(params: StageConfigParams, index: number) {
     pipeline: params.pipeline,
     poll: params.poll,
     repo: params.repo,
-
   }
 }
 
@@ -69,6 +68,7 @@ function getCommonConfig(
   return {
     atIndex: index,
     build: { commands: [], finally: [] },
+    computeTypeSize: params.computeTypeSize,
     env: getEnv(params),
     inputArtifact,
     install: getInstall(params),
@@ -149,6 +149,7 @@ function getEnv(params: StageConfigParams) {
   const parameterStore = { ACCESS_TOKEN: params.ssmSecret.name }
   const variables = {
     BRANCH_NAME: params.branch,
+    COMPUTE_TYPE_SIZE: params.computeTypeSize,
     DEPLOY_MODE: params.stage,
     PIPELINE_DESC: 'Bootstraping pipeline',
     PIPELINE_STATE: 'pending',

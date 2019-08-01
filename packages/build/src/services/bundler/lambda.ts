@@ -1,6 +1,6 @@
 import { join } from 'path'
 import { LogEvent, OutputServiceEvents, ServiceEventBus } from '..'
-import { Bundler, NodeAppBundle } from './lib/bundler'
+import { BundleWorker } from './worker'
 
 export const BundleLambdaEvent = Symbol('Start backend Bundling')
 export const BundledLambdaEvent = Symbol('Lambda got Bundled event')
@@ -14,7 +14,7 @@ export interface LambdaBundleServiceEvents extends OutputServiceEvents {
 
 export class LambdaBundleService {
   bus: ServiceEventBus<LambdaBundleServiceEvents>
-  bundler!: Bundler
+  bundler!: BundleWorker
   config = {
     watch: false,
   }
@@ -28,13 +28,11 @@ export class LambdaBundleService {
   }
   private createBundler() {
     const { src, dst } = this.bundlerPaths()
-    const bundle = new NodeAppBundle(src, dst, ['aws-sdk'])
-    this.bundler = new Bundler(
-      bundle,
-      this.handleBundled,
-      this.handleError,
-      this.config.watch
-    )
+    const config = { dstFile: dst, excludes: ['aws-sdk'], srcFile: src }
+    this.bundler = new BundleWorker()
+      .setWatchMode(this.config.watch)
+      .configure('NodeAppBundle', config)
+      .connect(this.handleBundled, this.handleError)
   }
   private bundlerPaths() {
     const cwd = process.cwd()

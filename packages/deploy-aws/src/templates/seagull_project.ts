@@ -58,7 +58,7 @@ export class SeagullProject {
     const name = this.getAppName()
     const itemBucketName = await this.getBucketName('items')
     const logBucketName = await this.getBucketName('logs', true)
-    const errorBucketName = await this.getBucketName('error')
+    const errorBucketName = await this.getBucketName('error', true)
     const actions: string[] = [
       'sts:AssumeRole',
       'logs:*',

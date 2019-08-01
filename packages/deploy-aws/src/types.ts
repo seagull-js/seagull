@@ -35,6 +35,7 @@ export interface RepoData {
 
 export interface StageConfigParams {
   branch: string
+  computeTypeSize: 'SMALL' | 'MEDIUM' | 'LARGE'
   owner: string
   pipeline: Pipeline
   pipelineLink: string
@@ -64,6 +65,7 @@ export interface StageConfig {
 export interface BuildStageConfig extends StageConfig {
   additionalInputArtifacts?: Artifact[]
   build: { commands: string[]; finally: string[] }
+  computeTypeSize: 'SMALL' | 'MEDIUM' | 'LARGE'
   install: { commands: string[]; finally: string[] }
   outputArtifacts?: any
   postBuild?: { commands: string[]; finally?: string[] }

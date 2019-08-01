@@ -22,9 +22,16 @@ export class BrowserLibraryBundle {
   /** minimizing etc? */
   optimized: boolean = false
 
-  constructor(packages: string[], dstFile: string) {
-    this.packages = packages
-    this.dstFile = dstFile
+  constructor(cfg: {
+    packages: string[]
+    dstFile: string
+    optimized?: boolean
+    compatible?: boolean
+  }) {
+    this.packages = cfg.packages
+    this.dstFile = cfg.dstFile
+    this.compatible = cfg.compatible || this.compatible
+    this.optimized = cfg.optimized || this.optimized
   }
 
   bfyInstance = (opts: bfy.Options) => bfy(opts).require(this.packages as any)
@@ -44,9 +51,18 @@ export class BrowserPageBundle {
   /** minimizing etc? */
   optimized: boolean = false
 
-  constructor(srcFile: string, dstFile: string) {
-    this.srcFile = srcFile
-    this.dstFile = dstFile
+  constructor(cfg: {
+    srcFile: string
+    dstFile: string
+    excludes?: string[]
+    compatible?: boolean
+    optimized?: boolean
+  }) {
+    this.srcFile = cfg.srcFile
+    this.dstFile = cfg.dstFile
+    this.excludes = cfg.excludes || this.excludes
+    this.compatible = cfg.compatible || this.compatible
+    this.optimized = cfg.optimized || this.optimized
   }
 
   bfyInstance = (opts: bfy.Options) =>
@@ -68,9 +84,9 @@ export class ServerPageBundle {
   /** custom transforms */
   transforms = [addPageRenderExport]
 
-  constructor(srcFile: string, dstFile: string) {
-    this.srcFile = srcFile
-    this.dstFile = dstFile
+  constructor(cfg: { srcFile: string; dstFile: string }) {
+    this.srcFile = cfg.srcFile
+    this.dstFile = cfg.dstFile
   }
 
   bfyInstance = (opts: bfy.Options) =>
@@ -88,10 +104,10 @@ export class NodeAppBundle {
   /** minimizing etc? */
   optimized: boolean = false
 
-  constructor(srcFile: string, dstFile: string, excludes = [] as string[]) {
-    this.srcFile = srcFile
-    this.dstFile = dstFile
-    this.excludes = excludes
+  constructor(cfg: { srcFile: string; dstFile: string; excludes?: string[] }) {
+    this.srcFile = cfg.srcFile
+    this.dstFile = cfg.dstFile
+    this.excludes = cfg.excludes || []
   }
 
   bfyInstance = (opts: bfy.Options) =>

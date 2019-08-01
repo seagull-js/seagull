@@ -1,6 +1,6 @@
 import { join } from 'path'
 import { LogEvent, OutputServiceEvents, ServiceEventBus } from '..'
-import { Bundler, ServerPageBundle } from './lib/bundler'
+import { BundleWorker } from './worker'
 
 export const BundleBackendPageEvent = Symbol('Start BackendPage Bundling')
 export const BundledBackendPageEvent = Symbol('BackendPage got Bundled event')
@@ -13,7 +13,7 @@ export interface BackendPageBundleServiceEvents extends OutputServiceEvents {
 
 export class BackendPageBundleService {
   bus: ServiceEventBus<BackendPageBundleServiceEvents>
-  bundler!: Bundler
+  bundler!: BundleWorker
   config = {
     page: '',
     watch: true,
@@ -29,13 +29,11 @@ export class BackendPageBundleService {
 
   private createBundler() {
     const { src, dst } = this.bundlerPaths()
-    const bundle = new ServerPageBundle(src, dst)
-    this.bundler = new Bundler(
-      bundle,
-      this.handleBundled,
-      this.handleError,
-      this.config.watch
-    )
+    const config = { srcFile: src, dstFile: dst }
+    this.bundler = new BundleWorker()
+      .setWatchMode(this.config.watch)
+      .configure('ServerPageBundle', config)
+      .connect(this.handleBundled, this.handleError)
   }
 
   private bundlerPaths() {
