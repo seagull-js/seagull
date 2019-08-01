@@ -19,6 +19,7 @@ export class ReleaseOperator extends Operator {
     compatible: true,
     fast: false,
     optimized: true,
+    pagesToExclude: '',
   }
 
   constructor(config: any) {
@@ -42,6 +43,7 @@ export class ReleaseOperator extends Operator {
       compatible: config.compatible,
       fast: !config.typeCheck,
       optimized: config.optimizeBundle,
+      pagesToExclude: config.pagesToExclude,
     }
     Object.assign(this.config, mapped)
   }

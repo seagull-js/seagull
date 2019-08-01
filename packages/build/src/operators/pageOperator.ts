@@ -10,8 +10,11 @@ export class PageOperator extends Operator {
   backlog: string[] = []
   bundled = new Set<string>()
   bundleTimer?: [number, number]
-  config: Partial<PageService['config']> = {}
-  constructor(parent: Operator, config?: Partial<PageService['config']>) {
+  config: Partial<PageService['config']> & { pagesToExclude?: string } = {}
+  constructor(
+    parent: Operator,
+    config?: Partial<PageService['config']> & { pagesToExclude?: string }
+  ) {
     super(parent)
     Object.assign(this.config, config)
     this.parent!.on(PageOperator.StartEvent, this.bundleAll)
@@ -21,10 +24,24 @@ export class PageOperator extends Operator {
 
   bundleAll = () => {
     this.bundleTimer = process.hrtime()
-    listPages(process.cwd()).forEach(this.addPage)
+    const pages: string[] = listPages(process.cwd())
+    const exclusionRegEx = this.config.pagesToExclude
+
+    console.info('pages', pages)
+
+    console.info('RegEx', exclusionRegEx)
+
+    const filteredPages = exclusionRegEx
+      ? pages.filter(page => !page.match(exclusionRegEx))
+      : pages
+
+    console.info('filteredPages', filteredPages)
+
+    filteredPages.forEach(this.addPage)
     const coreCount = os.cpus().length
     Array.from('x'.repeat(Math.ceil(coreCount / 2))).forEach(this.bundleNext)
   }
+
   addPage = (page: string) =>
     this.pages.push(new PageService(this, { page, ...this.config })) &&
     this.backlog.push(page)
