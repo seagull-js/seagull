@@ -160,12 +160,12 @@ function getEnv(params: StageConfigParams) {
     BRANCH_NAME: params.branch,
     COMPUTE_TYPE_SIZE: params.computeTypeSize,
     DEPLOY_MODE: params.stage,
-    PAGES_TO_EXCLUDE: params.excludedPages,
     PIPELINE_DESC: 'Bootstraping pipeline',
     PIPELINE_STATE: 'pending',
     STAGE: params.stage,
     TARGET_URL: params.pipelineLink,
     TEST_PIPELINE_CONTEXT: 'continuous-integration/seagull',
+    ...(params.excludedPages ? { PAGES_TO_EXCLUDE: params.excludedPages } : {}),
   }
   return { 'parameter-store': parameterStore, variables }
 }
