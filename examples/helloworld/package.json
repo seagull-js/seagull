@@ -1,7 +1,7 @@
 {
   "name": "helloworld",
   "private": true,
-  "version": "15.0.1",
+  "version": "15.0.2",
   "description": "Helloworld example app using the Seagull Framework",
   "main": "index.js",
   "scripts": {
@@ -19,12 +19,12 @@
   "author": "Maximilian Stroh <hisako1337@gmail.com>",
   "license": "LGPL-3.0",
   "devDependencies": {
-    "@seagull/build": "^15.0.1",
-    "@seagull/commands-logging": "^15.0.1",
-    "@seagull/deploy-aws": "^15.0.1",
-    "@seagull/test-e2e": "^15.0.1",
-    "@seagull/test-pages": "^15.0.1",
-    "@seagull/tslint": "^15.0.1",
+    "@seagull/build": "^15.0.2",
+    "@seagull/commands-logging": "^15.0.2",
+    "@seagull/deploy-aws": "^15.0.2",
+    "@seagull/test-e2e": "^15.0.2",
+    "@seagull/test-pages": "^15.0.2",
+    "@seagull/tslint": "^15.0.2",
     "@types/lodash": "^4.14.123",
     "@types/node": "^8.10",
     "jsdom": "^13.0.0",
@@ -35,10 +35,10 @@
     "typescript": "^3.4.1"
   },
   "dependencies": {
-    "@seagull/libraries": "^15.0.1",
-    "@seagull/pages": "^15.0.1",
-    "@seagull/plugin-items": "^15.0.1",
-    "@seagull/routes": "^15.0.1",
+    "@seagull/libraries": "^15.0.2",
+    "@seagull/pages": "^15.0.2",
+    "@seagull/plugin-items": "^15.0.2",
+    "@seagull/routes": "^15.0.2",
     "chart.js": "^2.8.0",
     "instantclick": "^3.1.0-2",
     "lodash": "^4.17.5",
