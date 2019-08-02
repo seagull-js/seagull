@@ -8,17 +8,18 @@ import {
   getTestEnd2EndConfig,
 } from './get_stage_configs'
 
-const buildActionOutputArtifacts = {
-  'secondary-artifacts': {
-    build: {
-      files: '**/*',
-      name: 'build',
-    },
-    dist: {
-      files: ['dist/**/*'],
-      name: 'dist',
-    },
-  },
+const buildActionOutputArtifacts = (workers: number) => {
+  const artifacts = {} as any
+  ;[...Array(workers).keys()].forEach(i => {
+    const build = `build${i}`
+    const dist = `dist${i}`
+    artifacts[build] = { files: ['dist/**/*'], name: build }
+    artifacts[dist] = { files: ['dist/**/*'], name: dist }
+  })
+  return {
+    'primary-artifacts': {},
+    'secondary-artifacts': artifacts,
+  }
 }
 
 const deployActionOutputArtifacts = {
@@ -42,21 +43,28 @@ export function addPipelineStages(
     'source',
     getSourceConfig(params, 0)
   )
-  stack.addBuildActionStage(
-    'test',
-    getTestConfig(params, 1, sourceAction.outputArtifact)
+
+  const buildActions = stack.addBuildActionStage(
+    'build',
+    {
+      ...getBuildConfig(params, 1, sourceAction.outputArtifact),
+      outputArtifacts: buildActionOutputArtifacts(params.buildWorkers),
+    },
+    getTestConfig(params, 1, sourceAction.outputArtifact),
+    params.buildWorkers
   )
-  const buildAction = stack.addBuildActionStage('build', {
-    ...getBuildConfig(params, 2, sourceAction.outputArtifact),
-    outputArtifacts: buildActionOutputArtifacts,
-  })
-  const deployAction = stack.addBuildActionStage('deploy', {
-    ...getDeployConfig(params, 3, sourceAction.outputArtifact),
-    additionalInputArtifacts: [buildAction.additionalOutputArtifact('dist')],
+
+  const deployInput = buildActions.map((a, i) =>
+    a.additionalOutputArtifact(`dist${i}`)
+  )
+
+  const deployAction = stack.addDeployActionStage('deploy', {
+    ...getDeployConfig(params, 2, sourceAction.outputArtifact),
+    additionalInputArtifacts: deployInput,
     outputArtifacts: deployActionOutputArtifacts,
   })
-  stack.addBuildActionStage('end2end-test', {
-    ...getTestEnd2EndConfig(params, 4, sourceAction.outputArtifact),
+  stack.addGenericBuildActionStage('end2end-test', {
+    ...getTestEnd2EndConfig(params, 3, sourceAction.outputArtifact),
     additionalInputArtifacts: [deployAction.additionalOutputArtifact('cfurl')],
   })
 }

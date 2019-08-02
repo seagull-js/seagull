@@ -11,7 +11,7 @@ import * as CM from '@aws-cdk/aws-certificatemanager'
 import * as CF from '@aws-cdk/aws-cloudfront'
 import { CloudFrontWebDistributionProps } from '@aws-cdk/aws-cloudfront'
 import * as CB from '@aws-cdk/aws-codebuild'
-import { GitHubSourceAction, Pipeline } from '@aws-cdk/aws-codepipeline'
+import { GitHubSourceAction, Pipeline, Stage } from '@aws-cdk/aws-codepipeline'
 import * as Events from '@aws-cdk/aws-events'
 import * as IAM from '@aws-cdk/aws-iam'
 import { Code, Function as Lambda, Runtime } from '@aws-cdk/aws-lambda'
@@ -193,7 +193,7 @@ export class SeagullStack extends Stack {
     return new GitHubSourceAction(this, sourceName, stageConfig)
   }
 
-  addBuildActionStage(name: string, config: BuildStageConfig) {
+  addGenericBuildActionStage(name: string, config: BuildStageConfig) {
     const stageName = name
     const projectName = `${this.id}-project-${name}`
     const { atIndex, pipeline } = config
@@ -213,6 +213,96 @@ export class SeagullStack extends Stack {
       stage,
     }
     return new CB.PipelineBuildAction(this, name, stageConfig)
+  }
+
+  addDeployActionStage(name: string, config: BuildStageConfig) {
+    const stageName = name
+    const projectName = `${this.id}-project-${name}`
+    const { atIndex, pipeline } = config
+    const projectConfig = this.createProjectConfig(config)
+    const additionalOutputArtifactNames = this.getAdditionalOutputArtifactNames(
+      name,
+      config
+    )
+    const project = new CB.PipelineProject(this, projectName, projectConfig)
+    const stage = pipeline.addStage(stageName, { placement: { atIndex } })
+    const stageConfig = {
+      additionalInputArtifacts: config.additionalInputArtifacts,
+      additionalOutputArtifactNames,
+      inputArtifact: config.inputArtifact,
+      outputArtifactName: name,
+      project,
+      stage,
+    }
+    return new CB.PipelineBuildAction(this, name, stageConfig)
+  }
+
+  addTestAction(name: string, stage: Stage, config: BuildStageConfig) {
+    const projectName = `${this.id}-project-${name}`
+    const projectConfig = this.createProjectConfig(config)
+    const additionalOutputArtifactNames = this.getAdditionalOutputArtifactNames(
+      name,
+      config
+    )
+    const project = new CB.PipelineProject(this, projectName, projectConfig)
+    const stageConfig = {
+      additionalInputArtifacts: config.additionalInputArtifacts,
+      additionalOutputArtifactNames,
+      inputArtifact: config.inputArtifact,
+      outputArtifactName: name,
+      project,
+      stage,
+    }
+    return new CB.PipelineBuildAction(this, name, stageConfig)
+  }
+
+  addBuildActionStage(
+    name: string,
+    config: BuildStageConfig,
+    testConfig: BuildStageConfig,
+    workerCount: number
+  ) {
+    const stage = config.pipeline.addStage(name, {
+      placement: { atIndex: config.atIndex },
+    })
+
+    const parallelBuildActions = workerCount
+    const actions = [...Array(parallelBuildActions).keys()].map(current =>
+      this.addBuildAction(name, stage, config, {
+        count: parallelBuildActions,
+        current,
+      })
+    )
+    this.addTestAction('test', stage, testConfig)
+    return actions
+  }
+
+  addBuildAction(
+    name: string,
+    stage: Stage,
+    config: BuildStageConfig,
+    workerMeta: { current: number; count: number }
+  ) {
+    const projectName = `${this.id}-project-${name}-${workerMeta.current}`
+    config.env.variables.BUILD_WORKER_ID = workerMeta.current.toString()
+    config.env.variables.BUILD_WORKER_COUNT = workerMeta.count.toString()
+    const projectConfig = this.createProjectConfig(config)
+    const project = new CB.PipelineProject(this, projectName, projectConfig)
+
+    const stageConfig: CB.PipelineBuildActionProps = {
+      additionalInputArtifacts: config.additionalInputArtifacts,
+      additionalOutputArtifactNames: [`dist${workerMeta.current}`],
+      inputArtifact: config.inputArtifact,
+      outputArtifactName: `build${workerMeta.current}`,
+      project,
+      stage,
+    }
+    const action = new CB.PipelineBuildAction(
+      this,
+      `${name}-${workerMeta.current}`,
+      stageConfig
+    )
+    return action
   }
 
   addSecretParam(name: string, ssmParameter: string) {

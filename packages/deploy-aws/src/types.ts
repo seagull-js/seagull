@@ -36,6 +36,8 @@ export interface RepoData {
 export interface StageConfigParams {
   branch: string
   computeTypeSize: 'SMALL' | 'MEDIUM' | 'LARGE'
+  buildWorkers: 1 | 2 | 3 | 4
+  excludedPages?: string
   owner: string
   pipeline: Pipeline
   pipelineLink: string

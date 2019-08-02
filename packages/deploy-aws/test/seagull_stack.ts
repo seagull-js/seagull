@@ -217,7 +217,7 @@ export class Test extends BasicTest {
       role,
     }
 
-    stack.addBuildActionStage(buildName, buildConfig)
+    stack.addBuildActionStage(buildName, buildConfig, buildConfig, 4)
     const synth = app.synthesizeStack(stackName)
     const resources = Object.keys(synth.template.Resources)
     const metadata = Object.keys(synth.metadata)

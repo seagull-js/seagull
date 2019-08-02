@@ -1,24 +1,31 @@
+import { coreRoundRobin } from '../lib/environment'
 import * as E from '../services'
 import { Operator, Wiring } from './operator'
 import { PageOperator } from './pageOperator'
+
+const notEmpty = (o: any) => !!o
+const onlyOnWorker = <T>(i: number, value: T) =>
+  coreRoundRobin(i) ? value : undefined
 
 export class ReleaseOperator extends Operator {
   static DoneEvent = Symbol('Build completed')
 
   startupTimer?: [number, number]
-  wiring: Wiring[] = [
+  wiring = [
     { once: ReleaseOperator.StartEvent, emit: E.PrepareEvent },
     { once: E.PreparedEvent, emit: E.CompileEvent },
     { once: E.CompiledEvent, emit: E.GenerateCodeEvent },
     { once: E.GeneratedCodeEvent, emit: PageOperator.StartEvent },
-    { once: E.GeneratedCodeEvent, emit: E.BundleVendorEvent },
-    { once: E.GeneratedCodeEvent, emit: E.BundleLambdaEvent },
-    { once: E.GeneratedCodeEvent, emit: E.BundleServerEvent },
-  ]
+    onlyOnWorker(0, { once: E.GeneratedCodeEvent, emit: E.BundleVendorEvent }),
+    onlyOnWorker(1, { once: E.GeneratedCodeEvent, emit: E.BundleLambdaEvent }),
+    onlyOnWorker(2, { once: E.GeneratedCodeEvent, emit: E.BundleServerEvent }),
+  ].filter(notEmpty) as Wiring[]
+
   config = {
     compatible: true,
     fast: false,
     optimized: true,
+    pagesToExclude: '',
   }
 
   constructor(config: any) {
@@ -42,6 +49,7 @@ export class ReleaseOperator extends Operator {
       compatible: config.compatible,
       fast: !config.typeCheck,
       optimized: config.optimizeBundle,
+      pagesToExclude: config.pagesToExclude,
     }
     Object.assign(this.config, mapped)
   }
@@ -61,10 +69,10 @@ export class ReleaseOperator extends Operator {
   waitForDone = () =>
     Promise.all([
       this.promisifyEmitOnce(PageOperator.DoneEvent),
-      this.promisifyEmitOnce(E.BundledVendorEvent),
-      this.promisifyEmitOnce(E.BundledLambdaEvent),
-      this.promisifyEmitOnce(E.BundledServerEvent),
-    ])
+      onlyOnWorker(0, this.promisifyEmitOnce(E.BundledVendorEvent)),
+      onlyOnWorker(1, this.promisifyEmitOnce(E.BundledLambdaEvent)),
+      onlyOnWorker(2, this.promisifyEmitOnce(E.BundledServerEvent)),
+    ].filter(notEmpty) as any)
   exitSuccess = () => process.exit(0)
   exitFailure = () => process.nextTick(() => process.exit(1))
 
