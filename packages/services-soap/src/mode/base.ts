@@ -53,7 +53,8 @@ export const getWsdlAsyncMethods = (client: ISoapClient) => {
 const proxifyClient = <T extends ISoapClient>(
   client: T,
   name: string,
-  proxyFunction: ClientProxyFunction
+  proxyFunction: ClientProxyFunction,
+  debug: boolean
 ) => {
   const original = client[name] as ClientFunction
   const clientAsBase = client as ISoapClient
@@ -62,9 +63,11 @@ const proxifyClient = <T extends ISoapClient>(
     const array: SoapResponseArray = await original(args)
     const response = Array.isArray(array) ? array[0] : array
     // note: safe because XML element names cannot start with the letters xml
-    response.xmlRequest = array[1]
-    response.xmlHeaders = array[2]
-    response.xmlResponse = array[3]
+    if (debug) {
+      response.xmlRequest = array[1]
+      response.xmlHeaders = array[2]
+      response.xmlResponse = array[3]
+    }
     return response
   }
   clientAsBase[name] = async args =>
@@ -78,17 +81,18 @@ const proxifyClient = <T extends ISoapClient>(
  */
 export const createProxy = <T extends ISoapClient>(
   client: T,
-  proxyFunction: ClientProxyFunction
+  proxyFunction: ClientProxyFunction,
+  debug: boolean
 ) => {
   const asyncMeths = getWsdlAsyncMethods(client)
-  asyncMeths.forEach(name => proxifyClient(client, name, proxyFunction))
+  asyncMeths.forEach(name => proxifyClient(client, name, proxyFunction, debug))
   return client
 }
 
 export const getClientInternal = async <T extends ISoapClient>({
-  wsdlPath,
   credentials,
   endpoint,
+  wsdlPath,
 }: ClientOptions): Promise<T> => {
   const authOptions = credentials ? makeAuthOptions(credentials) : {}
   const defaultOptions = { rejectUnauthorized: false, strictSSL: false }

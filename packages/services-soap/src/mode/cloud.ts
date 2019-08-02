@@ -29,7 +29,7 @@ export class SoapClientSupplier extends SoapClientSupplierBase {
           throw new SoapError(`Error calling function '${name}'.`, e)
         }
       }
-      const cloudClient = await createProxy<T>(client, cloudify)
+      const cloudClient = await createProxy<T>(client, cloudify, false)
       return cloudClient
     } catch (e) {
       throw new SoapError('Unable to create cloud mode client', e)

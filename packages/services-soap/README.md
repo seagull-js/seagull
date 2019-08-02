@@ -10,7 +10,7 @@
 Basically you can use the SoapClientSupplier like this:
 
 ```javascript
-import { SoapClientSupplier, Client } from '@seagull/soap'
+import { SoapClientSupplier, Client } from '@seagull/services-soap'
 ...
 
 type MyResponseArray = [{ return: MyResponse }, string, object, string]
@@ -50,7 +50,7 @@ If you don't want to use it - you can implement your own Soap Client by the expo
 ### Bootstrap
 
 ```javascript
-import { SoapDIModule } from '@seagull/soap'
+import { SoapDIModule } from '@seagull/services-soap'
 import 'reflect-metadata'
 import { Container } from 'inversify'
 

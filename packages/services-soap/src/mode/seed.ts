@@ -48,7 +48,7 @@ export class SoapClientSupplierSeed extends SoapClientSupplierBase {
       seed.set(resp)
       return resp
     }
-    return await createProxy(client, seedify)
+    return await createProxy(client, seedify, true)
   }
 
   private async fetchWsdl(options: ClientOptions, fetchFun = fetch) {
