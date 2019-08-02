@@ -47,7 +47,7 @@ export function addPipelineStages(
   const buildActions = stack.addBuildActionStage(
     'build',
     {
-      ...getBuildConfig(params, 2, sourceAction.outputArtifact),
+      ...getBuildConfig(params, 1, sourceAction.outputArtifact),
       outputArtifacts: buildActionOutputArtifacts(params.buildWorkers),
     },
     getTestConfig(params, 1, sourceAction.outputArtifact),
@@ -59,12 +59,12 @@ export function addPipelineStages(
   )
 
   const deployAction = stack.addDeployActionStage('deploy', {
-    ...getDeployConfig(params, 3, sourceAction.outputArtifact),
+    ...getDeployConfig(params, 2, sourceAction.outputArtifact),
     additionalInputArtifacts: deployInput,
     outputArtifacts: deployActionOutputArtifacts,
   })
   stack.addGenericBuildActionStage('end2end-test', {
-    ...getTestEnd2EndConfig(params, 4, sourceAction.outputArtifact),
+    ...getTestEnd2EndConfig(params, 3, sourceAction.outputArtifact),
     additionalInputArtifacts: [deployAction.additionalOutputArtifact('cfurl')],
   })
 }

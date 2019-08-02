@@ -19,7 +19,7 @@ export class Test extends BasicTest {
     const props = {
       appPath: `${process.cwd()}/test_data`,
       branch: 'master',
-      buildWorkers: 1 as const,
+      buildWorkers: 4 as const,
       computeTypeSize: 'SMALL' as const,
       githubToken: 'Token123',
       handlers: { ssmHandler: new TestSSMHandler({ Token123: '123' }) },
@@ -40,7 +40,7 @@ export class Test extends BasicTest {
     )
     expect(pipelineKeys.length).to.equal(1)
     const codePipeline = synthStack.template.Resources[pipelineKeys[0]]
-    expect(codePipeline.Properties.Stages.length).to.equal(5)
+    expect(codePipeline.Properties.Stages.length).to.equal(4)
   }
 }
 
