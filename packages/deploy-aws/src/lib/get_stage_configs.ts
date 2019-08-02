@@ -114,9 +114,10 @@ function getTestEnd2End(params: StageConfigParams) {
 
 function getDeploy(params: StageConfigParams) {
   const mergeCommands = [...Array(params.buildWorkers).keys()].map(i =>
-    addStateChangeToCmd(`cp -Rf $CODEBUILD_SRC_DIR_dist${i}/dist dist`)
+    addStateChangeToCmd(`cp -Rf  $CODEBUILD_SRC_DIR_dist${i}/dist/* dist`)
   )
   const commands = [
+    addStateChangeToCmd('mkdir dist'),
     ...mergeCommands,
     checkState(),
     addStateChangeToCmd('npm run deploy'),
@@ -159,6 +160,7 @@ function getEnv(params: StageConfigParams) {
     BRANCH_NAME: params.branch,
     COMPUTE_TYPE_SIZE: params.computeTypeSize,
     DEPLOY_MODE: params.stage,
+    PAGES_TO_EXCLUDE: params.excludedPages,
     PIPELINE_DESC: 'Bootstraping pipeline',
     PIPELINE_STATE: 'pending',
     STAGE: params.stage,
