@@ -89,3 +89,8 @@ To implement any kind of CI you can create a AWS Pipeline with seagull. Just use
 
 - default: `undefined`
 - the oAuthToken to get access to the github repository
+
+`COMPUTE_TYPE_SIZE`
+
+- default: `SMALL`
+- the ComputeType to use for the build environment (see CodeBuild docs)

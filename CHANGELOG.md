@@ -8,11 +8,18 @@
 
 ### Patch Changes
 
-## 13.0.0
+## 16.0.0
 
 - seagull/seed -> renamed to services-seed
 - seagull/services-seed -> seed creation for soap requests
 - seagull/testing -> seed creation with multiple states via ServiceTest (services-http/-soap)
+
+## 13.0.0 - Seagull Swarm
+
+We allow to configure the ci servers and enable paralleization in build
+
+- seagull/build -> allowed multiple build processes
+- seagull/deploy-aws -> allow to configure pipeline-server selection via SMALL, MEDIUM, LARGE
 
 ## 12.0.0
 

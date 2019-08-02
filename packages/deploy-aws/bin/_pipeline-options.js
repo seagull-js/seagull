@@ -11,4 +11,7 @@ module.exports = {
   region: process.env.AWS_REGION || 'eu-central-1',
   repository: process.env.GITHUB_REPO,
   ssmParameter: process.env.GITHUB_SSM_PARAMETER,
+  computeTypeSize: process.env.COMPUTE_TYPE_SIZE || 'SMALL',
+  buildWorkers: parseInt(process.env.BUILD_WORKER_COUNT || "1", 10),
+  excludedPages: process.env.PAGES_TO_EXCLUDE
 }

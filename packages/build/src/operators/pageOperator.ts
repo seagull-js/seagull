@@ -1,3 +1,4 @@
+import * as buildEnv from '../lib/environment'
 import { listPages } from '../lib/project'
 import * as E from '../services'
 import { LogEvent, PageBundleService as PageService } from '../services'
@@ -9,8 +10,11 @@ export class PageOperator extends Operator {
   backlog: string[] = []
   bundled = new Set<string>()
   bundleTimer?: [number, number]
-  config: Partial<PageService['config']> = {}
-  constructor(parent: Operator, config?: Partial<PageService['config']>) {
+  config: Partial<PageService['config']> & { pagesToExclude?: string } = {}
+  constructor(
+    parent: Operator,
+    config?: Partial<PageService['config']> & { pagesToExclude?: string }
+  ) {
     super(parent)
     Object.assign(this.config, config)
     this.parent!.on(PageOperator.StartEvent, this.bundleAll)
@@ -20,9 +24,14 @@ export class PageOperator extends Operator {
 
   bundleAll = () => {
     this.bundleTimer = process.hrtime()
-    listPages(process.cwd()).forEach(this.addPage)
-    this.bundleNext()
+    const exclusionRegEx = this.config.pagesToExclude
+    listPages(process.cwd())
+      .filter(page => (exclusionRegEx ? !page.match(exclusionRegEx) : true))
+      .filter((p, index) => buildEnv.coreRoundRobin(index))
+      .forEach(this.addPage)
+    buildEnv.callPerCore(this.bundleNext)
   }
+
   addPage = (page: string) =>
     this.pages.push(new PageService(this, { page, ...this.config })) &&
     this.backlog.push(page)
