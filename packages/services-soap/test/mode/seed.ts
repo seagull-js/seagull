@@ -75,21 +75,23 @@ export class Test extends BasicTest {
     // delete old fixture
     rem(Test.seedFilePath)
 
-    const endpoint = Test.wsdlPath.replace('?wsdl', '')
-    const clientOptions = { endpoint, wsdlPath: './test/data/endpoint.wsdl' }
+    const clientOptions = {
+      endpoint: Test.endpointPath,
+      wsdlPath: './test/data/endpoint.wsdl',
+    }
     const client = await this.soapSeed.getClient<ExpectedClient>(clientOptions)
     const params = { intA: 3, intB: 5 }
     const response = await client.AddAsync(params)
-    expect(client.endpoint).to.be.equal(endpoint)
+    expect(client.endpoint).to.be.equal(Test.endpointPath)
     expect(response.AddResult).to.eq(8)
 
     const pureClient = await this.soapPure.getClient<ExpectedClient>({
-      endpoint,
+      endpoint: Test.endpointPath,
       wsdlPath: Test.wsdlPath,
     })
     const pureResponse = await pureClient.AddAsync(params)
 
-    expect(client.endpoint).to.be.equal(endpoint)
+    expect(client.endpoint).to.be.equal(Test.endpointPath)
     expect(
       fs.existsSync(Test.seedFilePath),
       `fixture ${Test.seedFilePath} not found!`

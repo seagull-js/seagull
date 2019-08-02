@@ -36,7 +36,10 @@ export class SoapClientSupplierSeed extends SoapClientSupplierBase {
       const seedClient = await this.seedifyClient<T>(client, endpoint)
       return seedClient
     } catch (e) {
-      throw new SoapError('Unable to create the SOAP seed mode client', e)
+      throw new SoapError(
+        `Unable to create the SOAP seed mode client: ${e.message}`,
+        e
+      )
     }
   }
 
