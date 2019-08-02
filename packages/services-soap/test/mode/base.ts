@@ -11,17 +11,24 @@ export class Test extends BasicTest {
 
   @test
   async 'returns a soap client'() {
-    const clientOptions = { wsdlPath: './test/data/example.wsdl' }
+    const clientOptions = {
+      endpoint: 'http://...',
+      wsdlPath: './test/data/example.wsdl',
+    }
     const client = await this.supplier.getClient(clientOptions)
     expect(client).to.haveOwnProperty('sayHello')
     expect(client).to.haveOwnProperty('sayHelloAsync')
-    expect(client.endpoint).to.be.equal(clientOptions.wsdlPath)
+    expect(client.endpoint).to.be.equal(clientOptions.endpoint)
   }
 
   @test
   async 'returns a soap client with authentication'() {
     const credentials = { username: 'banana39', password: '12345' }
-    const clientOptions = { wsdlPath: './test/data/example.wsdl', credentials }
+    const clientOptions = {
+      credentials,
+      endpoint: 'http://...',
+      wsdlPath: './test/data/example.wsdl',
+    }
     const client = await this.supplier.getClient(clientOptions)
     expect(client).to.haveOwnProperty('sayHello')
     expect(client).to.haveOwnProperty('sayHelloAsync')

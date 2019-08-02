@@ -14,29 +14,43 @@ type ExpectedClient = ISoapClient & {
   AddAsync: (x: any) => Promise<ExpectedResponse>
 }
 
+const rem = (path: string) => fs.existsSync(path) && fs.unlinkSync(path)
+
 // TODO: Mock outgoing test requests via Http-Mock like yakbak
 @suite('Soap::Mode::Seed')
 export class Test extends BasicTest {
+  static endpoint = `www.dneonline.com/calculator.asmx`
+  static endpointPath = `http://${Test.endpoint}`
+  static wsdlPath = `${Test.endpointPath}?wsdl`
+  static hash = '15e66e975bb36c02ae5b4afc5a5d9ec7'
+  static wsdlFilePath = `./seed/http/${Test.endpoint}`
+  static seedFilePath = `${Test.wsdlFilePath}/AddAsync/${Test.hash}.json`
+
   soapSeed = new SoapClientSupplierSeed()
   soapPure = new SoapClientSupplierPure()
-  wsdl = 'www.dneonline.com/calculator.asmx?wsdl'
-  wsdlPath = `http/${this.wsdl}`
-  wsdlUrl = `http://${this.wsdl}`
-  hash = '15e66e975bb36c02ae5b4afc5a5d9ec7'
+
+  @test
+  async 'has valid endpoint'() {
+    const pureClient = await this.soapPure.getClient<ExpectedClient>({
+      wsdlPath: Test.wsdlPath,
+    })
+
+    expect(pureClient.endpoint).to.be.equal(Test.endpointPath)
+  }
 
   @test
   async 'can seed fixture result'() {
     // delete old fixture
-    const path = `./seed/${this.wsdlPath}/AddAsync/${this.hash}.json`
-    if (fs.existsSync(path)) {
-      fs.unlinkSync(path)
-    }
+    rem(Test.seedFilePath)
 
-    expect(fs.existsSync(path), `${path} should not exist`).to.be.false
+    expect(
+      fs.existsSync(Test.seedFilePath),
+      `${Test.seedFilePath} should not exist`
+    ).to.be.false
 
     // seed fixture
     const seedClient = await this.soapSeed.getClient<ExpectedClient>({
-      wsdlPath: this.wsdlUrl,
+      wsdlPath: Test.wsdlPath,
     })
     const params = { intA: 3, intB: 5 }
     const seedResponse = await seedClient.AddAsync(params)
@@ -45,11 +59,41 @@ export class Test extends BasicTest {
 
     // get fixture
     const pureClient = await this.soapPure.getClient<ExpectedClient>({
-      wsdlPath: this.wsdlUrl,
+      wsdlPath: Test.wsdlPath,
     })
     const pureResponse = await pureClient.AddAsync(params)
 
-    expect(fs.existsSync(path), `fixture ${path} not found!`).to.be.true
+    expect(
+      fs.existsSync(Test.seedFilePath),
+      `fixture ${Test.seedFilePath} not found!`
+    ).to.be.true
+    expect(pureResponse.AddResult).to.eq(8)
+  }
+
+  @test
+  async 'can use different endpoint'() {
+    // delete old fixture
+    rem(Test.seedFilePath)
+
+    const endpoint = Test.wsdlPath.replace('?wsdl', '')
+    const clientOptions = { endpoint, wsdlPath: './test/data/endpoint.wsdl' }
+    const client = await this.soapSeed.getClient<ExpectedClient>(clientOptions)
+    const params = { intA: 3, intB: 5 }
+    const response = await client.AddAsync(params)
+    expect(client.endpoint).to.be.equal(endpoint)
+    expect(response.AddResult).to.eq(8)
+
+    const pureClient = await this.soapPure.getClient<ExpectedClient>({
+      endpoint,
+      wsdlPath: Test.wsdlPath,
+    })
+    const pureResponse = await pureClient.AddAsync(params)
+
+    expect(client.endpoint).to.be.equal(endpoint)
+    expect(
+      fs.existsSync(Test.seedFilePath),
+      `fixture ${Test.seedFilePath} not found!`
+    ).to.be.true
     expect(pureResponse.AddResult).to.eq(8)
   }
 }

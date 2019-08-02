@@ -16,23 +16,23 @@ import {
 export class SoapClientSupplier extends SoapClientSupplierBase {
   /**
    * Creates a SOAP cloud mode client.
-   * @param options client options
+   * @param opts client options
    * @throws {SoapError} when unable to create the SOAP client
    */
-  async getClient<T extends ISoapClient>(options: ClientOptions): Promise<T> {
+  async getClient<T extends ISoapClient>(opts: ClientOptions): Promise<T> {
     try {
-      const client = await getClientInternal<T>(options)
+      const client = await getClientInternal<T>(opts)
       const cloudify = (fnc: ClientFunction, _: string, args: any) => {
         try {
           return fnc(args)
         } catch (e) {
-          throw new SoapError(`Error calling function '${name}'.`, e)
+          throw new SoapError(`Error calling '${name}': ${e.message}`, e)
         }
       }
       const cloudClient = await createProxy<T>(client, cloudify, false)
       return cloudClient
     } catch (e) {
-      throw new SoapError('Unable to create cloud mode client', e)
+      throw new SoapError(`Unable to create cloud mode client: ${e.message}`, e)
     }
   }
 }

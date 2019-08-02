@@ -3,8 +3,9 @@ import { SeedableService } from '@seagull/seed'
 import { injectable } from 'inversify'
 import * as _ from 'lodash'
 import 'reflect-metadata'
-import { BasicAuthSecurity, createClientAsync } from 'soap'
+import { BasicAuthSecurity, createClientAsync, IOptions } from 'soap'
 import { ClientOptions, Credentials, ISoapClient } from '..'
+import { SoapError } from '../error'
 
 export type ClientFunction = (args: any) => Promise<any>
 
@@ -50,6 +51,22 @@ export const getWsdlAsyncMethods = (client: ISoapClient) => {
   return uniqFunctionNames
 }
 
+export const wsdlIsFile = (opts: ClientOptions) => {
+  return !opts.wsdlPath.startsWith('http')
+}
+
+export const getEndpoint = (opts: ClientOptions) => {
+  const wsdlLocal = wsdlIsFile(opts)
+  const wsdlLocalNoEndpoint = wsdlLocal && !opts.endpoint
+  if (wsdlLocalNoEndpoint) {
+    throw new SoapError(
+      'An endpoint definition is required when WSDL is a file.',
+      opts
+    )
+  }
+  return opts.endpoint || opts.wsdlPath.replace('?wsdl', '')
+}
+
 const proxifyClient = <T extends ISoapClient>(
   client: T,
   name: string,
@@ -89,17 +106,22 @@ export const createProxy = <T extends ISoapClient>(
   return client
 }
 
-export const getClientInternal = async <T extends ISoapClient>({
-  credentials,
-  endpoint,
-  wsdlPath,
-}: ClientOptions): Promise<T> => {
-  const authOptions = credentials ? makeAuthOptions(credentials) : {}
+export const getClientInternal = async <T extends ISoapClient>(
+  opts: ClientOptions
+): Promise<T> => {
+  const authOptions = opts.credentials ? makeAuthOptions(opts.credentials) : {}
   const defaultOptions = { rejectUnauthorized: false, strictSSL: false }
-  const options = { endpoint: wsdlPath, ...defaultOptions, ...authOptions }
-  const client: T = await createClientAsync(wsdlPath, options)
-  client.setEndpoint(endpoint || wsdlPath)
-  credentials && setSecurity(client, credentials)
+  const endpoint = getEndpoint(opts)
+  const options: IOptions = {
+    endpoint,
+    ...defaultOptions,
+    ...authOptions,
+  }
+  const client: T = await createClientAsync(opts.wsdlPath, options)
+  // note: the options endpoint and setEndpoint seem to set different values
+  // within the client. Setting both seems to work best :-B
+  client.setEndpoint(endpoint)
+  opts.credentials && setSecurity(client, opts.credentials)
   return client
 }
 

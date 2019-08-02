@@ -16,16 +16,28 @@ type ExpectedClient = ISoapClient & {
 
 @suite('Soap::Pure')
 export class Test extends BasicTest {
+  static endpoint = `www.dneonline.com/calculator.asmx`
+  static endpointPath = `http://${Test.endpoint}`
+  static wsdlPath = `${Test.endpointPath}?wsdl`
+  static hash = '15e66e975bb36c02ae5b4afc5a5d9ec7'
+  static wsdlFilePath = `./seed/http/${Test.endpoint}`
+  static seedFilePath = `${Test.wsdlFilePath}/AddAsync/${Test.hash}.json`
+
   soapPure = new SoapClientSupplierPure()
-  wsdl = 'www.dneonline.com/calculator.asmx?wsdl'
-  wsdlPath = `http/${this.wsdl}`
-  wsdlUrl = `http://${this.wsdl}`
-  hash = '15e66e975bb36c02ae5b4afc5a5d9ec7'
+
+  @test
+  async 'has valid endpoint'() {
+    const pureClient = await this.soapPure.getClient<ExpectedClient>({
+      wsdlPath: Test.wsdlPath,
+    })
+
+    expect(pureClient.endpoint).to.be.equal(Test.endpointPath)
+  }
 
   @test
   async 'can get result'() {
     const pureClient = await this.soapPure.getClient<ExpectedClient>({
-      wsdlPath: this.wsdlUrl,
+      wsdlPath: Test.wsdlPath,
     })
     const params = { intA: 3, intB: 5 }
     const seedResponse = await pureClient.AddAsync(params)
@@ -36,15 +48,17 @@ export class Test extends BasicTest {
   @test
   async 'throws error when seed is not available'() {
     // delete old fixture
-    const path = `./seed/${this.wsdlPath}/AddAsync/${this.hash}.json`
-    if (fs.existsSync(path)) {
-      fs.unlinkSync(path)
+    if (fs.existsSync(Test.seedFilePath)) {
+      fs.unlinkSync(Test.seedFilePath)
     }
 
-    expect(fs.existsSync(path), `${path} should not exist`).to.be.false
+    expect(
+      fs.existsSync(Test.seedFilePath),
+      `${Test.seedFilePath} should not exist`
+    ).to.be.false
 
     const pureClient = await this.soapPure.getClient<ExpectedClient>({
-      wsdlPath: this.wsdlUrl,
+      wsdlPath: Test.wsdlPath,
     })
     const params = { intA: 3, intB: 5 }
     const pureRequest = pureClient.AddAsync(params)

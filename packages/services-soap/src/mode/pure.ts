@@ -7,6 +7,7 @@ import {
   ClientFunction,
   createProxy,
   getClientInternal,
+  getEndpoint,
   SoapClientSupplierBase,
 } from './base'
 
@@ -17,32 +18,35 @@ import {
 export class SoapClientSupplierPure extends SoapClientSupplierBase {
   /**
    * Creates a SOAP pure mode client.
-   * @param options client options
+   * @param opts client options
    * @throws {SoapError} when unable to create the SOAP client
    */
-  async getClient<T extends ISoapClient>(options: ClientOptions): Promise<T> {
+  async getClient<T extends ISoapClient>(opts: ClientOptions): Promise<T> {
+    const endpoint = getEndpoint(opts)
+    const wsdlPath = `seed/${endpoint}.wsdl`.replace('://', '/')
+    const options = { endpoint, wsdlPath, credentials: opts.credentials }
     try {
-      const wsdlPath = `seed/${options.wsdlPath}.wsdl`.replace('://', '/')
-      const endpoint = options.endpoint || options.wsdlPath
-      const opts = { endpoint, wsdlPath, credentials: options.credentials }
-      const client = await getClientInternal<T>(opts)
-      const pureClient = await this.purifyClient<T>(client, options.wsdlPath)
+      const client = await getClientInternal<T>(options)
+      const pureClient = await this.purifyClient<T>(client, endpoint)
       return pureClient
     } catch (e) {
       if (e.code === 'ENOENT') {
-        throw new SeedError('WSDL Fixture (seed) is missing.')
+        throw new SeedError(`Fixture (seed) WSDL is missing: ${wsdlPath}`)
       }
-      throw new SoapError('Unable to create pure mode client.', e)
+      throw new SoapError(
+        `Unable to create pure mode client for endpoint: ${endpoint}`,
+        e
+      )
     }
   }
 
   private async purifyClient<T extends ISoapClient>(
     client: T,
-    wsdlPath: string
+    endpoint: string
   ) {
     const purify = async (fnc: ClientFunction, name: string, args: any) =>
       FixtureStorage.createByUrl(
-        `${wsdlPath}/${name}`,
+        `${endpoint}/${name}`,
         args,
         this.testScope
       ).get()

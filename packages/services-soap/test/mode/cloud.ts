@@ -14,7 +14,7 @@ type ExpectedClient = ISoapClient & {
 @suite('Soap::Mode::Cloud')
 export class Test extends BasicTest {
   soap = new SoapClientSupplier()
-  wsdlUrl = 'http://www.dneonline.com/calculator.asmx?wsdl'
+  wsdlPath = 'http://www.dneonline.com/calculator.asmx?wsdl'
 
   @test
   async 'can get result'() {
@@ -26,7 +26,7 @@ export class Test extends BasicTest {
 
     // seed fixture
     const seedClient = await this.soap.getClient<ExpectedClient>({
-      wsdlPath: this.wsdlUrl,
+      wsdlPath: this.wsdlPath,
     })
     const params = { intA: 3, intB: 5 }
     const seedResponse = await seedClient.AddAsync(params)
