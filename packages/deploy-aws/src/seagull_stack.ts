@@ -237,17 +237,44 @@ export class SeagullStack extends Stack {
     return new CB.PipelineBuildAction(this, name, stageConfig)
   }
 
-  addBuildActionStage(name: string, config: BuildStageConfig) {
+  addTestAction(name: string, stage: Stage, config: BuildStageConfig) {
+    const projectName = `${this.id}-project-${name}`
+    const projectConfig = this.createProjectConfig(config)
+    const additionalOutputArtifactNames = this.getAdditionalOutputArtifactNames(
+      name,
+      config
+    )
+    const project = new CB.PipelineProject(this, projectName, projectConfig)
+    const stageConfig = {
+      additionalInputArtifacts: config.additionalInputArtifacts,
+      additionalOutputArtifactNames,
+      inputArtifact: config.inputArtifact,
+      outputArtifactName: name,
+      project,
+      stage,
+    }
+    return new CB.PipelineBuildAction(this, name, stageConfig)
+  }
+
+  addBuildActionStage(
+    name: string,
+    config: BuildStageConfig,
+    testConfig: BuildStageConfig,
+    workerCount: number
+  ) {
     const stage = config.pipeline.addStage(name, {
       placement: { atIndex: config.atIndex },
     })
-    const parallelBuildActions = 4
-    return [...Array(parallelBuildActions).keys()].map(current =>
+
+    const parallelBuildActions = workerCount
+    const actions = [...Array(parallelBuildActions).keys()].map(current =>
       this.addBuildAction(name, stage, config, {
         count: parallelBuildActions,
         current,
       })
     )
+    this.addTestAction('test', stage, testConfig)
+    return actions
   }
 
   addBuildAction(

@@ -43,15 +43,16 @@ export function addPipelineStages(
     'source',
     getSourceConfig(params, 0)
   )
-  stack.addGenericBuildActionStage(
-    'test',
-    getTestConfig(params, 1, sourceAction.outputArtifact)
-  )
 
-  const buildActions = stack.addBuildActionStage('build', {
-    ...getBuildConfig(params, 2, sourceAction.outputArtifact),
-    outputArtifacts: buildActionOutputArtifacts(params.buildWorkers),
-  })
+  const buildActions = stack.addBuildActionStage(
+    'build',
+    {
+      ...getBuildConfig(params, 2, sourceAction.outputArtifact),
+      outputArtifacts: buildActionOutputArtifacts(params.buildWorkers),
+    },
+    getTestConfig(params, 1, sourceAction.outputArtifact),
+    params.buildWorkers
+  )
 
   const deployInput = buildActions.map((a, i) =>
     a.additionalOutputArtifact(`dist${i}`)
