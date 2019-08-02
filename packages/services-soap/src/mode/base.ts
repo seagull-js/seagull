@@ -81,9 +81,9 @@ const proxifyClient = <T extends ISoapClient>(
     const response = Array.isArray(array) ? array[0] : array
     // note: safe because XML element names cannot start with the letters xml
     if (debug) {
-      response.xmlRequest = array[1]
+      response.xmlResponse = array[1]
       response.xmlHeaders = array[2]
-      response.xmlResponse = array[3]
+      response.xmlRequest = array[3]
     }
     return response
   }
