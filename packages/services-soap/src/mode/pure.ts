@@ -1,4 +1,4 @@
-import { FixtureStorage } from '@seagull/seed'
+import { FixtureStorage, SeedError } from '@seagull/seed'
 import { injectable } from 'inversify'
 import 'reflect-metadata'
 import { ClientOptions, ISoapClient } from '..'
@@ -29,6 +29,9 @@ export class SoapClientSupplierPure extends SoapClientSupplierBase {
       const pureClient = await this.purifyClient<T>(client, options.wsdlPath)
       return pureClient
     } catch (e) {
+      if (e.code === 'ENOENT') {
+        throw new SeedError('WSDL Fixture (seed) is missing.')
+      }
       throw new SoapError('Unable to create pure mode client.', e)
     }
   }
@@ -43,6 +46,6 @@ export class SoapClientSupplierPure extends SoapClientSupplierBase {
         args,
         this.testScope
       ).get()
-    return await createProxy(client, purify)
+    return await createProxy(client, purify, true)
   }
 }
