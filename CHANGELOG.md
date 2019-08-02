@@ -14,7 +14,7 @@
 - seagull/services-seed -> seed creation for soap requests
 - seagull/testing -> seed creation with multiple states via ServiceTest (services-http/-soap)
 
-## 13.0.0 - Seagull Swarm
+## 15.0.0 - Seagull Swarm
 
 We allow to configure the ci servers and enable paralleization in build
 
