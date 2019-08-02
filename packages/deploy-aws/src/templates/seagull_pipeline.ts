@@ -10,6 +10,7 @@ interface SeagullPipelineProps {
   branch: string
   buildWorkers: 1 | 2 | 3 | 4
   computeTypeSize: 'SMALL' | 'MEDIUM' | 'LARGE'
+  excludedPages?: string
   githubToken?: string
   poll: boolean
   profile: string
@@ -38,6 +39,7 @@ export class SeagullPipeline {
   githubToken?: string
   actions: string[]
   buildWorkers: 1 | 2 | 3 | 4
+  excludedPages?: string
 
   constructor(props: SeagullPipelineProps) {
     this.appPath = props.appPath
@@ -54,6 +56,7 @@ export class SeagullPipeline {
     this.buildWorkers = props.buildWorkers
     const propsSSMHandler = props.handlers && props.handlers.ssmHandler
     this.ssm = propsSSMHandler || new SSMHandler()
+    this.excludedPages = props.excludedPages
     this.actions = [
       'cloudformation:*',
       'cloudfront:*',
@@ -105,6 +108,7 @@ export class SeagullPipeline {
       branch: gitData.branch,
       buildWorkers: this.buildWorkers,
       computeTypeSize: this.computeTypeSize,
+      excludedPages: this.excludedPages,
       owner: gitData.owner,
       pipeline,
       pipelineLink,
