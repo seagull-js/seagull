@@ -37,7 +37,6 @@
     "slugify": "^1.3.4"
   },
   "devDependencies": {
-    "@seagull/testing": "^15.0.3",
     "@seagull/tslint": "^15.0.3"
   },
   "nyc": {

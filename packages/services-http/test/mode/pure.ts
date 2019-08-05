@@ -43,6 +43,9 @@ export class Test extends BasicTest {
     const request = this.http.fetch(this.url)
     await expect(request)
       .to.eventually.be.rejectedWith(SeedError)
-      .and.have.property('message', 'Fixture (seed) is missing.')
+      .and.have.property(
+        'message',
+        'Fixture (seed) is missing: seed/https/postman-echo.com/get?foo1=bar1&foo2=bar2/default.json.'
+      )
   }
 }

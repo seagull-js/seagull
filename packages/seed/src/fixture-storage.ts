@@ -113,10 +113,10 @@ export class FixtureStorage<T> {
     const fixture = pathExistsSync(this.path) && this.fs.read(this.path)
 
     if (!fixture) {
-      throw new SeedError(`Fixture (seed) is missing: ${this.path}`, this)
+      throw new SeedError(`Fixture (seed) is missing: ${this.path}.`, this)
     }
     if (this.expired) {
-      throw new SeedError(`Fixture (seed) is expired: ${this.path}`, this)
+      throw new SeedError(`Fixture (seed) is expired: ${this.path}.`, this)
     }
     if (this.testScope) {
       this.testScope.callIndex += 1
