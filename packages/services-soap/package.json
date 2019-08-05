@@ -37,7 +37,8 @@
     "@seagull/mode": "^15.0.3",
     "@seagull/seed": "^15.0.3",
     "@seagull/testing": "^15.0.3",
-    "@seagull/tslint": "^15.0.3"
+    "@seagull/tslint": "^15.0.3",
+    "@seagull/services-http": "15.0.3"
   },
   "dependencies": {
     "crypto": "^1.0.1",

@@ -31,7 +31,7 @@ export class SoapClientSupplierPure extends SoapClientSupplierBase {
       return pureClient
     } catch (e) {
       if (e.code === 'ENOENT') {
-        throw new SeedError(`Fixture (seed) WSDL is missing: ${wsdlPath}`)
+        throw new SeedError(`Fixture (seed) WSDL is missing: ${wsdlPath}`, e)
       }
       throw new SoapError(`Unable to create pure mode client: ${e.message}`, e)
     }

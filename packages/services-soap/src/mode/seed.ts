@@ -4,6 +4,7 @@ import { injectable } from 'inversify'
 import fetch from 'node-fetch'
 import 'reflect-metadata'
 import { ClientOptions, Credentials, ISoapClient } from '..'
+import { Http } from '../../../services-http/src/mode/cloud'
 import { SoapError } from '../error'
 import {
   ClientFunction,
@@ -56,10 +57,7 @@ export class SoapClientSupplierSeed extends SoapClientSupplierBase {
     return await createProxy(client, seedify, true)
   }
 
-  private async fetchWsdl(
-    opts: ClientOptions,
-    fetchFun = fetch
-  ): Promise<string> {
+  private async fetchWsdl(opts: ClientOptions): Promise<string> {
     if (wsdlIsFile(opts)) {
       const wsdlString = fs.readFileSync(opts.wsdlPath, {
         encoding: 'utf-8',
@@ -70,7 +68,10 @@ export class SoapClientSupplierSeed extends SoapClientSupplierBase {
       const headers = creds ? this.makeAuthHeader(creds) : {}
       const credentials = creds ? 'include' : undefined
       const init = { credentials, headers, method: 'GET', mode: 'cors' }
-      const wsdlString = await (await fetchFun(opts.wsdlPath, init)).text()
+      const wsdlString = await (await new Http().get(
+        opts.wsdlPath,
+        init
+      )).text()
       return wsdlString
     }
   }
