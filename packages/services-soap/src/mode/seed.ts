@@ -1,10 +1,9 @@
 import { FixtureStorage as FxSt } from '@seagull/seed'
+import { Http } from '@seagull/services-http'
 import * as fs from 'fs'
 import { injectable } from 'inversify'
-import fetch from 'node-fetch'
 import 'reflect-metadata'
 import { ClientOptions, Credentials, ISoapClient } from '..'
-import { Http } from '../../../services-http/src/mode/cloud'
 import { SoapError } from '../error'
 import {
   ClientFunction,
