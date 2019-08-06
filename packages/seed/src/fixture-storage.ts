@@ -15,6 +15,11 @@ import { TestScope } from './testScope'
 // tslint:disable-next-line:no-var-requires
 require('ts-node')
 
+type FixtureFileExtension = '.json' | '.xml' | '.wsdl'
+type FsHandler = {
+  read: (path: string, ...params: any[]) => Buffer
+  save: (path: string, ...params: any[]) => void
+}
 /**
  * Seed fixtureStorage for managing seed fixtures.
  */
@@ -73,15 +78,15 @@ export class FixtureStorage<T> {
     testScope?: TestScope
   ): FixtureStorage<T> {
     const path = url.replace('://', '/')
-    return new FixtureStorage(
-      `${path}/${params ? this.hash(JSON.stringify(params)) : 'default'}`,
-      `.json`,
-      testScope
-    )
+    const uri = `${path}/${
+      params ? this.hash(JSON.stringify(params)) : 'default'
+    }`
+    const fileExtension = `.json`
+    return new FixtureStorage(uri, fileExtension, testScope)
   }
 
   /**
-   * Alternate constructor to create a seed fixtureStorage by wsdl url.
+   * Creates a new seed fixtureStorage by wsdl url.
    * @param url The request url.
    */
   static createByWsdlUrl<T>(url: string): FixtureStorage<T> {
@@ -101,7 +106,7 @@ export class FixtureStorage<T> {
    */
   constructor(
     readonly uri: string,
-    readonly fileExtension?: string,
+    readonly fileExtension: FixtureFileExtension,
     readonly testScope?: TestScope
   ) {}
 
@@ -111,7 +116,6 @@ export class FixtureStorage<T> {
    */
   get(): T {
     const fixture = pathExistsSync(this.path) && this.fs.read(this.path)
-
     if (!fixture) {
       throw new SeedError(`Fixture (seed) is missing: ${this.path}.`, this)
     }
@@ -124,18 +128,23 @@ export class FixtureStorage<T> {
     return fixture
   }
 
-  private get fs() {
+  private get fsJson() {
     const jsonOpts = { spaces: 2 }
-    switch (this.fileExtension) {
-      case '.wsdl':
-      case '.xml':
-        return { save: outputFileSync, read: readFileSync }
-      default:
-        return {
-          read: readJsonSync,
-          save: (path: string, val: any) => outputJsonSync(path, val, jsonOpts),
-        }
-    }
+    const save = (path: string, val: any) => outputJsonSync(path, val, jsonOpts)
+    return { read: readJsonSync, save }
+  }
+
+  private get fsXml() {
+    return { save: outputFileSync, read: readFileSync }
+  }
+
+  private get fs() {
+    const fileFormatFs = new Map<FixtureFileExtension, FsHandler>([
+      ['.json', this.fsJson],
+      ['.wsdl', this.fsXml],
+      ['.xml', this.fsXml],
+    ])
+    return fileFormatFs.get(this.fileExtension) || this.fsJson
   }
 
   /**
