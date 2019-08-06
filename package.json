@@ -9,7 +9,7 @@
     "publish:patch": "lerna publish patch --yes --force-publish",
     "publish:minor": "lerna publish minor --yes --force-publish",
     "publish:major": "lerna publish major --yes --force-publish",
-    "test": "lerna run test --stream --concurrency 2",
+    "test": "lerna run test",
     "test:watch": "lerna run test:watch --parallel"
   },
   "devDependencies": {
