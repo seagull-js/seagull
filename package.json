@@ -10,7 +10,7 @@
     "publish:minor": "lerna publish minor --yes --force-publish",
     "publish:major": "lerna publish major --yes --force-publish",
     "test": "lerna run test --stream --concurrency 5",
-    "test:watch": "lerna run test:watch --stream --concurrency 3"
+    "test:watch": "lerna run test:watch --stream --concurrency 10"
   },
   "devDependencies": {
     "@types/chai": "^4.1.3",
