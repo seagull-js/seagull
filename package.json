@@ -9,8 +9,8 @@
     "publish:patch": "lerna publish patch --yes --force-publish",
     "publish:minor": "lerna publish minor --yes --force-publish",
     "publish:major": "lerna publish major --yes --force-publish",
-    "test": "lerna run test --parallel",
-    "test:watch": "lerna run test:watch --parallel"
+    "test": "lerna run test --stream --concurrency 5",
+    "test:watch": "lerna run test:watch --stream --concurrency 3"
   },
   "devDependencies": {
     "@types/chai": "^4.1.3",
