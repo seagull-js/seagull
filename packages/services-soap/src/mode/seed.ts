@@ -1,3 +1,4 @@
+import { tryGet } from '@seagull/libraries'
 import { FixtureStorage as FxSt } from '@seagull/seed'
 import { Http } from '@seagull/services-http'
 import * as fs from 'fs'
@@ -9,6 +10,9 @@ import {
   ISoapClient,
   ISoapResponse,
   IXmlFault,
+  NodeSoapFault11,
+  NodeSoapFault12,
+  NodeSoapFaultError,
 } from '..'
 import { SoapError, SoapFaultError } from '../error'
 import {
@@ -70,24 +74,37 @@ export class SoapClientSupplierSeed extends SoapClientSupplierBase {
     return await createProxy(client, seedify, true)
   }
 
-  private handleError(seed: FxSt<any>, error: any) {
-    const isSoapFault =
-      error &&
-      error.cause &&
-      error.cause.root &&
-      error.cause.root.Envelope &&
-      error.cause.root.Envelope.Body &&
-      error.cause.root.Envelope.Body.Fault
-    if (isSoapFault) {
-      const code = error.cause.root.Envelope.Body.Fault.faultcode
-      const description = error.cause.root.Envelope.Body.Fault.faultstring
-      const details = error.cause.root.Envelope.Body.Fault.detail
-      const xmlFault: IXmlFault = { code, description, details }
+  private handleError(seed: FxSt<any>, error: NodeSoapFaultError | any) {
+    const fault: NodeSoapFault11 | NodeSoapFault12 = tryGet(
+      error,
+      (e: NodeSoapFaultError) => e.cause.root.Envelope.Body.Fault
+    )
+    if (fault) {
+      const xmlFault: IXmlFault = this.convertFault(fault)
       const xmlResponse = error.body
       seed.set({ xmlFault, xmlResponse })
-      throw new SoapFaultError(`Fault ${code}: ${description}`, xmlFault)
+      throw new SoapFaultError(
+        `Fault ${xmlFault.code}: ${xmlFault.description}`,
+        xmlFault
+      )
     }
     throw new SoapError('Unknown error', error)
+  }
+
+  private convertFault(fault: NodeSoapFault11 | NodeSoapFault12): IXmlFault {
+    return 'Reason' in fault
+      ? {
+          code: unpack(fault.Code.Value),
+          description: unpack(fault.Reason.Text),
+          statusCode: unpack(fault.statusCode),
+          subcode: unpack(fault.Code.Subcode && fault.Code.Subcode.Value),
+        }
+      : {
+          code: unpack(fault.faultcode),
+          description: unpack(fault.faultstring),
+          details: unpack(fault.detail),
+          statusCode: unpack(fault.statusCode),
+        }
   }
 
   private async fetchWsdl(opts: ClientOptions): Promise<string> {
@@ -115,4 +132,9 @@ export class SoapClientSupplierSeed extends SoapClientSupplierBase {
     const Authorization = `Basic ${base64Creds}`
     return { Authorization }
   }
+}
+
+type $ValuePacked<T> = { $value: T }
+const unpack = <T>(value: $ValuePacked<T> | T) => {
+  return (!!value && (value as $ValuePacked<T>).$value) || (value as T)
 }

@@ -49,10 +49,8 @@ export class SoapClientSupplierPure extends SoapClientSupplierBase {
       )
       const response = fixSt.get()
       if (response.xmlFault) {
-        const code = response.xmlFault.code
-        const description = response.xmlFault.description
         throw new SoapFaultError(
-          `Fault ${code}: ${description}`,
+          `Fault ${response.xmlFault.code}: ${response.xmlFault.description}`,
           response.xmlFault
         )
       }

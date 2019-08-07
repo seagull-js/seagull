@@ -1,4 +1,4 @@
-import { Client } from 'soap'
+import { Client, ISoapFault, ISoapFault12, ISoapFault11 } from 'soap'
 
 export type Credentials = { username: string; password: string }
 
@@ -30,7 +30,22 @@ export interface ISoapResponse {
 }
 
 export interface IXmlFault {
-  code: string
+  code: string | number
+  subcode?: string
   description: string
-  details: string
+  details?: string
+  statusCode?: number
+}
+
+export type NodeSoapFault11 = ISoapFault11['Fault']
+export type NodeSoapFault12 = ISoapFault12['Fault']
+
+export interface NodeSoapFaultError {
+  cause: {
+    root: {
+      Envelope: {
+        Body: { Fault: NodeSoapFault11 | NodeSoapFault12 }
+      }
+    }
+  }
 }
