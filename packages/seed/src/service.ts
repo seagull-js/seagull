@@ -1,6 +1,6 @@
 import { injectable, optional } from 'inversify'
 import 'reflect-metadata'
-import { TestScope } from './testScope'
+import { TestScope } from './test-scope'
 
 @injectable()
 export abstract class SeedableService {
