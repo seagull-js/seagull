@@ -56,9 +56,19 @@ export class SeagullProject {
   async createSeagullApp() {
     // preparations for deployment
     const name = this.getAppName()
-    const itemBucketName = await this.getBucketName('items')
-    const logBucketName = await this.getBucketName('logs', true)
-    const errorBucketName = await this.getBucketName('error', true)
+    const globalProps = {
+      accountId: (await aws.getAccountId(this.sts)) || '',
+      branch: this.branch,
+      projectName: this.pkgJson.name,
+      region: this.region,
+      stage: this.stage,
+    }
+    const itemProps = Object.assign({}, globalProps, { topic: 'items' })
+    const logsProps = Object.assign({}, globalProps, { topic: 'logs' })
+    const errorProps = Object.assign({}, globalProps, { topic: 'errors' })
+    const itemBucketName = lib.getBucketName(itemProps)
+    const logBucketName = lib.getBucketName(logsProps, true)
+    const errorBucketName = lib.getBucketName(errorProps)
     const actions: string[] = [
       'sts:AssumeRole',
       'logs:*',
@@ -107,10 +117,18 @@ export class SeagullProject {
 
   async createBareApp() {
     const account = this.account || (await new SDK({}).defaultAccount())
+    const itemsProps = {
+      accountId: (await aws.getAccountId(this.sts)) || '',
+      branch: this.branch,
+      projectName: this.pkgJson.name,
+      region: this.region,
+      stage: this.stage,
+      topic: 'items',
+    }
     const appProps = {
       addAssets: true,
       appPath: this.appPath,
-      itemsBucket: await this.getBucketName('items'),
+      itemsBucket: lib.getBucketName(itemsProps),
       projectName: this.getAppName(),
       stackProps: { env: { account, region: this.region } },
     }
@@ -146,7 +164,15 @@ export class SeagullProject {
   async destroyProject() {
     this.validate()
     const app = await this.createBareApp()
-    const logBucket = await this.getBucketName('logs', true)
+    const logsProps = {
+      accountId: (await aws.getAccountId(this.sts)) || '',
+      branch: this.branch,
+      projectName: this.pkgJson.name,
+      region: this.region,
+      stage: this.stage,
+      topic: 'logs',
+    }
+    const logBucket = await lib.getBucketName(logsProps, true)
     await emptyBucket(new S3Handler(), logBucket)
     await app.destroyStack()
   }
@@ -161,23 +187,6 @@ export class SeagullProject {
     const hasValidProfile = setCredsByProfile(this.profile)
     // tslint:disable-next-line:no-unused-expression
     !hasValidProfile && lib.noCredentialsSet()
-  }
-
-  async getBucketName(bucketUsage: string, addBranchName = false) {
-    const projectName = this.pkgJson.name
-    const accountId = await aws.getAccountId(this.sts)
-    const prefix = `${this.region}-${accountId}-`
-    const branchName = addBranchName ? `-${this.branch}` : ''
-    const suffix = `${this.stage !== 'prod' ? `-${this.stage}` : ''}`
-    const regex = /[^0-9A-Za-z-]/g
-    // bucketnames should be between 3 and 63 characters,
-    // therefore we have to cut a little at this point
-    const limit = 62 - prefix.length - suffix.length - bucketUsage.length
-    const projectAndBranch = `${projectName}${branchName}`.substring(0, limit)
-
-    const middlePart = `${projectAndBranch}-${bucketUsage}`.replace(regex, '')
-    const name = `${prefix}${middlePart}${suffix}`.toLowerCase()
-    return name
   }
 }
 
