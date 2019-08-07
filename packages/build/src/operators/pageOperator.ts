@@ -1,3 +1,4 @@
+import * as os from 'os'
 import { listPages } from '../lib/project'
 import * as E from '../services'
 import { LogEvent, PageBundleService as PageService } from '../services'
@@ -21,7 +22,8 @@ export class PageOperator extends Operator {
   bundleAll = () => {
     this.bundleTimer = process.hrtime()
     listPages(process.cwd()).forEach(this.addPage)
-    this.bundleNext()
+    const coreCount = os.cpus().length
+    Array.from('x'.repeat(Math.ceil(coreCount / 2))).forEach(this.bundleNext)
   }
   addPage = (page: string) =>
     this.pages.push(new PageService(this, { page, ...this.config })) &&

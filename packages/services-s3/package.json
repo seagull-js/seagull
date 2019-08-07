@@ -1,6 +1,6 @@
 {
   "name": "@seagull/services-s3",
-  "version": "11.4.0",
+  "version": "14.0.0",
   "description": "S3 services for the seagull framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -32,15 +32,15 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/testing": "^11.4.0",
-    "@seagull/tslint": "^11.4.0"
+    "@seagull/testing": "^14.0.0",
+    "@seagull/tslint": "^14.0.0"
   },
   "dependencies": {
-    "@seagull/commands": "^11.4.0",
-    "@seagull/commands-s3": "^11.4.0",
-    "@seagull/libraries": "^11.4.0",
-    "@seagull/mode": "^11.4.0",
-    "@seagull/seed": "^11.4.0",
+    "@seagull/commands": "^14.0.0",
+    "@seagull/commands-s3": "^14.0.0",
+    "@seagull/libraries": "^14.0.0",
+    "@seagull/mode": "^14.0.0",
+    "@seagull/seed": "^14.0.0",
     "inversify": "^5.0.1",
     "reflect-metadata": "^0.1.13"
   },
@@ -66,5 +66,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "3a0b7dd08da1d19ac6036eaebeb079386be12629"
+  "gitHead": "5836ee22619435f4fc2c0d9558da1e59b099b19e"
 }

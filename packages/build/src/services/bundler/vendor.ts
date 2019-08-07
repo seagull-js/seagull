@@ -1,7 +1,7 @@
 import { join } from 'path'
 import { LogEvent, OutputServiceEvents, ServiceEventBus } from '../'
 import { getVendorBundleIncludes } from '../../lib/project'
-import { BrowserLibraryBundle, Bundler } from './lib/bundler'
+import { BundleWorker } from './worker'
 
 export const BundleVendorEvent = Symbol('Start Vendor Bundling Event')
 export const BundledVendorEvent = Symbol('A Vendor Bundle got Bundled')
@@ -15,7 +15,7 @@ export interface VendorBundleServiceEvents extends OutputServiceEvents {
 
 export class VendorBundleService {
   bus: ServiceEventBus<VendorBundleServiceEvents>
-  bundler!: Bundler
+  bundler!: BundleWorker
   config = {
     compatible: false,
     optimized: false,
@@ -32,11 +32,12 @@ export class VendorBundleService {
 
   private createBundler() {
     const dstFile = join(process.cwd(), 'dist', 'assets', 'static', 'vendor.js')
-    const bundle = new BrowserLibraryBundle(this.config.packages, dstFile)
-    bundle.optimized = this.config.optimized
-    bundle.compatible = this.config.compatible
-
-    this.bundler = new Bundler(bundle, this.handleBundled, this.handleError)
+    const { compatible, optimized, packages } = this.config
+    const config = { compatible, dstFile, optimized, packages }
+    this.bundler = new BundleWorker()
+      .setWatchMode(false)
+      .configure('BrowserLibraryBundle', config)
+      .connect(this.handleBundled, this.handleError)
   }
 
   private handleStartBundling = async () => {

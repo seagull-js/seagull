@@ -8,6 +8,22 @@
 
 ### Patch Changes
 
+## 13.0.0 - Seagull Swarm
+
+We allow to configure the ci servers and enable paralleization in build
+
+- seagull/build -> allowed multiple build processes
+- seagull/deploy-aws -> allow to configure pipeline-server selection via SMALL, MEDIUM, LARGE
+
+## 12.0.0
+
+- seagull/deploy-aws -> added S3 bucket for error pages
+- seagull/deploy-aws -> for internal server errors, a custom page from error bucket is shown
+
+## 11.3.0/11.4.0
+
+- no changes
+
 ## 11.2.0
 
 - @seagull/build -> added customizability option for vendor bundle includes via seagull-project package.json entry 'seagull' > 'vendorBundleIncludes'
