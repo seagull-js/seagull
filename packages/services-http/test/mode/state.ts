@@ -28,6 +28,7 @@ export class Test extends ServiceTest {
   stateful = true
 
   @test
+  @timeout(5000)
   async 'can create stateful seed fixture'() {
     const httpSeed = this.injector.get(HttpSeed)
     const path = (idx: number) =>
