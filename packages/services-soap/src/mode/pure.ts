@@ -1,8 +1,8 @@
 import { FixtureStorage, SeedError } from '@seagull/seed'
 import { injectable } from 'inversify'
 import 'reflect-metadata'
-import { ClientOptions, ISoapClient } from '..'
-import { SoapError } from '../error'
+import { ClientOptions, ISoapClient, ISoapResponse } from '..'
+import { SoapError, SoapFaultError } from '../error'
 import {
   ClientFunction,
   createProxy,
@@ -41,12 +41,24 @@ export class SoapClientSupplierPure extends SoapClientSupplierBase {
     client: T,
     endpoint: string
   ) {
-    const purify = async (fnc: ClientFunction, name: string, args: any) =>
-      FixtureStorage.createByUrl(
+    const purify = async (fnc: ClientFunction, name: string, args: any) => {
+      const fixSt = FixtureStorage.createByUrl<ISoapResponse>(
         `${endpoint}/${name}`,
         args,
         this.testScope
-      ).get()
+      )
+      const response = fixSt.get()
+      if (response.xmlFault) {
+        const code = response.xmlFault.code
+        const description = response.xmlFault.description
+        throw new SoapFaultError(
+          `Fault ${code}: ${description}`,
+          response.xmlFault
+        )
+      }
+      return response
+    }
+
     return await createProxy(client, purify, true)
   }
 }

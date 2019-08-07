@@ -23,7 +23,14 @@ export interface ISoapClientSupplier {
 export type ISoapClient = Client
 
 export interface ISoapResponse {
+  xmlFault?: IXmlFault
   xmlHeaders: { [key: string]: string }
   xmlRequest: string
   xmlResponse: string
+}
+
+export interface IXmlFault {
+  code: string
+  description: string
+  details: string
 }

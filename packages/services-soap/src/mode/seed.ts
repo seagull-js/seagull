@@ -3,8 +3,14 @@ import { Http } from '@seagull/services-http'
 import * as fs from 'fs'
 import { injectable } from 'inversify'
 import 'reflect-metadata'
-import { ClientOptions, Credentials, ISoapClient } from '..'
-import { SoapError } from '../error'
+import {
+  ClientOptions,
+  Credentials,
+  ISoapClient,
+  ISoapResponse,
+  IXmlFault,
+} from '..'
+import { SoapError, SoapFaultError } from '../error'
 import {
   ClientFunction,
   createProxy,
@@ -48,12 +54,40 @@ export class SoapClientSupplierSeed extends SoapClientSupplierBase {
     endpoint: string
   ) {
     const seedify = async (fnc: ClientFunction, name: string, args: any) => {
-      const seed = FxSt.createByUrl(`${endpoint}/${name}`, args, this.testScope)
-      const resp = await fnc(args)
-      seed.set(resp)
-      return resp
+      const seed = FxSt.createByUrl<ISoapResponse>(
+        `${endpoint}/${name}`,
+        args,
+        this.testScope
+      )
+      try {
+        const resp = await fnc(args)
+        seed.set(resp)
+        return resp
+      } catch (e) {
+        this.handleError(seed, e)
+      }
     }
     return await createProxy(client, seedify, true)
+  }
+
+  private handleError(seed: FxSt<any>, error: any) {
+    const isSoapFault =
+      error &&
+      error.cause &&
+      error.cause.root &&
+      error.cause.root.Envelope &&
+      error.cause.root.Envelope.Body &&
+      error.cause.root.Envelope.Body.Fault
+    if (isSoapFault) {
+      const code = error.cause.root.Envelope.Body.Fault.faultcode
+      const description = error.cause.root.Envelope.Body.Fault.faultstring
+      const details = error.cause.root.Envelope.Body.Fault.detail
+      const xmlFault: IXmlFault = { code, description, details }
+      const xmlResponse = error.body
+      seed.set({ xmlFault, xmlResponse })
+      throw new SoapFaultError(`Fault ${code}: ${description}`, xmlFault)
+    }
+    throw new SoapError('Unknown error', error)
   }
 
   private async fetchWsdl(opts: ClientOptions): Promise<string> {
