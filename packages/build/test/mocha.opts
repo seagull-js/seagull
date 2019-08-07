@@ -2,6 +2,5 @@
 --require source-map-support/register
 --watch-extensions ts,tsx
 --recursive
---timeout 10000
 --exit
 test/**/*.ts*

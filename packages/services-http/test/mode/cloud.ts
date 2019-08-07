@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import 'chai/register-should'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as querystring from 'querystring'
-import { Http } from '../src'
+import { Http } from '../../src'
 
 interface ExpectedResponse {
   args: {
@@ -12,21 +12,18 @@ interface ExpectedResponse {
   }
 }
 
-@suite('Http::Cloud::Fetch')
+@suite('Http::Mode::Cloud')
 export class Test extends BasicTest {
   http = new Http()
   baseUrl = `https://postman-echo.com`
+  method = 'get'
+  params = { foo1: 'bar1', foo2: 'bar2' }
+  url = `${this.baseUrl}/${this.method}?${querystring.stringify(this.params)}`
 
   @test
   async 'can get json'() {
-    const method = 'get'
-    const params = {
-      foo1: 'bar1',
-      foo2: 'bar2',
-    }
-    const url = `${this.baseUrl}/${method}?${querystring.stringify(params)}`
     const result = (await (await this.http.fetch(
-      url
+      this.url
     )).json()) as ExpectedResponse
     expect(result).to.be.an('object')
     expect(result.args).to.have.ownProperty('foo1')

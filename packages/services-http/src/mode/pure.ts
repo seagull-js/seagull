@@ -11,7 +11,11 @@ import { HttpBase } from './base'
 @injectable()
 export class HttpPure extends HttpBase {
   async fetch(url: string, init?: RequestInit): Promise<Response> {
-    const seed = FixtureStorage.createByFetchParams<Fixture<any>>(url, init)
+    const seed = FixtureStorage.createByUrl<Fixture<any>>(
+      url,
+      init,
+      this.testScope
+    )
     const fixture = seed.get()
     return createResponse(fixture)
   }

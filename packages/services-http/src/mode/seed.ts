@@ -18,7 +18,11 @@ export interface RequestException {
 @injectable()
 export class HttpSeed extends HttpBase {
   async fetch(url: string, init?: RequestInit): Promise<Response> {
-    const seed = FixtureStorage.createByFetchParams<Fixture<any>>(url, init)
+    const seed = FixtureStorage.createByUrl<Fixture<any>>(
+      url,
+      init,
+      this.testScope
+    )
 
     try {
       const seedFixture = seed.get()

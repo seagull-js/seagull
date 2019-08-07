@@ -35,16 +35,18 @@
   "devDependencies": {
     "@seagull/testing": "^15.0.3",
     "@seagull/tslint": "^15.0.3",
-    "@types/node-fetch": "^2.3.3"
+    "@types/node-fetch": "^2.3.3",
+    "@types/rimraf": "^2.0.2",
+    "rimraf": "^2.6.3"
   },
   "dependencies": {
     "@seagull/libraries": "^15.0.3",
     "@seagull/mode": "^15.0.3",
     "@seagull/seed": "^15.0.3",
     "encoding": "^0.1.12",
-    "iconv-lite": "^0.4.24",
+    "iconv-lite": "^0.5.0",
     "inversify": "^5.0.1",
-    "node-fetch": "^2.3.0",
+    "node-fetch": "^2.6.0",
     "reflect-metadata": "^0.1.13"
   },
   "nyc": {

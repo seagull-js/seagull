@@ -39,7 +39,9 @@
   "dependencies": {
     "@seagull/mock": "^15.0.3",
     "@seagull/mode": "^15.0.3",
-    "@seagull/sandbox": "^15.0.3"
+    "@seagull/sandbox": "^15.0.3",
+    "@seagull/seed": "15.0.3",
+    "inversify": "^5.0.1"
   },
   "peerDependencies": {
     "aws-sdk": "*"

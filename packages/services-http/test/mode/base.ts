@@ -3,10 +3,10 @@ import { expect, use } from 'chai'
 import * as promisedChai from 'chai-as-promised'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as querystring from 'querystring'
-import { Http } from '../src/mode/cloud'
+import { Http } from '../../src/mode/cloud'
 use(promisedChai)
 
-@suite('Http::Base::Fetch')
+@suite('Http::Mode::Base')
 export class Test extends BasicTest {
   http = new Http()
   baseUrl = `https://postman-echo.com`
@@ -21,7 +21,7 @@ export class Test extends BasicTest {
 
   @test
   async 'can get 404 response'() {
-    const method = 'undefined'
+    const method = 'something-non-existing'
     const url = `${this.baseUrl}/${method}`
     const result = await this.http.fetch(url)
     expect(result).to.have.property('status', 404)
