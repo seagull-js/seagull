@@ -1,5 +1,5 @@
 export * from './decorators'
-export * from './library'
+export * from './Library'
 export * from './fileSystemHelper'
 export * from './loggingHelper'
 export * from './basicError'
