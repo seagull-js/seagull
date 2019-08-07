@@ -1,6 +1,6 @@
 {
   "name": "@seagull/mock-fs",
-  "version": "16.0.2",
+  "version": "16.0.3",
   "description": "FS Mocking module for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/tslint": "^16.0.2"
+    "@seagull/tslint": "^16.0.3"
   },
   "nyc": {
     "extension": [
@@ -55,8 +55,8 @@
     ]
   },
   "dependencies": {
-    "@seagull/mock": "^16.0.2",
-    "@seagull/testing": "^16.0.2",
+    "@seagull/mock": "^16.0.3",
+    "@seagull/testing": "^16.0.3",
     "fs-monkey": "0.3.3",
     "memfs": "^2.14.2",
     "mock-fs": "^4.5.0",
@@ -65,5 +65,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "658b3004ed294651a6dda95b2aacf55cb9ed3aaf"
+  "gitHead": "9b803ec0fec01608faadba967c9452e25c3049ac"
 }
