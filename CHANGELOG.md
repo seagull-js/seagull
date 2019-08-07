@@ -8,7 +8,11 @@
 
 ### Patch Changes
 
-## 16.0.0
+## 16.0.3
+
+- seagull/services-soap -> seed creation for soap faults
+
+## 16.0.1
 
 - seagull/seed -> renamed to services-seed
 - seagull/services-seed -> seed creation for soap requests

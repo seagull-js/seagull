@@ -17,6 +17,7 @@ export class Test extends BasicTest {
   wsdlPath = 'http://www.dneonline.com/calculator.asmx?wsdl'
 
   @test
+  @timeout(5000)
   async 'can get result'() {
     // delete old fixture
     const path = './seed/https/www.dneonline.com/calculator.asmx?'

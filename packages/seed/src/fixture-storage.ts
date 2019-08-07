@@ -10,7 +10,7 @@ import {
 import { join } from 'path'
 import { SeedError } from './error'
 import { LocalConfig } from './local-config'
-import { TestScope } from './testScope'
+import { TestScope } from './test-scope'
 
 // tslint:disable-next-line:no-var-requires
 require('ts-node')

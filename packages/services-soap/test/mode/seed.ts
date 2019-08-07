@@ -5,6 +5,7 @@ import * as promisedChai from 'chai-as-promised'
 import * as fs from 'fs'
 import { only, skip, slow, suite, test, timeout } from 'mocha-typescript'
 import { ISoapClient, ISoapResponse } from '../../src'
+import { SoapFaultError } from '../../src/error'
 import { SoapClientSupplierPure } from '../../src/mode/pure'
 import { SoapClientSupplierSeed } from '../../src/mode/seed'
 use(promisedChai)
@@ -25,6 +26,10 @@ export class Test extends BasicTest {
   static hash = '15e66e975bb36c02ae5b4afc5a5d9ec7'
   static wsdlFilePath = `./seed/http/${Test.endpoint}`
   static seedFilePath = `${Test.wsdlFilePath}/AddAsync/${Test.hash}.json`
+  static faultyHash = 'a4e5dd6a0a52fbba967140256a0b05b0'
+  static faultySeedFilePath = `${Test.wsdlFilePath}/AddAsync/${
+    Test.faultyHash
+  }.json`
 
   soapSeed = new SoapClientSupplierSeed()
   soapPure = new SoapClientSupplierPure()
@@ -97,5 +102,35 @@ export class Test extends BasicTest {
       `fixture ${Test.seedFilePath} not found!`
     ).to.be.true
     expect(pureResponse.AddResult).to.eq(8)
+  }
+
+  @test
+  async 'creates fixture in case of an error'() {
+    rem(Test.faultySeedFilePath) // delete old fixture
+
+    expect(
+      fs.existsSync(Test.faultySeedFilePath),
+      `expected ${Test.faultySeedFilePath} to not exist`
+    ).to.be.false
+
+    const seedClient = await this.soapSeed.getClient<ExpectedClient>({
+      wsdlPath: Test.wsdlPath,
+    }) // seed fixture
+
+    const params = { intA: '?', intB: '?' }
+    const seedRequest = seedClient.AddAsync(params)
+
+    await expect(seedRequest).to.be.rejectedWith(SoapFaultError)
+    expect(
+      fs.existsSync(Test.faultySeedFilePath),
+      `expected ${Test.faultySeedFilePath} to exist`
+    ).to.be.true
+
+    const pureClient = await this.soapPure.getClient<ExpectedClient>({
+      endpoint: Test.endpointPath,
+      wsdlPath: Test.wsdlPath,
+    })
+    const pureRequest = pureClient.AddAsync(params)
+    await expect(pureRequest).to.be.rejectedWith(SoapFaultError)
   }
 }
