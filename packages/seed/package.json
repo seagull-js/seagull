@@ -1,6 +1,6 @@
 {
   "name": "@seagull/seed",
-  "version": "16.0.0",
+  "version": "16.0.1",
   "description": "Seed implementation for the seagull framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -33,11 +33,11 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "dependencies": {
-    "@seagull/libraries": "^16.0.0",
+    "@seagull/libraries": "^16.0.1",
     "slugify": "^1.3.4"
   },
   "devDependencies": {
-    "@seagull/tslint": "^16.0.0"
+    "@seagull/tslint": "^16.0.1"
   },
   "nyc": {
     "extension": [
@@ -62,5 +62,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "d297fc3464157a9b4d73b0ff3c4f6e99319807f8"
+  "gitHead": "658b3004ed294651a6dda95b2aacf55cb9ed3aaf"
 }

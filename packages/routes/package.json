@@ -1,6 +1,6 @@
 {
   "name": "@seagull/routes",
-  "version": "16.0.0",
+  "version": "16.0.1",
   "description": "Routing functionalities for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -32,19 +32,19 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/mock-process": "^16.0.0",
-    "@seagull/mode": "^16.0.0",
-    "@seagull/pages": "^16.0.0",
-    "@seagull/testing": "^16.0.0",
-    "@seagull/tslint": "^16.0.0",
+    "@seagull/mock-process": "^16.0.1",
+    "@seagull/mode": "^16.0.1",
+    "@seagull/pages": "^16.0.1",
+    "@seagull/testing": "^16.0.1",
+    "@seagull/tslint": "^16.0.1",
     "@types/express": "^4.16.0",
     "@types/lodash": "^4.14.123",
     "mock-fs": "^4.5.0"
   },
   "dependencies": {
-    "@seagull/commands-fs": "^16.0.0",
-    "@seagull/libraries": "^16.0.0",
-    "@seagull/services-http": "^16.0.0",
+    "@seagull/commands-fs": "^16.0.1",
+    "@seagull/libraries": "^16.0.1",
+    "@seagull/services-http": "^16.0.1",
     "body-parser": "^1.18.3",
     "class-validator": "^0.9.1",
     "express": "^4.16.3",
@@ -74,5 +74,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "d297fc3464157a9b4d73b0ff3c4f6e99319807f8"
+  "gitHead": "658b3004ed294651a6dda95b2aacf55cb9ed3aaf"
 }

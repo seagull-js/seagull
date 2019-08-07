@@ -1,6 +1,6 @@
 {
   "name": "@seagull/deploy-aws",
-  "version": "16.0.0",
+  "version": "16.0.1",
   "description": "Code deploying for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -39,8 +39,8 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/testing": "^16.0.0",
-    "@seagull/tslint": "^16.0.0",
+    "@seagull/testing": "^16.0.1",
+    "@seagull/tslint": "^16.0.1",
     "@types/chai-as-promised": "^7.1.0",
     "@types/dotenv": "^6.1.1",
     "@types/lodash": "^4.14.123",
@@ -60,8 +60,8 @@
     "@aws-cdk/aws-s3": "^0.21.0",
     "@aws-cdk/cdk": "^0.21.0",
     "@aws-cdk/cloudformation-diff": "^0.21.0",
-    "@seagull/commands": "^16.0.0",
-    "@seagull/commands-fs": "^16.0.0",
+    "@seagull/commands": "^16.0.1",
+    "@seagull/commands-fs": "^16.0.1",
     "aws-cdk": "^0.21.0",
     "aws-sdk": "*",
     "chalk": "^2.4.1",
@@ -94,5 +94,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "d297fc3464157a9b4d73b0ff3c4f6e99319807f8"
+  "gitHead": "658b3004ed294651a6dda95b2aacf55cb9ed3aaf"
 }
