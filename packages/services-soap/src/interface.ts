@@ -1,4 +1,4 @@
-import { Client, ISoapFault, ISoapFault12, ISoapFault11 } from 'soap'
+import { Client, ISoapFault, ISoapFault11, ISoapFault12 } from 'soap'
 
 export type Credentials = { username: string; password: string }
 
@@ -48,4 +48,5 @@ export interface NodeSoapFaultError {
       }
     }
   }
+  body: string
 }

@@ -76,12 +76,12 @@ export class SoapClientSupplierSeed extends SoapClientSupplierBase {
 
   private handleError(seed: FxSt<any>, error: NodeSoapFaultError | any) {
     const fault: NodeSoapFault11 | NodeSoapFault12 = tryGet(
-      error,
-      (e: NodeSoapFaultError) => e.cause.root.Envelope.Body.Fault
+      error as NodeSoapFaultError,
+      e => e.cause.root.Envelope.Body.Fault
     )
     if (fault) {
       const xmlFault: IXmlFault = this.convertFault(fault)
-      const xmlResponse = error.body
+      const xmlResponse = (error as NodeSoapFaultError).body
       seed.set({ xmlFault, xmlResponse })
       throw new SoapFaultError(
         `Fault ${xmlFault.code}: ${xmlFault.description}`,
