@@ -7,6 +7,7 @@ const helpText = `
   --optimize-runtime true|false   # Sets NODE_ENV to production
   --optimize-bundle false       # Minimize, dead code elimination etc.
   --type-check false            # Transpile only?
+  --pages-to-exclude            # RegEx to use when filtering pages
   -h                            # show this
 `
 
@@ -28,10 +29,12 @@ const opts = {
   optimizeRuntime: getArgv('--optimize-runtime', true),
   optimizeBundle: getArgv('--optimize-bundle', true),
   typeCheck: getArgv('--type-check', true),
+  pagesToExclude: getArgv('--pages-to-exclude', process.env.PAGES_TO_EXCLUDE),
 }
 
 opts.mode ? (process.env.MODE = opts.mode) : null
 opts.stage ? (process.env.STAGE = opts.stage) : null
+opts.pagesToExclude ? (process.env.PAGES_TO_EXCLUDE = opts.pagesToExclude) : ''
 process.env.NODE_ENV = opts.optimizeRuntime ? 'production' : 'development'
 
 const Ops = require('../dist/src/operators')

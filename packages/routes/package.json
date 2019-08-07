@@ -1,12 +1,13 @@
 {
   "name": "@seagull/routes",
-  "version": "14.0.0",
+  "version": "16.0.3",
   "description": "Routing functionalities for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
     "build": "rm -rf dist && tsc",
-    "test": "tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
+    "test": "tslint --fix src/**/*.ts test/**/*.ts && mocha --opts test/mocha.opts",
+    "test:coverage": "tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
     "test:watch": "npm run test -- --watch --reporter min",
     "docs": "rm -rf docs && typedoc --mode modules --ignoreCompilerErrors --excludeExternals --excludePrivate --excludeNotExported --out docs src"
   },
@@ -32,19 +33,19 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/mock-process": "^14.0.0",
-    "@seagull/mode": "^14.0.0",
-    "@seagull/pages": "^14.0.0",
-    "@seagull/testing": "^14.0.0",
-    "@seagull/tslint": "^14.0.0",
+    "@seagull/mock-process": "^16.0.3",
+    "@seagull/mode": "^16.0.3",
+    "@seagull/pages": "^16.0.3",
+    "@seagull/testing": "^16.0.3",
+    "@seagull/tslint": "^16.0.3",
     "@types/express": "^4.16.0",
     "@types/lodash": "^4.14.123",
     "mock-fs": "^4.5.0"
   },
   "dependencies": {
-    "@seagull/commands-fs": "^14.0.0",
-    "@seagull/libraries": "^14.0.0",
-    "@seagull/services-http": "^14.0.0",
+    "@seagull/commands-fs": "^16.0.3",
+    "@seagull/libraries": "^16.0.3",
+    "@seagull/services-http": "^16.0.3",
     "body-parser": "^1.18.3",
     "class-validator": "^0.9.1",
     "express": "^4.16.3",
@@ -74,5 +75,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "5836ee22619435f4fc2c0d9558da1e59b099b19e"
+  "gitHead": "9b803ec0fec01608faadba967c9452e25c3049ac"
 }

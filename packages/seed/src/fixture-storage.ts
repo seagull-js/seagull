@@ -1,14 +1,25 @@
 import * as crypto from 'crypto'
 import * as fs from 'fs'
-import { outputJsonSync, pathExistsSync, readJsonSync } from 'fs-extra'
-import { RequestInit } from 'node-fetch'
+import {
+  outputFileSync,
+  outputJsonSync,
+  pathExistsSync,
+  readFileSync,
+  readJsonSync,
+} from 'fs-extra'
 import { join } from 'path'
 import { SeedError } from './error'
-import { LocalConfig } from './localConfig'
+import { LocalConfig } from './local-config'
+import { TestScope } from './test-scope'
 
 // tslint:disable-next-line:no-var-requires
 require('ts-node')
 
+type FixtureFileExtension = '.json' | '.xml' | '.wsdl'
+type FsHandler = {
+  read: (path: string, ...params: any[]) => Buffer
+  save: (path: string, ...params: any[]) => void
+}
 /**
  * Seed fixtureStorage for managing seed fixtures.
  */
@@ -51,7 +62,9 @@ export class FixtureStorage<T> {
   }
 
   private get path() {
-    return join('seed', this.uri + (this.fileExtension || ''))
+    const scopedPath = `${this.uri}${this.testScope ? this.testScope.path : ''}`
+    const path = join('seed', `${scopedPath}${this.fileExtension || ''}`)
+    return path
   }
 
   /**
@@ -59,16 +72,25 @@ export class FixtureStorage<T> {
    * @param url The request url.
    * @param init The request configuration.
    */
-  static createByFetchParams<T>(
+  static createByUrl<T>(
     url: string,
-    init?: RequestInit
+    params?: any,
+    testScope?: TestScope
   ): FixtureStorage<T> {
-    url = url.replace('http://', 'http/')
-    url = url.replace('https://', 'https/')
-    return new FixtureStorage(
-      `${url}/${init ? this.hash(JSON.stringify(init)) : 'default'}`,
-      `.json`
-    )
+    const path = url.replace('://', '/')
+    const uri = `${path}/${
+      params ? this.hash(JSON.stringify(params)) : 'default'
+    }`
+    const fileExtension = `.json`
+    return new FixtureStorage(uri, fileExtension, testScope)
+  }
+
+  /**
+   * Creates a new seed fixtureStorage by wsdl url.
+   * @param url The request url.
+   */
+  static createByWsdlUrl<T>(url: string): FixtureStorage<T> {
+    return new FixtureStorage(`${url.replace('://', '/')}`, `.wsdl`)
   }
 
   private static hash(key: string) {
@@ -82,25 +104,47 @@ export class FixtureStorage<T> {
    * Creates a new seed fixtureStorage for managing seed fixtures.
    * @param uri Fixture uri
    */
-  constructor(public uri: string, public fileExtension?: string) {}
+  constructor(
+    readonly uri: string,
+    readonly fileExtension: FixtureFileExtension,
+    readonly testScope?: TestScope
+  ) {}
 
   /**
    * Get fixture.
    * @param uri Fixture uri
    */
   get(): T {
-    const fixture = pathExistsSync(this.path)
-      ? readJsonSync(this.path)
-      : undefined
-
+    const fixture = pathExistsSync(this.path) && this.fs.read(this.path)
     if (!fixture) {
-      throw new SeedError('Http: fixture (seed) is missing.', this)
+      throw new SeedError(`Fixture (seed) is missing: ${this.path}.`, this)
     }
     if (this.expired) {
-      throw new SeedError('Http: fixture (seed) is expired.', this)
+      throw new SeedError(`Fixture (seed) is expired: ${this.path}.`, this)
     }
-
+    if (this.testScope) {
+      this.testScope.callIndex += 1
+    }
     return fixture
+  }
+
+  private get fsJson() {
+    const jsonOpts = { spaces: 2 }
+    const save = (path: string, val: any) => outputJsonSync(path, val, jsonOpts)
+    return { read: readJsonSync, save }
+  }
+
+  private get fsXml() {
+    return { save: outputFileSync, read: readFileSync }
+  }
+
+  private get fs() {
+    const fileFormatFs = new Map<FixtureFileExtension, FsHandler>([
+      ['.json', this.fsJson],
+      ['.wsdl', this.fsXml],
+      ['.xml', this.fsXml],
+    ])
+    return fileFormatFs.get(this.fileExtension) || this.fsJson
   }
 
   /**
@@ -111,7 +155,10 @@ export class FixtureStorage<T> {
     if (this.config.hook) {
       value = this.config.hook(value)
     }
-    return outputJsonSync(this.path, value, { spaces: 2 })
+    this.fs.save(this.path, value)
+    if (this.testScope) {
+      this.testScope.callIndex += 1
+    }
   }
 
   private getConfigRecursive(

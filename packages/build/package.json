@@ -1,6 +1,6 @@
 {
   "name": "@seagull/build",
-  "version": "14.0.0",
+  "version": "16.0.3",
   "description": "Code building and bundling for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -10,7 +10,8 @@
   },
   "scripts": {
     "build": "rm -rf dist && tsc",
-    "test": "tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
+    "test": "tslint --fix src/**/*.ts test/**/*.ts && mocha --opts test/mocha.opts",
+    "test:coverage": "tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
     "test:watch": "npm run test -- --watch --reporter min",
     "docs": "rm -rf docs && typedoc --mode modules --ignoreCompilerErrors --excludeExternals --excludePrivate --excludeNotExported --out docs src"
   },
@@ -36,7 +37,7 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/tslint": "^14.0.0",
+    "@seagull/tslint": "^16.0.3",
     "@types/browserify": "^12.0.36",
     "@types/chokidar": "^1.7.5",
     "@types/envify": "0.0.29",
@@ -50,19 +51,19 @@
     "@babel/core": "^7.2.2",
     "@babel/polyfill": "^7.2.5",
     "@babel/preset-env": "^7.3.1",
-    "@seagull/commands": "^14.0.0",
-    "@seagull/commands-fs": "^14.0.0",
-    "@seagull/commands-s3": "^14.0.0",
-    "@seagull/libraries": "^14.0.0",
-    "@seagull/mock-fs": "^14.0.0",
-    "@seagull/mock-s3": "^14.0.0",
-    "@seagull/mode": "^14.0.0",
-    "@seagull/testing": "^14.0.0",
+    "@seagull/commands": "^16.0.3",
+    "@seagull/commands-fs": "^16.0.3",
+    "@seagull/commands-s3": "^16.0.3",
+    "@seagull/libraries": "^16.0.3",
+    "@seagull/mock-fs": "^16.0.3",
+    "@seagull/mock-s3": "^16.0.3",
+    "@seagull/mode": "^16.0.3",
+    "@seagull/testing": "^16.0.3",
     "babelify": "^10.0.0",
     "browserify": "^16.2.0",
     "browserify-incremental": "^3.1.1",
     "chokidar": "^2.0.3",
-    "core-js": "^2.6.4",
+    "core-js": "^2.6.9",
     "envify": "^4.1.0",
     "lodash": "^4.17.5",
     "mock-require": "^3.0.2",
@@ -100,5 +101,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "5836ee22619435f4fc2c0d9558da1e59b099b19e"
+  "gitHead": "9b803ec0fec01608faadba967c9452e25c3049ac"
 }

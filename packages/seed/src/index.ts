@@ -1,4 +1,6 @@
-export { LocalConfig } from './localConfig'
-export { FixtureStorage } from './fixtureStorage'
+export { LocalConfig } from './local-config'
+export { FixtureStorage } from './fixture-storage'
 export { config } from './config'
 export { SeedError } from './error'
+export { SeedableService } from './service'
+export { TestScope } from './test-scope'

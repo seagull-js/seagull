@@ -1,11 +1,12 @@
+// tslint:disable: no-unused-expression
 import { BasicTest } from '@seagull/testing'
 import { expect } from 'chai'
 import 'chai/register-should'
 import * as fs from 'fs'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import * as querystring from 'querystring'
-import { HttpPure } from '../src/mode/pure'
-import { HttpSeed } from '../src/mode/seed'
+import { HttpPure } from '../../src/mode/pure'
+import { HttpSeed } from '../../src/mode/seed'
 
 interface ExpectedResponse {
   args: {
@@ -14,7 +15,7 @@ interface ExpectedResponse {
   }
 }
 
-@suite('Http::Seed::Request')
+@suite('Http::Mode::Seed')
 export class Test extends BasicTest {
   httpSeed = new HttpSeed()
   httpPure = new HttpPure()
@@ -22,26 +23,25 @@ export class Test extends BasicTest {
 
   @test
   async 'can get seed fixture'() {
-    // delete old fixture
     const path =
       './seed/https/postman-echo.com/get?foo1=bar1&foo2=bar2/default.json'
+    const method = 'get'
+    const params = { foo1: 'bar1', foo2: 'bar2' }
+    const url = `${this.baseUrl}/${method}?${querystring.stringify(params)}`
+
+    // seed should be empty
     if (fs.existsSync(path)) {
       fs.unlinkSync(path)
     }
 
     // seed fixture
-    const method = 'get'
-    const params = {
-      foo1: 'bar1',
-      foo2: 'bar2',
-    }
-    const url = `${this.baseUrl}/${method}?${querystring.stringify(params)}`
     const seedResponse = (await (await this.httpSeed.fetch(
       url
     )).json()) as ExpectedResponse
     expect(seedResponse).to.be.an('object')
     expect(seedResponse.args).to.have.ownProperty('foo1')
     expect(seedResponse.args).to.have.ownProperty('foo2')
+    expect(fs.existsSync(path), 'fixture file not found').to.be.true
 
     // get fixture
     const pureResponse = (await (await this.httpPure.fetch(
@@ -50,5 +50,8 @@ export class Test extends BasicTest {
     expect(pureResponse).to.be.an('object')
     expect(pureResponse.args).to.have.ownProperty('foo1')
     expect(pureResponse.args).to.have.ownProperty('foo2')
+
+    // cleanup
+    fs.unlinkSync(path)
   }
 }

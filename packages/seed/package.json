@@ -1,12 +1,13 @@
 {
   "name": "@seagull/seed",
-  "version": "14.0.0",
+  "version": "16.0.3",
   "description": "Seed implementation for the seagull framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
     "build": "rm -rf dist && tsc && npm run lint",
-    "test": "tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
+    "test": "tslint --fix src/**/*.ts test/**/*.ts && mocha --opts test/mocha.opts",
+    "test:coverage": "tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
     "test:watch": "npm run test -- --watch --reporter min",
     "lint": "tslint --project ./tsconfig.json --config ./tslint.json --fix './{src, test}/**/*.ts'",
     "docs": "rm -rf docs && typedoc --mode modules --ignoreCompilerErrors --excludeExternals --excludePrivate --excludeNotExported --out docs src"
@@ -33,11 +34,11 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "dependencies": {
-    "@seagull/libraries": "^14.0.0"
+    "@seagull/libraries": "^16.0.3",
+    "slugify": "^1.3.4"
   },
   "devDependencies": {
-    "@seagull/testing": "^14.0.0",
-    "@seagull/tslint": "^14.0.0"
+    "@seagull/tslint": "^16.0.3"
   },
   "nyc": {
     "extension": [
@@ -62,5 +63,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "5836ee22619435f4fc2c0d9558da1e59b099b19e"
+  "gitHead": "9b803ec0fec01608faadba967c9452e25c3049ac"
 }

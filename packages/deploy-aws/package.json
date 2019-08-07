@@ -1,6 +1,6 @@
 {
   "name": "@seagull/deploy-aws",
-  "version": "14.0.0",
+  "version": "16.0.3",
   "description": "Code deploying for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -13,7 +13,8 @@
   },
   "scripts": {
     "build": "rm -rf dist && tsc",
-    "test": "tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
+    "test": "tslint --fix src/**/*.ts test/**/*.ts && mocha --opts test/mocha.opts",
+    "test:coverage": "tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
     "test:watch": "npm run test -- --watch --reporter min",
     "docs": "rm -rf docs && typedoc --mode modules --ignoreCompilerErrors --excludeExternals --excludePrivate --excludeNotExported --out docs src"
   },
@@ -39,8 +40,8 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/testing": "^14.0.0",
-    "@seagull/tslint": "^14.0.0",
+    "@seagull/testing": "^16.0.3",
+    "@seagull/tslint": "^16.0.3",
     "@types/chai-as-promised": "^7.1.0",
     "@types/dotenv": "^6.1.1",
     "@types/lodash": "^4.14.123",
@@ -60,8 +61,8 @@
     "@aws-cdk/aws-s3": "^0.21.0",
     "@aws-cdk/cdk": "^0.21.0",
     "@aws-cdk/cloudformation-diff": "^0.21.0",
-    "@seagull/commands": "^14.0.0",
-    "@seagull/commands-fs": "^14.0.0",
+    "@seagull/commands": "^16.0.3",
+    "@seagull/commands-fs": "^16.0.3",
     "aws-cdk": "^0.21.0",
     "aws-sdk": "*",
     "chalk": "^2.4.1",
@@ -94,5 +95,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "5836ee22619435f4fc2c0d9558da1e59b099b19e"
+  "gitHead": "9b803ec0fec01608faadba967c9452e25c3049ac"
 }

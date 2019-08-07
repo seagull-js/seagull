@@ -34,21 +34,29 @@ const bundlerScriptPath = () => {
 export class BundleWorker {
   private bundler!: ChildProcess
   private watch = false
+  private bundlerArgs!: string
+  private events!: { handleBundled: BundleEvent; handleError: ErrorEvent }
+
   configure<T extends BundlerVariants>(type: T, config: VariantOptions<T>) {
-    const path = bundlerScriptPath()
-    const BUNDLER_ARGS = JSON.stringify({ config, type, watch: this.watch })
-    this.bundler = fork(path, [], { env: { BUNDLER_ARGS } })
+    this.bundlerArgs = JSON.stringify({ config, type, watch: this.watch })
     onExit(this.shutdown)
     return this
   }
   connect(handleBundled: BundleEvent, handleError: ErrorEvent) {
-    const service = { handleBundled, handleError }
-    type BWorkerEvent = { call: 'handleBundled' | 'handleError'; args: [any] }
-    this.bundler.on('message', (m: BWorkerEvent) => service[m.call](...m.args))
+    this.events = { handleBundled, handleError }
     return this
   }
 
   setWatchMode = (watch = true) => void (this.watch = watch) || this
-  bundle = () => this.bundler.send({ call: 'bundle' })
-  shutdown = () => this.bundler.kill()
+  shutdown = () => this.bundler && this.bundler.kill()
+
+  bundle = () => (this.bundler || this.startBundler()).send({ call: 'bundle' })
+  private startBundler = () => {
+    const path = bundlerScriptPath()
+    const service = this.events
+    this.bundler = fork(path, [], { env: { BUNDLER_ARGS: this.bundlerArgs } })
+    type BWorkerEvent = { call: 'handleBundled' | 'handleError'; args: [any] }
+    this.bundler.on('message', (m: BWorkerEvent) => service[m.call](...m.args))
+    return this.bundler
+  }
 }
