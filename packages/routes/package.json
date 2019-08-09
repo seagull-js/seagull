@@ -46,6 +46,7 @@
     "@seagull/commands-fs": "^16.0.3",
     "@seagull/libraries": "^16.0.3",
     "@seagull/services-http": "^16.0.3",
+    "@seagull/services-soap": "^16.0.3",
     "body-parser": "^1.18.3",
     "class-validator": "^0.9.1",
     "express": "^4.16.3",
