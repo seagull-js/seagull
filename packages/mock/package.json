@@ -1,6 +1,6 @@
 {
   "name": "@seagull/mock",
-  "version": "16.0.4",
+  "version": "16.0.5",
   "description": "General mock abstractions for the Seagull Framework",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/tslint": "^16.0.4"
+    "@seagull/tslint": "^16.0.5"
   },
   "nyc": {
     "extension": [
@@ -56,5 +56,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "9b803ec0fec01608faadba967c9452e25c3049ac"
+  "gitHead": "1950dcbecd5394b3fbf4ff9d5bf559ee10584cfc"
 }
