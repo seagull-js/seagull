@@ -20,6 +20,7 @@ import {
   createProxy,
   getClientInternal,
   getEndpoint,
+  handleSeedError,
   SoapClientSupplierBase,
   wsdlIsFile,
 } from './base'
@@ -39,8 +40,15 @@ export class SoapClientSupplierSeed extends SoapClientSupplierBase {
       const wsdl = await this.fetchWsdl(opts)
       const endpoint = getEndpoint(opts)
       if (!wsdlIsFile(opts)) {
-        const seed = FxSt.createByWsdlUrl(endpoint)
-        seed.set(wsdl)
+        const seed = FxSt.createByWsdlUrl<string>(endpoint)
+        try {
+          seed.get()
+          if (seed.expired) {
+            throw new Error()
+          }
+        } catch {
+          seed.set(wsdl)
+        }
       }
       const client = await getClientInternal<T>(opts)
       const seedClient = await this.seedifyClient<T>(client, endpoint)
@@ -64,9 +72,18 @@ export class SoapClientSupplierSeed extends SoapClientSupplierBase {
         this.testScope
       )
       try {
-        const resp = await fnc(args)
-        seed.set(resp)
-        return resp
+        try {
+          if (seed.expired) {
+            throw new Error()
+          }
+          const response = seed.get()
+          handleSeedError(response)
+          return response
+        } catch {
+          const response = await fnc(args)
+          seed.set(response)
+          return response
+        }
       } catch (e) {
         this.handleError(seed, e)
       }

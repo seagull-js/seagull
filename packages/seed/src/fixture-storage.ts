@@ -48,6 +48,10 @@ export class FixtureStorage<T> {
     return (expireDate && expireDate.getTime() <= new Date().getTime()) || false
   }
 
+  get exists(): boolean {
+    return pathExistsSync(this.path)
+  }
+
   /**
    * The seed configuration placed within the fixture folder.
    * @param uri
@@ -115,7 +119,7 @@ export class FixtureStorage<T> {
    * @param uri Fixture uri
    */
   get(): T {
-    const fixture = pathExistsSync(this.path) && this.fs.read(this.path)
+    const fixture = this.exists && this.fs.read(this.path)
     if (!fixture) {
       throw new SeedError(`Fixture (seed) is missing: ${this.path}.`, this)
     }

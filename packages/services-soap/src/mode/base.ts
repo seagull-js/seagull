@@ -4,8 +4,8 @@ import { injectable } from 'inversify'
 import * as _ from 'lodash'
 import 'reflect-metadata'
 import { BasicAuthSecurity, createClientAsync, IOptions } from 'soap'
-import { ClientOptions, Credentials, ISoapClient } from '..'
-import { SoapError } from '../error'
+import { ClientOptions, Credentials, ISoapClient, ISoapResponse } from '..'
+import { SoapError, SoapFaultError } from '../error'
 
 export type ClientFunction = (args: any) => Promise<any>
 
@@ -65,6 +65,15 @@ export const getEndpoint = (opts: ClientOptions) => {
     )
   }
   return opts.endpoint || opts.wsdlPath.replace('?wsdl', '')
+}
+
+export const handleSeedError = (response: ISoapResponse) => {
+  if (response.xmlFault) {
+    throw new SoapFaultError(
+      `Fault ${response.xmlFault.code}: ${response.xmlFault.description}`,
+      response.xmlFault
+    )
+  }
 }
 
 const proxifyClient = <T extends ISoapClient>(
