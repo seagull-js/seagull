@@ -10,7 +10,7 @@ import { SoapClientSupplierPure } from '../src/mode/pure'
 import { SoapClientSupplierSeed } from '../src/mode/seed'
 import { module } from '../src/module'
 
-@suite('Http::Module::Fetch')
+@suite('Soap::Module')
 export class Test extends BasicTest {
   static injector = new Container()
   static before() {
