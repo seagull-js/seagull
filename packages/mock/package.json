@@ -1,6 +1,6 @@
 {
   "name": "@seagull/mock",
-  "version": "16.0.3",
+  "version": "16.0.4",
   "description": "General mock abstractions for the Seagull Framework",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/tslint": "^16.0.3"
+    "@seagull/tslint": "^16.0.4"
   },
   "nyc": {
     "extension": [
