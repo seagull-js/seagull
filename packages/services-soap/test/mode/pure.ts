@@ -14,7 +14,7 @@ type ExpectedClient = ISoapClient & {
   AddAsync: (x: any) => Promise<ExpectedResponse>
 }
 
-@suite('Soap::Pure')
+@suite('Soap::Mode::Pure')
 export class Test extends BasicTest {
   static endpoint = `www.dneonline.com/calculator.asmx`
   static endpointPath = `http://${Test.endpoint}`

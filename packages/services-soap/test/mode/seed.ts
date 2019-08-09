@@ -105,6 +105,7 @@ export class Test extends BasicTest {
   }
 
   @test
+  @timeout(5000)
   async 'creates fixture in case of an error'() {
     rem(Test.faultySeedFilePath) // delete old fixture
 
