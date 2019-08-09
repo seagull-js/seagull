@@ -8,6 +8,10 @@
 
 ### Patch Changes
 
+## 16.0.4
+
+- seagull/routes -> services-soap di module binding added
+
 ## 16.0.3
 
 - seagull/services-soap -> seed creation for soap faults
