@@ -8,7 +8,11 @@
 
 ### Patch Changes
 
-## 16.0.4
+## 16.0.7
+
+- seagull/services-soap -> seed file generation only when not existing/expired
+
+## 16.0.5
 
 - seagull/routes -> services-soap di module binding added
 
