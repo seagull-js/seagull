@@ -1,6 +1,6 @@
 {
   "name": "@seagull/build",
-  "version": "16.1.0",
+  "version": "16.1.1",
   "description": "Code building and bundling for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -37,7 +37,7 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/tslint": "^16.1.0",
+    "@seagull/tslint": "^16.1.1",
     "@types/browserify": "^12.0.36",
     "@types/chokidar": "^1.7.5",
     "@types/envify": "0.0.29",
@@ -51,14 +51,14 @@
     "@babel/core": "^7.2.2",
     "@babel/polyfill": "^7.2.5",
     "@babel/preset-env": "^7.3.1",
-    "@seagull/commands": "^16.1.0",
-    "@seagull/commands-fs": "^16.1.0",
-    "@seagull/commands-s3": "^16.1.0",
-    "@seagull/libraries": "^16.1.0",
-    "@seagull/mock-fs": "^16.1.0",
-    "@seagull/mock-s3": "^16.1.0",
-    "@seagull/mode": "^16.1.0",
-    "@seagull/testing": "^16.1.0",
+    "@seagull/commands": "^16.1.1",
+    "@seagull/commands-fs": "^16.1.1",
+    "@seagull/commands-s3": "^16.1.1",
+    "@seagull/libraries": "^16.1.1",
+    "@seagull/mock-fs": "^16.1.1",
+    "@seagull/mock-s3": "^16.1.1",
+    "@seagull/mode": "^16.1.1",
+    "@seagull/testing": "^16.1.1",
     "babelify": "^10.0.0",
     "browserify": "^16.2.0",
     "browserify-incremental": "^3.1.1",
@@ -101,5 +101,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "9b803ec0fec01608faadba967c9452e25c3049ac"
+  "gitHead": "7251c23359aa5bd02a558d241c439ec641a6c1de"
 }
