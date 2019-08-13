@@ -30,7 +30,7 @@ export class HttpSeed extends HttpBase {
         // seed exists => return seed
         return createResponse(seedFixture)
       }
-    } catch (e) {
+    } catch {
       // ignore
     }
     const fixture = await this.fetchFixture(url, init)
