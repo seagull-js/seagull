@@ -1,10 +1,10 @@
 // tslint:disable: no-unused-expression
+import { FixtureStorage as FxSt } from '@seagull/seed'
 import { BasicTest } from '@seagull/testing'
 import { expect, use } from 'chai'
 import * as promisedChai from 'chai-as-promised'
 import * as fs from 'fs'
 import { only, skip, slow, suite, test, timeout } from 'mocha-typescript'
-import { FixtureStorage as FxSt } from '../../../seed/src/fixture-storage'
 import { ISoapClient, ISoapResponse } from '../../src'
 import { SoapFaultError } from '../../src/error'
 import { SoapClientSupplierPure } from '../../src/mode/pure'
