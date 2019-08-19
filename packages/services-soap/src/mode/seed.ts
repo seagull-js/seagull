@@ -20,7 +20,6 @@ import {
   createProxy,
   getClientInternal,
   getEndpoint,
-  handleSeedError,
   SoapClientSupplierBase,
   wsdlIsFile,
 } from './base'
@@ -37,19 +36,10 @@ export class SoapClientSupplierSeed extends SoapClientSupplierBase {
    */
   async getClient<T extends ISoapClient>(opts: ClientOptions): Promise<T> {
     try {
-      const wsdl = await this.fetchWsdl(opts)
+      const seed = await this.getWsdlSeed(opts)
       const endpoint = getEndpoint(opts)
-      if (!wsdlIsFile(opts)) {
-        const seed = FxSt.createByWsdlUrl<string>(endpoint)
-        try {
-          seed.get()
-          if (seed.expired) {
-            throw new Error()
-          }
-        } catch {
-          seed.set(wsdl)
-        }
-      }
+      opts.wsdlPath = seed.path
+      opts.endpoint = endpoint
       const client = await getClientInternal<T>(opts)
       const seedClient = await this.seedifyClient<T>(client, endpoint)
       return seedClient
@@ -72,26 +62,80 @@ export class SoapClientSupplierSeed extends SoapClientSupplierBase {
         this.testScope
       )
       try {
-        try {
-          if (seed.expired) {
-            throw new Error()
-          }
-          const response = seed.get()
-          handleSeedError(response)
-          return response
-        } catch {
-          const response = await fnc(args)
-          seed.set(response)
-          return response
-        }
+        return this.getSeedResponse(seed, fnc, args)
       } catch (e) {
-        this.handleError(seed, e)
+        this.handleResponseError(seed, e)
       }
     }
     return await createProxy(client, seedify, true)
   }
 
-  private handleError(seed: FxSt<any>, error: NodeSoapFaultError | any) {
+  private async getWsdlSeed(opts: ClientOptions): Promise<FxSt<string>> {
+    const endpoint = getEndpoint(opts)
+    const seed = FxSt.createByWsdlUrl<string>(endpoint)
+    try {
+      seed.get()
+      if (seed.expired) {
+        throw new Error()
+      }
+    } catch {
+      const wsdlString = await this.getWsdl(opts)
+      seed.set(wsdlString)
+    }
+    return seed
+  }
+
+  private async getSeedResponse(
+    seed: FxSt<ISoapResponse>,
+    fnc: ClientFunction,
+    args: any
+  ) {
+    try {
+      const response = seed.get()
+      handleSeedError(response)
+      return response
+    } catch {
+      try {
+        const response = await fnc(args)
+        seed.set(response)
+        return response
+      } catch (e) {
+        this.handleResponseError(seed, e)
+      }
+    }
+  }
+
+  private async getWsdl(opts: ClientOptions): Promise<string> {
+    return wsdlIsFile(opts) ? this.getWsdlLocal(opts) : this.fetchWsdl(opts)
+  }
+
+  private async getWsdlLocal(opts: ClientOptions): Promise<string> {
+    const wsdlString = fs.readFileSync(opts.wsdlPath, {
+      encoding: 'utf-8',
+    })
+    return await Promise.resolve<string>(wsdlString)
+  }
+
+  private async fetchWsdl(opts: ClientOptions): Promise<string> {
+    const creds = opts.credentials
+    const headers = creds ? this.getAuthHeader(creds) : {}
+    const credentials = creds ? 'include' : undefined
+    const init = { credentials, headers, method: 'GET', mode: 'cors' }
+    const wsdlString = await (await new Http().get(opts.wsdlPath, init)).text()
+    return wsdlString
+  }
+
+  private getAuthHeader(credentials: Credentials): { Authorization: string } {
+    const { username, password } = credentials
+    const base64Creds = new Buffer(username + ':' + password).toString('base64')
+    const Authorization = `Basic ${base64Creds}`
+    return { Authorization }
+  }
+
+  private handleResponseError(
+    seed: FxSt<any>,
+    error: NodeSoapFaultError | any
+  ) {
     const fault: NodeSoapFault11 | NodeSoapFault12 = tryGet(
       error as NodeSoapFaultError,
       e => e.cause.root.Envelope.Body.Fault
@@ -123,31 +167,14 @@ export class SoapClientSupplierSeed extends SoapClientSupplierBase {
           statusCode: unpack(fault.statusCode),
         }
   }
+}
 
-  private async fetchWsdl(opts: ClientOptions): Promise<string> {
-    if (wsdlIsFile(opts)) {
-      const wsdlString = fs.readFileSync(opts.wsdlPath, {
-        encoding: 'utf-8',
-      })
-      return await Promise.resolve<string>(wsdlString)
-    } else {
-      const creds = opts.credentials
-      const headers = creds ? this.makeAuthHeader(creds) : {}
-      const credentials = creds ? 'include' : undefined
-      const init = { credentials, headers, method: 'GET', mode: 'cors' }
-      const wsdlString = await (await new Http().get(
-        opts.wsdlPath,
-        init
-      )).text()
-      return wsdlString
-    }
-  }
-
-  private makeAuthHeader(credentials: Credentials) {
-    const { username, password } = credentials
-    const base64Creds = new Buffer(username + ':' + password).toString('base64')
-    const Authorization = `Basic ${base64Creds}`
-    return { Authorization }
+export const handleSeedError = (response: ISoapResponse) => {
+  if (response.xmlFault) {
+    throw new SoapFaultError(
+      `Fault ${response.xmlFault.code}: ${response.xmlFault.description}`,
+      response.xmlFault
+    )
   }
 }
 

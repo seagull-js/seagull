@@ -7,7 +7,7 @@
 
 ### Usage
 
-The basic fetch command can be used like this:
+The basic fetch function can be called like this:
 
 ```javascript
 import { Http } from '@seagull/services-http'
@@ -22,7 +22,7 @@ class ... {
 }
 ```
 
-For convinience, you can use content-specific adapters as well:
+For convinience, you can use a content-specific adapters as well:
 
 ```javascript
 import { HttpJson } from '@seagull/services-http'
@@ -58,37 +58,6 @@ injector.load(containerModule)
 - _edge_ : same as cloud
 - _pure_ : returns local seed data (throws an error if no seed data is available)
 
-### Seed data generation
-
-Use global switch to enable seed data generation while http request:
-
-```javascript
-import { config } from '@seagull/services-http'
-
-config.seed = true
-...
-// do your thing
-...
-config.seed = false
-```
-
-The seed data can be fetched in any mode except pure, as tests within the code pipeline should not call external ressources.
-
 #### Configuration hooks
 
-In case you want to modify the seed creation for a specific case, you can create a specific _SeedLocalConfig_ by creating a TypeScript-file within the seed folder structure:
-
-```javascript
-import { SeedLocalConfig } from '@seagull/commands-http/seedLocalConfig'
-
-export default <SeedLocalConfig<SomeResponse>>{
-  hook: (fixture: SomeResponse) => {
-    // do something, e.g. slice some arrays within the fixture
-    return fixture
-  },
-  expiresInDays: 14, // fixture will be re-fetched after 14 days
-}
-
-```
-
-A configuration file is applied for all subsequent fixtures.
+See `@seagull/seed` README for details.

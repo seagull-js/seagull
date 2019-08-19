@@ -8,12 +8,12 @@ import {
   createProxy,
   getClientInternal,
   getEndpoint,
-  handleSeedError,
   SoapClientSupplierBase,
 } from './base'
+import { handleSeedError } from './seed'
 
 /**
- * Soap client supplier seed mode implementation.
+ * Soap client supplier pure mode implementation.
  */
 @injectable()
 export class SoapClientSupplierPure extends SoapClientSupplierBase {
@@ -28,13 +28,11 @@ export class SoapClientSupplierPure extends SoapClientSupplierBase {
     const options = { endpoint, wsdlPath, credentials: opts.credentials }
     try {
       const client = await getClientInternal<T>(options)
-      const pureClient = await this.purifyClient<T>(client, endpoint)
-      return pureClient
+      return await this.purifyClient<T>(client, endpoint)
     } catch (e) {
-      if (e.code === 'ENOENT') {
-        throw new SeedError(`Fixture (seed) WSDL is missing: ${wsdlPath}`, e)
-      }
-      throw new SoapError(`Unable to create pure mode client: ${e.message}`, e)
+      throw e.code === 'ENOENT'
+        ? new SeedError(`Fixture (seed) WSDL is missing: ${wsdlPath}`, e)
+        : new SoapError(`Unable to create pure mode client: ${e.message}`, e)
     }
   }
 
@@ -42,7 +40,7 @@ export class SoapClientSupplierPure extends SoapClientSupplierBase {
     client: T,
     endpoint: string
   ) {
-    const purify = async (fnc: ClientFunction, name: string, args: any) => {
+    const purify = async (_: ClientFunction, name: string, args: any) => {
       const seed = FixtureStorage.createByUrl<ISoapResponse>(
         `${endpoint}/${name}`,
         args,
@@ -52,7 +50,6 @@ export class SoapClientSupplierPure extends SoapClientSupplierBase {
       handleSeedError(response)
       return response
     }
-
     return await createProxy(client, purify, true)
   }
 }
