@@ -68,7 +68,7 @@ export class SeagullProject {
     const errorProps = Object.assign({}, globalProps, { topic: 'errors' })
     const itemBucketName = lib.getBucketName(itemProps)
     const logBucketName = lib.getBucketName(logsProps, true)
-    const errorBucketName = lib.getBucketName(errorProps)
+    const errorBucketName = lib.getBucketName(errorProps, true)
     const actions: string[] = [
       'sts:AssumeRole',
       'logs:*',
