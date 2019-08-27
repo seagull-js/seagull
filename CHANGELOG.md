@@ -8,6 +8,10 @@
 
 ### Patch Changes
 
+## 16.2.1
+
+- seagull/build -> server bundling - testing library excluded
+
 ## 16.0.7
 
 - seagull/services-soap -> seed file generation only when not existing/expired
