@@ -4,8 +4,8 @@ import { injectable } from 'inversify'
 import * as _ from 'lodash'
 import 'reflect-metadata'
 import { BasicAuthSecurity, createClientAsync, IOptions } from 'soap'
-import { ClientOptions, Credentials, ISoapClient, ISoapResponse } from '..'
 import { SoapError } from '../error'
+import { ClientOptions, Credentials, ISoapClient } from '../interface'
 
 export type ClientFunction = (args: any) => Promise<any>
 

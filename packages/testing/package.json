@@ -35,6 +35,9 @@
   "devDependencies": {
     "@seagull/tslint": "^16.2.0",
     "@types/lodash": "^4.14.123",
+    "@types/mocha": "^5.2.7",
+    "mocha": "^5.2.0",
+    "mocha-typescript": "^1.1.17",
     "aws-sdk": "*"
   },
   "dependencies": {

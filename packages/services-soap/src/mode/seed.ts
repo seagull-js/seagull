@@ -4,6 +4,7 @@ import { Http } from '@seagull/services-http'
 import * as fs from 'fs'
 import { injectable } from 'inversify'
 import 'reflect-metadata'
+import { SoapError, SoapFaultError } from '../error'
 import {
   ClientOptions,
   Credentials,
@@ -13,8 +14,7 @@ import {
   NodeSoapFault11,
   NodeSoapFault12,
   NodeSoapFaultError,
-} from '..'
-import { SoapError, SoapFaultError } from '../error'
+} from '../interface'
 import {
   ClientFunction,
   createProxy,

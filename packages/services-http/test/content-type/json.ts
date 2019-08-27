@@ -35,6 +35,7 @@ export class Test extends BasicTest {
   }
 
   @test
+  @timeout(5000)
   async 'can get json'() {
     const method = 'get'
     const params = {

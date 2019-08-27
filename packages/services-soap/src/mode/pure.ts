@@ -1,8 +1,8 @@
 import { FixtureStorage, SeedError } from '@seagull/seed'
 import { injectable } from 'inversify'
 import 'reflect-metadata'
-import { ClientOptions, ISoapClient, ISoapResponse } from '..'
 import { SoapError } from '../error'
+import { ClientOptions, ISoapClient, ISoapResponse } from '../interface'
 import {
   ClientFunction,
   createProxy,

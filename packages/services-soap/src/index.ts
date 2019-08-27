@@ -3,6 +3,7 @@ import { SoapClientSupplier } from './mode/cloud'
 // types
 export * from './interface'
 export * from './module'
+export * from './error'
 
 // services
 export { SoapClientSupplier }

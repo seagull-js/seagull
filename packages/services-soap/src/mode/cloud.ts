@@ -1,7 +1,7 @@
 import { injectable } from 'inversify'
 import 'reflect-metadata'
-import { ClientOptions, ISoapClient } from '..'
 import { SoapError } from '../error'
+import { ClientOptions, ISoapClient } from '../interface'
 import {
   ClientFunction,
   createProxy,
