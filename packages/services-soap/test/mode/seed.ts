@@ -1,4 +1,5 @@
 // tslint:disable: no-unused-expression
+import { FixtureStorage as FxSt } from '@seagull/seed'
 import { BasicTest } from '@seagull/testing'
 import { expect, use } from 'chai'
 import * as promisedChai from 'chai-as-promised'
@@ -102,6 +103,40 @@ export class Test extends BasicTest {
       `fixture ${Test.seedFilePath} not found!`
     ).to.be.true
     expect(pureResponse.AddResult).to.eq(8)
+  }
+
+  @test
+  @timeout(5000)
+  @only
+  async 'keeps fixture when existing'() {
+    const params = { intA: 99, intB: 99 }
+    const noUpdateHash = '2073298ff3aed7e3fe042bd70146d62e'
+    const noUpdatePath = `${Test.wsdlFilePath}/AddAsync/${noUpdateHash}.json`
+
+    expect(fs.existsSync(noUpdatePath), `expected ${noUpdatePath} to exist`).to
+      .be.true
+
+    const comparable = (x: Date) => x.toISOString().substring(0, 16)
+    const modifiedCompare = comparable(new Date())
+
+    const wsdlSeed = FxSt.createByWsdlUrl<string>(Test.wsdlPath)
+    const wsdlModified = wsdlSeed.modifiedDate
+
+    const endpointFunctionUrl = `${Test.endpointPath}/AddAsync`
+    const funcSeed = FxSt.createByUrl<string>(endpointFunctionUrl, params)
+    const seedModified = funcSeed.modifiedDate
+
+    const client = await this.soapSeed.getClient<ExpectedClient>({
+      endpoint: Test.endpointPath,
+      wsdlPath: Test.wsdlPath,
+    })
+
+    await client.AddAsync(params)
+
+    expect(wsdlSeed.modifiedDate).to.be.a('Date')
+    expect(modifiedCompare).not.to.eq(comparable(wsdlModified!))
+    expect(funcSeed.modifiedDate).to.be.a('Date')
+    expect(modifiedCompare).not.to.eq(comparable(seedModified!))
   }
 
   @test

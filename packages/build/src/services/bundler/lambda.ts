@@ -28,7 +28,11 @@ export class LambdaBundleService {
   }
   private createBundler() {
     const { src, dst } = this.bundlerPaths()
-    const config = { dstFile: dst, excludes: ['aws-sdk'], srcFile: src }
+    const config = {
+      dstFile: dst,
+      excludes: ['aws-sdk', '@seagull/testing'],
+      srcFile: src,
+    }
     this.bundler = new BundleWorker()
       .setWatchMode(this.config.watch)
       .configure('NodeAppBundle', config)

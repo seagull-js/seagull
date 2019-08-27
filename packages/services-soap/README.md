@@ -1,21 +1,20 @@
 # soap (injectable)
 
-> A thin wrapper around the [soap]-Library (https://github.com/vpulim/node-soap).
+> Injectable library for http requests using [soap](https://github.com/vpulim/node-soap).
 
-- Implements a(n) (injectable) SoapClientSupplier (using inversifyJS)
-- Exports all other stuff from [soap]-Package
+- Implements seagull environment mode (cloud, connected, edge, pure)
+- Implements seed data generation for test cases
 
 ### Usage
 
-Basically you can use the SoapClientSupplier like this:
+A soap api function can be called like this:
 
 ```javascript
 import { SoapClientSupplier, Client } from '@seagull/services-soap'
 ...
 
-type MyResponseArray = [{ return: MyResponse }, string, object, string]
 interface HelloClient extends Client {
-  sayHelloAsync: (request: MyRequest) => Promise<MyResponseArray>
+  sayHelloAsync: (request: MyRequest) => Promise<MyResponse>
 }
 
 class ... {
@@ -25,15 +24,13 @@ class ... {
   ) {}
   doSomething() {
     try {
-      ...
       const client = await this.soapClientSupplier.getClient<HelloClient>(
         wsdlURI,
         username,
         password,
         optionalEndpointThatDiffersFromWsdlURI
       )
-      const [result, rawResponseString, soapheader, rawRequestString] =
-        await client.sayHelloAsync()
+      const result = await client.sayHelloAsync()
     } catch (err) {
       ...
     }
@@ -44,8 +41,6 @@ class ... {
 
 For more details, why to use the returned client this way, see
 https://www.npmjs.com/package/soap#client-method-asyncargs---call-method-on-the-soap-service
-
-If you don't want to use it - you can implement your own Soap Client by the exported [soap]-Library
 
 ### Bootstrap
 
@@ -58,6 +53,17 @@ export const injector = new Container()
 injector.load(SoapDIModule)
 ...
 ```
+
+### Mode behavior
+
+- _cloud_ : returns response of the external resource (as defined via url/config)
+- _connected_ : same as cloud
+- _edge_ : same as cloud
+- _pure_ : returns local seed data (throws an error if no seed data is available)
+
+### Seed data generation
+
+See `@seagull/seed` README for details.
 
 ### Singleton Behavior
 

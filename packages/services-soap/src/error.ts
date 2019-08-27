@@ -1,5 +1,5 @@
 import { BasicError } from '@seagull/libraries'
-import { ClientOptions, IXmlFault } from '.'
+import { ClientOptions, IXmlFault } from './interface'
 
 export class SoapError extends BasicError {
   /**

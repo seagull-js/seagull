@@ -4,8 +4,8 @@ import { injectable } from 'inversify'
 import * as _ from 'lodash'
 import 'reflect-metadata'
 import { BasicAuthSecurity, createClientAsync, IOptions } from 'soap'
-import { ClientOptions, Credentials, ISoapClient, ISoapResponse } from '..'
-import { SoapError, SoapFaultError } from '../error'
+import { SoapError } from '../error'
+import { ClientOptions, Credentials, ISoapClient } from '../interface'
 
 export type ClientFunction = (args: any) => Promise<any>
 
@@ -46,7 +46,7 @@ export const getWsdlAsyncMethods = (client: ISoapClient) => {
   const functionNames = _.flatMap(bindings, b =>
     Object.keys(b.methods).map(name => `${name}Async`)
   )
-  // note: node-soap actually combines all port definitions like this
+  // note: node-soap combines all port definitions like this
   const uniqFunctionNames = _.uniq(functionNames)
   return uniqFunctionNames
 }
@@ -59,21 +59,9 @@ export const getEndpoint = (opts: ClientOptions) => {
   const wsdlLocal = wsdlIsFile(opts)
   const wsdlLocalNoEndpoint = wsdlLocal && !opts.endpoint
   if (wsdlLocalNoEndpoint) {
-    throw new SoapError(
-      'An endpoint definition is required when WSDL is a file.',
-      opts
-    )
+    throw new SoapError('Endpoint is required when WSDL is a file.', opts)
   }
   return opts.endpoint || opts.wsdlPath.replace('?wsdl', '')
-}
-
-export const handleSeedError = (response: ISoapResponse) => {
-  if (response.xmlFault) {
-    throw new SoapFaultError(
-      `Fault ${response.xmlFault.code}: ${response.xmlFault.description}`,
-      response.xmlFault
-    )
-  }
 }
 
 const proxifyClient = <T extends ISoapClient>(
@@ -96,7 +84,7 @@ const proxifyClient = <T extends ISoapClient>(
     }
     return response
   }
-  clientAsBase[name] = async args =>
+  clientAsBase[name] = async (args: any) =>
     proxyFunction(genericProxyFunction, name, args)
 }
 
@@ -128,7 +116,7 @@ export const getClientInternal = async <T extends ISoapClient>(
   }
   const client: T = await createClientAsync(opts.wsdlPath, options)
   // note: the options endpoint and setEndpoint seem to set different values
-  // within the client. Setting both seems to work best :-B
+  // within the client. To work in all cases it's required to set both.
   client.setEndpoint(endpoint)
   opts.credentials && setSecurity(client, opts.credentials)
   return client

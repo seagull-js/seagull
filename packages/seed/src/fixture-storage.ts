@@ -20,8 +20,9 @@ type FsHandler = {
   read: (path: string, ...params: any[]) => Buffer
   save: (path: string, ...params: any[]) => void
 }
+
 /**
- * Seed fixtureStorage for managing seed fixtures.
+ * Seed fixture storage for managing seed fixtures.
  */
 export class FixtureStorage<T> {
   /**
@@ -32,8 +33,11 @@ export class FixtureStorage<T> {
     return pathExistsSync(this.path) ? fs.statSync(this.path).ctime : undefined
   }
 
+  /**
+   * The seed fixture is expired. See the seed `config` for details.
+   */
   get expired(): boolean {
-    if (!this.config.expiresInDays || !this.modifiedDate) {
+    if (this.config.expiresInDays === undefined || !this.modifiedDate) {
       return false
     }
     const addDays = (date: Date, days?: number) => {
@@ -44,14 +48,17 @@ export class FixtureStorage<T> {
       result.setDate(result.getDate() + days)
       return result
     }
+
     const expireDate = addDays(this.modifiedDate, this.config.expiresInDays)
     return (expireDate && expireDate.getTime() <= new Date().getTime()) || false
   }
 
+  /**
+   * The seed fixture exists and is loadable.
+   */
   get exists(): boolean {
     return pathExistsSync(this.path)
   }
-
   /**
    * The seed configuration placed within the fixture folder.
    * @param uri
@@ -65,14 +72,21 @@ export class FixtureStorage<T> {
     return config
   }
 
-  private get path() {
+  /**
+   * The local uri of the fixture.
+   */
+  get uriLocal(): string {
+    return `${process.cwd()}/${this.path}`
+  }
+
+  get path() {
     const scopedPath = `${this.uri}${this.testScope ? this.testScope.path : ''}`
     const path = join('seed', `${scopedPath}${this.fileExtension || ''}`)
     return path
   }
 
   /**
-   * Alternate constructor to create a seed fixtureStorage by request informations.
+   * Creates a new fixture storage by url and request information.
    * @param url The request url.
    * @param init The request configuration.
    */
@@ -94,6 +108,8 @@ export class FixtureStorage<T> {
    * @param url The request url.
    */
   static createByWsdlUrl<T>(url: string): FixtureStorage<T> {
+    url = url.replace('://', '/')
+    url = url.replace('?wsdl', '')
     return new FixtureStorage(`${url.replace('://', '/')}`, `.wsdl`)
   }
 
@@ -105,12 +121,21 @@ export class FixtureStorage<T> {
   }
 
   /**
-   * Creates a new seed fixtureStorage for managing seed fixtures.
+   * Creates a new seed fixture storage for managing seed fixtures.
    * @param uri Fixture uri
    */
   constructor(
+    /** The uri of the origin of the fixture. */
     readonly uri: string,
+    /** The file extendsion for the local fixture. */
     readonly fileExtension: FixtureFileExtension,
+    /**
+     * The test scope of the fixture.\
+     * If a test scope is used, the fixture will be created within folders named
+     * by test suite and test name. The callIndex will automatically count up by
+     * 1 when the `get` function is called. This can be used to identify a
+     * specific call in case calls are stateful.
+     */
     readonly testScope?: TestScope
   ) {}
 
@@ -132,6 +157,20 @@ export class FixtureStorage<T> {
     return fixture
   }
 
+  /**
+   * Set fixture.
+   * @param value Fixture value (response/file content)
+   */
+  set(value: T) {
+    if (this.config.hook) {
+      value = this.config.hook(value)
+    }
+    this.fs.save(this.path, value)
+    if (this.testScope) {
+      this.testScope.callIndex += 1
+    }
+  }
+
   private get fsJson() {
     const jsonOpts = { spaces: 2 }
     const save = (path: string, val: any) => outputJsonSync(path, val, jsonOpts)
@@ -151,34 +190,18 @@ export class FixtureStorage<T> {
     return fileFormatFs.get(this.fileExtension) || this.fsJson
   }
 
-  /**
-   * Set fixture.
-   * @param value Fixture value (response/file content)
-   */
-  set(value: T) {
-    if (this.config.hook) {
-      value = this.config.hook(value)
-    }
-    this.fs.save(this.path, value)
-    if (this.testScope) {
-      this.testScope.callIndex += 1
-    }
-  }
-
   private getConfigRecursive(
     config: LocalConfig<T>,
     path: string
   ): LocalConfig<T> {
     const tsPath = path + '.ts'
-
     if (path.indexOf('/') > -1) {
       const parentConfig = this.getConfigRecursive(
         config,
         path.substring(0, path.lastIndexOf('/'))
       )
       if (pathExistsSync(tsPath)) {
-        // node_modules/@seagull/services-http/dist/src/seed
-        const seedFolder = `${process.cwd()}/` // `${__dirname}/${'../'.repeat(6)}`
+        const seedFolder = `${process.cwd()}/`
         config = Object.assign(config, require(seedFolder + tsPath).default)
       }
       return parentConfig
