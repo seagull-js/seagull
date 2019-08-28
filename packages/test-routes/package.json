@@ -1,12 +1,12 @@
 {
-  "name": "@seagull/testing",
+  "name": "@seagull/test-routes",
   "version": "16.2.1",
-  "description": "Testing Utilities for the Seagull Framework",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "description": "A basic test class for the route implementation of the Seagull Framework",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "rm -rf dist && tsc",
-    "test": "tslint --fix src/**/*.ts test/**/*.ts && mocha --opts test/mocha.opts",
+    "test": "echo \"nothing to test\"",
     "test:coverage": "tslint --fix src/**/*.ts test/**/*.ts && nyc mocha --opts test/mocha.opts",
     "test:watch": "npm run test -- --watch --reporter min",
     "docs": "rm -rf docs && typedoc --mode modules --ignoreCompilerErrors --excludeExternals --excludePrivate --excludeNotExported --out docs src"
@@ -33,24 +33,13 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/tslint": "^16.2.1",
-    "@types/lodash": "^4.14.123",
-    "@types/mocha": "^5.2.7",
-    "aws-sdk": "*",
-    "inversify": "5.0.1",
-    "mocha": "^5.2.0",
-    "mocha-typescript": "^1.1.17"
-  },
-  "dependencies": {
-    "@seagull/mock": "^16.2.1",
     "@seagull/mode": "^16.2.1",
-    "@seagull/sandbox": "^16.2.1",
-    "@seagull/seed": "^16.2.1",
-    "inversify": "^5.0.1"
+    "@seagull/pages": "^16.2.1",
+    "@seagull/services-http": "^16.2.1",
+    "@seagull/testing": "^16.2.1",
+    "@seagull/tslint": "^16.2.1"
   },
-  "peerDependencies": {
-    "aws-sdk": "*"
-  },
+  "dependencies": {},
   "nyc": {
     "extension": [
       ".ts",

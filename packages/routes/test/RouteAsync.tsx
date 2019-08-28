@@ -1,6 +1,7 @@
+import { RouteTest } from '@seagull/test-routes'
 import { expect } from 'chai'
 import { suite, test } from 'mocha-typescript'
-import { Route, RouteContext, RouteTest } from '../src'
+import { Route, RouteContext } from '../src'
 
 class DemoRoute extends Route {
   static path = '/:id'

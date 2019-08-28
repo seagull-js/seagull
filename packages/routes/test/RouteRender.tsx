@@ -1,11 +1,12 @@
 import { FS } from '@seagull/commands-fs'
 import { Process as ProcessMock } from '@seagull/mock-process'
 import { Page } from '@seagull/pages'
+import { RouteTest } from '@seagull/test-routes'
 import 'chai/register-should'
-import { skip, slow, suite, test, timeout } from 'mocha-typescript'
+import { suite, test } from 'mocha-typescript'
 import * as path from 'path'
 import * as React from 'react'
-import { Route, RouteContext, RouteTest } from '../src'
+import { Route, RouteContext } from '../src'
 
 class DemoPage extends Page {
   html() {

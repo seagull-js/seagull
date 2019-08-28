@@ -1,8 +1,9 @@
 import { Http } from '@seagull/services-http'
+import { RouteTest } from '@seagull/test-routes'
 import { expect } from 'chai'
 import 'chai/register-should'
 import { ContainerModule, injectable } from 'inversify'
-import { skip, slow, suite, test, timeout } from 'mocha-typescript'
+import { suite, test } from 'mocha-typescript'
 import * as httpMocks from 'node-mocks-http'
 import { Route, RouteContext } from '../src'
 

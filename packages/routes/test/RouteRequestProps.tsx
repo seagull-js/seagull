@@ -1,11 +1,12 @@
+import { RouteTest } from '@seagull/test-routes'
 import { expect } from 'chai'
 import 'chai/register-should'
 import * as CV from 'class-validator'
 import { EventEmitter } from 'events'
 import * as express from 'express'
-import { skip, slow, suite, test, timeout } from 'mocha-typescript'
+import { suite, test, timeout } from 'mocha-typescript'
 import * as httpMocks from 'node-mocks-http'
-import { Route, RouteContext, RouteRequestProps, RouteTest } from '../src'
+import { Route, RouteContext, RouteRequestProps } from '../src'
 
 class RouteParams extends RouteRequestProps {
   // geter and setter (for example to convert string to num) are working like expected

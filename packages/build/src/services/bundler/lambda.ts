@@ -30,7 +30,7 @@ export class LambdaBundleService {
     const { src, dst } = this.bundlerPaths()
     const config = {
       dstFile: dst,
-      excludes: ['aws-sdk', '@seagull/testing'],
+      excludes: ['aws-sdk'],
       srcFile: src,
     }
     this.bundler = new BundleWorker()

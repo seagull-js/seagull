@@ -2,9 +2,8 @@ import { httpServicesModule } from '@seagull/services-http'
 import { soapServicesModule } from '@seagull/services-soap'
 import { Express, Request, Response } from 'express'
 import { ContainerModule } from 'inversify'
-import { HttpMethod } from '.'
+import { HttpMethod } from './HttpMethod'
 import { RouteContext } from './RouteContext'
-import { RouteContextMock } from './RouteContextMock'
 
 type Middleware = (ctx: RouteContext) => Promise<boolean | void>
 

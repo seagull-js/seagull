@@ -2,7 +2,6 @@ import { BasicTest } from '@seagull/testing'
 import { EventEmitter } from 'events'
 import { Request, Response } from 'express'
 import * as httpMocks from 'node-mocks-http'
-import { Route } from './Route'
 import { RouteContextMock } from './RouteContextMock'
 
 export type HttpMethod = 'GET' | 'POST' | 'get' | 'post'
@@ -12,7 +11,7 @@ interface Connection {
 }
 
 export abstract class RouteTest extends BasicTest {
-  abstract route: typeof Route
+  abstract route: any
 
   /**
    * Invokes the `route` with an mocked request and an response object.
@@ -37,7 +36,10 @@ export abstract class RouteTest extends BasicTest {
    * @param params Params object passed through TODO: think body vs query vs path params...
    */
 
-  async invokeMocked(path = '/', params: any = {}) {
+  async invokeMocked(
+    path = '/',
+    params: any = {}
+  ): Promise<RouteContextMock['results']> {
     const reqRes = this.requestAndResponse(this.route.method, path, params)
     const ctx = new RouteContextMock(reqRes.request, reqRes.response)
 

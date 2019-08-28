@@ -8,6 +8,11 @@
 
 ### Patch Changes
 
+## 17.0.0
+
+- seagull/routes -> dependencies reorganized due to build still bundling tests
+- seagull/test-routes -> moved from routes
+
 ## 16.2.1
 
 - seagull/build -> server bundling - testing library excluded

@@ -1,8 +1,9 @@
+import { RouteTest } from '@seagull/test-routes'
 import 'chai/register-should'
 import * as express from 'express'
 import { suite, test } from 'mocha-typescript'
 import * as httpMocks from 'node-mocks-http'
-import { Route, RouteContext, RouteTest } from '../src'
+import { Route, RouteContext } from '../src'
 
 class DemoRoute extends Route {
   static path = '/'
