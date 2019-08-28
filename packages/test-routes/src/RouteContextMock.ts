@@ -1,10 +1,6 @@
-import { PageType, render } from '@seagull/pages'
+import { PageType } from '@seagull/pages'
 import { Request, Response } from 'express'
-import * as fs from 'fs'
 import { Container } from 'inversify'
-import { isString } from 'lodash'
-import * as rfs from 'require-from-string'
-import { RouteContext } from './RouteContext'
 
 type RouteContextCalls =
   | 'text'

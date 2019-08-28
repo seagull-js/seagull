@@ -1,10 +1,11 @@
-import { Http } from '@seagull/services-http'
 import { Mode } from '@seagull/mode'
+import { Http } from '@seagull/services-http'
+import { RouteTest } from '@seagull/test-routes'
 import { expect } from 'chai'
 import 'chai/register-should'
 import { ContainerModule, injectable } from 'inversify'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
-import { Route, RouteContext, RouteTest } from '../src'
+import { Route, RouteContext } from '../src'
 
 class DemoRoute extends Route {
   static path = '/'

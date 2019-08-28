@@ -36,7 +36,7 @@
     "@seagull/mock-process": "^16.2.1",
     "@seagull/mode": "^16.2.1",
     "@seagull/pages": "^16.2.1",
-    "@seagull/testing": "^16.2.1",
+    "@seagull/test-routes": "16.2.1",
     "@seagull/tslint": "^16.2.1",
     "@types/express": "^4.16.0",
     "@types/lodash": "^4.14.123",
