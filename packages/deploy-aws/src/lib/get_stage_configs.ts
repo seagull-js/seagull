@@ -89,16 +89,16 @@ function getInstall(params: StageConfigParams) {
 function getBuild(params: StageConfigParams) {
   // Fixes an issue where the max file watch count is exceeded, triggering ENOSPC
   // https://stackoverflow.com/questions/22475849/node-js-error-enospc#32600959
-  const increaseFileWatcherLimit = addStateChangeToCmd(
+  const incFileWatcherLimit = addStateChangeToCmd(
     `echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p`
   )
   const runBuild = addStateChangeToCmd('npm run build')
-  return getCommandConfig(params, [increaseFileWatcherLimit, runBuild])
+  return getCommandConfig(params, [incFileWatcherLimit, runBuild, checkState()])
 }
 
 function getTest(params: StageConfigParams) {
   const runTest = addStateChangeToCmd('npm run test')
-  return getCommandConfig(params, [runTest])
+  return getCommandConfig(params, [runTest, checkState()])
 }
 
 function getTestEnd2End(params: StageConfigParams) {
