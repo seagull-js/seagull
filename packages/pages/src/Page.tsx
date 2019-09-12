@@ -116,6 +116,14 @@ export abstract class Page<P = {}, S = {}> extends React.Component<
   image: string | (() => string) = ''
 
   /**
+   * Authors are encouraged to specify a lang attribute on the root html
+   * element, giving the document's language. This aids speech synthesis
+   * tools to determine what pronunciations to use, translation tools to
+   * determine what rules to use, and so forth.
+   */
+  language: string | (() => string) = 'de'
+
+  /**
    * This is the "robots" meta tag and defaults to 'index, follow'. CHange it if
    * you want to control the indexation of your pages from search engines.
    * Example code:
@@ -163,9 +171,11 @@ export abstract class Page<P = {}, S = {}> extends React.Component<
     const description = prop(this.description) || ''
     const image = prop(this.image) || ''
     const link = prop(this.canonical) || ''
+    const language = prop(this.language) || 'de'
+
     return (
       <>
-        <Helmet>
+        <Helmet htmlAttributes={{ lang: language }}>
           {/* general meta tags */}
           <meta charSet="utf-8" />
           <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
