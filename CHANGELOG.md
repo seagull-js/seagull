@@ -8,7 +8,7 @@
 
 ### Patch Changes
 
-## 17.0.1
+## 17.0.2
 
 - seagull/pages -> added configurable lang attribute
 
