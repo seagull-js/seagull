@@ -8,6 +8,10 @@
 
 ### Patch Changes
 
+## 17.0.2
+
+- seagull/pages -> added configurable lang attribute
+
 ## 17.0.0
 
 - seagull/routes -> dependencies reorganized due to build still bundling tests
