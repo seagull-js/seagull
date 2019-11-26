@@ -1,6 +1,6 @@
 {
   "name": "@seagull/commands",
-  "version": "17.7.0",
+  "version": "17.8.0",
   "description": "Side Effect Functions implemented as Command Pattern for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -33,14 +33,14 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/testing": "^17.7.0",
-    "@seagull/tslint": "^17.7.0",
+    "@seagull/testing": "^17.8.0",
+    "@seagull/tslint": "^17.8.0",
     "@types/lodash": "^4.14.123",
     "@types/mock-fs": "^3.6.30",
     "mock-fs": "^4.5.0"
   },
   "dependencies": {
-    "@seagull/mode": "^17.7.0",
+    "@seagull/mode": "^17.8.0",
     "lodash": "^4.17.5",
     "mode": "^0.3.2"
   },
@@ -66,5 +66,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "c308dc1057fba11a5c620891e3c0047a5ed81f5c"
+  "gitHead": "d3f74a019eb5f6c7c3d85ee0199ac31087f0e24d"
 }

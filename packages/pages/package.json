@@ -1,6 +1,6 @@
 {
   "name": "@seagull/pages",
-  "version": "17.7.0",
+  "version": "17.8.0",
   "description": "View Layer implementation in React for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/tslint": "^17.7.0",
+    "@seagull/tslint": "^17.8.0",
     "@types/jsdom": "^12.2.3",
     "@types/lodash": "^4.14.123",
     "@types/react": "^16.8.2",
@@ -75,5 +75,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "c308dc1057fba11a5c620891e3c0047a5ed81f5c"
+  "gitHead": "d3f74a019eb5f6c7c3d85ee0199ac31087f0e24d"
 }
