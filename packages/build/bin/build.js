@@ -8,6 +8,7 @@ const helpText = `
   --optimize-bundle false       # Minimize, dead code elimination etc.
   --type-check false            # Transpile only?
   --pages-to-exclude            # RegEx to use when filtering pages
+  --use-polling true|false      # set polling option for watchify
   -h                            # show this
 `
 
@@ -30,11 +31,13 @@ const opts = {
   optimizeBundle: getArgv('--optimize-bundle', true),
   typeCheck: getArgv('--type-check', true),
   pagesToExclude: getArgv('--pages-to-exclude', process.env.PAGES_TO_EXCLUDE),
+  usePolling: true,
 }
 
 opts.mode ? (process.env.MODE = opts.mode) : null
 opts.stage ? (process.env.STAGE = opts.stage) : null
 opts.pagesToExclude ? (process.env.PAGES_TO_EXCLUDE = opts.pagesToExclude) : ''
+opts.usePolling ? (process.env.USE_POLLING = opts.usePolling) : false
 process.env.NODE_ENV = opts.optimizeRuntime ? 'production' : 'development'
 
 const Ops = require('../dist/src/operators')

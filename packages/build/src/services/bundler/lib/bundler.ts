@@ -197,7 +197,12 @@ export class Bundler {
   }
 
   private addWatchMode() {
-    const opts: wify.Options = { delay: 10, ignoreWatch: true }
+    const pollInterval = process.env.USE_POLLING ? 50000 : undefined
+    const opts: wify.Options = {
+      delay: 10,
+      ignoreWatch: true,
+      poll: pollInterval,
+    }
     // tslint:disable-next-line:no-unused-expression
     this.watch && this.bfy.plugin(wify as any, opts).on('update', this.bundle)
   }

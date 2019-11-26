@@ -54,7 +54,12 @@ export class BundleWorker {
   private startBundler = () => {
     const path = bundlerScriptPath()
     const service = this.events
-    this.bundler = fork(path, [], { env: { BUNDLER_ARGS: this.bundlerArgs } })
+    this.bundler = fork(path, [], {
+      env: {
+        BUNDLER_ARGS: this.bundlerArgs,
+        USE_POLLING: process.env.USE_POLLING,
+      },
+    })
     type BWorkerEvent = { call: 'handleBundled' | 'handleError'; args: [any] }
     this.bundler.on('message', (m: BWorkerEvent) => service[m.call](...m.args))
     return this.bundler
