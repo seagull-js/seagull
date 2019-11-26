@@ -1,6 +1,6 @@
 {
   "name": "@seagull/libraries",
-  "version": "17.6.0",
+  "version": "17.7.0",
   "description": "Business Logic Container for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/tslint": "^17.6.0",
+    "@seagull/tslint": "^17.7.0",
     "@types/lodash": "^4.14.123"
   },
   "dependencies": {
@@ -62,5 +62,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "784d15df7f8e9491ab20f1bf68e4e55651379531"
+  "gitHead": "c308dc1057fba11a5c620891e3c0047a5ed81f5c"
 }
