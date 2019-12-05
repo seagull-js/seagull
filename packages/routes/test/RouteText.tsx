@@ -18,7 +18,7 @@ export class Test extends RouteTest {
   async 'can return html response'() {
     const { code, data, headers } = await this.invoke('/', {})
     code.should.be.equal(200)
-    headers['content-type'].should.be.equal('text/plain')
+    headers['content-type']!.should.be.equal('text/plain')
     data.should.be.equal('hello world')
   }
 }

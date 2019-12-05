@@ -55,7 +55,7 @@ export class Test extends RouteTest {
   async 'can return rendered Page as html response when given Page Class'() {
     const { code, data, headers } = await this.invoke('/', {})
     code.should.be.equal(200)
-    headers['content-type'].should.be.equal('text/html')
+    headers['content-type']!.should.be.equal('text/html')
     data.should.be.a('string')
     data.should.contain('<div id="app"><div>Hello</div></div>')
   }
@@ -75,7 +75,7 @@ export class Test extends RouteTest {
 
     // inspect response
     code.should.be.equal(200)
-    headers['content-type'].should.be.equal('text/html')
+    headers['content-type']!.should.be.equal('text/html')
     data.should.be.a('string')
     data.should.contain('<div id="app"><div>Hello</div></div>')
   }
