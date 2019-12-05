@@ -1,9 +1,8 @@
 {
   "packages": [
     "apps/*",
-    "examples/*",
     "old_code/*",
     "packages/*"
   ],
-  "version": "17.8.0"
+  "version": "17.8.1"
 }
