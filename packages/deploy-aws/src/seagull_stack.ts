@@ -67,7 +67,7 @@ export class SeagullStack extends Stack {
       handler: 'dist/assets/backend/lambda.handler',
       memorySize: 1536,
       role,
-      runtime: Runtime.NodeJS810,
+      runtime: Runtime.NODEJS_12_X,
       timeout: 300,
     }
     return new Lambda(this, lambdaName, conf)
