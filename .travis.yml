@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - '8.10.0'
+  - '12.14.1'
 before_script:
   # Fixes an issue where the max file watch count is exceeded, triggering ENOSPC
   # https://stackoverflow.com/questions/22475849/node-js-error-enospc#32600959

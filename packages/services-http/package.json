@@ -36,7 +36,7 @@
   "devDependencies": {
     "@seagull/testing": "^17.8.2",
     "@seagull/tslint": "^17.8.2",
-    "@types/node-fetch": "^2.3.3",
+    "@types/node-fetch": "^2.5.4",
     "@types/rimraf": "^2.0.2",
     "rimraf": "^2.6.3"
   },
