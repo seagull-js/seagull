@@ -42,9 +42,12 @@
     "@types/chokidar": "^1.7.5",
     "@types/envify": "0.0.29",
     "@types/lodash": "^4.14.123",
+    "@types/shelljs": "^0.8.3",
     "@types/through2": "^2.0.34",
     "@types/watchify": "^3.7.4",
     "chai-as-promised": "^7.1.1",
+    "serverless-http": "^1.8.0",
+    "shelljs": "^0.8.3",
     "stream-buffers": "^3.0.2"
   },
   "dependencies": {

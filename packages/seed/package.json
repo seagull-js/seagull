@@ -38,7 +38,8 @@
     "slugify": "^1.3.4"
   },
   "devDependencies": {
-    "@seagull/tslint": "^17.8.2"
+    "@seagull/tslint": "^17.8.2",
+    "@types/fs-extra": "^8.0.1"
   },
   "nyc": {
     "extension": [

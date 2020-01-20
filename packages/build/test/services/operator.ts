@@ -13,7 +13,7 @@ import { Console } from 'console'
 import * as fs from 'fs'
 import { skip, slow, suite, test, timeout } from 'mocha-typescript'
 import { join } from 'path'
-import { exit } from 'shelljs'
+import { exit, touch } from 'shelljs'
 import * as stream from 'stream-buffers'
 import * as OP from '../../src/operators'
 import * as Services from '../../src/services'
@@ -30,7 +30,6 @@ export class Test extends BasicTest {
   async 'release operator builds a valid project'() {
     const pre = process.cwd()
     const appFolder = setupProject(pre)
-
     process.chdir(appFolder)
     const op = new OP.ReleaseOperator({ typeCheck: true })
     const stdout = new stream.WritableStreamBuffer() as any
@@ -76,7 +75,7 @@ const setupProject = (cwd: string) => {
   createFolderRecursive(join(appFolder, 'static', 'images'))
   createFolderRecursive(join(appFolder, routePath))
   createFolderRecursive(join(appFolder, pagePath))
-
+  
   fs.copyFileSync(
     join(exampleFolder, 'tsconfig.build.json'),
     join(appFolder, 'tsconfig.build.json')
@@ -85,7 +84,10 @@ const setupProject = (cwd: string) => {
     join(exampleFolder, 'tsconfig.json'),
     join(appFolder, 'tsconfig.json')
   )
-
+  fs.copyFileSync(
+    join(exampleFolder, 'async_hooks'),
+    join(appFolder, 'async_hooks')
+  )
   fs.copyFileSync(
     join(exampleFolder, routePath, 'index_route.ts'),
     join(appFolder, routePath, 'index_route.ts')
@@ -94,6 +96,7 @@ const setupProject = (cwd: string) => {
     join(exampleFolder, pagePath, 'HelloPage.tsx'),
     join(appFolder, pagePath, 'HelloPage.tsx')
   )
+  
   fs.symlinkSync(
     join(exampleFolder, 'node_modules'),
     join(appFolder, 'node_modules'),
