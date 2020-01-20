@@ -14,7 +14,12 @@ import * as CB from '@aws-cdk/aws-codebuild'
 import { GitHubSourceAction, Pipeline, Stage } from '@aws-cdk/aws-codepipeline'
 import * as Events from '@aws-cdk/aws-events'
 import * as IAM from '@aws-cdk/aws-iam'
-import { Code, Function as Lambda, Runtime } from '@aws-cdk/aws-lambda'
+import {
+  Code,
+  Function as Lambda,
+  Runtime,
+  RuntimeFamily
+} from '@aws-cdk/aws-lambda'
 import { LogGroup } from '@aws-cdk/aws-logs'
 import * as S3 from '@aws-cdk/aws-s3'
 import {
@@ -67,7 +72,7 @@ export class SeagullStack extends Stack {
       handler: 'dist/assets/backend/lambda.handler',
       memorySize: 1536,
       role,
-      runtime: Runtime.NodeJS810,
+      runtime: new Runtime('nodejs10.x', RuntimeFamily.NodeJS, { supportsInlineCode: true }),
       timeout: 300,
     }
     return new Lambda(this, lambdaName, conf)
