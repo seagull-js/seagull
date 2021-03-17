@@ -1,6 +1,6 @@
 {
   "name": "@seagull/test-routes",
-  "version": "18.2.0",
+  "version": "18.2.1",
   "description": "A basic test class for the route implementation of the Seagull Framework",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -33,11 +33,11 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/mode": "^18.2.0",
-    "@seagull/pages": "^18.2.0",
-    "@seagull/services-http": "^18.2.0",
-    "@seagull/testing": "^18.2.0",
-    "@seagull/tslint": "^18.2.0"
+    "@seagull/mode": "^18.2.1",
+    "@seagull/pages": "^18.2.1",
+    "@seagull/services-http": "^18.2.1",
+    "@seagull/testing": "^18.2.1",
+    "@seagull/tslint": "^18.2.1"
   },
   "nyc": {
     "extension": [
