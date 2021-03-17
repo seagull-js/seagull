@@ -1,6 +1,6 @@
 {
   "name": "@seagull/services-soap",
-  "version": "18.1.0",
+  "version": "18.2.0",
   "description": "A soap module for the seagull framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -34,12 +34,12 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/libraries": "^18.1.0",
-    "@seagull/mode": "^18.1.0",
-    "@seagull/seed": "^18.1.0",
-    "@seagull/services-http": "^18.1.0",
-    "@seagull/testing": "^18.1.0",
-    "@seagull/tslint": "^18.1.0"
+    "@seagull/libraries": "^18.2.0",
+    "@seagull/mode": "^18.2.0",
+    "@seagull/seed": "^18.2.0",
+    "@seagull/services-http": "^18.2.0",
+    "@seagull/testing": "^18.2.0",
+    "@seagull/tslint": "^18.2.0"
   },
   "dependencies": {
     "crypto": "^1.0.1",
