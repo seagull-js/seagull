@@ -1,6 +1,6 @@
 {
   "name": "@seagull/plugin-items",
-  "version": "18.0.2",
+  "version": "18.1.0",
   "description": "Lightweight Key-Value-Store for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -33,13 +33,13 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/testing": "^18.0.2",
-    "@seagull/tslint": "^18.0.2",
+    "@seagull/testing": "^18.1.0",
+    "@seagull/tslint": "^18.1.0",
     "@types/lodash": "^4.14.123"
   },
   "dependencies": {
-    "@seagull/commands": "^18.0.2",
-    "@seagull/commands-s3": "^18.0.2",
+    "@seagull/commands": "^18.1.0",
+    "@seagull/commands-s3": "^18.1.0",
     "lodash": "^4.17.5"
   },
   "nyc": {
