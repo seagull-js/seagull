@@ -22,6 +22,7 @@ import {
 } from '@aws-cdk/aws-lambda'
 import { LogGroup } from '@aws-cdk/aws-logs'
 import * as S3 from '@aws-cdk/aws-s3'
+import * as EC2 from '@aws-cdk/aws-ec2'
 import {
   getApiGatewayDomain,
   getApiGatewayPath,
@@ -64,6 +65,7 @@ export class SeagullStack extends Stack {
 
   addLambda(name: string, folder: string, role: IAM.Role, env: Keymap) {
     const lambdaName = `${this.id}-${name}`
+    const vpc = EC2.VpcNetworkRef.importFromContext(this, 'VPC', { vpcId: "vpc-42b4c82a"});
     const conf = {
       code: Code.asset(`${folder}/.seagull/deploy`),
       description: 'universal route',
@@ -73,6 +75,7 @@ export class SeagullStack extends Stack {
       memorySize: 1536,
       role,
       runtime: new Runtime('nodejs10.x', RuntimeFamily.NodeJS, { supportsInlineCode: true }),
+      vpc,
       timeout: 300,
     }
     return new Lambda(this, lambdaName, conf)
