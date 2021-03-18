@@ -364,6 +364,8 @@ const getTestProps = (appPath: string) => ({
   region: 'eu-central-1',
   repository: 'test-repo',
   stage: 'prod',
+  vpcId: 'vpc-12345678',
+  subnetIds: 'subnet-12345678,subnet-abcdefgh'
 })
 
 const deleteCustomInfra = async (appPath: string) => {

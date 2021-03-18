@@ -63,9 +63,18 @@ export class SeagullStack extends Stack {
     return bucket
   }
 
-  addLambda(name: string, folder: string, role: IAM.Role, env: Keymap) {
+  addVPC(name: string, vpcId: string, privateSubnetIds: string[], availabilityZones: string[]) {
+    const props = {
+      vpcId,
+      availabilityZones,
+      privateSubnetIds
+    }
+    return EC2.VpcNetworkRef.import(this, name, props)
+  }
+
+  addLambda(name: string, folder: string, role: IAM.Role, vpc: EC2.VpcNetworkRef, env: Keymap) {
+
     const lambdaName = `${this.id}-${name}`
-    const vpc = EC2.VpcNetworkRef.importFromContext(this, 'VPC', { vpcId: "vpc-42b4c82a"});
     const securityGroup = EC2.SecurityGroupRef.import(this, 'SecurityGroup', { securityGroupId: "sg-06ee9962c3d90de3e"})
     const conf = {
       code: Code.asset(`${folder}/.seagull/deploy`),

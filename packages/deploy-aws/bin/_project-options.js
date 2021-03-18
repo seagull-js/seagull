@@ -7,4 +7,6 @@ module.exports = {
   profile: process.env.AWS_PROFILE || 'default',
   region: process.env.AWS_REGION || 'eu-central-1',
   stage: process.env.DEPLOY_MODE || 'prod',
+  vpcId: process.env.VPC_ID || null,
+  subnetIds: process.env.SUBNET_IDS || null
 }

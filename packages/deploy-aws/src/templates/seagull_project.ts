@@ -17,6 +17,8 @@ interface SeagullProjectProps {
   stage: string
   profile: string
   region: string
+  vpcId: string
+  subnetIds: string
   handlers?: {
     acmHandler?: aws.ACMHandler
     cloudfrontHandler?: aws.CloudfrontHandler
@@ -32,6 +34,8 @@ export class SeagullProject {
   pkgJson: any
   profile: string
   region: string
+  vpcId: string
+  subnetIds: string[]
   acm: aws.ACMHandler
   cloudfront: aws.CloudfrontHandler
   sts: aws.STSHandler
@@ -44,6 +48,8 @@ export class SeagullProject {
     this.profile = props.profile
     this.region = props.region
     this.pkgJson = require(`${this.appPath}/package.json`)
+    this.vpcId = props.vpcId
+    this.subnetIds = props.subnetIds && props.subnetIds.split(",") || []
     setCredsByProfile(this.profile)
     const propsACMHandler = props.handlers && props.handlers.acmHandler
     const propsCFHandler = props.handlers && props.handlers.cloudfrontHandler
@@ -76,6 +82,7 @@ export class SeagullProject {
       'lambda:InvokeAsync',
       'ses:*',
       's3:*',
+      'ec2:*',
       'events:*',
       'cloudwatch:*',
     ]
@@ -92,7 +99,8 @@ export class SeagullProject {
     const logBucket = app.stack.addS3(logBucketName, role, false)
     const errorBucket = app.stack.addS3(errorBucketName, role, false)
     errorBucket.grantPublicAccess()
-    const lambda = app.stack.addLambda('lambda', this.appPath, role, env)
+    const vpc = app.stack.addVPC('vpc', this.vpcId, this.subnetIds, [ this.region ])
+    const lambda = app.stack.addLambda('lambda', this.appPath, role, vpc, env)
     const apiGW = app.stack.addUniversalApiGateway('apiGW', lambda, this.stage)
     const cloudfrontConfig = {
       aliasConfig,
