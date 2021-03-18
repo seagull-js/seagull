@@ -62,6 +62,7 @@ export class SeagullPipeline {
       'cloudfront:*',
       'iam:*',
       's3:*',
+      'ec2:*',
       'ssm:GetParameters',
       'apigateway:*',
       'lambda:*',
