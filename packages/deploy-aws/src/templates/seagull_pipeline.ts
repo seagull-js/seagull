@@ -22,6 +22,8 @@ interface SeagullPipelineProps {
   handlers?: {
     ssmHandler?: SSMHandler
   }
+  vpcId: string,
+  subnetIds: string
 }
 
 export class SeagullPipeline {
@@ -40,6 +42,8 @@ export class SeagullPipeline {
   actions: string[]
   buildWorkers: 1 | 2 | 3 | 4
   excludedPages?: string
+  vpcId: string
+  subnetIds: string
 
   constructor(props: SeagullPipelineProps) {
     this.appPath = props.appPath
@@ -57,6 +61,8 @@ export class SeagullPipeline {
     const propsSSMHandler = props.handlers && props.handlers.ssmHandler
     this.ssm = propsSSMHandler || new SSMHandler()
     this.excludedPages = props.excludedPages
+    this.vpcId = props.vpcId
+    this.subnetIds = props.subnetIds
     this.actions = [
       'cloudformation:*',
       'cloudfront:*',
@@ -118,6 +124,8 @@ export class SeagullPipeline {
       role,
       ssmSecret,
       stage: this.stage,
+      vpcId: this.vpcId,
+      subnetIds: this.subnetIds
     }
     lib.addPipelineStages(stack, stageConfigParams)
     return pipelineApp

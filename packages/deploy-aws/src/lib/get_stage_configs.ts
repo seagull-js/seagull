@@ -165,6 +165,8 @@ function getEnv(params: StageConfigParams) {
     STAGE: params.stage,
     TARGET_URL: params.pipelineLink,
     TEST_PIPELINE_CONTEXT: 'continuous-integration/seagull',
+    VPC_ID: params.vpcId,
+    SUBNET_IDS: params.subnetIds,
     ...(params.excludedPages ? { PAGES_TO_EXCLUDE: params.excludedPages } : {}),
   }
   return { 'parameter-store': parameterStore, variables }

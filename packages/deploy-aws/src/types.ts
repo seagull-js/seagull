@@ -46,6 +46,8 @@ export interface StageConfigParams {
   role: IAM.Role
   ssmSecret: { name: string; secret: Secret }
   stage: string
+  vpcId: string
+  subnetIds: string
 }
 
 export interface OperationsProps {
