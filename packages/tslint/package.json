@@ -1,6 +1,6 @@
 {
   "name": "@seagull/tslint",
-  "version": "18.2.5",
+  "version": "18.2.6",
   "description": "Coding Standards for the Seagull Framework",
   "main": "tslint.json",
   "scripts": {

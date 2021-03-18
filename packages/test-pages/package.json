@@ -1,6 +1,6 @@
 {
   "name": "@seagull/test-pages",
-  "version": "18.2.5",
+  "version": "18.2.6",
   "description": "A basic test class for the View Layer implementation of the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -33,11 +33,11 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/tslint": "^18.2.5"
+    "@seagull/tslint": "^18.2.6"
   },
   "dependencies": {
-    "@seagull/pages": "^18.2.5",
-    "@seagull/testing": "^18.2.5",
+    "@seagull/pages": "^18.2.6",
+    "@seagull/testing": "^18.2.6",
     "@types/enzyme": "^3.1.15",
     "@types/enzyme-adapter-react-16": "1.0.3",
     "@types/react": "^16.8.2",
