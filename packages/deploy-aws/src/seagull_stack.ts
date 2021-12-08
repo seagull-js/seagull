@@ -365,7 +365,7 @@ export class SeagullStack extends Stack {
   private createProjectConfig(config: BuildStageConfig) {
     const allowedComputeTypeSizes = ['SMALL', 'MEDIUM', 'LARGE']
     const { build, env, install, postBuild, role } = config
-    const buildImage = new CB.LinuxBuildImage('aws/codebuild/nodejs:10.1.0')
+    const buildImage = CB.LinuxBuildImage.UBUNTU_14_04_NODEJS_10_1_0
     const computeType = allowedComputeTypeSizes.includes(config.computeTypeSize)
       ? `BUILD_GENERAL1_${config.computeTypeSize}`
       : CB.ComputeType.Small

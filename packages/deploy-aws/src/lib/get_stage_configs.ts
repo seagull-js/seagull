@@ -80,7 +80,7 @@ function getCommonConfig(
 
 function getInstall(params: StageConfigParams) {
   const curlCmd = getCurlToSendTestResult(params.owner, params.repo, curlData)
-  const upgradeNpm = addStateChangeToCmd('npm i -g npm@7.7.6')
+  const upgradeNpm = addStateChangeToCmd('npm i -g npm')
   const runInstall = addStateChangeToCmd('npm ci')
   const commands = [curlCmd, upgradeNpm, checkState(), runInstall, checkState()]
   return getCommandConfig(params, commands)
