@@ -1,6 +1,6 @@
 {
   "name": "@seagull/logging",
-  "version": "18.3.2",
+  "version": "18.3.4",
   "description": "Logging utilities for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/tslint": "^18.3.2",
+    "@seagull/tslint": "^18.3.4",
     "@types/lodash": "^4.14.123",
     "@types/npmlog": "^4.1.1"
   },
