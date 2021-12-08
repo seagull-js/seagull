@@ -5,7 +5,7 @@
     "bootstrap": "lerna bootstrap --hoist",
     "build": "lerna run build",
     "changes": "lerna changed",
-    "publish": "lerna publish --force-publish",
+    "publish": "lerna publish",
     "publish:patch": "lerna publish patch --yes --force-publish",
     "publish:minor": "lerna publish minor --yes --force-publish",
     "publish:major": "lerna publish major --yes --force-publish",
