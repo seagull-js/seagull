@@ -84,7 +84,7 @@ export class SeagullStack extends Stack {
       handler: 'dist/assets/backend/lambda.handler',
       memorySize: 1536,
       role,
-      runtime: new Runtime('nodejs10.x', RuntimeFamily.NodeJS, { supportsInlineCode: true }),
+      runtime: new Runtime('nodejs12.x', RuntimeFamily.NodeJS, { supportsInlineCode: true }),
       vpc,
       securityGroup,
       timeout: 300,
