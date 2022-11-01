@@ -49,7 +49,7 @@ export class SeagullProject {
     this.region = props.region
     this.pkgJson = require(`${this.appPath}/package.json`)
     this.vpcId = props.vpcId
-    this.subnetIds = props.subnetIds && props.subnetIds.split(",") || []
+    this.subnetIds = props.subnetIds && props.subnetIds.split(',') || []
     setCredsByProfile(this.profile)
     const propsACMHandler = props.handlers && props.handlers.acmHandler
     const propsCFHandler = props.handlers && props.handlers.cloudfrontHandler

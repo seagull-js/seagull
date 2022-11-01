@@ -37,6 +37,8 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
+    "@seagull/pages": "^19.1.0",
+    "@seagull/routes": "^19.1.0",
     "@seagull/tslint": "^19.1.0",
     "@types/browserify": "^12.0.36",
     "@types/chokidar": "^1.7.5",

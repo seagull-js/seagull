@@ -7,41 +7,41 @@ import { Process } from '../src'
 export class Test extends BasicTest {
   @test
   async 'can be enabled and disabled'() {
-    process.env.npm_package_author_name!.should.be.equal('Tom Jaster')
+    process.env.npm_package_name!.should.be.equal('@seagull/mock-process')
     const currentCWD = process.cwd()
-    const env = { npm_package_author_name: 'xxx' }
+    const env = { npm_package_name: 'xxx' }
     const cwd = '/tmp'
     const mock = new Process({ cwd, env })
     mock.activate()
-    process.env.npm_package_author_name!.should.be.equal('xxx')
+    process.env.npm_package_name!.should.be.equal('xxx')
     process.cwd().should.be.equal('/tmp')
     mock.deactivate()
-    process.env.npm_package_author_name!.should.be.equal('Tom Jaster')
+    process.env.npm_package_name!.should.be.equal('@seagull/mock-process')
     process.cwd().should.be.equal(currentCWD)
   }
   @test
   async 'state survives disabling/enabling'() {
-    process.env.npm_package_author_name!.should.be.equal('Tom Jaster')
-    const env = { npm_package_author_name: 'xxx' }
+    process.env.npm_package_name!.should.be.equal('@seagull/mock-process')
+    const env = { npm_package_name: 'xxx' }
     const cwd = '/tmp'
     const mock = new Process({ cwd, env })
     mock.activate()
-    process.env.npm_package_author_name!.should.be.equal('xxx')
+    process.env.npm_package_name!.should.be.equal('xxx')
     mock.deactivate()
-    process.env.npm_package_author_name!.should.be.equal('Tom Jaster')
+    process.env.npm_package_name!.should.be.equal('@seagull/mock-process')
     mock.activate()
-    process.env.npm_package_author_name!.should.be.equal('xxx')
+    process.env.npm_package_name!.should.be.equal('xxx')
     mock.deactivate()
   }
   @test
   async 'state can be resetted'() {
-    const env = { npm_package_author_name: 'xxx' }
+    const env = { npm_package_name: 'xxx' }
     const cwd = '/tmp'
     const mock = new Process({ cwd, env })
     mock.activate()
-    process.env.npm_package_author_name!.should.be.equal('xxx')
+    process.env.npm_package_name!.should.be.equal('xxx')
     mock.reset()
-    process.env.npm_package_author_name!.should.be.equal('xxx')
+    process.env.npm_package_name!.should.be.equal('xxx')
     mock.deactivate()
   }
 }

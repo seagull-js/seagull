@@ -10,7 +10,8 @@
     "member-access": [true, "no-public"],
     "no-console": [true, "log", "error"],
     "no-misused-new": [false],
-    "quotemark": [true, "single", "jsx-double"]
+    "quotemark": [true, "single", "jsx-double"],
+    "object-literal-sort-keys": false
   },
   "rulesDirectory": []
 }
