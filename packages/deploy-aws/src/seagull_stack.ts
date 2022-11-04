@@ -18,7 +18,7 @@ import {
   Code,
   Function as Lambda,
   Runtime,
-  RuntimeFamily
+  RuntimeFamily,
 } from '@aws-cdk/aws-lambda'
 import { LogGroup } from '@aws-cdk/aws-logs'
 import * as S3 from '@aws-cdk/aws-s3'
@@ -38,6 +38,7 @@ import {
   Rule,
   SourceStageConfig,
 } from './types'
+import { LinuxBuildImage } from '@aws-cdk/aws-codebuild'
 /**
  * The Seagull Stack - including convenience functions to add resources
  *
@@ -63,19 +64,31 @@ export class SeagullStack extends Stack {
     return bucket
   }
 
-  addVPC(name: string, vpcId: string, privateSubnetIds: string[], availabilityZones: string[]) {
+  addVPC(
+    name: string,
+    vpcId: string,
+    privateSubnetIds: string[],
+    availabilityZones: string[]
+  ) {
     const props = {
       vpcId,
       availabilityZones,
-      privateSubnetIds
+      privateSubnetIds,
     }
     return EC2.VpcNetworkRef.import(this, name, props)
   }
 
-  addLambda(name: string, folder: string, role: IAM.Role, vpc: EC2.VpcNetworkRef, env: Keymap) {
-
+  addLambda(
+    name: string,
+    folder: string,
+    role: IAM.Role,
+    vpc: EC2.VpcNetworkRef,
+    env: Keymap
+  ) {
     const lambdaName = `${this.id}-${name}`
-    const securityGroup = EC2.SecurityGroupRef.import(this, 'SecurityGroup', { securityGroupId: "sg-06ee9962c3d90de3e"})
+    const securityGroup = EC2.SecurityGroupRef.import(this, 'SecurityGroup', {
+      securityGroupId: 'sg-06ee9962c3d90de3e',
+    })
     const conf = {
       code: Code.asset(`${folder}/.seagull/deploy`),
       description: 'universal route',
@@ -84,7 +97,9 @@ export class SeagullStack extends Stack {
       handler: 'dist/assets/backend/lambda.handler',
       memorySize: 1536,
       role,
-      runtime: new Runtime('nodejs16.x', RuntimeFamily.NodeJS, { supportsInlineCode: true }),
+      runtime: new Runtime('nodejs16.x', RuntimeFamily.NodeJS, {
+        supportsInlineCode: true,
+      }),
       vpc,
       securityGroup,
       timeout: 300,
@@ -365,7 +380,9 @@ export class SeagullStack extends Stack {
   private createProjectConfig(config: BuildStageConfig) {
     const allowedComputeTypeSizes = ['SMALL', 'MEDIUM', 'LARGE']
     const { build, env, install, postBuild, role } = config
-    const buildImage = CB.LinuxBuildImage.UBUNTU_14_04_NODEJS_10_1_0
+    const buildImage = new (LinuxBuildImage as any)(
+      'aws/codebuild/nodejs:16.15.1'
+    )
     const computeType = allowedComputeTypeSizes.includes(config.computeTypeSize)
       ? `BUILD_GENERAL1_${config.computeTypeSize}`
       : CB.ComputeType.Small
