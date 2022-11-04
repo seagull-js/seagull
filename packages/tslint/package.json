@@ -1,6 +1,6 @@
 {
   "name": "@seagull/tslint",
-  "version": "20.0.2",
+  "version": "20.0.3",
   "description": "Coding Standards for the Seagull Framework",
   "main": "tslint.json",
   "scripts": {
@@ -35,5 +35,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "0e5c032b71f7b3f1a25d8af100166a9f1beb341f"
+  "gitHead": "773b314226581c4e4428a4764fb41aeb966267e8"
 }

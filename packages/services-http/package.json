@@ -1,6 +1,6 @@
 {
   "name": "@seagull/services-http",
-  "version": "20.0.2",
+  "version": "20.0.3",
   "description": "Http services for the seagull framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -34,16 +34,16 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/testing": "^20.0.2",
-    "@seagull/tslint": "^20.0.2",
+    "@seagull/testing": "^20.0.3",
+    "@seagull/tslint": "^20.0.3",
     "@types/node-fetch": "^2.3.3",
     "@types/rimraf": "^2.0.2",
     "rimraf": "^2.6.3"
   },
   "dependencies": {
-    "@seagull/libraries": "^20.0.2",
-    "@seagull/mode": "^20.0.2",
-    "@seagull/seed": "^20.0.2",
+    "@seagull/libraries": "^20.0.3",
+    "@seagull/mode": "^20.0.3",
+    "@seagull/seed": "^20.0.3",
     "encoding": "^0.1.12",
     "iconv-lite": "^0.5.0",
     "inversify": "^5.0.1",
@@ -73,5 +73,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "0e5c032b71f7b3f1a25d8af100166a9f1beb341f"
+  "gitHead": "773b314226581c4e4428a4764fb41aeb966267e8"
 }

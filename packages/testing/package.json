@@ -1,6 +1,6 @@
 {
   "name": "@seagull/testing",
-  "version": "20.0.2",
+  "version": "20.0.3",
   "description": "Testing Utilities for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/tslint": "^20.0.2",
+    "@seagull/tslint": "^20.0.3",
     "@types/lodash": "^4.14.123",
     "@types/mocha": "^5.2.7",
     "aws-sdk": "*",
@@ -42,10 +42,10 @@
     "mocha-typescript": "^1.1.17"
   },
   "dependencies": {
-    "@seagull/mock": "^20.0.2",
-    "@seagull/mode": "^20.0.2",
-    "@seagull/sandbox": "^20.0.2",
-    "@seagull/seed": "^20.0.2",
+    "@seagull/mock": "^20.0.3",
+    "@seagull/mode": "^20.0.3",
+    "@seagull/sandbox": "^20.0.3",
+    "@seagull/seed": "^20.0.3",
     "inversify": "^5.0.1"
   },
   "peerDependencies": {
@@ -73,5 +73,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "0e5c032b71f7b3f1a25d8af100166a9f1beb341f"
+  "gitHead": "773b314226581c4e4428a4764fb41aeb966267e8"
 }

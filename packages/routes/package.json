@@ -1,6 +1,6 @@
 {
   "name": "@seagull/routes",
-  "version": "20.0.2",
+  "version": "20.0.3",
   "description": "Routing functionalities for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -33,20 +33,20 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/mock-process": "^20.0.2",
-    "@seagull/mode": "^20.0.2",
-    "@seagull/pages": "^20.0.2",
-    "@seagull/test-routes": "^20.0.2",
-    "@seagull/tslint": "^20.0.2",
+    "@seagull/mock-process": "^20.0.3",
+    "@seagull/mode": "^20.0.3",
+    "@seagull/pages": "^20.0.3",
+    "@seagull/test-routes": "^20.0.3",
+    "@seagull/tslint": "^20.0.3",
     "@types/express": "^4.16.0",
     "@types/lodash": "^4.14.123",
     "mock-fs": "^4.5.0"
   },
   "dependencies": {
-    "@seagull/commands-fs": "^20.0.2",
-    "@seagull/libraries": "^20.0.2",
-    "@seagull/services-http": "^20.0.2",
-    "@seagull/services-soap": "^20.0.2",
+    "@seagull/commands-fs": "^20.0.3",
+    "@seagull/libraries": "^20.0.3",
+    "@seagull/services-http": "^20.0.3",
+    "@seagull/services-soap": "^20.0.3",
     "body-parser": "^1.18.3",
     "class-validator": "^0.11.0",
     "express": "^4.16.3",
@@ -76,5 +76,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "0e5c032b71f7b3f1a25d8af100166a9f1beb341f"
+  "gitHead": "773b314226581c4e4428a4764fb41aeb966267e8"
 }
