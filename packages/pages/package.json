@@ -1,6 +1,6 @@
 {
   "name": "@seagull/pages",
-  "version": "20.0.3",
+  "version": "20.0.4",
   "description": "View Layer implementation in React for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/tslint": "^20.0.3",
+    "@seagull/tslint": "^20.0.4",
     "@types/jsdom": "^12.2.3",
     "@types/lodash": "^4.14.123",
     "@types/react": "^16.8.2",

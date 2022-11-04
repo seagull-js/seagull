@@ -1,6 +1,6 @@
 {
   "name": "@seagull/mock-s3",
-  "version": "20.0.3",
+  "version": "20.0.4",
   "description": "AWS S3 Mocking module for the Seagull Framework",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -33,8 +33,8 @@
   },
   "homepage": "https://github.com/seagull-js/seagull#readme",
   "devDependencies": {
-    "@seagull/mock-fs": "^20.0.3",
-    "@seagull/tslint": "^20.0.3",
+    "@seagull/mock-fs": "^20.0.4",
+    "@seagull/tslint": "^20.0.4",
     "aws-sdk": "*",
     "memfs": "^2.14.2"
   },
@@ -58,9 +58,9 @@
     ]
   },
   "dependencies": {
-    "@seagull/libraries": "^20.0.3",
-    "@seagull/mock": "^20.0.3",
-    "@seagull/testing": "^20.0.3",
+    "@seagull/libraries": "^20.0.4",
+    "@seagull/mock": "^20.0.4",
+    "@seagull/testing": "^20.0.4",
     "aws-sdk-mock": "^1.7.0"
   },
   "publishConfig": {
