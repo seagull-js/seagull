@@ -48,7 +48,7 @@
     "@seagull/services-http": "^20.0.5",
     "@seagull/services-soap": "^20.0.5",
     "body-parser": "^1.18.3",
-    "class-validator": "^0.11.0",
+    "class-validator": "^0.14.0",
     "express": "^4.16.3",
     "lodash": "^4.17.5",
     "node-mocks-http": "^1.7.2",
