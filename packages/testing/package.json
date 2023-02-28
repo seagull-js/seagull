@@ -38,7 +38,7 @@
     "@types/mocha": "^5.2.7",
     "aws-sdk": "*",
     "inversify": "5.0.1",
-    "mocha": "^5.2.0",
+    "mocha": "^10.2.0",
     "mocha-typescript": "^1.1.17"
   },
   "dependencies": {
