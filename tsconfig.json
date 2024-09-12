@@ -14,8 +14,17 @@
     "rootDirs": ["src", "test"],
     "strict": true
   },
-  "include": ["src/**/*", "test/**/*", "declarations.d.ts"],
-  "exclude": ["dist", "examples", "node_modules"],
+  "include": [
+    "packages/*/src/**/*",
+    "packages/*/test/**/*",
+    "packages/*/declarations.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "packages/*/dist",
+    "packages/*/examples",
+    "packages/*/node_modules"
+  ],
   "types": ["node"],
   "typeRoots": ["node_modules/@types"]
 }
